@@ -475,7 +475,6 @@ get_token = function() {
 
 update_token_buf = function(a, b) {
   var n;
-  int(n);
   if (token_buf) {
     free(token_buf);
   }

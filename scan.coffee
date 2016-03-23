@@ -223,7 +223,7 @@ scan_factor = ->
 	else if (token == T_STRING)
 		scan_string()
 	else
-		error("syntax error");
+		error("syntax error")
 
 	# index
 
@@ -336,7 +336,7 @@ error = (errmsg) ->
 
 # takes an integer
 build_tensor = (n) ->
-	# int i, j, k, ndim, nelem;
+	# int i, j, k, ndim, nelem
 
 	i = 0
 
@@ -344,10 +344,10 @@ build_tensor = (n) ->
 
 	save()
 
-	s = stack + tos - n;
+	s = stack + tos - n
 
 	p2 = alloc_tensor(n)
-	p2.tensor.ndim = 1;
+	p2.tensor.ndim = 1
 	p2.tensor.dim[0] = n
 	for i in [0...n]
 		# !!!! this is wrong here
@@ -393,91 +393,90 @@ get_token = ->
 		if (scanned[scan_str] == '.')
 			scan_str++
 			while (isdigit(scanned[scan_str]))
-				scan_str++;
+				scan_str++
 			if (scanned[scan_str] == 'e' && (scan_str[1] == '+' || scan_str[1] == '-' || isdigit(scan_str[1])))
-				scan_str += 2;
+				scan_str += 2
 				while (isdigit(scanned[scan_str]))
-					scan_str++;
-			token = T_DOUBLE;
+					scan_str++
+			token = T_DOUBLE
 		else
-			token = T_INTEGER;
-		update_token_buf(token_str, scan_str);
-		return;
+			token = T_INTEGER
+		update_token_buf(token_str, scan_str)
+		return
 
 	# symbol?
 
 	if (isalpha(scanned[scan_str]))
 		while (isalnum(scanned[scan_str]))
-			scan_str++;
+			scan_str++
 		if (scanned[scan_str] == '(')
-			token = T_FUNCTION;
+			token = T_FUNCTION
 		else
-			token = T_SYMBOL;
-		update_token_buf(token_str, scan_str);
-		return;
+			token = T_SYMBOL
+		update_token_buf(token_str, scan_str)
+		return
 
 	# string ?
 
 	if (scanned[scan_str] == '"')
-		scan_str++;
+		scan_str++
 		while (scanned[scan_str] != '"')
 			if (scanned[scan_str] == 0 || scanned[scan_str] == '\n' || scanned[scan_str] == '\r')
-				error("runaway string");
+				error("runaway string")
 			scan_str++
 		scan_str++
 		token = T_STRING
 		update_token_buf(token_str + 1, scan_str - 1)
-		return;
+		return
 
 	# comment?
 
 	if (scanned[scan_str] == '#' || scanned[scan_str] == '-' && scan_str[1] == '-')
 		while (scanned[scan_str] && scanned[scan_str] != '\n' && scanned[scan_str] != '\r')
-			scan_str++;
+			scan_str++
 		if (scanned[scan_str])
-			scan_str++;
-		token = T_NEWLINE;
-		return;
+			scan_str++
+		token = T_NEWLINE
+		return
 
 	# relational operator?
 
 	if (scanned[scan_str] == '=' && scan_str[1] == '=')
-		scan_str += 2;
-		token = T_EQ;
-		return;
+		scan_str += 2
+		token = T_EQ
+		return
 
 	if (scanned[scan_str] == '<' && scan_str[1] == '=')
-		scan_str += 2;
-		token = T_LTEQ;
-		return;
+		scan_str += 2
+		token = T_LTEQ
+		return
 
 	if (scanned[scan_str] == '>' && scan_str[1] == '=')
-		scan_str += 2;
-		token = T_GTEQ;
-		return;
+		scan_str += 2
+		token = T_GTEQ
+		return
 
 	# single char token
 
-	token = scanned[scan_str]++;
+	token = scanned[scan_str]++
 
 # both strings
 update_token_buf = (a,b) ->
-	int n;
 
 	if (token_buf)
-		free(token_buf);
+		free(token_buf)
 
-	n = (int) (b - a);
+	n = (int) (b - a)
 
 	# !!!
-	#token_buf = (char *) malloc(n + 1);
+	#token_buf = (char *) malloc(n + 1)
 
 	if (token_buf == 0)
-		stop("malloc failure");
+		stop("malloc failure")
 
-	strncpy(token_buf, a, n);
+	strncpy(token_buf, a, n)
 
-	token_buf[n] = 0;
+	token_buf[n] = 0
 
 
 testString = [
@@ -516,7 +515,7 @@ testString = [
 test_scan = ->
 	a = 0
 	# !!!!!
-	#test(__FILE__, s, sizeof s / sizeof (char *));
+	#test(__FILE__, s, sizeof s / sizeof (char *))
 
 
 #	Notes:

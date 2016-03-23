@@ -320,7 +320,6 @@ EVAL_det = function() {
 
 EVAL_dim = function() {
   var n, p2;
-  int(n);
   push(cadr(p1));
   EVAL();
   p2 = pop();
@@ -512,7 +511,7 @@ EVAL_number = function() {
 
 EVAL_operator = function() {
   var h, p1;
-  int(h = tos);
+  h = tos;
   push_symbol(OPERATOR);
   p1 = cdr(p1);
   while (iscons(p1)) {

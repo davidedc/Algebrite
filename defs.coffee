@@ -248,7 +248,7 @@ class tensor
 	ndim: 0
 	dim: (0 for [0..MAXDIM])
 	nelem: 0
-	elem: null #U *elem[1];
+	elem: null #U *elem[1]
 
 class display
 	h: 0

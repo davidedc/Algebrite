@@ -22,7 +22,7 @@
 #include "defs.h"
 
 # !!!!
-# U **frame, *stack[TOS];
+# U **frame, *stack[TOS]
 tos = 0
 
 # p is a U
@@ -70,22 +70,22 @@ save = ->
 restore = ->
 	if (frame > stack + TOS - 10)
 		stop("frame underflow")
-	p0 = frame[0];
-	p1 = frame[1];
-	p2 = frame[2];
-	p3 = frame[3];
-	p4 = frame[4];
-	p5 = frame[5];
-	p6 = frame[6];
-	p7 = frame[7];
-	p8 = frame[8];
-	p9 = frame[9];
-	frame += 10;
+	p0 = frame[0]
+	p1 = frame[1]
+	p2 = frame[2]
+	p3 = frame[3]
+	p4 = frame[4]
+	p5 = frame[5]
+	p6 = frame[6]
+	p7 = frame[7]
+	p8 = frame[8]
+	p9 = frame[9]
+	frame += 10
 
 # Local U * is OK here because there is no functional path to the garbage collector.
 
 swap = ->
-	#U *p, *q;
+	#U *p, *q
 	# p and q are both Us
 	p = pop()
 	q = pop()
@@ -95,7 +95,7 @@ swap = ->
 # Local U * is OK here because there is no functional path to the garbage collector.
 
 dupl = ->
-	#U *p;
+	#U *p
 	p = pop()
 	push(p)
 	push(p)
