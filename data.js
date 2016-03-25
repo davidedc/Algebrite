@@ -2,14 +2,13 @@
 var defn, defn_str, init;
 
 init = function() {
-  var draw_flag, esc_flag, flag, frame, i, imaginaryunit, j, k, one, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, ref, ref1, tos, zero;
+  var draw_flag, esc_flag, flag, frame, i, imaginaryunit, j, one, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, ref, tos, zero;
   i = 0;
   flag = 0;
   tos = 0;
   esc_flag = 0;
   draw_flag = 0;
-  debugger;
-  frame = TOS;
+  frame = stack + TOS;
   p0 = symbol(NIL);
   p1 = symbol(NIL);
   p2 = symbol(NIL);
@@ -25,11 +24,8 @@ init = function() {
   }
   flag = 1;
   for (i = j = 0, ref = NSYM; 0 <= ref ? j < ref : j > ref; i = 0 <= ref ? ++j : --j) {
-    symtab[i] = new U();
-  }
-  for (i = k = 0, ref1 = NSYM; 0 <= ref1 ? k < ref1 : k > ref1; i = 0 <= ref1 ? ++k : --k) {
     symtab[i].k = SYM;
-    binding[i] = symtab[i];
+    binding[i] = symtab + i;
     arglist[i] = symbol(NIL);
   }
   std_symbol("abs", ABS);
@@ -212,4 +208,4 @@ defn = function() {
   return results;
 };
 
-//# sourceMappingURL=init.js.map
+//# sourceMappingURL=data.js.map

@@ -1,3 +1,4 @@
+debugger
 SELFTEST = 1
 
 # size of the symbol table
@@ -262,7 +263,55 @@ class text_metric
 	descent: 0
 	width: 0
 
-symbol = (x) -> (symtab + (x))
+
+tos = 0 # top of stack
+expanding = 0
+fmt_x = 0
+fmt_index = 0
+fmt_level = 0
+verbosing = 0
+
+primetab = []
+primetab[MAXPRIMETAB] = 0
+
+esc_flag = 0
+draw_flag = 0
+mtotal = 0
+trigmode = 0
+logbuf = ""
+program_buf = ""
+symtab = [] # will contain U
+binding = [] # will contain *U
+arglist = [] # will contain U
+stack = [] # will contain *U
+debugger
+frame = 0
+p0 = null # will contain U
+p1 = null # will contain U
+p2 = null # will contain U
+p3 = null # will contain U
+p4 = null # will contain U
+p5 = null # will contain U
+p6 = null # will contain U
+p7 = null # will contain U
+p8 = null # will contain U
+p9 = null # will contain U
+
+zero = null # will contain U
+one = null # will contain U
+imaginaryunit = null # will contain U
+
+symtab = [] # will contain U
+out_buf = ""
+out_count = 0
+test_flag = 0
+draw_stop_return = null # extern jmp_buf ?????
+endian = 0
+#define little_endian() (*((unsigned char *) &endian))
+
+#include "prototypes.h"
+
+symbol = (x) -> (symtab[x])
 iscons = (p) -> (p.k == CONS)
 isrational = (p) -> (p.k == NUM)
 isdouble = (p) -> (p.k == DOUBLE)
@@ -306,49 +355,3 @@ MLENGTH = (p) -> p[-1]
 
 MZERO = (p) -> (MLENGTH(p) == 1 && (p)[0] == 0)
 MEQUAL = (p, n) -> (MLENGTH(p) == 1 && (long long) MSIGN(p) * (p)[0] == (n))
-
-tos = 0 # top of stack
-expanding = 0
-fmt_x = 0
-fmt_index = 0
-fmt_level = 0
-verbosing = 0
-
-primetab = []
-primetab[MAXPRIMETAB] = 0
-
-esc_flag = 0
-draw_flag = 0
-mtotal = 0
-trigmode = 0
-logbuf = ""
-program_buf = ""
-symtab = [] # will contain U
-binding = [] # will contain *U
-arglist = [] # will contain U
-stack = [] # will contain *U
-frame = [] # will contain *U
-p0 = null # will contain U
-p1 = null # will contain U
-p2 = null # will contain U
-p3 = null # will contain U
-p4 = null # will contain U
-p5 = null # will contain U
-p6 = null # will contain U
-p7 = null # will contain U
-p8 = null # will contain U
-p9 = null # will contain U
-
-zero = null # will contain U
-one = null # will contain U
-imaginaryunit = null # will contain U
-
-symtab = [] # will contain U
-out_buf = ""
-out_count = 0
-test_flag = 0
-draw_stop_return = null # extern jmp_buf ?????
-endian = 0
-#define little_endian() (*((unsigned char *) &endian))
-
-#include "prototypes.h"

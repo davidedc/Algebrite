@@ -8,8 +8,7 @@ init = ->
 	tos = 0
 	esc_flag = 0
 	draw_flag = 0
-	debugger
-	frame = TOS
+	frame = stack + TOS
 
 	p0 = symbol(NIL)
 	p1 = symbol(NIL)
@@ -28,11 +27,8 @@ init = ->
 	flag = 1
 
 	for i in [0...NSYM]
-		symtab[i] =  new U()
-
-	for i in [0...NSYM]
 		symtab[i].k = SYM
-		binding[i] = symtab[i]
+		binding[i] = symtab + i
 		arglist[i] = symbol(NIL)
 
 	std_symbol("abs", ABS)

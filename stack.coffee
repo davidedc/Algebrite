@@ -27,7 +27,7 @@ tos = 0
 
 # p is a U
 push = (p) ->
-	if (stack + tos >= frame)
+	if (tos >= frame)
 		stop("stack overflow")
 	stack[tos++] = p
 
@@ -41,45 +41,47 @@ pop = ->
 push_frame = (n) ->
 	i = 0
 	frame -= n
-	if (frame < stack + tos)
+	if (frame < tos)
+		debugger
 		stop("frame overflow, circular reference?")
 	for i in [0...n]
-		frame[i] = symbol(NIL)
+		stack[frame + i] = symbol(NIL)
 
 # n is an integer
 pop_frame = (n) ->
 	frame += n
-	if (frame > stack + TOS)
+	if (frame > TOS)
 		stop("frame underflow")
 
 save = ->
 	frame -= 10
-	if (frame < stack + tos)
+	if (frame < tos)
+		debugger
 		stop("frame overflow, circular reference?")
-	frame[0] = p0
-	frame[1] = p1
-	frame[2] = p2
-	frame[3] = p3
-	frame[4] = p4
-	frame[5] = p5
-	frame[6] = p6
-	frame[7] = p7
-	frame[8] = p8
-	frame[9] = p9
+	stack[frame + 0] = p0
+	stack[frame + 1] = p1
+	stack[frame + 2] = p2
+	stack[frame + 3] = p3
+	stack[frame + 4] = p4
+	stack[frame + 5] = p5
+	stack[frame + 6] = p6
+	stack[frame + 7] = p7
+	stack[frame + 8] = p8
+	stack[frame + 9] = p9
 
 restore = ->
 	if (frame > stack + TOS - 10)
 		stop("frame underflow")
-	p0 = frame[0]
-	p1 = frame[1]
-	p2 = frame[2]
-	p3 = frame[3]
-	p4 = frame[4]
-	p5 = frame[5]
-	p6 = frame[6]
-	p7 = frame[7]
-	p8 = frame[8]
-	p9 = frame[9]
+	p0 = stack[frame + 0]
+	p1 = stack[frame + 1]
+	p2 = stack[frame + 2]
+	p3 = stack[frame + 3]
+	p4 = stack[frame + 4]
+	p5 = stack[frame + 5]
+	p6 = stack[frame + 6]
+	p7 = stack[frame + 7]
+	p8 = stack[frame + 8]
+	p9 = stack[frame + 9]
 	frame += 10
 
 # Local U * is OK here because there is no functional path to the garbage collector.

@@ -4,7 +4,7 @@ var dupl, pop, pop_frame, push, push_frame, restore, save, swap, tos;
 tos = 0;
 
 push = function(p) {
-  if (stack + tos >= frame) {
+  if (tos >= frame) {
     stop("stack overflow");
   }
   return stack[tos++] = p;
@@ -21,38 +21,40 @@ push_frame = function(n) {
   var i, j, ref, results;
   i = 0;
   frame -= n;
-  if (frame < stack + tos) {
+  if (frame < tos) {
+    debugger;
     stop("frame overflow, circular reference?");
   }
   results = [];
   for (i = j = 0, ref = n; 0 <= ref ? j < ref : j > ref; i = 0 <= ref ? ++j : --j) {
-    results.push(frame[i] = symbol(NIL));
+    results.push(stack[frame + i] = symbol(NIL));
   }
   return results;
 };
 
 pop_frame = function(n) {
   frame += n;
-  if (frame > stack + TOS) {
+  if (frame > TOS) {
     return stop("frame underflow");
   }
 };
 
 save = function() {
   frame -= 10;
-  if (frame < stack + tos) {
+  if (frame < tos) {
+    debugger;
     stop("frame overflow, circular reference?");
   }
-  frame[0] = p0;
-  frame[1] = p1;
-  frame[2] = p2;
-  frame[3] = p3;
-  frame[4] = p4;
-  frame[5] = p5;
-  frame[6] = p6;
-  frame[7] = p7;
-  frame[8] = p8;
-  return frame[9] = p9;
+  stack[frame + 0] = p0;
+  stack[frame + 1] = p1;
+  stack[frame + 2] = p2;
+  stack[frame + 3] = p3;
+  stack[frame + 4] = p4;
+  stack[frame + 5] = p5;
+  stack[frame + 6] = p6;
+  stack[frame + 7] = p7;
+  stack[frame + 8] = p8;
+  return stack[frame + 9] = p9;
 };
 
 restore = function() {
@@ -60,16 +62,16 @@ restore = function() {
   if (frame > stack + TOS - 10) {
     stop("frame underflow");
   }
-  p0 = frame[0];
-  p1 = frame[1];
-  p2 = frame[2];
-  p3 = frame[3];
-  p4 = frame[4];
-  p5 = frame[5];
-  p6 = frame[6];
-  p7 = frame[7];
-  p8 = frame[8];
-  p9 = frame[9];
+  p0 = stack[frame + 0];
+  p1 = stack[frame + 1];
+  p2 = stack[frame + 2];
+  p3 = stack[frame + 3];
+  p4 = stack[frame + 4];
+  p5 = stack[frame + 5];
+  p6 = stack[frame + 6];
+  p7 = stack[frame + 7];
+  p8 = stack[frame + 8];
+  p9 = stack[frame + 9];
   return frame += 10;
 };
 

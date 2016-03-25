@@ -2,10 +2,10 @@
 var check_esc_flag, check_stack, echo_input, run, stop, top_level_eval;
 
 stop = function(s) {
-  printstr("Stop: ");
-  printstr(s);
-  printstr("\n");
-  return longjmp(stop_return, 1);
+  debugger;
+  console.log("Stop: ");
+  console.log(s);
+  return console.log("\n");
 };
 
 run = function(s) {
@@ -34,8 +34,8 @@ run = function(s) {
       continue;
     }
     if (isstr(p2)) {
-      printstr(p2.str);
-      printstr("\n");
+      console.log(p2.str);
+      console.log("\n");
       continue;
     }
     results.push(printline(p2));
@@ -47,14 +47,14 @@ check_stack = function() {
   if (tos !== 0) {
     stop("stack error");
   }
-  if (frame !== stack + TOS) {
+  if (frame !== TOS) {
     return stop("frame error");
   }
 };
 
 echo_input = function(s) {
-  printstr(s);
-  return printstr("\n");
+  console.log(s);
+  return console.log("\n");
 };
 
 top_level_eval = function() {

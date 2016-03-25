@@ -8,10 +8,11 @@ stop = (s) ->
 	#if (draw_flag == 2)
 	#	longjmp(draw_stop_return, 1)
 	#else
-		printstr("Stop: ")
-		printstr(s)
-		printstr("\n")
-		longjmp(stop_return, 1)
+		debugger
+		console.log("Stop: ")
+		console.log(s)
+		console.log("\n")
+		#longjmp(stop_return, 1)
 
 # s a string here
 run = (s) ->
@@ -61,8 +62,8 @@ run = (s) ->
 		# print string w/o quotes
 
 		if (isstr(p2))
-			printstr(p2.str)
-			printstr("\n")
+			console.log(p2.str)
+			console.log("\n")
 			continue
 
 		# in tty mode
@@ -71,15 +72,15 @@ run = (s) ->
 check_stack = ->
 	if (tos != 0)
 		stop("stack error")
-	if (frame != stack + TOS)
+	if (frame != TOS)
 		stop("frame error")
 
 # cannot reference symbols yet
 
 # s is a string here
 echo_input = (s) ->
-	printstr(s)
-	printstr("\n")
+	console.log(s)
+	console.log("\n")
 
 # returns nil on stack if no result to print
 

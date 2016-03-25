@@ -1,19 +1,19 @@
 # Evaluate an expression, for example...
 #
 #	push(p1)
-#	EVAL()
+#	Eval()
 #	p2 = pop()
 
 #include "stdafx.h"
 #include "defs.h"
 
-EVAL = ->
+Eval = ->
 	check_esc_flag()
 	save()
 	p1 = pop()
 	switch (p1.k)
 		when CONS
-			EVAL_cons()
+			Eval_cons()
 		when NUM
 			push(p1)
 		when DOUBLE
@@ -21,185 +21,185 @@ EVAL = ->
 		when STR
 			push(p1)
 		when TENSOR
-			EVAL_tensor()
+			Eval_tensor()
 		when SYM
-			EVAL_sym()
+			Eval_sym()
 		else
 			stop("atom?")
 	restore()
 
-EVAL_sym = ->
+Eval_sym = ->
 	# bare keyword?
 
 	if (iskeyword(p1))
 		push(p1)
 		push(symbol(LAST))
 		list(2)
-		EVAL()
+		Eval()
 		return
 
-	# EVALuate symbol's binding
+	# Evaluate symbol's binding
 
 	p2 = get_binding(p1)
 	push(p2)
 	if (p1 != p2)
-		EVAL()
+		Eval()
 
-EVAL_cons = ->
+Eval_cons = ->
 	if (!issymbol(car(p1)))
 		stop("cons?")
 
 	switch (symnum(car(p1)))
-		when ABS then EVAL_abs()
-		when ADD then EVAL_add()
-		when ADJ then EVAL_adj()
-		when AND then EVAL_and()
-		when ARCCOS then EVAL_arccos()
-		when ARCCOSH then EVAL_arccosh()
-		when ARCSIN then EVAL_arcsin()
-		when ARCSINH then EVAL_arcsinh()
-		when ARCTAN then EVAL_arctan()
-		when ARCTANH then EVAL_arctanh()
-		when ARG then EVAL_arg()
-		when ATOMIZE then EVAL_atomize()
-		when BESSELJ then EVAL_besselj()
-		when BESSELY then EVAL_bessely()
-		when BINDING then EVAL_binding()
-		when BINOMIAL then EVAL_binomial()
-		when CEILING then EVAL_ceiling()
-		when CHECK then EVAL_check()
-		when CHOOSE then EVAL_choose()
-		when CIRCEXP then EVAL_circexp()
-		when CLEAR then EVAL_clear()
-		when CLOCK then EVAL_clock()
-		when COEFF then EVAL_coeff()
-		when COFACTOR then EVAL_cofactor()
-		when CONDENSE then EVAL_condense()
-		when CONJ then EVAL_conj()
-		when CONTRACT then EVAL_contract()
-		when COS then EVAL_cos()
-		when COSH then EVAL_cosh()
-		when DECOMP then EVAL_decomp()
-		when DEGREE then EVAL_degree()
-		when DEFINT then EVAL_defint()
-		when DENOMINATOR then EVAL_denominator()
-		when DERIVATIVE then EVAL_derivative()
-		when DET then EVAL_det()
-		when DIM then EVAL_dim()
-		when DIRAC then EVAL_dirac()
-		when DISPLAY then EVAL_display()
-		when DIVISORS then EVAL_divisors()
-		when DO then EVAL_do()
-		when DOT then EVAL_inner()
-		when DRAW then EVAL_draw()
-		when DSOLVE then EVAL_dsolve()
-		when EIGEN then EVAL_eigen()
-		when EIGENVAL then EVAL_eigenval()
-		when EIGENVEC then EVAL_eigenvec()
-		when ERF then EVAL_erf()
-		when ERFC then EVAL_erfc()
-		when EVAL then EVAL_EVAL()
-		when EXP then EVAL_exp()
-		when EXPAND then EVAL_expand()
-		when EXPCOS then EVAL_expcos()
-		when EXPSIN then EVAL_expsin()
-		when FACTOR then EVAL_factor()
-		when FACTORIAL then EVAL_factorial()
-		when FACTORPOLY then EVAL_factorpoly()
-		when FILTER then EVAL_filter()
-		when FLOATF then EVAL_float()
-		when FLOOR then EVAL_floor()
-		when FOR then EVAL_for()
-		when GAMMA then EVAL_gamma()
-		when GCD then EVAL_gcd()
-		when HERMITE then EVAL_hermite()
-		when HILBERT then EVAL_hilbert()
-		when IMAG then EVAL_imag()
-		when INDEX then EVAL_index()
-		when INNER then EVAL_inner()
-		when INTEGRAL then EVAL_integral()
-		when INV then EVAL_inv()
-		when INVG then EVAL_invg()
-		when ISINTEGER then EVAL_isinteger()
-		when ISPRIME then EVAL_isprime()
-		when LAGUERRE then EVAL_laguerre()
-	#	when LAPLACE then EVAL_laplace()
-		when LCM then EVAL_lcm()
-		when LEADING then EVAL_leading()
-		when LEGENDRE then EVAL_legendre()
-		when LOG then EVAL_log()
-		when MAG then EVAL_mag()
-		when MOD then EVAL_mod()
-		when MULTIPLY then EVAL_multiply()
-		when NOT then EVAL_not()
-		when NROOTS then EVAL_nroots()
-		when NUMBER then EVAL_number()
-		when NUMERATOR then EVAL_numerator()
-		when OPERATOR then EVAL_operator()
-		when OR then EVAL_or()
-		when OUTER then EVAL_outer()
-		when POLAR then EVAL_polar()
-		when POWER then EVAL_power()
-		when PRIME then EVAL_prime()
-		when PRINT then EVAL_display()
-		when PRODUCT then EVAL_product()
-		when QUOTE then EVAL_quote()
-		when QUOTIENT then EVAL_quotient()
-		when RANK then EVAL_rank()
-		when RATIONALIZE then EVAL_rationalize()
-		when REAL then EVAL_real()
-		when YYRECT then EVAL_rect()
-		when ROOTS then EVAL_roots()
-		when SETQ then EVAL_setq()
-		when SGN then EVAL_sgn()
-		when SIMPLIFY then EVAL_simplify()
-		when SIN then EVAL_sin()
-		when SINH then EVAL_sinh()
-		when SQRT then EVAL_sqrt()
-		when STOP then EVAL_stop()
-		when SUBST then EVAL_subst()
-		when SUM then EVAL_sum()
-		when TAN then EVAL_tan()
-		when TANH then EVAL_tanh()
-		when TAYLOR then EVAL_taylor()
-		when TEST then EVAL_test()
-		when TESTEQ then EVAL_testeq()
-		when TESTGE then EVAL_testge()
-		when TESTGT then EVAL_testgt()
-		when TESTLE then EVAL_testle()
-		when TESTLT then EVAL_testlt()
-		when TRANSPOSE then EVAL_transpose()
-		when UNIT then EVAL_unit()
-		when ZERO then EVAL_zero()
+		when ABS then Eval_abs()
+		when ADD then Eval_add()
+		when ADJ then Eval_adj()
+		when AND then Eval_and()
+		when ARCCOS then Eval_arccos()
+		when ARCCOSH then Eval_arccosh()
+		when ARCSIN then Eval_arcsin()
+		when ARCSINH then Eval_arcsinh()
+		when ARCTAN then Eval_arctan()
+		when ARCTANH then Eval_arctanh()
+		when ARG then Eval_arg()
+		when ATOMIZE then Eval_atomize()
+		when BESSELJ then Eval_besselj()
+		when BESSELY then Eval_bessely()
+		when BINDING then Eval_binding()
+		when BINOMIAL then Eval_binomial()
+		when CEILING then Eval_ceiling()
+		when CHECK then Eval_check()
+		when CHOOSE then Eval_choose()
+		when CIRCEXP then Eval_circexp()
+		when CLEAR then Eval_clear()
+		when CLOCK then Eval_clock()
+		when COEFF then Eval_coeff()
+		when COFACTOR then Eval_cofactor()
+		when CONDENSE then Eval_condense()
+		when CONJ then Eval_conj()
+		when CONTRACT then Eval_contract()
+		when COS then Eval_cos()
+		when COSH then Eval_cosh()
+		when DECOMP then Eval_decomp()
+		when DEGREE then Eval_degree()
+		when DEFINT then Eval_defint()
+		when DENOMINATOR then Eval_denominator()
+		when DERIVATIVE then Eval_derivative()
+		when DET then Eval_det()
+		when DIM then Eval_dim()
+		when DIRAC then Eval_dirac()
+		when DISPLAY then Eval_display()
+		when DIVISORS then Eval_divisors()
+		when DO then Eval_do()
+		when DOT then Eval_inner()
+		when DRAW then Eval_draw()
+		when DSOLVE then Eval_dsolve()
+		when EIGEN then Eval_eigen()
+		when EIGENVAL then Eval_eigenval()
+		when EIGENVEC then Eval_eigenvec()
+		when ERF then Eval_erf()
+		when ERFC then Eval_erfc()
+		when EVAL then Eval_Eval()
+		when EXP then Eval_exp()
+		when EXPAND then Eval_expand()
+		when EXPCOS then Eval_expcos()
+		when EXPSIN then Eval_expsin()
+		when FACTOR then Eval_factor()
+		when FACTORIAL then Eval_factorial()
+		when FACTORPOLY then Eval_factorpoly()
+		when FILTER then Eval_filter()
+		when FLOATF then Eval_float()
+		when FLOOR then Eval_floor()
+		when FOR then Eval_for()
+		when GAMMA then Eval_gamma()
+		when GCD then Eval_gcd()
+		when HERMITE then Eval_hermite()
+		when HILBERT then Eval_hilbert()
+		when IMAG then Eval_imag()
+		when INDEX then Eval_index()
+		when INNER then Eval_inner()
+		when INTEGRAL then Eval_integral()
+		when INV then Eval_inv()
+		when INVG then Eval_invg()
+		when ISINTEGER then Eval_isinteger()
+		when ISPRIME then Eval_isprime()
+		when LAGUERRE then Eval_laguerre()
+	#	when LAPLACE then Eval_laplace()
+		when LCM then Eval_lcm()
+		when LEADING then Eval_leading()
+		when LEGENDRE then Eval_legendre()
+		when LOG then Eval_log()
+		when MAG then Eval_mag()
+		when MOD then Eval_mod()
+		when MULTIPLY then Eval_multiply()
+		when NOT then Eval_not()
+		when NROOTS then Eval_nroots()
+		when NUMBER then Eval_number()
+		when NUMERATOR then Eval_numerator()
+		when OPERATOR then Eval_operator()
+		when OR then Eval_or()
+		when OUTER then Eval_outer()
+		when POLAR then Eval_polar()
+		when POWER then Eval_power()
+		when PRIME then Eval_prime()
+		when PRINT then Eval_display()
+		when PRODUCT then Eval_product()
+		when QUOTE then Eval_quote()
+		when QUOTIENT then Eval_quotient()
+		when RANK then Eval_rank()
+		when RATIONALIZE then Eval_rationalize()
+		when REAL then Eval_real()
+		when YYRECT then Eval_rect()
+		when ROOTS then Eval_roots()
+		when SETQ then Eval_setq()
+		when SGN then Eval_sgn()
+		when SIMPLIFY then Eval_simplify()
+		when SIN then Eval_sin()
+		when SINH then Eval_sinh()
+		when SQRT then Eval_sqrt()
+		when STOP then Eval_stop()
+		when SUBST then Eval_subst()
+		when SUM then Eval_sum()
+		when TAN then Eval_tan()
+		when TANH then Eval_tanh()
+		when TAYLOR then Eval_taylor()
+		when TEST then Eval_test()
+		when TESTEQ then Eval_testeq()
+		when TESTGE then Eval_testge()
+		when TESTGT then Eval_testgt()
+		when TESTLE then Eval_testle()
+		when TESTLT then Eval_testlt()
+		when TRANSPOSE then Eval_transpose()
+		when UNIT then Eval_unit()
+		when ZERO then Eval_zero()
 		else
-			EVAL_user_function()
+			Eval_user_function()
 
-EVAL_binding = ->
+Eval_binding = ->
 	push(get_binding(cadr(p1)))
 
 # checks a predicate, i.e. check(A = B)
 
-EVAL_check = ->
+Eval_check = ->
 	push(cadr(p1))
-	EVAL_predicate()
+	Eval_predicate()
 	p1 = pop()
 	if (iszero(p1))
 		stop("check(arg): arg is zero")
 	push(symbol(NIL)) # no result is printed
 
-EVAL_det = ->
+Eval_det = ->
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	det()
 
-EVAL_dim = ->
+Eval_dim = ->
 	#int n
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	p2 = pop()
 	if (iscons(cddr(p1)))
 		push(caddr(p1))
-		EVAL()
+		Eval()
 		n = pop_integer()
 	else
 		n = 1
@@ -210,103 +210,103 @@ EVAL_dim = ->
 	else
 		push_integer(p2.tensor.dim[n - 1])
 
-EVAL_divisors = ->
+Eval_divisors = ->
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	divisors()
 
-EVAL_do = ->
+Eval_do = ->
 	push(car(p1))
 	p1 = cdr(p1)
 	while (iscons(p1))
 		pop()
 		push(car(p1))
-		EVAL()
+		Eval()
 		p1 = cdr(p1)
 
-EVAL_dsolve = ->
+Eval_dsolve = ->
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	push(caddr(p1))
-	EVAL()
+	Eval()
 	push(cadddr(p1))
-	EVAL()
+	Eval()
 	dsolve()
 
-# for example, EVAL(f,x,2)
+# for example, Eval(f,x,2)
 
-EVAL_EVAL = ->
+Eval_Eval = ->
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	p1 = cddr(p1)
 	while (iscons(p1))
 		push(car(p1))
-		EVAL()
+		Eval()
 		push(cadr(p1))
-		EVAL()
+		Eval()
 		subst()
 		p1 = cddr(p1)
-	EVAL()
+	Eval()
 
-EVAL_exp = ->
+Eval_exp = ->
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	exponential()
 
-EVAL_factorial = ->
+Eval_factorial = ->
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	factorial()
 
-EVAL_factorpoly = ->
+Eval_factorpoly = ->
 	p1 = cdr(p1)
 	push(car(p1))
-	EVAL()
+	Eval()
 	p1 = cdr(p1)
 	push(car(p1))
-	EVAL()
+	Eval()
 	factorpoly()
 	p1 = cdr(p1)
 	while (iscons(p1))
 		push(car(p1))
-		EVAL()
+		Eval()
 		factorpoly()
 		p1 = cdr(p1)
 
-EVAL_hermite = ->
+Eval_hermite = ->
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	push(caddr(p1))
-	EVAL()
+	Eval()
 	hermite()
 
-EVAL_hilbert = ->
+Eval_hilbert = ->
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	hilbert()
 
-EVAL_index = ->
+Eval_index = ->
 	h = tos
 	p1 = cdr(p1)
 	while (iscons(p1))
 		push(car(p1))
-		EVAL()
+		Eval()
 		p1 = cdr(p1)
 	index_function(tos - h)
 
-EVAL_inv = ->
+Eval_inv = ->
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	inv()
 
-EVAL_invg = ->
+Eval_invg = ->
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	invg()
 
-EVAL_isinteger = ->
+Eval_isinteger = ->
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	p1 = pop()
 	if (isrational(p1))
 		if (isinteger(p1))
@@ -325,40 +325,40 @@ EVAL_isinteger = ->
 	push(p1)
 	list(2)
 
-EVAL_multiply = ->
+Eval_multiply = ->
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	p1 = cddr(p1)
 	while (iscons(p1))
 		push(car(p1))
-		EVAL()
+		Eval()
 		multiply()
 		p1 = cdr(p1)
 
-EVAL_number = ->
+Eval_number = ->
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	p1 = pop()
 	if (p1.k == NUM || p1.k == DOUBLE)
 		push_integer(1)
 	else
 		push_integer(0)
 
-EVAL_operator = ->
+Eval_operator = ->
 	h = tos
 	push_symbol(OPERATOR)
 	p1 = cdr(p1)
 	while (iscons(p1))
 		push(car(p1))
-		EVAL()
+		Eval()
 		p1 = cdr(p1)
 	list(tos - h)
 
-EVAL_print = ->
+Eval_print = ->
 	p1 = cdr(p1)
 	while (iscons(p1))
 		push(car(p1))
-		EVAL()
+		Eval()
 		if (equaln(get_binding(symbol(TTY)), 1))
 			printline(pop())
 		else
@@ -366,12 +366,12 @@ EVAL_print = ->
 		p1 = cdr(p1)
 	push(symbol(NIL))
 
-EVAL_quote = ->
+Eval_quote = ->
 	push(cadr(p1))
 
-EVAL_rank = ->
+Eval_rank = ->
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	p1 = pop()
 	if (istensor(p1))
 		push_integer(p1.tensor.ndim)
@@ -398,18 +398,18 @@ setq_indexed = ->
 		stop("indexed assignment: error in symbol")
 	h = tos
 	push(caddr(p1))
-	EVAL()
+	Eval()
 	p2 = cdadr(p1)
 	while (iscons(p2))
 		push(car(p2))
-		EVAL()
+		Eval()
 		p2 = cdr(p2)
 	set_component(tos - h)
 	p3 = pop()
 	set_binding(p4, p3)
 	push(symbol(NIL))
 
-EVAL_setq = ->
+Eval_setq = ->
 	if (caadr(p1) == symbol(INDEX))
 		setq_indexed()
 		return
@@ -422,35 +422,35 @@ EVAL_setq = ->
 		stop("symbol assignment: error in symbol")
 
 	push(caddr(p1))
-	EVAL()
+	Eval()
 	p2 = pop()
 	set_binding(cadr(p1), p2)
 
 	push(symbol(NIL))
 
-EVAL_sqrt = ->
+Eval_sqrt = ->
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	push_rational(1, 2)
 	power()
 
-EVAL_stop = ->
+Eval_stop = ->
 	stop("user stop")
 
-EVAL_subst = ->
+Eval_subst = ->
 	push(cadddr(p1))
-	EVAL()
+	Eval()
 	push(caddr(p1))
-	EVAL()
+	Eval()
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	subst()
-	EVAL() # normalize
+	Eval() # normalize
 
-EVAL_unit = ->
+Eval_unit = ->
 	#int i, n
 	push(cadr(p1))
-	EVAL()
+	Eval()
 	n = pop_integer()
 	if (n < 2)
 		push(p1)
@@ -463,20 +463,20 @@ EVAL_unit = ->
 		p1.tensor.elem[n * i + i] = one
 	push(p1)
 
-EVAL_noexpand = ->
+Eval_noexpand = ->
 	x = expanding
 	expanding = 0
-	EVAL()
+	Eval()
 	expanding = x
 
-# like EVAL() except "=" is EVALuated as "=="
+# like Eval() except "=" is Evaluated as "=="
 
-EVAL_predicate = ->
+Eval_predicate = ->
 	save()
 	p1 = pop()
 	if (car(p1) == symbol(SETQ))
-		EVAL_testeq()
+		Eval_testeq()
 	else
 		push(p1)
-		EVAL()
+		Eval()
 	restore()
