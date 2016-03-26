@@ -98,7 +98,7 @@ top_level_eval = ->
 
 	p1 = pop()
 	push(p1)
-	eval()
+	Eval()
 	p2 = pop()
 
 	# "draw", "for" and "setq" return "nil", there is no result to print

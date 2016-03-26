@@ -13,6 +13,7 @@ mfreecount = 0
 free_stack = []
 
 # n is an int
+###
 mnew = (n) ->
 	if (n < MP_MIN_SIZE)
 		n = MP_MIN_SIZE
@@ -25,9 +26,11 @@ mnew = (n) ->
 	p[0] = n
 	mtotal += n
 	return p[3]
+###
 
 # p is the index of array of ints
 # !!! array wasn't passed here
+###
 mfree = (array, p) ->
 	p -= 3
 	mtotal -= array[p]
@@ -35,10 +38,12 @@ mfree = (array, p) ->
 		free_stack[mfreecount++] = p
 	else
 		free(p)
+###
 
 # convert int to bignum
 
 # n is an int
+###
 mint = (n) ->
 	p = mnew(1)
 	if (n < 0)
@@ -53,10 +58,12 @@ mint = (n) ->
 	#MLENGTH(p) = 1
 	p[0] = Math.abs(n)
 	return p
+###
 
 # copy bignum
 
 # a is an array of ints
+###
 mcopy = (a) ->
 	#unsigned int *b
 
@@ -70,11 +77,13 @@ mcopy = (a) ->
 		b[i] = a[i]
 
 	return b
+###
 
 # a >= b ?
 
 # and and b arrays of ints, len is an int
 ge = (a, b, len) ->
+	debugger
 	for i in [0...len]
 		if (a[i] == b[i])
 			continue
@@ -208,8 +217,8 @@ invert_number = ->
 		restore()
 		return
 
-	a = mcopy(p1.q.a)
-	b = mcopy(p1.q.b)
+	a = bigInt(p1.q.a)
+	b = bigInt(p1.q.b)
 
 	# !!! fu
 	#MSIGN(b) = MSIGN(a)
@@ -269,8 +278,8 @@ negate_number = ->
 		when NUM
 			p2 = new U()
 			p2.k = NUM
-			p2.q.a = mcopy(p1.q.a)
-			p2.q.b = mcopy(p1.q.b)
+			p2.q.a = bigInt(p1.q.a)
+			p2.q.b = bigInt(p1.q.b)
 			# !!! fu
 			#MSIGN(p2.q.a) *= -1
 			push(p2)
@@ -294,7 +303,7 @@ bignum_truncate = ->
 	p1.k = NUM
 
 	p1.q.a = a
-	p1.q.b = mint(1)
+	p1.q.b = bigInt(1)
 
 	push(p1)
 
@@ -314,8 +323,8 @@ mp_numerator = ->
 
 	p2.k = NUM
 
-	p2.q.a = mcopy(p1.q.a)
-	p2.q.b = mint(1)
+	p2.q.a = bigInt(p1.q.a)
+	p2.q.b = bigInt(1)
 
 	push(p2)
 
@@ -335,8 +344,8 @@ mp_denominator = ->
 
 	p2.k = NUM
 
-	p2.q.a = mcopy(p1.q.b)
-	p2.q.b = mint(1)
+	p2.q.a = bigInt(p1.q.b)
+	p2.q.b = bigInt(1)
 
 	push(p2)
 
@@ -375,15 +384,11 @@ bignum_power_number = (expo) ->
 
 # p an array of ints
 convert_bignum_to_double = (p) ->
-	d = 0.0
-	for i in [0...MLENGTH(p)]
-		d = 4294967296.0 * d + p[i]
-	if (MSIGN(p) == -1)
-		d = -d
-	return d
+	return p.toJSNumber()
 
 # p is a U
 convert_rational_to_double = (p) ->
+	console.log '!!!! convert_rational_to_double not properly translated due to MLENGTH'
 	i = 0
 	n = 0
 	na = 0
@@ -420,11 +425,12 @@ convert_rational_to_double = (p) ->
 
 # n an integer
 push_integer = (n) ->
+	console.log "pushing integer " + n
 	save()
 	p1 = new U()
 	p1.k = NUM
-	p1.q.a = mint(n)
-	p1.q.b = mint(1)
+	p1.q.a = bigInt(n)
+	p1.q.b = bigInt(1)
 	push(p1)
 	restore()
 
@@ -442,8 +448,8 @@ push_rational = (a,b) ->
 	save()
 	p1 = new U()
 	p1.k = NUM
-	p1.q.a = mint(a)
-	p1.q.b = mint(b)
+	p1.q.a = bigInt(a)
+	p1.q.b = bigInt(b)
 	## FIXME -- normalize ##
 	push(p1)
 	restore()
@@ -458,7 +464,7 @@ pop_integer = ->
 	switch (p1.k)
 
 		when NUM
-			if (isinteger(p1) && MLENGTH(p1.q.a) == 1)
+			if (isinteger(p1) && p1.q.a.isSmall())
 				n = p1.q.a[0]
 				if (n & 0x80000000)
 					n = 0x80000000
@@ -468,8 +474,8 @@ pop_integer = ->
 				n = 0x80000000
 
 		when DOUBLE
-			n = (int) p1.d
-			if ((double) n != p1.d)
+			n = Math.floor(p1.d)
+			if (n != p1.d)
 				n = 0x80000000
 
 		else
@@ -502,14 +508,14 @@ bignum_scan_integer = (s) ->
 		scounter++
 
 	# !!!! some mess in here, added an argument
-	a = mscan(s,scounter)
+	a = bigInt(s.substring(scounter))
 
 	p1 = new U()
 
 	p1.k = NUM
 
 	p1.q.a = a
-	p1.q.b = mint(1)
+	p1.q.b = bigInt(1)
 
 	push(p1)
 
@@ -596,7 +602,7 @@ bignum_factorial = (n) ->
 	p1 = new U()
 	p1.k = NUM
 	p1.q.a = __factorial(n)
-	p1.q.b = mint(1)
+	p1.q.b = bigInt(1)
 	push(p1)
 	restore()
 
@@ -606,12 +612,12 @@ __factorial = (n) ->
 	#unsigned int *a, *b, *t
 
 	if (n == 0 || n == 1)
-		a = mint(1)
+		a = bigInt(1)
 		return a
 
-	a = mint(2)
+	a = bigInt(2)
 
-	b = mint(0)
+	b = bigInt(0)
 
 	for i in [3..n]
 		b[0] = Math.floor(i)

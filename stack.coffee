@@ -35,7 +35,8 @@ push = (p) ->
 pop = ->
 	if (tos == 0)
 		stop("stack underflow")
-	return stack[--tos]
+	elementToBeReturned = stack[--tos]
+	return elementToBeReturned
 
 # n is an integer
 push_frame = (n) ->
@@ -70,7 +71,7 @@ save = ->
 	stack[frame + 9] = p9
 
 restore = ->
-	if (frame > stack + TOS - 10)
+	if (frame > TOS - 10)
 		stop("frame underflow")
 	p0 = stack[frame + 0]
 	p1 = stack[frame + 1]

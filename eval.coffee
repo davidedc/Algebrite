@@ -123,7 +123,7 @@ Eval_cons = ->
 		when ISINTEGER then Eval_isinteger()
 		when ISPRIME then Eval_isprime()
 		when LAGUERRE then Eval_laguerre()
-	#	when LAPLACE then Eval_laplace()
+		#	when LAPLACE then Eval_laplace()
 		when LCM then Eval_lcm()
 		when LEADING then Eval_leading()
 		when LEGENDRE then Eval_legendre()
@@ -315,7 +315,7 @@ Eval_isinteger = ->
 			push(zero)
 		return
 	if (isdouble(p1))
-		n = (int) p1.d
+		n = Math.floor(p1.d)
 		if (n == p1.d)
 			push(one)
 		else

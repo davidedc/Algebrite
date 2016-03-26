@@ -26,7 +26,7 @@ T_GTEQ = 1008
 T_LTEQ = 1009
 T_EQ = 1010
 
-token = 0
+token = ""
 newline_flag = 0
 meta_mode = 0
 
@@ -49,7 +49,7 @@ scan = (s) ->
 	input_str = 0
 	scan_str = 0
 	get_next_token()
-	if (token == 0)
+	if (token == "")
 		push(symbol(NIL))
 		expanding--
 		return 0
@@ -64,7 +64,7 @@ scan_meta = (s) ->
 	input_str = 0
 	scan_str = 0
 	get_next_token()
-	if (token == 0)
+	if (token == "")
 		push(symbol(NIL))
 		expanding--
 		return 0
@@ -336,6 +336,7 @@ error = (errmsg) ->
 
 # takes an integer
 build_tensor = (n) ->
+	console.log "build_tensor is not correct"
 	# int i, j, k, ndim, nelem
 
 	i = 0
@@ -366,6 +367,9 @@ get_next_token = ->
 		if (token != T_NEWLINE)
 			break
 		newline_flag = 1
+	console.log "get_next_token token: " + token
+	if token == ')'
+		debugger
 
 get_token = ->
 	# skip spaces
@@ -381,8 +385,8 @@ get_token = ->
 
 	# end of string?
 
-	if (scanned[scan_str] == 0)
-		token = 0
+	if (scan_str == scanned.length)
+		token = ""
 		return
 
 	# number?
@@ -421,7 +425,7 @@ get_token = ->
 	if (scanned[scan_str] == '"')
 		scan_str++
 		while (scanned[scan_str] != '"')
-			if (scanned[scan_str] == 0 || scanned[scan_str] == '\n' || scanned[scan_str] == '\r')
+			if (scan_str == scanned.length || scanned[scan_str] == '\n' || scanned[scan_str] == '\r')
 				error("runaway string")
 			scan_str++
 		scan_str++
@@ -458,25 +462,12 @@ get_token = ->
 
 	# single char token
 
-	token = scanned[scan_str]++
+	token = scanned[scan_str++]
 
 # both strings
 update_token_buf = (a,b) ->
 
-	if (token_buf)
-		free(token_buf)
-
-	n = (int) (b - a)
-
-	# !!!
-	#token_buf = (char *) malloc(n + 1)
-
-	if (token_buf == 0)
-		stop("malloc failure")
-
-	strncpy(token_buf, a, n)
-
-	token_buf[n] = 0
+	token_buf = scanned.substring(a,b)
 
 
 testString = [

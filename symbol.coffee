@@ -17,7 +17,9 @@ std_symbol = (s, n) ->
 # s is a string
 usr_symbol = (s) ->
 	for i in [0...NSYM]
-		if (symtab[i].printname == 0)
+		if (symtab[i].printname == "")
+			# found an entry in the symbol table
+			# with no printname
 			break
 		if (s == symtab[i].printname)
 			return symtab[i]
@@ -41,27 +43,31 @@ get_printname = (p) ->
 set_binding = (p, q) ->
 	if (p.k != SYM)
 		stop("symbol error")
-	binding[p - symtab] = q
-	arglist[p - symtab] = symbol(NIL)
+	indexFound = symtab.indexOf(p)
+	binding[indexFound] = q
+	arglist[indexFound] = symbol(NIL)
 
 # p is a U
 get_binding = (p) ->
 	if (p.k != SYM)
 		stop("symbol error")
-	return binding[p - symtab]
+	indexFound = symtab.indexOf(p)
+	return binding[indexFound]
 
 # p,q,r are all U
 set_binding_and_arglist = (p, q, r) ->
 	if (p.k != SYM)
 		stop("symbol error")
-	binding[p - symtab] = q
-	arglist[p - symtab] = r
+	indexFound = symtab.indexOf(p)
+	binding[indexFound] = q
+	arglist[indexFound] = r
 
 # p is U
 get_arglist = (p) ->
 	if (p.k != SYM)
 		stop("symbol error")
-	return arglist[p - symtab]
+	indexFound = symtab.indexOf(p)
+	return arglist[indexFound]
 
 # get symbol's number from ptr
 
@@ -69,7 +75,8 @@ get_arglist = (p) ->
 symnum = (p) ->
 	if (p.k != SYM)
 		stop("symbol error")
-	return Math.floor(p - symtab)
+	indexFound = symtab.indexOf(p)
+	return indexFound
 
 # push indexed symbol
 

@@ -8,19 +8,7 @@ init = ->
 	tos = 0
 	esc_flag = 0
 	draw_flag = 0
-	debugger
 	frame = TOS
-
-	p0 = symbol(NIL)
-	p1 = symbol(NIL)
-	p2 = symbol(NIL)
-	p3 = symbol(NIL)
-	p4 = symbol(NIL)
-	p5 = symbol(NIL)
-	p6 = symbol(NIL)
-	p7 = symbol(NIL)
-	p8 = symbol(NIL)
-	p9 = symbol(NIL)
 
 	if (flag)
 		return		# already initted
@@ -34,6 +22,17 @@ init = ->
 		symtab[i].k = SYM
 		binding[i] = symtab[i]
 		arglist[i] = symbol(NIL)
+
+	p0 = symbol(NIL)
+	p1 = symbol(NIL)
+	p2 = symbol(NIL)
+	p3 = symbol(NIL)
+	p4 = symbol(NIL)
+	p5 = symbol(NIL)
+	p6 = symbol(NIL)
+	p7 = symbol(NIL)
+	p8 = symbol(NIL)
+	p9 = symbol(NIL)
 
 	std_symbol("abs", ABS)
 	std_symbol("add", ADD)
@@ -203,6 +202,7 @@ init = ->
 	push_integer(1)
 	one = pop()		# must be untagged in gc
 
+	# i is the square root of -1 i.e. -1 ^ 1/2
 	push_symbol(POWER)
 	push_integer(-1)
 	push_rational(1, 2)
@@ -231,6 +231,9 @@ defn = ->
 	n = 0
 	n = defn_str.length
 	for i in [0...n]
+		console.log "scanning " + defn_str[i]
 		scan(defn_str[i])
-		eval()
+		console.log "... evaling " + defn_str[i]
+		debugger
+		Eval()
 		pop()

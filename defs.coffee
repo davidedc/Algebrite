@@ -1,4 +1,3 @@
-debugger
 SELFTEST = 1
 
 # size of the symbol table
@@ -24,24 +23,24 @@ NSYM = 1000
 #                       |_______|    |_______|    |_______|
 
 
-class cons
-	car: null # pointing down
-	cdr: null # pointing right
-
 class rational
-	a: 0
-	b: 0
+	a: null # a bigInteger
+	b: null # a bigInteger
 
 class U
-	cons: null # will point to a cons
+	cons: {} # will have a car and cdr
 	printname: ""
 	str: ""
 	tensor: null
 	# rational number a over b
-	q: null # will point to a rational
-	d: 0.0
+	q: new rational() # will point to a rational
+	d: 0.0 # a double
 	k: 0
 	tag: 0
+
+	constructor: ->
+		cons.car = null
+		cons.cdr = null
 
 # the following enum is for struct U, member k
 
@@ -284,7 +283,6 @@ symtab = [] # will contain U
 binding = [] # will contain *U
 arglist = [] # will contain U
 stack = [] # will contain *U
-debugger
 frame = 0
 p0 = null # will contain U
 p1 = null # will contain U
@@ -350,8 +348,8 @@ isadd = (p) -> (car(p) == symbol(ADD))
 ispower = (p) -> (car(p) == symbol(POWER))
 isfactorial = (p) -> (car(p) == symbol(FACTORIAL))
 
-MSIGN = (p) -> p[-2]
+MSIGN = (p) -> if p.isPositive() then return 1 else return -1
 MLENGTH = (p) -> p[-1]
 
-MZERO = (p) -> (MLENGTH(p) == 1 && (p)[0] == 0)
-MEQUAL = (p, n) -> (MLENGTH(p) == 1 && (long long) MSIGN(p) * (p)[0] == (n))
+MZERO = (p) -> p.isZero()
+MEQUAL = (p, n) -> p.equals(n)
