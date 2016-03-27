@@ -33,7 +33,7 @@ alloc(void)
 	return p;
 }
  */
-var ABS, ADD, ADJ, AND, ARCCOS, ARCCOSH, ARCSIN, ARCSINH, ARCTAN, ARCTANH, ARG, ATOMIZE, AUTOEXPAND, BAKE, BESSELJ, BESSELY, BINDING, BINOMIAL, BUF, C1, C2, C3, C4, C5, C6, CEILING, CHECK, CHOOSE, CIRCEXP, CLEAR, CLOCK, COEFF, COFACTOR, CONDENSE, CONJ, CONS, CONTRACT, COS, COSH, DECOMP, DEFINT, DEGREE, DENOMINATOR, DERIVATIVE, DET, DIM, DIRAC, DISPLAY, DIVISORS, DO, DOT, DOUBLE, DRAW, DRAWX, DSOLVE, E, EIGEN, EIGENVAL, EIGENVEC, ERF, ERFC, EVAL, EXP, EXPAND, EXPCOS, EXPSIN, Eval, Eval_Eval, Eval_binding, Eval_check, Eval_cons, Eval_det, Eval_dim, Eval_divisors, Eval_do, Eval_dsolve, Eval_exp, Eval_factorial, Eval_factorpoly, Eval_hermite, Eval_hilbert, Eval_index, Eval_inv, Eval_invg, Eval_isinteger, Eval_multiply, Eval_noexpand, Eval_number, Eval_operator, Eval_predicate, Eval_print, Eval_quote, Eval_rank, Eval_setq, Eval_sqrt, Eval_stop, Eval_subst, Eval_sym, Eval_tensor, Eval_unit, FACTOR, FACTORIAL, FACTORPOLY, FILTER, FLOATF, FLOOR, FOR, GAMMA, GCD, HERMITE, HILBERT, IMAG, INDEX, INNER, INTEGRAL, INV, INVG, ISINTEGER, ISPRIME, LAGUERRE, LAST, LCM, LEADING, LEGENDRE, LOG, MAG, MAXDIM, MAXPRIMETAB, MAX_PROGRAM_SIZE, MEQUAL, METAA, METAB, METAX, MLENGTH, MOD, MP_MAX_FREE, MP_MIN_SIZE, MSIGN, MULTIPLY, MZERO, NIL, NOT, NROOTS, NSYM, NUM, NUMBER, NUMERATOR, OPERATOR, OR, OUTER, PI, POLAR, POWER, PRIME, PRINT, PRODUCT, QUOTE, QUOTIENT, RANK, RATIONALIZE, REAL, ROOTS, SECRETX, SELFTEST, SETQ, SGN, SIMPLIFY, SIN, SINH, SQRT, STOP, STR, SUBST, SUM, SYM, SYMBOL_A, SYMBOL_B, SYMBOL_C, SYMBOL_D, SYMBOL_I, SYMBOL_J, SYMBOL_N, SYMBOL_R, SYMBOL_S, SYMBOL_T, SYMBOL_X, SYMBOL_Y, SYMBOL_Z, TAN, TANH, TAYLOR, TENSOR, TEST, TESTEQ, TESTGE, TESTGT, TESTLE, TESTLT, TOS, TRACE, TRANSPOSE, TTY, T_DOUBLE, T_EQ, T_FUNCTION, T_GTEQ, T_INTEGER, T_LTEQ, T_NEWLINE, T_STRING, T_SYMBOL, U, UNIT, USR_SYMBOLS, YYE, YYRECT, ZERO, __cmp, __factorial, __is_radical_number, __normalize_radical_factors, add_numbers, alloc_tensor, arglist, bignum_factorial, bignum_float, bignum_power_number, bignum_scan_float, bignum_scan_integer, bignum_truncate, binding, build_tensor, caaddr, caadr, caar, cadaddr, cadadr, cadar, caddaddr, caddadr, caddar, caddddr, cadddr, caddr, cadr, car, cdaddr, cdadr, cdar, cddaddr, cddar, cdddaddr, cddddr, cdddr, cddr, cdr, check_esc_flag, check_stack, clear_symbols, cmp_expr, combine_factors, combine_gammas, compare_numbers, compare_rationals, compare_tensors, compatible, cons, convert_bignum_to_double, convert_rational_to_double, copy_tensor, counter, d_scalar_tensor, d_tensor_scalar, d_tensor_tensor, define_user_function, defn, defn_str, display, divide, divide_numbers, draw_flag, draw_stop_return, dupl, echo_input, endian, equal, equaln, equalq, error, esc_flag, eval_power, expanding, exponential, fmt_index, fmt_level, fmt_x, frame, free_stack, gcd_numbers, ge, get_arglist, get_binding, get_next_token, get_printname, get_token, gp, imaginaryunit, init, input_str, inverse, invert_number, is_factor, is_small_integer, is_square_matrix, isadd, isalnum, isalpha, iscomplexnumber, iscons, isdigit, isdouble, iseveninteger, isfactorial, isfloating, isfraction, isimaginarynumber, isimaginaryunit, isinteger, isintegerfactor, iskeyword, isminusone, isminusoneoversqrttwo, isnegative, isnegativenumber, isnegativeterm, isnonnegativeinteger, isnpi, isnum, isoneover, isoneoversqrttwo, isplusone, ispoly, ispoly_expr, ispoly_factor, ispoly_term, isposint, ispower, isquarterturn, isrational, isspace, isstr, issymbol, issymbolic, istensor, iszero, length, lessp, list, logbuf, makePositive, makeSignSameAs, mask, mcmp, mcmpint, mdiv, meta_mode, mmod, mmul, mp_clr_bit, mp_denominator, mp_numerator, mp_set_bit, mshiftright, mtotal, multinomial_sum, multiply, multiply_all, multiply_all_noexpand, multiply_noexpand, multiply_numbers, negate, negate_expand, negate_noexpand, negate_number, new_string, newline_flag, normalize_angle, one, out_buf, out_count, out_of_memory, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, parse_p1, parse_p2, peek, peek2, pop, pop_double, pop_frame, pop_integer, power, power_sum, power_tensor, primetab, print1, print_double, print_number, program_buf, promote_tensor, push, push_cars, push_double, push_frame, push_identity_matrix, push_integer, push_rational, push_symbol, push_zero_matrix, qpow, qpowf, rational, reciprocate, restore, run, s, save, scalar_times_tensor, scan, scan_expression, scan_factor, scan_function_call, scan_meta, scan_power, scan_relation, scan_stmt, scan_str, scan_string, scan_subexpr, scan_symbol, scan_term, scanned, set_binding, set_binding_and_arglist, setq_indexed, sign, simplify_polar, sort_stack, square, ssqrt, stack, std_symbol, stop, subtract_numbers, swap, symbol, symnum, symtab, tensor, tensor_plus_tensor, tensor_times_scalar, testString, test_flag, test_scan, text_metric, token, token_buf, token_str, top_level_eval, tos, trigmode, unique, unique_f, update_token_buf, usr_symbol, verbosing, yyexpand, yymultiply, yypower, zero;
+var ABS, ADD, ADJ, AND, ARCCOS, ARCCOSH, ARCSIN, ARCSINH, ARCTAN, ARCTANH, ARG, ATOMIZE, AUTOEXPAND, BAKE, BESSELJ, BESSELY, BINDING, BINOMIAL, BUF, C1, C2, C3, C4, C5, C6, CEILING, CHECK, CHOOSE, CIRCEXP, CLEAR, CLOCK, COEFF, COFACTOR, CONDENSE, CONJ, CONS, CONTRACT, COS, COSH, DECOMP, DEFINT, DEGREE, DENOMINATOR, DERIVATIVE, DET, DIM, DIRAC, DISPLAY, DIVISORS, DO, DOT, DOUBLE, DRAW, DRAWX, DSOLVE, E, EIGEN, EIGENVAL, EIGENVEC, ERF, ERFC, EVAL, EXP, EXPAND, EXPCOS, EXPSIN, Eval, Eval_Eval, Eval_binding, Eval_check, Eval_cons, Eval_det, Eval_dim, Eval_divisors, Eval_do, Eval_dsolve, Eval_exp, Eval_factorial, Eval_factorpoly, Eval_hermite, Eval_hilbert, Eval_index, Eval_inv, Eval_invg, Eval_isinteger, Eval_multiply, Eval_noexpand, Eval_number, Eval_operator, Eval_predicate, Eval_print, Eval_quote, Eval_rank, Eval_setq, Eval_sqrt, Eval_stop, Eval_subst, Eval_sym, Eval_tensor, Eval_unit, FACTOR, FACTORIAL, FACTORPOLY, FILTER, FLOATF, FLOOR, FOR, GAMMA, GCD, HERMITE, HILBERT, IMAG, INDEX, INNER, INTEGRAL, INV, INVG, ISINTEGER, ISPRIME, LAGUERRE, LAST, LCM, LEADING, LEGENDRE, LOG, MAG, MAXDIM, MAXPRIMETAB, MAX_PROGRAM_SIZE, MEQUAL, METAA, METAB, METAX, MLENGTH, MOD, MP_MAX_FREE, MP_MIN_SIZE, MSIGN, MULTIPLY, MZERO, NIL, NOT, NROOTS, NSYM, NUM, NUMBER, NUMERATOR, OPERATOR, OR, OUTER, PI, POLAR, POWER, PRIME, PRINT, PRODUCT, QUOTE, QUOTIENT, RANK, RATIONALIZE, REAL, ROOTS, SECRETX, SELFTEST, SETQ, SGN, SIMPLIFY, SIN, SINH, SQRT, STOP, STR, SUBST, SUM, SYM, SYMBOL_A, SYMBOL_B, SYMBOL_C, SYMBOL_D, SYMBOL_I, SYMBOL_J, SYMBOL_N, SYMBOL_R, SYMBOL_S, SYMBOL_T, SYMBOL_X, SYMBOL_Y, SYMBOL_Z, TAN, TANH, TAYLOR, TENSOR, TEST, TESTEQ, TESTGE, TESTGT, TESTLE, TESTLT, TOS, TRACE, TRANSPOSE, TTY, T_DOUBLE, T_EQ, T_FUNCTION, T_GTEQ, T_INTEGER, T_LTEQ, T_NEWLINE, T_STRING, T_SYMBOL, U, UNIT, USR_SYMBOLS, YYE, YYRECT, ZERO, __cmp, __factorial, __is_radical_number, __normalize_radical_factors, add_numbers, alloc_tensor, arglist, bake, bake_poly, bake_poly_term, bignum_factorial, bignum_float, bignum_power_number, bignum_scan_float, bignum_scan_integer, bignum_truncate, binding, build_tensor, caaddr, caadr, caar, cadaddr, cadadr, cadar, caddaddr, caddadr, caddar, caddddr, cadddr, caddr, cadr, car, cdaddr, cdadr, cdar, cddaddr, cddar, cdddaddr, cddddr, cdddr, cddr, cdr, check_esc_flag, check_stack, clear_symbols, cmp_expr, combine_factors, combine_gammas, compare_numbers, compare_rationals, compare_tensors, compatible, cons, convert_bignum_to_double, convert_rational_to_double, copy_tensor, counter, d_scalar_tensor, d_tensor_scalar, d_tensor_tensor, define_user_function, defn, defn_str, display, divide, divide_numbers, draw_flag, draw_stop_return, dupl, echo_input, endian, equal, equaln, equalq, error, esc_flag, eval_power, expanding, exponential, fmt_index, fmt_level, fmt_x, frame, free_stack, gcd_numbers, ge, get_arglist, get_binding, get_next_token, get_printname, get_token, gp, imaginaryunit, init, input_str, inverse, invert_number, is_factor, is_small_integer, is_square_matrix, isadd, isalnum, isalpha, iscomplexnumber, iscons, isdigit, isdouble, iseveninteger, isfactorial, isfloating, isfraction, isimaginarynumber, isimaginaryunit, isinteger, isintegerfactor, iskeyword, isminusone, isminusoneoversqrttwo, isnegative, isnegativenumber, isnegativeterm, isnonnegativeinteger, isnpi, isnum, isoneover, isoneoversqrttwo, isplusone, ispoly, ispoly_expr, ispoly_factor, ispoly_term, isposint, ispower, isquarterturn, isrational, isspace, isstr, issymbol, issymbolic, istensor, iszero, length, lessp, list, logbuf, makePositive, makeSignSameAs, mask, mcmp, mcmpint, mdiv, meta_mode, mmod, mmul, mp_clr_bit, mp_denominator, mp_numerator, mp_set_bit, mshiftright, mtotal, multinomial_sum, multiply, multiply_all, multiply_all_noexpand, multiply_noexpand, multiply_numbers, negate, negate_expand, negate_noexpand, negate_number, new_string, newline_flag, normalize_angle, one, out_buf, out_count, out_of_memory, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, parse_p1, parse_p2, peek, peek2, polyform, pop, pop_double, pop_frame, pop_integer, power, power_sum, power_tensor, primetab, print1, print_double, print_expr, print_factor, print_number, print_str, print_term, printline, program_buf, promote_tensor, push, push_cars, push_double, push_frame, push_identity_matrix, push_integer, push_rational, push_symbol, push_zero_matrix, qpow, qpowf, rational, reciprocate, restore, run, s, save, scalar_times_tensor, scan, scan_expression, scan_factor, scan_function_call, scan_meta, scan_power, scan_relation, scan_stmt, scan_str, scan_string, scan_subexpr, scan_symbol, scan_term, scanned, set_binding, set_binding_and_arglist, setq_indexed, sign, sign_of_term, simplify_polar, sort_stack, square, ssqrt, stack, std_symbol, stop, subtract_numbers, swap, symbol, symnum, symtab, tensor, tensor_plus_tensor, tensor_times_scalar, testString, test_flag, test_scan, text_metric, token, token_buf, token_str, top_level_eval, tos, trigmode, unique, unique_f, update_token_buf, usr_symbol, verbosing, yyexpand, yymultiply, yypower, zero;
 
 alloc_tensor = function(nelem) {
   var i, l, p, ref;
@@ -184,6 +184,163 @@ print_mem_info(void)
 
 	sprintf(buf, "%d used\n", N * mcount - free_count);
 	printstr(buf);
+}
+ */
+
+bake = function() {
+  var h, p1, p2, s, t, x, y, z;
+  h = 0;
+  s = 0;
+  t = 0;
+  x = 0;
+  y = 0;
+  z = 0;
+  expanding++;
+  save();
+  p1 = pop();
+  s = ispoly(p1, symbol(SYMBOL_S));
+  t = ispoly(p1, symbol(SYMBOL_T));
+  x = ispoly(p1, symbol(SYMBOL_X));
+  y = ispoly(p1, symbol(SYMBOL_Y));
+  z = ispoly(p1, symbol(SYMBOL_Z));
+  if (s === 1 && t === 0 && x === 0 && y === 0 && z === 0) {
+    p2 = symbol(SYMBOL_S);
+    bake_poly();
+  } else if (s === 0 && t === 1 && x === 0 && y === 0 && z === 0) {
+    p2 = symbol(SYMBOL_T);
+    bake_poly();
+  } else if (s === 0 && t === 0 && x === 1 && y === 0 && z === 0) {
+    p2 = symbol(SYMBOL_X);
+    bake_poly();
+  } else if (s === 0 && t === 0 && x === 0 && y === 1 && z === 0) {
+    p2 = symbol(SYMBOL_Y);
+    bake_poly();
+  } else if (s === 0 && t === 0 && x === 0 && y === 0 && z === 1) {
+    p2 = symbol(SYMBOL_Z);
+    bake_poly();
+  } else if (iscons(p1)) {
+    h = tos;
+    push(car(p1));
+    p1 = cdr(p1);
+    while (iscons(p1)) {
+      push(car(p1));
+      bake();
+      p1 = cdr(p1);
+    }
+    list(tos - h);
+  } else {
+    push(p1);
+  }
+  restore();
+  return expanding--;
+};
+
+polyform = function() {
+  var h, p1, p2;
+  h = 0;
+  save();
+  p2 = pop();
+  p1 = pop();
+  if (ispoly(p1, p2)) {
+    bake_poly();
+  } else if (iscons(p1)) {
+    h = tos;
+    push(car(p1));
+    p1 = cdr(p1);
+    while (iscons(p1)) {
+      push(car(p1));
+      push(p2);
+      polyform();
+      p1 = cdr(p1);
+    }
+    list(tos - h);
+  } else {
+    push(p1);
+  }
+  return restore();
+};
+
+bake_poly = function() {
+  var a, h, i, k, l, n, p1, ref;
+  h = 0;
+  i = 0;
+  k = 0;
+  n = 0;
+  a = stack + tos;
+  push(p1);
+  push(p2);
+  k = coeff();
+  h = tos;
+  for (i = l = ref = k - 1; l > 0; i = l += -1) {
+    p1 = a[i];
+    bake_poly_term(i);
+  }
+  n = tos - h;
+  if (n > 1) {
+    list(n);
+    push(symbol(ADD));
+    swap();
+    cons();
+  }
+  p1 = pop();
+  tos -= k;
+  return push(p1);
+};
+
+bake_poly_term = function(k) {
+  var h, n, p1;
+  h = 0;
+  n = 0;
+  if (iszero(p1)) {
+    return;
+  }
+  if (k === 0) {
+    if (car(p1) === symbol(ADD)) {
+      p1 = cdr(p1);
+      while (iscons(p1)) {
+        push(car(p1));
+        p1 = cdr(p1);
+      }
+    } else {
+      push(p1);
+    }
+    return;
+  }
+  h = tos;
+  if (car(p1) === symbol(MULTIPLY)) {
+    p1 = cdr(p1);
+    while (iscons(p1)) {
+      push(car(p1));
+      p1 = cdr(p1);
+    }
+  } else if (!equaln(p1, 1)) {
+    push(p1);
+  }
+  if (k === 1) {
+    push(p2);
+  } else {
+    push(symbol(POWER));
+    push(p2);
+    push_integer(k);
+    list(3);
+  }
+  n = tos - h;
+  if (n > 1) {
+    list(n);
+    push(symbol(MULTIPLY));
+    swap();
+    return cons();
+  }
+};
+
+s = ["(x+3)^3", "x^3+9*x^2+27*x+27", "factor", "(x+3)^3"];
+
+
+/*
+void
+test_bake(void)
+{
+	test(__FILE__, s, sizeof s / sizeof (char *));
 }
  */
 
@@ -678,7 +835,7 @@ bignum_scan_float = function(s) {
 };
 
 print_number = function(p) {
-  var buf, s;
+  var buf;
   s = "";
   buf = "";
   switch (p.k) {
@@ -2576,13 +2733,10 @@ defn = function() {
   n = defn_str.length;
   results = [];
   for (i = l = 0, ref = n; 0 <= ref ? l < ref : l > ref; i = 0 <= ref ? ++l : --l) {
-    console.log("scanning " + defn_str[i]);
     scan(defn_str[i]);
     console.log("... evaling " + defn_str[i]);
     console.log("top of stack:");
-    debugger;
     print1(stack[tos - 1]);
-    debugger;
     Eval();
     results.push(pop());
   }
@@ -3982,14 +4136,23 @@ __is_radical_number = function(p) {
 s = ["0*a", "0", "a*0", "0", "1*a", "a", "a*1", "a", "a*a", "a^2", "a^2*a", "a^3", "a*a^2", "a^3", "a^2*a^2", "a^4", "2^a*2^(3-a)", "8", "sqrt(2)/2", "2^(-1/2)", "2/sqrt(2)", "2^(1/2)", "-sqrt(2)/2", "-1/(2^(1/2))", "2^(1/2-a)*2^a/10", "1/(5*2^(1/2))", "i/4", "1/4*i", "1/(4 i)", "-1/4*i", "1.0 pi 1/2", "0.5*pi", "1.0 1/2 pi", "0.5*pi"];
 
 isspace = function(s) {
+  if (s == null) {
+    return false;
+  }
   return s === ' ' || s === '\t' || s === '\n' || s === '\v' || s === '\f' || s === '\r';
 };
 
 isdigit = function(str) {
+  if (str == null) {
+    return false;
+  }
   return /^\d+$/.test(str);
 };
 
 isalpha = function(str) {
+  if (str == null) {
+    return false;
+  }
   if (str == null) {
     debugger;
   }
@@ -3997,6 +4160,9 @@ isalpha = function(str) {
 };
 
 isalnum = function(str) {
+  if (str == null) {
+    return false;
+  }
   return isalpha(str) || isdigit(str);
 };
 
@@ -4296,6 +4462,190 @@ test_power(void)
 }
  */
 
+print_str = function(s) {
+  return console.log(s);
+};
+
+printline = function(p) {
+  return print_expr(p);
+};
+
+print_expr = function(p) {
+  var results;
+  if (isadd(p)) {
+    p = cdr(p);
+    if (sign_of_term(car(p)) === '-') {
+      print_str("-");
+    }
+    print_term(car(p));
+    p = cdr(p);
+    results = [];
+    while (iscons(p)) {
+      if (sign_of_term(car(p)) === '+') {
+        if (test_flag === 0) {
+          print_str(" + ");
+        } else {
+          print_str("+");
+        }
+      } else {
+        if (test_flag === 0) {
+          print_str(" - ");
+        } else {
+          print_str("-");
+        }
+      }
+      print_term(car(p));
+      results.push(p = cdr(p));
+    }
+    return results;
+  } else {
+    if (sign_of_term(p) === '-') {
+      print_str("-");
+    }
+    return print_term(p);
+  }
+};
+
+sign_of_term = function(p) {
+  if (car(p) === symbol(MULTIPLY) && isnum(cadr(p)) && lessp(cadr(p), zero)) {
+    return '-';
+  } else if (isnum(p) && lessp(p, zero)) {
+    return '-';
+  } else {
+    return '+';
+  }
+};
+
+print_term = function(p) {
+  var results;
+  if (car(p) === symbol(MULTIPLY) && any_denominators(p)) {
+    print_a_over_b(p);
+    return;
+  }
+  if (car(p) === symbol(MULTIPLY)) {
+    p = cdr(p);
+    if (isminusone(car(p))) {
+      p = cdr(p);
+    }
+    print_factor(car(p));
+    p = cdr(p);
+    results = [];
+    while (iscons(p)) {
+      print_multiply_sign();
+      print_factor(car(p));
+      results.push(p = cdr(p));
+    }
+    return results;
+  } else {
+    return print_factor(p);
+  }
+};
+
+print_factor = function(p) {
+  if (isnum(p)) {
+    print_number(p);
+    return;
+  }
+  if (isstr(p)) {
+    print_str(p.str);
+    return;
+  }
+  if (istensor(p)) {
+    print_tensor(p);
+    return;
+  }
+  if (isadd(p) || car(p) === symbol(MULTIPLY)) {
+    print_str("(");
+    print_expr(p);
+    print_str(")");
+    return;
+  }
+  if (car(p) === symbol(POWER)) {
+    if (cadr(p) === symbol(E)) {
+      print_str("exp(");
+      print_expr(caddr(p));
+      print_str(")");
+      return;
+    }
+    if (isminusone(caddr(p))) {
+      if (test_flag === 0) {
+        print_str("1 / ");
+      } else {
+        print_str("1/");
+      }
+      if (iscons(cadr(p))) {
+        print_str("(");
+        print_expr(cadr(p));
+        print_str(")");
+      } else {
+        print_expr(cadr(p));
+      }
+      return;
+    }
+    if (isadd(cadr(p)) || caadr(p) === symbol(MULTIPLY) || caadr(p) === symbol(POWER) || isnegativenumber(cadr(p))) {
+      print_str("(");
+      print_expr(cadr(p));
+      print_str(")");
+    } else if (isnum(cadr(p)) && (lessp(cadr(p), zero) || isfraction(cadr(p)))) {
+      print_str("(");
+      print_factor(cadr(p));
+      print_str(")");
+    } else {
+      print_factor(cadr(p));
+    }
+    if (test_flag === 0) {
+      print_str(power_str);
+    } else {
+      print_str("^");
+    }
+    if (iscons(caddr(p)) || isfraction(caddr(p)) || (isnum(caddr(p)) && lessp(caddr(p), zero))) {
+      print_str("(");
+      print_expr(caddr(p));
+      print_str(")");
+    } else {
+      print_factor(caddr(p));
+    }
+    return;
+  }
+  if (car(p) === symbol(INDEX) && issymbol(cadr(p))) {
+    print_index_function(p);
+    return;
+  }
+  if (car(p) === symbol(FACTORIAL)) {
+    print_factorial_function(p);
+    return;
+  }
+  if (iscons(p)) {
+    print_factor(car(p));
+    p = cdr(p);
+    print_str("(");
+    if (iscons(p)) {
+      print_expr(car(p));
+      p = cdr(p);
+      while (iscons(p)) {
+        if (test_flag === 0) {
+          print_str(",");
+        } else {
+          print_str(",");
+        }
+        print_expr(car(p));
+        p = cdr(p);
+      }
+    }
+    print_str(")");
+    return;
+  }
+  if (p === symbol(DERIVATIVE)) {
+    return print_char('d');
+  } else if (p === symbol(E)) {
+    return print_str("exp(1)");
+  } else if (p === symbol(PI)) {
+    return print_str("pi");
+  } else {
+    return print_str(get_printname(p));
+  }
+};
+
 print1 = function(p) {
   switch (p.k) {
     case CONS:
@@ -4488,18 +4838,21 @@ stop = function(s) {
   return console.log("\n");
 };
 
-run = function(s) {
+run = function(stringToBeRun) {
   var i, n, results;
-  i = 0;
-  n = 0;
-  if (s === "selftest") {
+  stringToBeRun = stringToBeRun + "\n";
+  if (stringToBeRun === "selftest") {
     selftest();
     return;
   }
   init();
+  i = 0;
+  n = 0;
+  s = 0;
   results = [];
   while (1.) {
-    n = scan(s);
+    debugger;
+    n = scan(stringToBeRun.substring(s));
     p1 = pop();
     check_stack();
     if (n === 0) {
@@ -4629,6 +4982,13 @@ token_buf = 0;
 scanned = "";
 
 scan = function(s) {
+  console.log("#### scanning " + s);
+  if (s === "y=x") {
+    debugger;
+  }
+  if (s === "y") {
+    debugger;
+  }
   scanned = s;
   meta_mode = 0;
   expanding++;

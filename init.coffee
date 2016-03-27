@@ -235,12 +235,9 @@ defn = ->
 	n = 0
 	n = defn_str.length
 	for i in [0...n]
-		console.log "scanning " + defn_str[i]
 		scan(defn_str[i])
 		console.log "... evaling " + defn_str[i]
 		console.log("top of stack:")
-		debugger
 		print1(stack[tos-1])
-		debugger
 		Eval()
 		pop()

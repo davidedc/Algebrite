@@ -15,11 +15,11 @@ stop = (s) ->
 		#longjmp(stop_return, 1)
 
 # s a string here
-run = (s) ->
-	i = 0
-	n = 0
+run = (stringToBeRun) ->
 
-	if s == "selftest"
+	stringToBeRun = stringToBeRun + "\n"
+
+	if stringToBeRun == "selftest"
 		selftest()
 		return
 
@@ -28,9 +28,14 @@ run = (s) ->
 
 	init()
 
+	i = 0
+	n = 0
+	s = 0
+
 	while (1)
 
-		n = scan(s)
+		debugger
+		n = scan(stringToBeRun.substring(s))
 
 		p1 = pop()
 		check_stack()
