@@ -293,7 +293,7 @@ isquarterturn = (p) ->
 
 	n = pop_integer();
 
-	if (n == (int) 0x80000000)
+	if (n == 0x80000000)
 		return 0;
 
 	if (n < 1)
@@ -341,7 +341,7 @@ isnpi = (p) ->
 	push_integer(2);
 	multiply();
 	n = pop_integer();
-	if (n == (int) 0x80000000)
+	if (n == 0x80000000)
 		return 0;
 	if (n < 0)
 		n = 4 - (-n) % 4;

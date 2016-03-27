@@ -481,20 +481,8 @@ pop_integer = ->
 
 	switch (p1.k)
 
-		when NUM
-			if (isinteger(p1) && p1.q.a.isSmall())
-				n = p1.q.a[0]
-				if (n & 0x80000000)
-					n = 0x80000000
-				else
-					n *= MSIGN(p1.q.a)
-			else
-				n = 0x80000000
-
-		when DOUBLE
-			n = Math.floor(p1.d)
-			if (n != p1.d)
-				n = 0x80000000
+		when NUM, DOUBLE
+			n = Math.floor p1.q.a
 
 		else
 			n = 0x80000000
@@ -675,24 +663,16 @@ mask = [
 
 # unsigned int *x, unsigned int k
 mp_set_bit = (x, k) ->
+	console.log "not implemented yet"
+	debugger
 	x[k / 32] |= mask[k % 32]
 
 # unsigned int *x, unsigned int k
 mp_clr_bit = (x,k) ->
+	console.log "not implemented yet"
+	debugger
 	x[k / 32] &= ~mask[k % 32]
 
 # unsigned int *a
 mshiftright = (a) ->
-	n = MLENGTH(a)
-	c = 0
-	for i in [0...n]
-		if (a[i] & 1)
-			a[i] = (a[i] >> 1) | c
-			c = 0x80000000
-		else
-			a[i] = (a[i] >> 1) | c
-			c = 0
-	if (n > 1 && a[n - 1] == 0)
-		# !!! fu
-		#MLENGTH(a) = n - 1
-		fu = true
+	a = a.shiftRight()

@@ -341,18 +341,14 @@ build_tensor = (n) ->
 
 	i = 0
 
-	s = 0
-
 	save()
-
-	s = stack + tos - n
 
 	p2 = alloc_tensor(n)
 	p2.tensor.ndim = 1
 	p2.tensor.dim[0] = n
 	for i in [0...n]
 		# !!!! this is wrong here
-		p2.tensor.elem[i] = s[i]
+		p2.tensor.elem[i] = stack[tos-n+i]
 
 	tos -= n
 

@@ -248,9 +248,14 @@ MAXDIM = 24
 
 class tensor
 	ndim: 0
-	dim: (0 for [0..MAXDIM])
+	dim: null
 	nelem: 0
 	elem: null #U *elem[1]
+
+	constructor: ->
+		@dim = (0 for [0..MAXDIM])
+		@elem = []
+
 
 class display
 	h: 0

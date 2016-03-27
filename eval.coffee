@@ -8,10 +8,12 @@
 #include "defs.h"
 
 Eval = ->
-	debugger
+	#debugger
 	check_esc_flag()
 	save()
 	p1 = pop()
+	if !p1?
+		debugger
 	switch (p1.k)
 		when CONS
 			Eval_cons()

@@ -27,6 +27,8 @@ tos = 0
 
 # p is a U
 push = (p) ->
+	if !p?
+		debugger
 	if (tos >= frame)
 		stop("stack overflow")
 	stack[tos++] = p
@@ -34,7 +36,10 @@ push = (p) ->
 # returns a U
 pop = ->
 	if (tos == 0)
+		debugger
 		stop("stack underflow")
+	if !stack[tos-1]?
+		debugger
 	elementToBeReturned = stack[--tos]
 	return elementToBeReturned
 
