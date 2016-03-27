@@ -9,7 +9,6 @@ MP_MAX_FREE  = 1000
 #int ge(unsigned int *, unsigned int *, int)
 
 mtotal = 0
-mfreecount = 0
 free_stack = []
 
 # n is an int
@@ -242,8 +241,6 @@ compare_rationals = (a, b) ->
 	ab = mmul(a.q.a, b.q.b)
 	ba = mmul(a.q.b, b.q.a)
 	t = mcmp(ab, ba)
-	mfree(ab)
-	mfree(ba)
 	return t
 
 # a and b are Us
@@ -445,6 +442,7 @@ push_double = (d) ->
 
 # a,b parts of a rational
 push_rational = (a,b) ->
+	###
 	save()
 	p1 = new U()
 	p1.k = NUM
@@ -453,6 +451,13 @@ push_rational = (a,b) ->
 	## FIXME -- normalize ##
 	push(p1)
 	restore()
+	###
+
+	p = new U()
+	p.k = NUM
+	p.q.a = bigInt(a)
+	p.q.b = bigInt(b)
+	push(p)
 
 pop_integer = ->
 	n = 0
@@ -536,21 +541,14 @@ print_number = (p) ->
 	buf = ""
 	switch (p.k)
 		when NUM
-			s = mstr(p.q.a)
-			if (s[0] == '+' || s[0] == '-')
-				s++
-			print_str(s)
+			s = p.q.a.toString()
+			console.log(s)
 			if (isfraction(p))
-				print_str("/")
-				s = mstr(p.q.b)
-				print_str(s)
+				console.log("/")
+				s = p.q.b.toString()
+				console.log(s)
 		when DOUBLE
-			# !!!! sprintf fucked here
-			sprintf(buf, "%g", p.d)
-			if (buf[0] == '+' || buf[0] == '-')
-				print_str(buf + 1)
-			else
-				print_str(buf)
+			console.log(p,d)
 
 gcd_numbers = ->
 	save()
@@ -622,10 +620,8 @@ __factorial = (n) ->
 	for i in [3..n]
 		b[0] = Math.floor(i)
 		t = mmul(a, b)
-		mfree(a)
 		a = t
 
-	mfree(b)
 
 	return a
 

@@ -28,19 +28,21 @@ class rational
 	b: null # a bigInteger
 
 class U
-	cons: {} # will have a car and cdr
+	cons: null # will have a car and cdr
 	printname: ""
 	str: ""
 	tensor: null
 	# rational number a over b
-	q: new rational() # will point to a rational
+	q: null # will point to a rational
 	d: 0.0 # a double
 	k: 0
 	tag: 0
 
 	constructor: ->
-		cons.car = null
-		cons.cdr = null
+		@cons = {}
+		@cons.car = null
+		@cons.cdr = null
+		@q = new rational()
 
 # the following enum is for struct U, member k
 

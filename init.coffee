@@ -204,9 +204,13 @@ init = ->
 
 	# i is the square root of -1 i.e. -1 ^ 1/2
 	push_symbol(POWER)
+	print1(stack[tos-1])
 	push_integer(-1)
+	print1(stack[tos-1])
 	push_rational(1, 2)
+	print1(stack[tos-1])
 	list(3)
+	print1(stack[tos-1])
 	imaginaryunit = pop()	# must be untagged in gc
 
 	defn()
@@ -234,6 +238,9 @@ defn = ->
 		console.log "scanning " + defn_str[i]
 		scan(defn_str[i])
 		console.log "... evaling " + defn_str[i]
+		console.log("top of stack:")
+		debugger
+		print1(stack[tos-1])
 		debugger
 		Eval()
 		pop()

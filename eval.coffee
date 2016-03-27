@@ -421,6 +421,7 @@ Eval_setq = ->
 	if (!issymbol(cadr(p1)))
 		stop("symbol assignment: error in symbol")
 
+	debugger
 	push(caddr(p1))
 	Eval()
 	p2 = pop()
