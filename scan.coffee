@@ -368,8 +368,8 @@ get_next_token = ->
 			break
 		newline_flag = 1
 	console.log "get_next_token token: " + token
-	if token == ')'
-		debugger
+	#if token == ')'
+	#	debugger
 
 get_token = ->
 	# skip spaces

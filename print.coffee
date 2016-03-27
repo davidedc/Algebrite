@@ -1,5 +1,4 @@
 print1 = (p) ->
-	debugger
 	switch (p.k)
 		when CONS
 			console.log("(");

@@ -8,6 +8,7 @@
 #include "defs.h"
 
 Eval = ->
+	debugger
 	check_esc_flag()
 	save()
 	p1 = pop()
@@ -421,7 +422,6 @@ Eval_setq = ->
 	if (!issymbol(cadr(p1)))
 		stop("symbol assignment: error in symbol")
 
-	debugger
 	push(caddr(p1))
 	Eval()
 	p2 = pop()

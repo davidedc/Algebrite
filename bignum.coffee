@@ -11,6 +11,19 @@ MP_MAX_FREE  = 1000
 mtotal = 0
 free_stack = []
 
+makeSignSameAs = (a,b) ->
+	if a.isPositive
+		if b.isNegative
+			b = b.multiply bigInt -1
+	else
+		# a is negative
+		if b.isPositive
+			b = b.multiply bigInt -1
+
+makePositive = (a) ->
+	if a.isNegative
+		a = a.multiply bigInt -1
+
 # n is an int
 ###
 mnew = (n) ->
