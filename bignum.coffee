@@ -537,19 +537,28 @@ bignum_scan_float = (s) ->
 # print as unsigned
 
 # p is a U
-print_number = (p) ->
+print_number = (p, accumulator) ->
+	topLevelCall = false
+	if !accumulator?
+		topLevelCall = true
+		accumulator = ""
+
 	s = ""
 	buf = ""
 	switch (p.k)
 		when NUM
-			s = p.q.a.toString()
-			console.log(s)
+			accumulator += p.q.a.toString()
 			if (isfraction(p))
-				console.log("/")
+				accumulator += ("/")
 				s = p.q.b.toString()
-				console.log(s)
+				accumulator += (s)
 		when DOUBLE
-			console.log(p,d)
+			accumulator += (p.d)
+
+	if topLevelCall
+		console.log accumulator
+	else
+		return accumulator
 
 gcd_numbers = ->
 	save()

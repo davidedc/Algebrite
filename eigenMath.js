@@ -834,22 +834,31 @@ bignum_scan_float = function(s) {
   return push_double(atof(s));
 };
 
-print_number = function(p) {
-  var buf;
+print_number = function(p, accumulator) {
+  var buf, topLevelCall;
+  topLevelCall = false;
+  if (accumulator == null) {
+    topLevelCall = true;
+    accumulator = "";
+  }
   s = "";
   buf = "";
   switch (p.k) {
     case NUM:
-      s = p.q.a.toString();
-      console.log(s);
+      accumulator += p.q.a.toString();
       if (isfraction(p)) {
-        console.log("/");
+        accumulator += "/";
         s = p.q.b.toString();
-        return console.log(s);
+        accumulator += s;
       }
       break;
     case DOUBLE:
-      return console.log(p, d);
+      accumulator += p.d;
+  }
+  if (topLevelCall) {
+    return console.log(accumulator);
+  } else {
+    return accumulator;
   }
 };
 
@@ -969,9 +978,9 @@ cons = function() {
     debugger;
     console.log("something wrong p == its car");
   }
-  console.log("cons new cdr.k = " + p.cons.cdr.k + "or more in detail:");
+  console.log("cons new cdr.k = " + p.cons.cdr.k + "\nor more in detail:");
   print1(p.cons.cdr);
-  console.log("cons new car.k = " + p.cons.car.k + "or more in detail:");
+  console.log("cons new car.k = " + p.cons.car.k + "\nor more in detail:");
   print1(p.cons.car);
   return push(p);
 };
@@ -4646,31 +4655,46 @@ print_factor = function(p) {
   }
 };
 
-print1 = function(p) {
+print1 = function(p, accumulator) {
+  var topLevelCall;
+  topLevelCall = false;
+  if (accumulator == null) {
+    topLevelCall = true;
+    accumulator = "";
+  }
   switch (p.k) {
     case CONS:
-      console.log("(");
-      print1(car(p));
+      accumulator += "(";
+      accumulator = print1(car(p), accumulator);
       p = cdr(p);
       while (iscons(p)) {
-        console.log(" ");
-        print1(car(p));
+        accumulator += " ";
+        accumulator = print1(car(p), accumulator);
         p = cdr(p);
       }
       if (p !== symbol(NIL)) {
-        console.log(" . ");
-        print1(p);
+        accumulator += " . ";
+        accumulator = print1(p, accumulator);
       }
-      return console.log(")");
+      accumulator += ")";
+      break;
     case STR:
-      return console.log(p.str);
+      accumulator += p.str;
+      break;
     case NUM:
     case DOUBLE:
-      return print_number(p);
+      accumulator = print_number(p, accumulator);
+      break;
     case SYM:
-      return console.log(get_printname(p));
+      accumulator += get_printname(p);
+      break;
     default:
-      return console.log("<tensor>");
+      accumulator += "<tensor>";
+  }
+  if (topLevelCall) {
+    return console.log(accumulator);
+  } else {
+    return accumulator;
   }
 };
 
@@ -4840,7 +4864,7 @@ stop = function(s) {
 
 run = function(stringToBeRun) {
   var i, n, results;
-  stringToBeRun = stringToBeRun + "\n";
+  stringToBeRun = stringToBeRun;
   if (stringToBeRun === "selftest") {
     selftest();
     return;
@@ -4851,7 +4875,6 @@ run = function(stringToBeRun) {
   s = 0;
   results = [];
   while (1.) {
-    debugger;
     n = scan(stringToBeRun.substring(s));
     p1 = pop();
     check_stack();
@@ -4860,6 +4883,7 @@ run = function(stringToBeRun) {
     }
     s += n;
     push(p1);
+    debugger;
     top_level_eval();
     p2 = pop();
     check_stack();
@@ -5308,7 +5332,6 @@ error = function(errmsg) {
 
 build_tensor = function(n) {
   var i, l, ref;
-  console.log("build_tensor is not correct");
   i = 0;
   save();
   p2 = alloc_tensor(n);
@@ -5571,6 +5594,10 @@ set_binding = function(p, q) {
     stop("symbol error");
   }
   indexFound = symtab.indexOf(p);
+  if (symtab.indexOf(p, indexFound + 1) !== -1) {
+    console.log("ops, more than one element!");
+  }
+  console.log("lookup >> set_binding lookup " + indexFound);
   binding[indexFound] = q;
   return arglist[indexFound] = symbol(NIL);
 };
@@ -5581,6 +5608,10 @@ get_binding = function(p) {
     stop("symbol error");
   }
   indexFound = symtab.indexOf(p);
+  if (symtab.indexOf(p, indexFound + 1) !== -1) {
+    console.log("ops, more than one element!");
+  }
+  console.log("lookup >> get_binding lookup " + indexFound);
   return binding[indexFound];
 };
 
@@ -5590,6 +5621,10 @@ set_binding_and_arglist = function(p, q, r) {
     stop("symbol error");
   }
   indexFound = symtab.indexOf(p);
+  if (symtab.indexOf(p, indexFound + 1) !== -1) {
+    console.log("ops, more than one element!");
+  }
+  console.log("lookup >> set_binding_and_arglist lookup " + indexFound);
   binding[indexFound] = q;
   return arglist[indexFound] = r;
 };
@@ -5600,6 +5635,10 @@ get_arglist = function(p) {
     stop("symbol error");
   }
   indexFound = symtab.indexOf(p);
+  if (symtab.indexOf(p, indexFound + 1) !== -1) {
+    console.log("ops, more than one element!");
+  }
+  console.log("lookup >> get_arglist lookup " + indexFound);
   return arglist[indexFound];
 };
 
@@ -5609,6 +5648,10 @@ symnum = function(p) {
     stop("symbol error");
   }
   indexFound = symtab.indexOf(p);
+  if (symtab.indexOf(p, indexFound + 1) !== -1) {
+    console.log("ops, more than one element!");
+  }
+  console.log("lookup >> symnum lookup " + indexFound);
   return indexFound;
 };
 

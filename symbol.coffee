@@ -44,6 +44,9 @@ set_binding = (p, q) ->
 	if (p.k != SYM)
 		stop("symbol error")
 	indexFound = symtab.indexOf(p)
+	if symtab.indexOf(p, indexFound + 1) != -1
+		console.log("ops, more than one element!");
+	console.log("lookup >> set_binding lookup " + indexFound);
 	binding[indexFound] = q
 	arglist[indexFound] = symbol(NIL)
 
@@ -52,6 +55,9 @@ get_binding = (p) ->
 	if (p.k != SYM)
 		stop("symbol error")
 	indexFound = symtab.indexOf(p)
+	if symtab.indexOf(p, indexFound + 1) != -1
+		console.log("ops, more than one element!");
+	console.log("lookup >> get_binding lookup " + indexFound);
 	return binding[indexFound]
 
 # p,q,r are all U
@@ -59,6 +65,9 @@ set_binding_and_arglist = (p, q, r) ->
 	if (p.k != SYM)
 		stop("symbol error")
 	indexFound = symtab.indexOf(p)
+	if symtab.indexOf(p, indexFound + 1) != -1
+		console.log("ops, more than one element!");
+	console.log("lookup >> set_binding_and_arglist lookup " + indexFound);
 	binding[indexFound] = q
 	arglist[indexFound] = r
 
@@ -67,6 +76,9 @@ get_arglist = (p) ->
 	if (p.k != SYM)
 		stop("symbol error")
 	indexFound = symtab.indexOf(p)
+	if symtab.indexOf(p, indexFound + 1) != -1
+		console.log("ops, more than one element!");
+	console.log("lookup >> get_arglist lookup " + indexFound);
 	return arglist[indexFound]
 
 # get symbol's number from ptr
@@ -76,6 +88,9 @@ symnum = (p) ->
 	if (p.k != SYM)
 		stop("symbol error")
 	indexFound = symtab.indexOf(p)
+	if symtab.indexOf(p, indexFound + 1) != -1
+		console.log("ops, more than one element!");
+	console.log("lookup >> symnum lookup " + indexFound);
 	return indexFound
 
 # push indexed symbol

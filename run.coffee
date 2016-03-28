@@ -17,7 +17,7 @@ stop = (s) ->
 # s a string here
 run = (stringToBeRun) ->
 
-	stringToBeRun = stringToBeRun + "\n"
+	stringToBeRun = stringToBeRun # + "\n"
 
 	if stringToBeRun == "selftest"
 		selftest()
@@ -34,7 +34,6 @@ run = (stringToBeRun) ->
 
 	while (1)
 
-		debugger
 		n = scan(stringToBeRun.substring(s))
 
 		p1 = pop()
@@ -56,6 +55,7 @@ run = (stringToBeRun) ->
 		s += n
 
 		push(p1)
+		debugger
 		top_level_eval()
 
 		p2 = pop()

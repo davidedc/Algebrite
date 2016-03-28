@@ -341,7 +341,6 @@ error = (errmsg) ->
 
 # takes an integer
 build_tensor = (n) ->
-	console.log "build_tensor is not correct"
 	# int i, j, k, ndim, nelem
 
 	i = 0
@@ -352,7 +351,6 @@ build_tensor = (n) ->
 	p2.tensor.ndim = 1
 	p2.tensor.dim[0] = n
 	for i in [0...n]
-		# !!!! this is wrong here
 		p2.tensor.elem[i] = stack[tos-n+i]
 
 	tos -= n

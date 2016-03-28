@@ -28,8 +28,8 @@ cons = ->
 	if p.cons.car == p.cons.car.cons.cdr
 		debugger
 		console.log "something wrong p == its car"
-	console.log "cons new cdr.k = " + p.cons.cdr.k + "or more in detail:"
+	console.log "cons new cdr.k = " + p.cons.cdr.k + "\nor more in detail:"
 	print1 p.cons.cdr
-	console.log "cons new car.k = " + p.cons.car.k + "or more in detail:"
+	console.log "cons new car.k = " + p.cons.car.k + "\nor more in detail:"
 	print1 p.cons.car
 	push(p);
