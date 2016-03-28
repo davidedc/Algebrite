@@ -69,7 +69,7 @@ isposint = (p) ->
 
 # both p,x are U
 ispoly = (p,x) ->
-	if (find(p, x))
+	if (Find(p, x))
 		return ispoly_expr(p, x);
 	else
 		return 0;
@@ -104,7 +104,7 @@ ispoly_factor = (p,x) ->
 			return 1;
 		else
 			return 0;
-	if (find(p, x))
+	if (Find(p, x))
 		return 0;
 	else
 		return 1;
