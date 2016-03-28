@@ -288,10 +288,8 @@ negate_number = ->
 		when NUM
 			p2 = new U()
 			p2.k = NUM
-			p2.q.a = bigInt(p1.q.a)
+			p2.q.a = bigInt(p1.q.a.multiply(bigInt.minusOne))
 			p2.q.b = bigInt(p1.q.b)
-			# !!! fu
-			#MSIGN(p2.q.a) *= -1
 			push(p2)
 		when DOUBLE
 			push_double(-p1.d)

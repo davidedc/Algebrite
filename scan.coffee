@@ -48,6 +48,8 @@ scan = (s) ->
 		debugger
 	if s=="y"
 		debugger
+	if s=="i=sqrt(-1)"
+		debugger
 	scanned = s
 	meta_mode = 0
 	expanding++
