@@ -43,7 +43,7 @@ add_terms = (n) ->
 
 	h = tos - n;
 
-	s = stack + h;
+	s = h;
 
 	# ensure no infinite loop, use "for"
 
@@ -61,7 +61,7 @@ add_terms = (n) ->
 		if (flag == 0)
 			break;
 
-		n = combine_terms(s, n);
+		n = combine_terms(stack[h], n);
 
 	tos = h + n;
 
@@ -257,10 +257,10 @@ add = ->
 
 add_all = (k) ->
 	save();
-	s = stack + tos - k;
+	s = tos - k;
 	h = tos;
 	for i in [0...k]
-		push_terms(s[i]);
+		push_terms(stack[s+i]);
 	add_terms(tos - h);
 	p1 = pop();
 	tos -= k;

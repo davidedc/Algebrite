@@ -85,13 +85,13 @@ bake_poly = ->
 	k = 0
 	n = 0
 	#U **a;
-	a = stack + tos;
+	a = tos;
 	push(p1);		# p(x)
 	push(p2);		# x
 	k = coeff();
 	h = tos;
 	for i in[(k - 1)...0] by -1
-		p1 = a[i];
+		p1 = stack[a+i];
 		bake_poly_term(i);
 	n = tos - h;
 	if (n > 1)
