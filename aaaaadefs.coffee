@@ -322,7 +322,7 @@ isrational = (p) -> (p.k == NUM)
 isdouble = (p) -> (p.k == DOUBLE)
 isnum = (p) -> (isrational(p) || isdouble(p))
 isstr = (p) -> (p.k == STR)
-istensor = (p) -> (p.k == TENSOR)
+istensor = (p) -> (if !p? then debugger else p.k == TENSOR)
 issymbol = (p) -> (p.k == SYM)
 iskeyword = (p) -> (issymbol(p) && symnum(p) < NIL)
 
