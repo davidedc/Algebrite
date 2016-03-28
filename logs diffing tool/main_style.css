@@ -1,0 +1,79 @@
+pre {
+    background-color: white;
+    margin: 5px;
+    white-space: pre;
+    word-wrap: normal;
+    border: none;
+}
+
+button {
+    margin: 5px 5px 5px 20px;
+    width: 100px;
+    height: 35px;
+}
+
+h3 {
+    margin: 10px;
+}
+
+textarea {
+    width: 97%;
+    height: 180px;
+    margin: 5px;
+    font-size: 13px;
+    font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+}
+
+.text {
+    width: 50%;
+}
+
+.wrapper {
+    width: 98%;
+}
+
+.left {
+    float: left;
+    width: 50%;
+}
+
+.right {
+    float: right;
+    width: 49%;
+}
+
+.scroll {
+    height: 600px;
+    overflow-x: scroll;
+    overflow-y: auto;
+}
+
+.inserted {
+    background-color: #9E9;
+    min-width: 100%;
+    display: inline-block;
+}
+
+.deleted {
+    background-color: #E99;
+    min-width: 100%;
+    display: inline-block;
+}
+
+.modified {
+    background-color: #FD8;
+    min-width: 100%;
+    display: inline-block;
+}
+
+.modified-light {
+    background-color: #fcffb6;
+    /*min-width: 100%;*/
+    /*display: inline-block;*/
+}
+
+.padding {
+    background-color: lightgray;
+    min-width: 100%;
+    display: inline-block;
+}
