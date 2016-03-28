@@ -203,4 +203,4 @@ __cmp = (p1, p2) ->
 sort_stack = (n) ->
 	# !!!!! not yet translated
 	console.log "!!! sort_stack not yet translated"
-	qsort(stack + tos - n, n, aaa , __cmp);
+	qsort(stack[tos - n], n, aaa , __cmp);
