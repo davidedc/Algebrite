@@ -120,6 +120,10 @@ body {
 
         var text1 = document.getElementById('original').value;
         var text2 = document.getElementById('edited').value;
+        
+        // customisations to make the two logs similar
+        text2 = text2.replace(/eigenMath\.js:\d* /g, "");
+        text2 = text2.replace(/token: 100/g, "token: \\35");        
 
         var results = formatter.formattedDiff(text1, text2);
 
