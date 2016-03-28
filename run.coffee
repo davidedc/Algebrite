@@ -15,6 +15,7 @@ stop = (s) ->
 		#longjmp(stop_return, 1)
 
 # s a string here
+inited = false
 run = (stringToBeRun) ->
 
 	stringToBeRun = stringToBeRun # + "\n"
@@ -26,7 +27,9 @@ run = (stringToBeRun) ->
 	#if (setjmp(stop_return))
 	#	return
 
-	init()
+	if !inited
+		inited = true
+		init()
 
 	i = 0
 	n = 0
