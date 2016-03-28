@@ -93,6 +93,8 @@ echo_input = (s) ->
 # returns nil on stack if no result to print
 
 top_level_eval = ->
+	console.log "#### top level eval"
+	debugger
 	save()
 
 	trigmode = 0
