@@ -60,7 +60,7 @@ qpowf = ->
 			makeSignSameAs(x,y)
 			makePositive(y)
 
-		p3 = alloc();
+		p3 = new U()
 		p3.k = NUM;
 		p3.q.a = x;
 		p3.q.b = y;
@@ -137,13 +137,13 @@ qpowf = ->
 
 	y = mpow(x, a);
 
-	mfree(x);
+	#mfree(x);
 
-	p3 = alloc();
+	p3 = new U();
 
 	p3.k = NUM;
 
-	if (MSIGN(p2.q.a) == -1)  # p2 is EXPO
+	if (p2.q.a.isNegative())  # p2 is EXPO
 		p3.q.a = bigInt(1);
 		p3.q.b = y;
 	else

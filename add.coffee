@@ -54,14 +54,17 @@ add_terms = (n) ->
 
 		flag = 0;
 
-		console.log "!!!! qsort not implemented"
-		debugger
+		#console.log "!!!! qsort not implemented"
+		#debugger
 		#qsort(s, n, sizeof (U *), cmp_terms);
+		subsetOfStack = stack.slice(h,h+n)
+		subsetOfStack.sort(cmp_terms)
+		stack = stack.splice(0,h-1).concat(subsetOfStack).concat(stack.splice(h+n+1))
 
 		if (flag == 0)
 			break;
 
-		n = combine_terms(stack[h], n);
+		n = combine_terms(h, n);
 
 	tos = h + n;
 
@@ -135,8 +138,8 @@ combine_terms = (s, n) ->
 	for i in [0...n]
 		check_esc_flag();
 
-		p3 = s[i];
-		p4 = s[i + 1];
+		p3 = stack[s+i];
+		p4 = stack[s+i + 1];
 
 		if (istensor(p3) && istensor(p4))
 			push(p3);
@@ -144,9 +147,9 @@ combine_terms = (s, n) ->
 			tensor_plus_tensor();
 			p1 = pop();
 			if (p1 != symbol(NIL))
-				s[i] = p1;
+				stack[s+i] = p1;
 				for j in [(i + 1)...(n - 1)]
-					s[j] = s[j + 1];
+					stack[s+j] = stack[s+j + 1];
 				n--;
 				i--;
 			continue;
@@ -161,12 +164,12 @@ combine_terms = (s, n) ->
 			p1 = pop();
 			if (iszero(p1))
 				for j in [i...(n - 2)]
-					s[j] = s[j + 2];
+					stack[s+j] = stack[s+j + 2];
 				n -= 2;
 			else
-				s[i] = p1;
+				stack[s+i] = p1;
 				for j in [(i + 1)...(n - 1)]
-					s[j] = s[j + 1];
+					stack[s+j] = stack[s+j + 1];
 				n--;
 			i--;
 			continue;
@@ -208,7 +211,7 @@ combine_terms = (s, n) ->
 
 		if (iszero(p1))
 			for j in [i...(n - 2)]
-				s[j] = s[j + 2];
+				stack[s+j] = stack[s+j + 2];
 			n -= 2;
 			i--;
 			continue;
@@ -224,10 +227,10 @@ combine_terms = (s, n) ->
 
 		multiply();
 
-		s[i] = pop();
+		stack[s+i] = pop();
 
 		for j in [(i + 1)...(n - 1)]
-			s[j] = s[j + 1];
+			stack[s+j] = stack[s+j + 1];
 
 		n--;
 		i--;

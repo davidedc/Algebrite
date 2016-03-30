@@ -107,7 +107,8 @@ ge = (a, b, len) ->
 		return 0
 
 add_numbers = ->
-	double a, b
+	a = 1.0
+	b = 1.0
 
 	if (isrational(stack[tos - 1]) && isrational(stack[tos - 2]))
 		qadd()
@@ -159,7 +160,8 @@ subtract_numbers = ->
 	restore()
 
 multiply_numbers = ->
-	double a, b
+	a = 0.0
+	b = 0.0
 
 	if (isrational(stack[tos - 1]) && isrational(stack[tos - 2]))
 		qmul()
