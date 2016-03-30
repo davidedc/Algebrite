@@ -293,7 +293,6 @@ gp = [
 
 # h an int
 combine_gammas = (h) ->
-	int n;
 	n = gp[Math.floor(p1.gamma)][Math.floor(p2.gamma)];
 	if (n < 0)
 		n = -n;
@@ -306,7 +305,6 @@ combine_gammas = (h) ->
 #endif
 
 multiply_noexpand = ->
-	int x;
 	x = expanding;
 	expanding = 0;
 	multiply();
@@ -316,7 +314,6 @@ multiply_noexpand = ->
 
 # n an integer
 multiply_all = (n) ->
-	int h, i;
 	if (n == 1)
 		return;
 	if (n == 0)

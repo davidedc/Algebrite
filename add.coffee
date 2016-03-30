@@ -26,8 +26,8 @@
 
 flag = 0;
 
-eval_add = ->
-	int h = tos;
+Eval_add = ->
+	h = tos;
 	p1 = cdr(p1);
 	while (iscons(p1))
 		push(car(p1));
@@ -47,6 +47,10 @@ add_terms = (n) ->
 
 	# ensure no infinite loop, use "for"
 
+	console.log "stack before adding terms"
+	for i in [0...tos]
+		print1 stack[i]
+
 	for i in [0...10]
 
 		if (n < 2)
@@ -54,12 +58,13 @@ add_terms = (n) ->
 
 		flag = 0;
 
+
 		#console.log "!!!! qsort not implemented"
 		#debugger
 		#qsort(s, n, sizeof (U *), cmp_terms);
 		subsetOfStack = stack.slice(h,h+n)
 		subsetOfStack.sort(cmp_terms)
-		stack = stack.splice(0,h-1).concat(subsetOfStack).concat(stack.splice(h+n+1))
+		stack = stack.slice(0,h).concat(subsetOfStack).concat(stack.slice(h+n))
 
 		if (flag == 0)
 			break;
@@ -79,6 +84,10 @@ add_terms = (n) ->
 			push(p1);
 			cons();
 
+	console.log "stack after adding terms"
+	for i in [0...tos]
+		print1 stack[i]
+
 # Compare terms for order, clobbers p1 and p2.
 
 cmp_terms = (p1, p2) ->
@@ -87,21 +96,27 @@ cmp_terms = (p1, p2) ->
 
 	if (isnum(p1) && isnum(p2))
 		flag = 1;
+		console.log "cmp_terms returns 0"
 		return 0;
 
 	# congruent tensors can be combined
 
 	if (istensor(p1) && istensor(p2))
 		if (p1.tensor.ndim < p2.tensor.ndim)
+			console.log "cmp_terms returns -1"
 			return -1;
 		if (p1.tensor.ndim > p2.tensor.ndim)
+			console.log "cmp_terms returns 1"
 			return 1;
 		for i in [0...p1.tensor.ndim]
 			if (p1.tensor.dim[i] < p2.tensor.dim[i])
+				console.log "cmp_terms returns -1"
 				return -1;
 			if (p1.tensor.dim[i] > p2.tensor.dim[i])
+				console.log "cmp_terms returns 1"
 				return 1;
 		flag = 1;
+		console.log "cmp_terms returns 0"
 		return 0;
 
 	if (car(p1) == symbol(MULTIPLY))
@@ -123,6 +138,7 @@ cmp_terms = (p1, p2) ->
 	if (t == 0)
 		flag = 1;
 
+	console.log "cmp_terms returns " + t
 	return t;
 
 ###
@@ -135,7 +151,8 @@ cmp_terms = (p1, p2) ->
 
 combine_terms = (s, n) ->
 
-	for i in [0...n]
+	debugger
+	for i in [0...(n-1)]
 		check_esc_flag();
 
 		p3 = stack[s+i];

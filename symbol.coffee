@@ -58,7 +58,9 @@ get_binding = (p) ->
 	if symtab.indexOf(p, indexFound + 1) != -1
 		console.log("ops, more than one element!");
 	console.log("lookup >> get_binding lookup " + indexFound);
-	if indexFound == 122
+	#if indexFound == 122
+	#	debugger
+	if indexFound == 137
 		debugger
 	return binding[indexFound]
 

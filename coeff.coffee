@@ -7,7 +7,7 @@
 #define X p2
 #define N p3
 
-eval_coeff = ->
+Eval_coeff = ->
 	push(cadr(p1));			# 1st arg, p
 	eval();
 

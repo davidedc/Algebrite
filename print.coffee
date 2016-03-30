@@ -221,3 +221,29 @@ print1 = (p, accumulator) ->
 	else
 		return accumulator
 
+print_multiply_sign = ->
+	if (test_flag == 0)
+		print_str(" ");
+	else
+		print_str("*");
+
+is_denominator = (p) ->
+	if (car(p) == symbol(POWER) && cadr(p) != symbol(E) && isnegativeterm(caddr(p)))
+		return 1;
+	else
+		return 0;
+
+# don't consider the leading fraction
+# we want 2/3*a*b*c instead of 2*a*b*c/3
+
+any_denominators = (p) ->
+	p = cdr(p);
+	#	if (isfraction(car(p)))
+	#		return 1;
+	while (iscons(p))
+		q = car(p);
+		if (is_denominator(q))
+			return 1;
+		p = cdr(p);
+	return 0;
+

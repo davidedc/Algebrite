@@ -33,11 +33,11 @@ run = (stringToBeRun) ->
 
 	i = 0
 	n = 0
-	s = 0
+	indexOfPartRemainingToBeParsed = 0
 
 	while (1)
 
-		n = scan(stringToBeRun.substring(s))
+		n = scan(stringToBeRun.substring(indexOfPartRemainingToBeParsed))
 
 		p1 = pop()
 		check_stack()
@@ -55,7 +55,7 @@ run = (stringToBeRun) ->
 		#		printchar('\n')
 		#}
 
-		s += n
+		indexOfPartRemainingToBeParsed += n
 
 		push(p1)
 		debugger
@@ -150,19 +150,20 @@ top_level_eval = ->
 		subst()
 		p2 = pop()
 
-	#ifndef LINUX
+	#ifndef LINUX ----------------------
 
 	# if we evaluated the symbol "a" and got "b" then print "a=b"
 
 	# do not print "a=a"
 
-	if (issymbol(p1) && !iskeyword(p1) && p1 != p2 && test_flag == 0)
-		push_symbol(SETQ)
-		push(p1)
-		push(p2)
-		list(3)
-		p2 = pop()
-	#endif
+	#if (issymbol(p1) && !iskeyword(p1) && p1 != p2 && test_flag == 0)
+	#	push_symbol(SETQ)
+	#	push(p1)
+	#	push(p2)
+	#	list(3)
+	#	p2 = pop()
+	#endif -----------------------------
+
 	push(p2)
 
 	restore()

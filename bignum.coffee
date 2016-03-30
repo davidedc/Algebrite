@@ -110,6 +110,9 @@ add_numbers = ->
 	a = 1.0
 	b = 1.0
 
+	console.log("add_numbers adding numbers: " + print1(stack[tos - 1], "") + " and " + print1(stack[tos - 2], ""))
+	debugger
+
 	if (isrational(stack[tos - 1]) && isrational(stack[tos - 2]))
 		qadd()
 		return

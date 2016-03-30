@@ -10,7 +10,7 @@
 #include "stdafx.h"
 #include "defs.h"
 
-eval_power = ->
+Eval_power = ->
 	push(cadr(p1));
 	eval();
 	push(caddr(p1));

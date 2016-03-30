@@ -179,7 +179,6 @@ ssqrt = ->
 	power();
 
 yyexpand = ->
-	int x;
 	x = expanding;
 	expanding = 1;
 	eval();
