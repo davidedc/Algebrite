@@ -3,7 +3,7 @@
 #include "stdafx.h"
 #include "defs.h"
 
-eval_abs = ->
+Eval_abs = ->
 	push(cadr(p1));
 	eval();
 	absval();

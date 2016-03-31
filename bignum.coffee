@@ -533,7 +533,7 @@ bignum_scan_integer = (s) ->
 
 # s a string
 bignum_scan_float = (s) ->
-	push_double(atof(s))
+	push_double(parseInt(s))
 
 # print as unsigned
 

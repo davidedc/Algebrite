@@ -120,7 +120,7 @@ isnegativeterm = (p) ->
 isimaginarynumber = (p) ->
 	if ((car(p) == symbol(MULTIPLY) \
 	&& length(p) == 3 \
-	&& isnum(cadr(p)) '' \
+	&& isnum(cadr(p)) \
 	&& equal(caddr(p), imaginaryunit)) \
 	|| equal(p, imaginaryunit))
 		return 1;
