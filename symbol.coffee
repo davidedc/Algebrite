@@ -95,7 +95,7 @@ symnum = (p) ->
 	if symtab.indexOf(p, indexFound + 1) != -1
 		console.log("ops, more than one element!");
 	console.log("lookup >> symnum lookup " + indexFound);
-	if indexFound == 0
+	if indexFound == 88
 		debugger
 	return indexFound
 

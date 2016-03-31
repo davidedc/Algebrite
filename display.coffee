@@ -842,7 +842,7 @@ print_it = ->
 	for i in [0...yindex]
 
 		while (chartab[i].y > y)
-			printchar('\n');
+			accumulatedPrint = printchar('\n', accumulatedPrint);
 			x = 0;
 			y++;
 

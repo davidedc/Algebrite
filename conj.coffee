@@ -8,7 +8,7 @@ Eval_conj = ->
 	Eval();
 	p1 = pop();
 	push(p1);
-	if (!find(p1, imaginaryunit)) # example: (-1)^(1/3)
+	if (!Find(p1, imaginaryunit)) # example: (-1)^(1/3)
 		polar();
 		conjugate();
 		clockform();
