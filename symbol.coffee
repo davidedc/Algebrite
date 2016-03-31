@@ -95,8 +95,8 @@ symnum = (p) ->
 	if symtab.indexOf(p, indexFound + 1) != -1
 		console.log("ops, more than one element!");
 	console.log("lookup >> symnum lookup " + indexFound);
-	#if indexFound == 1
-	#	debugger
+	if indexFound == 0
+		debugger
 	return indexFound
 
 # push indexed symbol

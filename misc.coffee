@@ -181,7 +181,7 @@ ssqrt = ->
 yyexpand = ->
 	x = expanding;
 	expanding = 1;
-	eval();
+	Eval();
 	expanding = x;
 
 exponential = ->

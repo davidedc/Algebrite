@@ -150,7 +150,16 @@ cmp_terms = (p1, p2) ->
 combine_terms = (s, n) ->
 
 	#debugger
-	for i in [0...(n-1)]
+
+	# I had to turn the coffeescript for loop into
+	# a more mundane while loop because the i
+	# variable was changed from within the body,
+	# which is something that is not supposed to
+	# happen in the coffeescript 'vector' form.
+	# Also this means I had to add a 'i++' jus before
+	# the end of the body and before the "continue"s
+	i=0
+	while i < (n-1)
 		check_esc_flag();
 
 		p3 = stack[s+i];
@@ -167,9 +176,13 @@ combine_terms = (s, n) ->
 					stack[s+j] = stack[s+j + 1];
 				n--;
 				i--;
+
+			i++
 			continue;
 
 		if (istensor(p3) || istensor(p4))
+
+			i++
 			continue;
 
 		if (isnum(p3) && isnum(p4))
@@ -187,9 +200,13 @@ combine_terms = (s, n) ->
 					stack[s+j] = stack[s+j + 1];
 				n--;
 			i--;
+
+			i++
 			continue;
 
 		if (isnum(p3) || isnum(p4))
+
+			i++
 			continue;
 
 		p1 = one;
@@ -216,6 +233,8 @@ combine_terms = (s, n) ->
 					p4 = car(p4);
 
 		if (!equal(p3, p4))
+
+			i++
 			continue;
 
 		push(p1);
@@ -229,6 +248,8 @@ combine_terms = (s, n) ->
 				stack[s+j] = stack[s+j + 2];
 			n -= 2;
 			i--;
+
+			i++
 			continue;
 
 		push(p1);
@@ -249,6 +270,9 @@ combine_terms = (s, n) ->
 
 		n--;
 		i--;
+
+	  	# this i++ is to match the while
+		i++
 
 	return n;
 

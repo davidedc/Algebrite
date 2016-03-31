@@ -110,6 +110,7 @@ add_numbers = ->
 	b = 1.0
 
 	console.log("add_numbers adding numbers: " + print1(stack[tos - 1], "") + " and " + print1(stack[tos - 2], ""))
+	debugger
 
 	if (isrational(stack[tos - 1]) && isrational(stack[tos - 2]))
 		qadd()
@@ -130,7 +131,8 @@ add_numbers = ->
 	else
 		b = convert_rational_to_double(p2)
 
-	push_double(a + b)
+	theResult = a+b
+	push_double(theResult)
 
 	restore()
 
@@ -370,8 +372,8 @@ bignum_power_number = (expo) ->
 
 	p1 = pop()
 
-	a = mpow(p1.q.a, abs(expo))
-	b = mpow(p1.q.b, abs(expo))
+	a = mpow(p1.q.a, Math.abs(expo))
+	b = mpow(p1.q.b, Math.abs(expo))
 
 	if (expo < 0)
 		t = a
@@ -399,40 +401,10 @@ convert_bignum_to_double = (p) ->
 
 # p is a U
 convert_rational_to_double = (p) ->
-	console.log '!!!! convert_rational_to_double not properly translated due to MLENGTH'
-	i = 0
-	n = 0
-	na = 0
-	nb = 0
-	a = 0.0
-	b = 0.0
+	quotientAndRemainder = p.q.a.divmod(p.q.b)
+	result = quotientAndRemainder.quotient + quotientAndRemainder.remainder / p.q.b.toJSNumber()
 
-	na = MLENGTH(p.q.a)
-	nb = MLENGTH(p.q.b)
-
-	if (na < nb)
-		n = na
-	else
-		n = nb
-
-	for i in [0...n]
-		a = a / 4294967296.0 + p.q.a[i]
-		b = b / 4294967296.0 + p.q.b[i]
-
-	if (na > nb)
-		for i in [nb...na]
-			a = a / 4294967296.0 + p.q.a[i]
-			b = b / 4294967296.0
-
-	if (na < nb)
-		for i in [na...nb]
-			a = a / 4294967296.0
-			b = b / 4294967296.0 + p.q.b[i]
-
-	if (MSIGN(p.q.a) == -1)
-		a = -a
-
-	return a / b
+	return result
 
 # n an integer
 push_integer = (n) ->
@@ -482,7 +454,13 @@ pop_integer = ->
 
 	switch (p1.k)
 
-		when NUM, DOUBLE
+		when NUM
+			if (isinteger(p1) && p1.q.a.isSmall)
+				n = p1.q.a.toJSNumber()
+			else
+				n = 0x80000000
+
+		when DOUBLE
 			n = Math.floor p1.q.a
 
 		else

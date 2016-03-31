@@ -5,7 +5,7 @@
 
 Eval_abs = ->
 	push(cadr(p1));
-	eval();
+	Eval();
 	absval();
 
 absval = ->
@@ -79,7 +79,7 @@ absval_tensor = ->
 	push_rational(1, 2);
 	power();
 	simplify();
-	eval();
+	Eval();
 
 #if SELFTEST
 

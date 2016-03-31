@@ -232,11 +232,11 @@ defn_str = ["e=exp(1)",
 
 defn = ->
 	i = 0
-	n = 0
 	n = defn_str.length
 	for i in [0...n]
-		scan(defn_str[i])
-		console.log "... evaling " + defn_str[i]
+		definitionOfInterest = defn_str[i]
+		scan(definitionOfInterest)
+		console.log "... evaling " + definitionOfInterest
 		console.log("top of stack:")
 		print1(stack[tos-1])
 		Eval()

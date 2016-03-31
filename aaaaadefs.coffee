@@ -23,6 +23,12 @@ NSYM = 1000
 #                       |_______|    |_______|    |_______|
 
 
+# primetab will be re-defined later by
+# a dedicate .js file that will be loaded
+# last, this is a placeholder so
+# it becomes a global.
+primetab = []
+
 class rational
 	a: null # a bigInteger
 	b: null # a bigInteger
