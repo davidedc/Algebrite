@@ -3,6 +3,7 @@
 
 # p is a U
 iszero = (p) ->
+	i = 0
 	switch (p.k)
 		when NUM
 			if (MZERO(p.q.a))

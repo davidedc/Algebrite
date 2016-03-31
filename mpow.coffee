@@ -6,24 +6,7 @@
 # a is a bigint, n is a small normal int
 mpow = (a,n) ->
 
-	aa = bigInt(1);
-
-	while 1
-
-		if (n & 1)
-			t = mmul(aa, a);
-			aa = t;
-
-		n >>= 1;
-
-		if (n == 0)
-			break;
-
-		t = mmul(a, a);
-		a = t;
-
-
-	return aa;
+	return a.pow n;
 
 #if SELFTEST
 

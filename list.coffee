@@ -5,6 +5,7 @@
 
 # n is an integer
 list = (n) ->
+	i = 0
 	push(symbol(NIL));
 	for i in [0...n]
 		cons()

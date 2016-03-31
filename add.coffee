@@ -39,7 +39,10 @@ Eval_add = ->
 
 # Add n terms, returns one expression on the stack.
 
+stackAddsCount = 0
 add_terms = (n) ->
+	stackAddsCount++
+	i = 0
 
 	h = tos - n;
 
@@ -82,7 +85,9 @@ add_terms = (n) ->
 			push(p1);
 			cons();
 
-	console.log "stack after adding terms"
+	console.log "stack after adding terms #" + stackAddsCount
+	if stackAddsCount == 28
+		debugger
 	for i in [0...tos]
 		print1 stack[i]
 
@@ -90,6 +95,7 @@ add_terms = (n) ->
 
 cmp_terms = (p1, p2) ->
 
+	i = 0
 	# numbers can be combined
 
 	if (isnum(p1) && isnum(p2))
@@ -298,6 +304,7 @@ add = ->
 	restore();
 
 add_all = (k) ->
+	i = 0
 	save();
 	s = tos - k;
 	h = tos;

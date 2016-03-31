@@ -314,6 +314,7 @@ multiply_noexpand = ->
 
 # n an integer
 multiply_all = (n) ->
+	i = 0
 	if (n == 1)
 		return;
 	if (n == 0)
@@ -420,6 +421,7 @@ negate_noexpand = ->
 # h is an int
 __normalize_radical_factors = (h) ->
 
+	i = 0
 	# if coeff is 1 or floating then don't bother
 
 	if (isplusone(stack[h]) || isminusone(stack[h]) || isdouble(stack[h]))

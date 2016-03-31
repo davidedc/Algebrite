@@ -23,6 +23,10 @@ Eval_tensor = ->
 	#
 	#---------------------------------------------------------------------
 
+	if p1.tensor.nelem != p1.tensor.elem.length
+		console.log "something wrong in tensor dimensions"
+		debugger
+
 	nelem = p1.tensor.nelem;
 
 	ndim = p1.tensor.ndim;
@@ -43,11 +47,23 @@ Eval_tensor = ->
 	a = p1.tensor.elem;
 	b = p2.tensor.elem;
 
+	if p2.tensor.nelem != p2.tensor.elem.length
+		console.log "something wrong in tensor dimensions"
+		debugger
+
 	for i in [0...nelem]
+		#console.log "push/pop: pushing element a of " + i
 		push(a[i]);
 		Eval();
+		#console.log "push/pop: popping into element b of " + i
 		b[i] = pop();
 
+	if p1.tensor.nelem != p1.tensor.elem.length
+		console.log "something wrong in tensor dimensions"
+		debugger
+	if p2.tensor.nelem != p2.tensor.elem.length
+		console.log "something wrong in tensor dimensions"
+		debugger
 	#---------------------------------------------------------------------
 	#
 	#	push the result
@@ -304,6 +320,7 @@ d_tensor_scalar = ->
 
 compare_tensors = (p1, p2) ->
 
+	i = 0
 	if (p1.tensor.ndim < p2.tensor.ndim)
 		return -1;
 
@@ -375,6 +392,11 @@ power_tensor = ->
 		p1.tensor.dim[1] = n;
 		for i in [0...n]
 			p1.tensor.elem[n * i + i] = one;
+
+		if p1.tensor.nelem != p1.tensor.elem.length
+			console.log "something wrong in tensor dimensions"
+			debugger
+
 		push(p1);
 		return;
 
@@ -408,6 +430,14 @@ copy_tensor = ->
 
 	for i in [0...p1.tensor.nelem]
 		p2.tensor.elem[i] = p1.tensor.elem[i];
+
+	if p1.tensor.nelem != p1.tensor.elem.length
+		console.log "something wrong in tensor dimensions"
+		debugger
+
+	if p2.tensor.nelem != p2.tensor.elem.length
+		console.log "something wrong in tensor dimensions"
+		debugger
 
 	push(p2);
 
@@ -465,6 +495,14 @@ promote_tensor = ->
 		p2 = p1.tensor.elem[i];
 		for j in [0...p2.tensor.nelem]
 			p3.tensor.elem[k++] = p2.tensor.elem[j];
+
+	if p2.tensor.nelem != p2.tensor.elem.length
+		console.log "something wrong in tensor dimensions"
+		debugger
+
+	if p3.tensor.nelem != p3.tensor.elem.length
+		console.log "something wrong in tensor dimensions"
+		debugger
 
 	push(p3);
 

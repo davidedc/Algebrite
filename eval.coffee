@@ -451,7 +451,8 @@ Eval_subst = ->
 	Eval() # normalize
 
 Eval_unit = ->
-	#int i, n
+	i = 0
+	n = 0
 	push(cadr(p1))
 	Eval()
 	n = pop_integer()
@@ -464,6 +465,9 @@ Eval_unit = ->
 	p1.tensor.dim[1] = n
 	for i in [0...n]
 		p1.tensor.elem[n * i + i] = one
+	if p1.tensor.nelem != p1.tensor.elem.length
+		console.log "something wrong in tensor dimensions"
+		debugger
 	push(p1)
 
 Eval_noexpand = ->

@@ -42,6 +42,7 @@ simplify_main = ->
 	push(p1);
 
 simplify_tensor = ->
+	i = 0
 	p2 = alloc_tensor(p1.tensor.nelem);
 	p2.tensor.ndim = p1.tensor.ndim;
 	for i in [0...p1.tensor.ndim]
@@ -50,6 +51,11 @@ simplify_tensor = ->
 		push(p1.tensor.elem[i]);
 		simplify();
 		p2.tensor.elem[i] = pop();
+
+	if p2.tensor.nelem != p2.tensor.elem.length
+		console.log "something wrong in tensor dimensions"
+		debugger
+
 	if (iszero(p2))
 		p2 = zero; # null tensor becomes scalar zero
 	push(p2);

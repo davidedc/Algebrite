@@ -14,6 +14,7 @@
 #include "defs.h"
 
 subst = ->
+	i = 0
 	save();
 	p3 = pop(); # new expr
 	p2 = pop(); # old expr
@@ -32,6 +33,11 @@ subst = ->
 			push(p3);
 			subst();
 			p4.tensor.elem[i] = pop();
+
+			if p4.tensor.nelem != p4.tensor.elem.length
+				console.log "something wrong in tensor dimensions"
+				debugger
+
 		push(p4);
 	else if (equal(p1, p2))
 		push(p3);

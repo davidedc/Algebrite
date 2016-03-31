@@ -27,6 +27,7 @@ ucmp = (a,b) ->
 	return a.compareAbs b
 
 test_madd = ->
+	i = 0
 	logout("test madd\n");
 	m = mtotal;
 	for i in [-100...100]
@@ -57,6 +58,7 @@ test_maddf = (na, nb, nc) ->
 	errout();
 
 test_msub = ->
+	i = 0
 	logout("test msub\n");
 	m = mtotal;
 	for i in [-100..100]

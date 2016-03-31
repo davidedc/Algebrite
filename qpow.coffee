@@ -51,8 +51,8 @@ qpowf = ->
 			list(3);
 			return;
 
-		x = mpow(p1.q.a, abs(expo));  # p1 is BASE
-		y = mpow(p1.q.b, abs(expo)); # p1 is BASE
+		x = mpow(p1.q.a, Math.abs(expo));  # p1 is BASE
+		y = mpow(p1.q.b, Math.abs(expo)); # p1 is BASE
 		if (expo < 0)
 			t = x;
 			x = y;

@@ -34,6 +34,7 @@ inner = ->
 # inner product of tensors p1 and p2
 inner_f = ->
 
+	i = 0
 	n = p1.tensor.dim[p1.tensor.ndim - 1];
 
 	if (n != p2.tensor.dim[0])

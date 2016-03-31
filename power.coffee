@@ -100,7 +100,7 @@ yypower = ->
 	if (expanding && isadd(p1) && isnum(p2))
 		push(p2);
 		n = pop_integer();
-		if (n > 1)
+		if (n > 1 && n != 0x80000000)
 			power_sum(n);
 			return;
 
@@ -253,7 +253,7 @@ power_sum = (n) ->
 			push(car(p1));
 			push_integer(j);
 			power();
-			frame[(i) * (n + 1) + (j)] = pop();
+			stack[frame + (i) * (n + 1) + (j)] = pop();
 		p1 = cdr(p1);
 
 	push_integer(n);
@@ -266,8 +266,6 @@ power_sum = (n) ->
 	push(zero);
 
 	multinomial_sum(k, n, a, 0, n);
-
-	free(a);
 
 	pop_frame(k * (n + 1));
 
@@ -321,7 +319,7 @@ multinomial_sum = (k,n,a,i,m) ->
 	# factors
 
 	for j in [0...k]
-		push(A(j, a[j]));
+		push(stack[frame + (j) * (n + 1) + a[j]]);
 		multiply();
 
 	add();

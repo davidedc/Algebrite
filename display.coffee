@@ -29,8 +29,8 @@ class glyph
 
 # will contain glyphs
 chartab = []
-for i in [0...YMAX]
-	chartab[i] = new glyph()
+for charTabIndex in [0...YMAX]
+	chartab[charTabIndex] = new glyph()
 
 
 yindex = 0
@@ -658,6 +658,7 @@ emit_subexpr = (p) ->
 
 emit_symbol = (p) ->
 
+	i = 0
 	if (p == symbol(E))
 		__emit_str("exp(1)");
 		return;
@@ -667,6 +668,7 @@ emit_symbol = (p) ->
 		__emit_char(s[i]);
 
 emit_string = (p) ->
+	i = 0
 	s = p.str;
 	for i in [0...s.length]
 		__emit_char(s[i]);
@@ -745,6 +747,7 @@ fixup_power = (k1, k2) ->
 	move(k2, yindex, 0, dy);
 
 move = (j, k, dx, dy) ->
+	i = 0
 	for i in [j...k]
 		chartab[i].x += dx;
 		chartab[i].y += dy;
@@ -752,6 +755,7 @@ move = (j, k, dx, dy) ->
 # finds the bounding rectangle and vertical position
 
 get_size = (j, k)->
+	i = 0
 	min_x = chartab[j].x;
 	max_x = chartab[j].x;
 	min_y = chartab[j].y;
@@ -785,10 +789,12 @@ __emit_char = (c) ->
 	emit_x++;
 
 __emit_str = (s) ->
+	i = 0
 	for i in [0...s.length]
 		__emit_char(s[i]);
 
 emit_number = (p, emit_sign) ->
+	i = 0
 	switch (p.k)
 		when NUM
 			s = p.q.a.toString();
@@ -829,6 +835,7 @@ cmpGlyphs = (a, b) ->
 
 print_it = ->
 
+	i = 0
 	accumulatedPrint = ""
 	#qsort(chartab, yindex, sizeof (struct glyph), __cmp);
 	subsetOfStack = chartab.slice(0,yindex)
@@ -869,6 +876,7 @@ getdisplaystr = ->
 fill_buf = ->
 	s = buffer;
 	sIndex = 0
+	i = 0
 
 	#qsort(chartab, yindex, sizeof (struct glyph), __cmp);
 	subsetOfStack = chartab.slice(0,yindex)
@@ -908,8 +916,8 @@ class oneElement
 	count: 0
 
 elem = []
-for i in [0...10000]
-	elem[i] = new oneElement
+for elelmIndex in [0...10000]
+	elem[elelmIndex] = new oneElement
 
 SPACE_BETWEEN_COLUMNS = 3
 SPACE_BETWEEN_ROWS = 1
@@ -1062,6 +1070,7 @@ emit_flat_tensor = (p) ->
 	emit_tensor_inner(p, 0, 0);
 
 emit_tensor_inner = (p, j, k) ->
+	i = 0
 	__emit_char('(');
 	for i in [0...p.tensor.dim[j]]
 		if (j + 1 == p.tensor.ndim)

@@ -120,6 +120,7 @@ multiply_denominators_factor = (p) ->
 
 __rationalize_tensor = ->
 
+	i = 0
 	push(p1);
 
 	Eval(); # makes a copy
@@ -136,6 +137,11 @@ __rationalize_tensor = ->
 		push(p1.tensor.elem[i]);
 		rationalize();
 		p1.tensor.elem[i] = pop();
+
+	if p1.tensor.nelem != p1.tensor.elem.length
+		console.log "something wrong in tensor dimensions"
+		debugger
+
 
 	push(p1);
 

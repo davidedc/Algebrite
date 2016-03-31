@@ -22,8 +22,14 @@ push_zero_matrix = (i,j) ->
 
 push_identity_matrix = (n) ->
 	push_zero_matrix(n, n);
+	i = 0
 	for i in [0...n]
 		stack[tos - 1].tensor.elem[i * n + i] = one;
+
+	if stack[tos - 1].tensor.nelem != stack[tos - 1].tensor.elem.length
+		console.log "something wrong in tensor dimensions"
+		debugger
+
 
 push_cars = (p) ->
 	while (iscons(p))

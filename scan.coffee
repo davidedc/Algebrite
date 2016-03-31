@@ -355,6 +355,10 @@ build_tensor = (n) ->
 	for i in [0...n]
 		p2.tensor.elem[i] = stack[tos-n+i]
 
+	if p2.tensor.nelem != p2.tensor.elem.length
+		console.log "something wrong in tensor dimensions"
+		debugger
+
 	tos -= n
 
 	push(p2)

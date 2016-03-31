@@ -106,6 +106,7 @@ quickpower = ->
 #if SELFTEST
 
 test_quickfactor = ->
+	i = 0
 	logout("testing quickfactor\n");
 	for i in [2...10001]
 		base = i;

@@ -16,6 +16,7 @@ std_symbol = (s, n) ->
 
 # s is a string
 usr_symbol = (s) ->
+	i = 0
 	for i in [0...NSYM]
 		if (symtab[i].printname == "")
 			# found an entry in the symbol table
@@ -58,8 +59,8 @@ get_binding = (p) ->
 	if symtab.indexOf(p, indexFound + 1) != -1
 		console.log("ops, more than one element!");
 	console.log("lookup >> get_binding lookup " + indexFound);
-	#if indexFound == 122
-	#	debugger
+	if indexFound == 162
+		debugger
 	#if indexFound == 137
 	#	debugger
 	return binding[indexFound]
@@ -88,15 +89,19 @@ get_arglist = (p) ->
 # get symbol's number from ptr
 
 # p is U
+lookupsTotal = 0
 symnum = (p) ->
+	lookupsTotal++
 	if (p.k != SYM)
 		stop("symbol error")
 	indexFound = symtab.indexOf(p)
 	if symtab.indexOf(p, indexFound + 1) != -1
 		console.log("ops, more than one element!");
-	console.log("lookup >> symnum lookup " + indexFound);
-	if indexFound == 88
-		debugger
+	console.log("lookup >> symnum lookup " + indexFound + " lookup # " + lookupsTotal);
+	#if lookupsTotal == 140
+	#	debugger
+	#if indexFound == 79
+	#	debugger
 	return indexFound
 
 # push indexed symbol
@@ -106,6 +111,7 @@ push_symbol = (k) ->
 	push(symtab[k])
 
 clear_symbols = ->
+	i = 0
 	for i in [0...NSYM]
 		binding[i] = symtab[i]
 		arglist[i] = symbol(NIL)

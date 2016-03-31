@@ -95,6 +95,7 @@ mcopy = (a) ->
 
 # and and b arrays of ints, len is an int
 ge = (a, b, len) ->
+	i = 0
 	for i in [0...len]
 		if (a[i] == b[i])
 			continue
@@ -110,7 +111,6 @@ add_numbers = ->
 	b = 1.0
 
 	console.log("add_numbers adding numbers: " + print1(stack[tos - 1], "") + " and " + print1(stack[tos - 2], ""))
-	debugger
 
 	if (isrational(stack[tos - 1]) && isrational(stack[tos - 2]))
 		qadd()
@@ -595,7 +595,7 @@ bignum_factorial = (n) ->
 
 # n is an int
 __factorial = (n) ->
-	int i
+	i = 0
 	#unsigned int *a, *b, *t
 
 	if (n == 0 || n == 1)
@@ -606,10 +606,11 @@ __factorial = (n) ->
 
 	b = bigInt(0)
 
-	for i in [3..n]
-		b[0] = Math.floor(i)
-		t = mmul(a, b)
-		a = t
+	if 3 <= n
+		for i in [3..n]
+			b[0] = Math.floor(i)
+			t = mmul(a, b)
+			a = t
 
 
 	return a

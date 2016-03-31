@@ -3,8 +3,12 @@
 #include "stdafx.h"
 #include "defs.h"
 
+consCount = 0
 cons = ->
-	console.log "cons tos: " + tos
+	consCount++
+	console.log "cons tos: " + tos + " # " + consCount
+	if consCount == 1429
+		debugger
 	# auto var ok, no opportunity for garbage collection after p = alloc()
 	p = new U();
 	p.k = CONS;
@@ -31,8 +35,11 @@ cons = ->
 	#	debugger
 	#	console.log "something wrong p == its car"
 
+	###
 	console.log "cons new cdr.k = " + p.cons.cdr.k + "\nor more in detail:"
 	print1 p.cons.cdr
 	console.log "cons new car.k = " + p.cons.car.k + "\nor more in detail:"
 	print1 p.cons.car
+	###
+
 	push(p);

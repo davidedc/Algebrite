@@ -5,6 +5,7 @@
 
 Find = (p, q) ->
 
+	i = 0
 	if (equal(p, q))
 		return 1;
 

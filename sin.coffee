@@ -4,11 +4,14 @@
 #include "defs.h"
 
 Eval_sin = ->
+	#console.log "sin ---- "
 	push(cadr(p1));
 	Eval();
 	sine();
+	#console.log "sin end ---- "
 
 sine = ->
+	#console.log "sine ---- "
 	save();
 	p1 = pop();
 	if (car(p1) == symbol(ADD))
@@ -16,6 +19,7 @@ sine = ->
 	else
 		sine_of_angle();
 	restore();
+	#console.log "sine end ---- "
 
 # Use angle sum formula for special angles.
 
@@ -23,6 +27,7 @@ sine = ->
 #define B p4
 
 sine_of_angle_sum = ->
+	#console.log "sin of angle sum ---- "
 	p2 = cdr(p1);
 	while (iscons(p2))
 		p4 = car(p2); # p4 is B
@@ -42,9 +47,11 @@ sine_of_angle_sum = ->
 			sine();
 			multiply();
 			add();
+			#console.log "sin of angle sum end ---- "
 			return;
 		p2 = cdr(p2);
 	sine_of_angle();
+	#console.log "sin of angle sum end ---- "
 
 sine_of_angle = ->
 

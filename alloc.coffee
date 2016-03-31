@@ -35,7 +35,9 @@ alloc(void)
 }
 ###
 
+allocatedId = 0
 alloc_tensor = (nelem) ->
+	i = 0
 	p = new U();
 	p.k = TENSOR;
 	p.tensor = new tensor()
@@ -43,6 +45,16 @@ alloc_tensor = (nelem) ->
 	p.tensor.nelem = nelem;
 	for i in [0...nelem]
 		p.tensor.elem[i] = zero;
+
+	p.tensor.allocatedId = allocatedId
+	if allocatedId == 9
+		debugger
+	allocatedId++
+
+	if p.tensor.nelem != p.tensor.elem.length
+		console.log "something wrong in tensor dimensions"
+		debugger
+
 	return p;
 
 ###
