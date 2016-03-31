@@ -58,7 +58,7 @@ run = (stringToBeRun) ->
 		indexOfPartRemainingToBeParsed += n
 
 		push(p1)
-		debugger
+		#debugger
 		top_level_eval()
 
 		p2 = pop()
@@ -75,7 +75,7 @@ run = (stringToBeRun) ->
 			continue
 
 		# in tty mode
-		printline(p2)
+		display(p2)
 
 check_stack = ->
 	if (tos != 0)
@@ -94,7 +94,7 @@ echo_input = (s) ->
 
 top_level_eval = ->
 	console.log "#### top level eval"
-	debugger
+	#debugger
 	save()
 
 	trigmode = 0

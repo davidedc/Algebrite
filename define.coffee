@@ -45,7 +45,7 @@ define_user_function = ->
 
 	if (car(p5) == symbol(EVAL))  # p5 is B
 		push(cadr(p5));  # p5 is B
-		eval();
+		Eval();
 		p5 = pop();  # p5 is B
 
 	set_binding_and_arglist(p3, p5, p4);  # p3 is F  # p4 is A  # p5 is B

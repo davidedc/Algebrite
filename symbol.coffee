@@ -60,8 +60,8 @@ get_binding = (p) ->
 	console.log("lookup >> get_binding lookup " + indexFound);
 	#if indexFound == 122
 	#	debugger
-	if indexFound == 137
-		debugger
+	#if indexFound == 137
+	#	debugger
 	return binding[indexFound]
 
 # p,q,r are all U
@@ -95,6 +95,8 @@ symnum = (p) ->
 	if symtab.indexOf(p, indexFound + 1) != -1
 		console.log("ops, more than one element!");
 	console.log("lookup >> symnum lookup " + indexFound);
+	#if indexFound == 1
+	#	debugger
 	return indexFound
 
 # push indexed symbol

@@ -95,7 +95,6 @@ mcopy = (a) ->
 
 # and and b arrays of ints, len is an int
 ge = (a, b, len) ->
-	debugger
 	for i in [0...len]
 		if (a[i] == b[i])
 			continue
@@ -111,7 +110,6 @@ add_numbers = ->
 	b = 1.0
 
 	console.log("add_numbers adding numbers: " + print1(stack[tos - 1], "") + " and " + print1(stack[tos - 2], ""))
-	debugger
 
 	if (isrational(stack[tos - 1]) && isrational(stack[tos - 2]))
 		qadd()

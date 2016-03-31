@@ -12,9 +12,9 @@
 
 Eval_power = ->
 	push(cadr(p1));
-	eval();
+	Eval();
 	push(caddr(p1));
-	eval();
+	Eval();
 	power();
 
 power = ->

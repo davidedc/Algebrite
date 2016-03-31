@@ -31,7 +31,7 @@ Eval_add = ->
 	p1 = cdr(p1);
 	while (iscons(p1))
 		push(car(p1));
-		eval();
+		Eval();
 		p2 = pop();
 		push_terms(p2);
 		p1 = cdr(p1);
@@ -59,8 +59,6 @@ add_terms = (n) ->
 		flag = 0;
 
 
-		#console.log "!!!! qsort not implemented"
-		#debugger
 		#qsort(s, n, sizeof (U *), cmp_terms);
 		subsetOfStack = stack.slice(h,h+n)
 		subsetOfStack.sort(cmp_terms)
@@ -151,7 +149,7 @@ cmp_terms = (p1, p2) ->
 
 combine_terms = (s, n) ->
 
-	debugger
+	#debugger
 	for i in [0...(n-1)]
 		check_esc_flag();
 

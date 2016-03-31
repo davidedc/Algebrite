@@ -9,13 +9,13 @@
 
 Eval_coeff = ->
 	push(cadr(p1));			# 1st arg, p
-	eval();
+	Eval();
 
 	push(caddr(p1));		# 2nd arg, x
-	eval();
+	Eval();
 
 	push(cadddr(p1));		# 3rd arg, n
-	eval();
+	Eval();
 
 	p3 = pop(); # p3 is N
 	p2 = pop(); # p2 is X
@@ -65,7 +65,7 @@ coeff = ->
 		push(p2);
 		push(zero);
 		subst();
-		eval();
+		Eval();
 
 		p3 = pop();
 		push(p3);

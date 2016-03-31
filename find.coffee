@@ -10,12 +10,12 @@ Find = (p, q) ->
 
 	if (istensor(p))
 		for i in [0...p.tensor.nelem]
-			if (find(p.tensor.elem[i], q))
+			if (Find(p.tensor.elem[i], q))
 				return 1;
 		return 0;
 
 	while (iscons(p))
-		if (find(car(p), q))
+		if (Find(car(p), q))
 			return 1;
 		p = cdr(p);
 

@@ -44,12 +44,12 @@ token_buf = 0
 scanned = ""
 scan = (s) ->
 	console.log "#### scanning " + s
-	if s=="y=x"
-		debugger
-	if s=="y"
-		debugger
-	if s=="i=sqrt(-1)"
-		debugger
+	#if s=="y=x"
+	#	debugger
+	#if s=="y"
+	#	debugger
+	#if s=="i=sqrt(-1)"
+	#	debugger
 	scanned = s
 	meta_mode = 0
 	expanding++
