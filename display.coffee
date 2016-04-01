@@ -663,15 +663,15 @@ emit_symbol = (p) ->
 		__emit_str("exp(1)");
 		return;
 
-	s = get_printname(p);
-	for i in [0...s.length]
-		__emit_char(s[i]);
+	pPrintName = get_printname(p);
+	for i in [0...pPrintName.length]
+		__emit_char(pPrintName[i]);
 
 emit_string = (p) ->
 	i = 0
-	s = p.str;
-	for i in [0...s.length]
-		__emit_char(s[i]);
+	pString = p.str;
+	for i in [0...pString.length]
+		__emit_char(pString[i]);
 
 fixup_fraction = (x, k1, k2) ->
 	dx = 0
@@ -794,27 +794,28 @@ __emit_str = (s) ->
 		__emit_char(s[i]);
 
 emit_number = (p, emit_sign) ->
+	tmpString = ""
 	i = 0
 	switch (p.k)
 		when NUM
-			s = p.q.a.toString();
-			if (s[0] == '-' && emit_sign == 0)
-				s = s.substring(1);
-			for i in [0...s.length]
-				__emit_char(s[i]);
-			s = p.q.b.toString();
-			if (s == "1")
+			tmpString = p.q.a.toString();
+			if (tmpString[0] == '-' && emit_sign == 0)
+				tmpString = tmpString.substring(1);
+			for i in [0...tmpString.length]
+				__emit_char(tmpString[i]);
+			tmpString = p.q.b.toString();
+			if (tmpString == "1")
 				break;
 			__emit_char('/');
-			for i in [0...s.length]
-				__emit_char(s[i]);
+			for i in [0...tmpString.length]
+				__emit_char(tmpString[i]);
 
 		when DOUBLE
-			s = p.d.toString();
-			if (s[0] == '-' && emit_sign == 0)
-				s = s.substring(1);
-			for i in [0...s.length]
-				__emit_char(s[i]);
+			tmpString = p.d.toString();
+			if (tmpString[0] == '-' && emit_sign == 0)
+				tmpString = tmpString.substring(1);
+			for i in [0...tmpString.length]
+				__emit_char(tmpString[i]);
 
 # a and b are glyphs
 cmpGlyphs = (a, b) ->
@@ -874,7 +875,7 @@ getdisplaystr = ->
 	return buffer;
 
 fill_buf = ->
-	s = buffer;
+	tmpBuffer = buffer;
 	sIndex = 0
 	i = 0
 
@@ -890,19 +891,19 @@ fill_buf = ->
 	for i in [0...yindex]
 
 		while (chartab[i].y > y)
-			s[sIndex++] = '\n';
+			tmpBuffer[sIndex++] = '\n';
 			x = 0;
 			y++;
 
 		while (chartab[i].x > x)
-			s[sIndex++] = ' ';
+			tmpBuffer[sIndex++] = ' ';
 			x++;
 
-		s[sIndex++] = chartab[i].c;
+		tmpBuffer[sIndex++] = chartab[i].c;
 
 		x++;
 
-	s[sIndex++] = '\n';
+	tmpBuffer[sIndex++] = '\n';
 
 
 N = 100

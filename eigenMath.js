@@ -857,7 +857,7 @@ add_terms = function(n) {
       cons();
   }
   console.log("stack after adding terms #" + stackAddsCount);
-  if (stackAddsCount === 28) {
+  if (stackAddsCount === 11) {
     debugger;
   }
   results = [];
@@ -1932,21 +1932,21 @@ bignum_scan_float = function(s) {
 };
 
 print_number = function(p, accumulator) {
-  var buf, topLevelCall;
+  var buf, denominatorString, topLevelCall;
   topLevelCall = false;
   if (accumulator == null) {
     topLevelCall = true;
     accumulator = "";
   }
-  s = "";
+  denominatorString = "";
   buf = "";
   switch (p.k) {
     case NUM:
       accumulator += p.q.a.toString();
       if (isfraction(p)) {
         accumulator += "/";
-        s = p.q.b.toString();
-        accumulator += s;
+        denominatorString = p.q.b.toString();
+        accumulator += denominatorString;
       }
       break;
     case DOUBLE:
@@ -3820,27 +3820,27 @@ emit_subexpr = function(p) {
 };
 
 emit_symbol = function(p) {
-  var i, o, ref1, results;
+  var i, o, pPrintName, ref1, results;
   i = 0;
   if (p === symbol(E)) {
     __emit_str("exp(1)");
     return;
   }
-  s = get_printname(p);
+  pPrintName = get_printname(p);
   results = [];
-  for (i = o = 0, ref1 = s.length; 0 <= ref1 ? o < ref1 : o > ref1; i = 0 <= ref1 ? ++o : --o) {
-    results.push(__emit_char(s[i]));
+  for (i = o = 0, ref1 = pPrintName.length; 0 <= ref1 ? o < ref1 : o > ref1; i = 0 <= ref1 ? ++o : --o) {
+    results.push(__emit_char(pPrintName[i]));
   }
   return results;
 };
 
 emit_string = function(p) {
-  var i, o, ref1, results;
+  var i, o, pString, ref1, results;
   i = 0;
-  s = p.str;
+  pString = p.str;
   results = [];
-  for (i = o = 0, ref1 = s.length; 0 <= ref1 ? o < ref1 : o > ref1; i = 0 <= ref1 ? ++o : --o) {
-    results.push(__emit_char(s[i]));
+  for (i = o = 0, ref1 = pString.length; 0 <= ref1 ? o < ref1 : o > ref1; i = 0 <= ref1 ? ++o : --o) {
+    results.push(__emit_char(pString[i]));
   }
   return results;
 };
@@ -3974,36 +3974,37 @@ __emit_str = function(s) {
 };
 
 emit_number = function(p, emit_sign) {
-  var ac, ad, i, o, ref1, ref2, ref3, results, results1;
+  var ac, ad, i, o, ref1, ref2, ref3, results, results1, tmpString;
+  tmpString = "";
   i = 0;
   switch (p.k) {
     case NUM:
-      s = p.q.a.toString();
-      if (s[0] === '-' && emit_sign === 0) {
-        s = s.substring(1);
+      tmpString = p.q.a.toString();
+      if (tmpString[0] === '-' && emit_sign === 0) {
+        tmpString = tmpString.substring(1);
       }
-      for (i = o = 0, ref1 = s.length; 0 <= ref1 ? o < ref1 : o > ref1; i = 0 <= ref1 ? ++o : --o) {
-        __emit_char(s[i]);
+      for (i = o = 0, ref1 = tmpString.length; 0 <= ref1 ? o < ref1 : o > ref1; i = 0 <= ref1 ? ++o : --o) {
+        __emit_char(tmpString[i]);
       }
-      s = p.q.b.toString();
-      if (s === "1") {
+      tmpString = p.q.b.toString();
+      if (tmpString === "1") {
         break;
       }
       __emit_char('/');
       results = [];
-      for (i = ac = 0, ref2 = s.length; 0 <= ref2 ? ac < ref2 : ac > ref2; i = 0 <= ref2 ? ++ac : --ac) {
-        results.push(__emit_char(s[i]));
+      for (i = ac = 0, ref2 = tmpString.length; 0 <= ref2 ? ac < ref2 : ac > ref2; i = 0 <= ref2 ? ++ac : --ac) {
+        results.push(__emit_char(tmpString[i]));
       }
       return results;
       break;
     case DOUBLE:
-      s = p.d.toString();
-      if (s[0] === '-' && emit_sign === 0) {
-        s = s.substring(1);
+      tmpString = p.d.toString();
+      if (tmpString[0] === '-' && emit_sign === 0) {
+        tmpString = tmpString.substring(1);
       }
       results1 = [];
-      for (i = ad = 0, ref3 = s.length; 0 <= ref3 ? ad < ref3 : ad > ref3; i = 0 <= ref3 ? ++ad : --ad) {
-        results1.push(__emit_char(s[i]));
+      for (i = ad = 0, ref3 = tmpString.length; 0 <= ref3 ? ad < ref3 : ad > ref3; i = 0 <= ref3 ? ++ad : --ad) {
+        results1.push(__emit_char(tmpString[i]));
       }
       return results1;
   }
@@ -4062,8 +4063,8 @@ getdisplaystr = function() {
 };
 
 fill_buf = function() {
-  var i, o, ref1, sIndex, subsetOfStack, x, y;
-  s = buffer;
+  var i, o, ref1, sIndex, subsetOfStack, tmpBuffer, x, y;
+  tmpBuffer = buffer;
   sIndex = 0;
   i = 0;
   subsetOfStack = chartab.slice(0, yindex);
@@ -4073,18 +4074,18 @@ fill_buf = function() {
   y = chartab[0].y;
   for (i = o = 0, ref1 = yindex; 0 <= ref1 ? o < ref1 : o > ref1; i = 0 <= ref1 ? ++o : --o) {
     while (chartab[i].y > y) {
-      s[sIndex++] = '\n';
+      tmpBuffer[sIndex++] = '\n';
       x = 0;
       y++;
     }
     while (chartab[i].x > x) {
-      s[sIndex++] = ' ';
+      tmpBuffer[sIndex++] = ' ';
       x++;
     }
-    s[sIndex++] = chartab[i].c;
+    tmpBuffer[sIndex++] = chartab[i].c;
     x++;
   }
-  return s[sIndex++] = '\n';
+  return tmpBuffer[sIndex++] = '\n';
 };
 
 N = 100;
@@ -4998,7 +4999,6 @@ factor = function() {
 };
 
 factor_small_number = function() {
-  debugger;
   var ac, d, expo, i, n, ref1;
   i = 0;
   save();
@@ -8201,7 +8201,8 @@ is_small_integer = function(p) {
 };
 
 quickfactor = function() {
-  var ac, h, i, n, ref1;
+  var ac, h, i, n, ref1, stackIndex;
+  i = 0;
   save();
   p2 = pop();
   p1 = pop();
@@ -8209,10 +8210,10 @@ quickfactor = function() {
   push(p1);
   factor_small_number();
   n = tos - h;
-  s = h;
+  stackIndex = h;
   for (i = ac = 0, ref1 = n; ac < ref1; i = ac += 2) {
-    push(stack[s + i]);
-    push(stack[s + i + 1]);
+    push(stack[stackIndex + i]);
+    push(stack[stackIndex + i + 1]);
     push(p2);
     multiply();
     quickpower();
@@ -8267,6 +8268,9 @@ test_quickfactor = function() {
   i = 0;
   logout("testing quickfactor\n");
   for (i = ac = 2; ac < 10001; i = ++ac) {
+    if (i % 1000 === 0) {
+      alert(i);
+    }
     base = i;
     push_integer(base);
     push_integer(1);
@@ -8296,6 +8300,7 @@ test_quickfactor = function() {
       errout();
     }
   }
+  alert("quickfactor is ok");
   return logout("ok\n");
 };
 
@@ -9181,8 +9186,7 @@ test_low_level = function() {
   test_mprime();
   test_mgcd();
   test_mpow();
-  test_mroot();
-  return test_quickfactor();
+  return test_mroot();
 };
 
 Eval_simplify = function() {

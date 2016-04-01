@@ -18,6 +18,7 @@
 
 
 quickfactor = ->
+	i = 0
 	save();
 
 	p2 = pop(); # p2 is EXPO
@@ -31,11 +32,11 @@ quickfactor = ->
 
 	n = tos - h;
 
-	s = h;
+	stackIndex = h;
 
 	for i in [0...n] by 2
-		push(stack[s+i]);		# factored base
-		push(stack[s + i + 1]);		# factored exponent
+		push(stack[stackIndex+i]);		# factored base
+		push(stack[stackIndex + i + 1]);		# factored exponent
 		push(p2);  # p2 is EXPO
 		multiply();
 		quickpower();
@@ -109,6 +110,8 @@ test_quickfactor = ->
 	i = 0
 	logout("testing quickfactor\n");
 	for i in [2...10001]
+		if i % 1000 == 0
+			alert i
 		base = i;
 		push_integer(base);
 		push_integer(1);
@@ -133,6 +136,7 @@ test_quickfactor = ->
 			print_lisp(p1);
 			print_lisp(p2);
 			errout();
+	alert "quickfactor is ok"
 	logout("ok\n");
 
 #endif

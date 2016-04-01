@@ -85,7 +85,6 @@ factor = ->
 
 factor_small_number = ->
 
-	debugger
 	i = 0
 	save();
 

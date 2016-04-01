@@ -538,15 +538,15 @@ print_number = (p, accumulator) ->
 		topLevelCall = true
 		accumulator = ""
 
-	s = ""
+	denominatorString = ""
 	buf = ""
 	switch (p.k)
 		when NUM
 			accumulator += p.q.a.toString()
 			if (isfraction(p))
 				accumulator += ("/")
-				s = p.q.b.toString()
-				accumulator += (s)
+				denominatorString = p.q.b.toString()
+				accumulator += (denominatorString)
 		when DOUBLE
 			accumulator += (p.d)
 
