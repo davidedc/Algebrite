@@ -13,7 +13,6 @@ mpow = (a,n) ->
 test_mpow = ->
 	logout("testing mpow\n");
 
-	mem = mtotal;
 
 	# small numbers
 
@@ -24,16 +23,9 @@ test_mpow = ->
 			b = mpow(a, j);
 			c = mint(x);
 			if (mcmp(b, c) != 0)
-				sprintf(logbuf, "failed a=%d b=%d c=%d\n", a[0], b[0], c[0]);
-				logout(logbuf);
-				errout();
-			mfree(b);
-			mfree(c);
+				throw new Error("failed test_mpow");
 			x *= i;
 
-	if (mem != mtotal)
-		logout("memory leak\n");
-		errout();
 
 	logout("ok\n");
 

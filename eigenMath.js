@@ -6872,9 +6872,8 @@ mpow = function(a, n) {
 };
 
 test_mpow = function() {
-  var a, ac, ad, b, c, i, j, mem, x;
+  var a, ac, ad, b, c, i, j, x;
   logout("testing mpow\n");
-  mem = mtotal;
   for (i = ac = -10; ac < 10; i = ++ac) {
     a = mint(i);
     x = 1;
@@ -6882,18 +6881,10 @@ test_mpow = function() {
       b = mpow(a, j);
       c = mint(x);
       if (mcmp(b, c) !== 0) {
-        sprintf(logbuf, "failed a=%d b=%d c=%d\n", a[0], b[0], c[0]);
-        logout(logbuf);
-        errout();
+        throw new Error("failed test_mpow");
       }
-      mfree(b);
-      mfree(c);
       x *= i;
     }
-  }
-  if (mem !== mtotal) {
-    logout("memory leak\n");
-    errout();
   }
   return logout("ok\n");
 };
