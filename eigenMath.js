@@ -666,6 +666,8 @@ isfactorial = function(p) {
 MSIGN = function(p) {
   if (p.isPositive()) {
     return 1;
+  } else if (p.isZero()) {
+    return 0;
   } else {
     return -1;
   }

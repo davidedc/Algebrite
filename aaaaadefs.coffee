@@ -361,7 +361,14 @@ isadd = (p) -> (car(p) == symbol(ADD))
 ispower = (p) -> (car(p) == symbol(POWER))
 isfactorial = (p) -> (car(p) == symbol(FACTORIAL))
 
-MSIGN = (p) -> if p.isPositive() then return 1 else return -1
+MSIGN = (p) ->
+	if p.isPositive()
+		return 1
+	else if p.isZero()
+		return 0
+	else
+		return -1
+
 MLENGTH = (p) -> p[-1]
 
 MZERO = (p) -> p.isZero()
