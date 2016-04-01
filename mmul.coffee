@@ -176,33 +176,19 @@ mdivrem(unsigned int **q, unsigned int **r, unsigned int *a, unsigned int *b)
 
 #if SELFTEST
 
-###
-// small integer tests
+# small integer tests
 
-static void test_mmulf(int, int, int);
-static void test_mdivf(int, int, int);
-static void test_mmodf(int, int, int);
-
-void
-test_mmul(void)
-{
-	int i, j, m;
+test_mmul = ->
+	i = 0
+	j = 0
+	m = 0
 	logout("test mmul\n");
-	m = mtotal;
-	for (i = -100; i <= 100; i++)
-		for (j = -100; j <= 100; j++)
+	for i in [-100..100]
+		for j in [-100..100]
 			test_mmulf(i, j, i * j);
-	if (m != mtotal) {
-		logout("memory leak\n");
-		errout();
-	}
 	logout("ok\n");
-}
 
-static void
-test_mmulf(int na, int nb, int nc)
-{
-	unsigned int *a, *b, *c, *d;
+test_mmulf = (na, nb, nc) ->
 
 	a = mint(na);
 	b = mint(nb);
@@ -210,40 +196,27 @@ test_mmulf(int na, int nb, int nc)
 
 	d = mmul(a, b);
 
-	if (mcmp(c, d) == 0) {
-		mfree(a);
-		mfree(b);
-		mfree(c);
-		mfree(d);
+	if (mcmp(c, d) == 0)
 		return;
-	}
+	else
+		throw new Error("test_mmulf error")
 
-	sprintf(logbuf, "%d %d %d %d\n", na, nb, nc, *d * MSIGN(d));
-	logout(logbuf);
-	errout();
-}
-
-void
-test_mdiv(void)
-{
-	int i, j, m;
+test_mdiv = ->
+	i = 0
+	j = 0
+	m = 0
 	logout("test mdiv\n");
-	m = mtotal;
-	for (i = -100; i <= 100; i++)
-		for (j = -100; j <= 100; j++)
+	for i in [-100..100]
+		for j in [-100..100]
 			if (j)
-				test_mdivf(i, j, i / j);
-	if (m != mtotal) {
-		logout("memory leak\n");
-		errout();
-	}
+				if i/j > 0
+					expectedResult = Math.floor(i / j)
+				else
+					expectedResult = Math.ceil(i / j)
+				test_mdivf(i, j, expectedResult);
 	logout("ok\n");
-}
 
-static void
-test_mdivf(int na, int nb, int nc)
-{
-	unsigned int *a, *b, *c, *d;
+test_mdivf = (na, nb, nc) ->
 
 	a = mint(na);
 	b = mint(nb);
@@ -251,40 +224,25 @@ test_mdivf(int na, int nb, int nc)
 
 	d = mdiv(a, b);
 
-	if (mcmp(c, d) == 0) {
-		mfree(a);
-		mfree(b);
-		mfree(c);
-		mfree(d);
+	if (mcmp(c, d) == 0)
 		return;
-	}
+	else
+		debugger
+		throw new Error("test_mdivf error")
 
-	sprintf(logbuf, "%d %d %d %d\n", na, nb, nc, *d * MSIGN(d));
-	logout(logbuf);
-	errout();
-}
 
-void
-test_mmod(void)
-{
-	int i, j, m;
+test_mmod = ->
+	i = 0
+	j = 0
+	m = 0
 	logout("test mmod\n");
-	m = mtotal;
-	for (i = -100; i <= 100; i++)
-		for (j = -100; j <= 100; j++)
+	for i in [-100..100]
+		for j in [-100..100]
 			if (j)
 				test_mmodf(i, j, i % j);
-	if (m != mtotal) {
-		logout("memory leak\n");
-		errout();
-	}
 	logout("ok\n");
-}
 
-static void
-test_mmodf(int na, int nb, int nc)
-{
-	unsigned int *a, *b, *c, *d;
+test_mmodf = (na,nb,nc) ->
 
 	a = mint(na);
 	b = mint(nb);
@@ -292,19 +250,10 @@ test_mmodf(int na, int nb, int nc)
 
 	d = mmod(a, b);
 
-	if (mcmp(c, d) == 0) {
-		mfree(a);
-		mfree(b);
-		mfree(c);
-		mfree(d);
+	if (mcmp(c, d) == 0)
 		return;
-	}
+	else
+		throw new Error("test_mmodf error")
 
-	sprintf(logbuf, "%d %d %d %d\n", na, nb, nc, *d * MSIGN(d));
-	logout(logbuf);
-	errout();
-}
 
-#endif
-###
 

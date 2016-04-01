@@ -28,14 +28,14 @@ ucmp = (a,b) ->
 
 test_madd = ->
 	i = 0
-	logout("test madd\n");
+	console.log("test madd\n");
 	m = mtotal;
 	for i in [-100...100]
 		for j in [-100...100]
 			test_maddf(i, j, i + j);
-	if (m != mtotal)
-		logout("memory leak\n");
-		errout();
+	#if (m != mtotal)
+	#	logout("memory leak\n");
+	#	errout();
 	logout("ok\n");
 
 test_maddf = (na, nb, nc) ->
@@ -47,11 +47,9 @@ test_maddf = (na, nb, nc) ->
 	d = madd(a, b);
 
 	if (mcmp(c, d) == 0)
-		#mfree(a);
-		#mfree(b);
-		#mfree(c);
-		#mfree(d);
 		return;
+	else
+		throw new Error("test_maddf")
 
 	#sprintf(logbuf, "%d %d %d %d\n", na, nb, nc, *d * MSIGN(d));
 	logout(logbuf);

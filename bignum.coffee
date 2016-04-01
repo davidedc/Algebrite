@@ -11,6 +11,11 @@ MP_MAX_FREE  = 1000
 mtotal = 0
 free_stack = []
 
+
+mint = (a) ->
+	return bigInt a
+
+
 makeSignSameAs = (a,b) ->
 	if a.isPositive
 		if b.isNegative
