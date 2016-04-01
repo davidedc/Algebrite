@@ -50,6 +50,10 @@ class U
 		@cons.cdr = null
 		@q = new rational()
 
+
+errorMessage = ""
+
+
 # the following enum is for struct U, member k
 
 CONS = 0

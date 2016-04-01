@@ -1,8 +1,171 @@
+power_str = "^"
+stringToBePrinted = ""
+
 print_str = (s) ->
-	console.log s
+	stringToBePrinted += s
+
+print_char = (c) ->
+	stringToBePrinted += c
+
+collectResultLine = (p) ->
+	stringToBePrinted = ""
+	print_expr(p)
+	return stringToBePrinted
 
 printline = (p) ->
+	stringToBePrinted = ""
 	print_expr(p)
+	console.log stringToBePrinted
+
+
+# prints stuff after the divide symbol "/"
+
+# d is the number of denominators
+
+#define BASE p1
+#define EXPO p2
+
+print_denom = (p, d) ->
+	save();
+
+	p1 = cadr(p); # p1 is BASE
+	p2 = caddr(p); # p2 is EXPO
+
+	# i.e. 1 / (2^(1/3))
+
+	if (d == 1 && !isminusone(p2)) # p2 is EXPO
+		print_char('(');
+
+	if (isfraction(p1) || car(p1) == symbol(ADD) || car(p1) == symbol(MULTIPLY) || car(p1) == symbol(POWER) || lessp(p1, zero)) # p1 is BASE
+			print_char('(');
+			print_expr(p1); # p1 is BASE
+			print_char(')');
+	else
+		print_expr(p1); # p1 is BASE
+
+	if (isminusone(p2)) # p2 is EXPO
+		restore();
+		return;
+
+	if (test_flag == 0)
+		print_str(power_str);
+	else
+		print_char('^');
+
+	push(p2); # p2 is EXPO
+	negate();
+	p2 = pop(); # p2 is EXPO
+
+	if (isfraction(p2) || car(p2) == symbol(ADD) || car(p2) == symbol(MULTIPLY) || car(p2) == symbol(POWER)) # p2 is EXPO
+		print_char('(');
+		print_expr(p2); # p2 is EXPO
+		print_char(')');
+	else
+		print_expr(p2); # p2 is EXPO
+
+	if (d == 1)
+		print_char(')');
+
+	restore();
+
+
+#define A p3
+#define B p4
+
+print_a_over_b = (p) ->
+	flag = 0
+	n = 0
+	d = 0
+
+	save();
+
+	# count numerators and denominators
+
+	n = 0;
+	d = 0;
+
+	p1 = cdr(p);
+	p2 = car(p1);
+
+	if (isrational(p2))
+		push(p2);
+		mp_numerator();
+		absval();
+		p3 = pop(); # p3 is A
+		push(p2);
+		mp_denominator();
+		p4 = pop(); # p4 is B
+		if (!isplusone(p3)) # p3 is A
+			n++;
+		if (!isplusone(p4)) # p4 is B
+			d++;
+		p1 = cdr(p1);
+	else
+		p3 = one; # p3 is A
+		p4 = one; # p4 is B
+
+	while (iscons(p1))
+		p2 = car(p1);
+		if (is_denominator(p2))
+			d++;
+		else
+			n++;
+		p1 = cdr(p1);
+
+	if (n == 0)
+		print_char('1');
+	else
+		flag = 0;
+		p1 = cdr(p);
+		if (isrational(car(p1)))
+			p1 = cdr(p1);
+		if (!isplusone(p3)) # p3 is A
+			print_factor(p3); # p3 is A
+			flag = 1;
+		while (iscons(p1))
+			p2 = car(p1);
+			if (is_denominator(p2))
+				doNothing = 1
+			else
+				if (flag)
+					print_multiply_sign();
+				print_factor(p2);
+				flag = 1;
+			p1 = cdr(p1);
+
+	if (test_flag == 0)
+		print_str(" / ");
+	else
+		print_str("/");
+
+	if (d > 1)
+		print_char('(');
+
+
+	flag = 0;
+	p1 = cdr(p);
+
+	if (isrational(car(p1)))
+		p1 = cdr(p1);
+
+	if (!isplusone(p4)) # p4 is B
+		print_factor(p4); # p4 is B
+		flag = 1;
+
+	while (iscons(p1))
+		p2 = car(p1);
+		if (is_denominator(p2))
+			if (flag)
+				print_multiply_sign();
+			print_denom(p2, d);
+			flag = 1;
+		p1 = cdr(p1);
+
+	if (d > 1)
+		print_char(')');
+
+	restore();
+
 
 print_expr = (p) ->
 	if (isadd(p))

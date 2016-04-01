@@ -28,7 +28,7 @@ ucmp = (a,b) ->
 
 test_madd = ->
 	i = 0
-	console.log("test madd\n");
+	console.log("test madd");
 	m = mtotal;
 	for i in [-100...100]
 		for j in [-100...100]

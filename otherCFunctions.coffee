@@ -15,7 +15,7 @@ isalpha = (str) ->
 	if !str? then return false
 	#Check for non-alphabetic characters and space
 	if !str? then debugger
-	return (str.search(/[^A-Za-z\s]/) == -1)
+	return (str.search(/[^A-Za-z]/) == -1)
 
 isalnum = (str) ->
 	if !str? then return false

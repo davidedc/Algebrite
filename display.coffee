@@ -54,7 +54,6 @@ printchar = (character, accumulator) ->
 	printchar_nowrap character, accumulator
 
 display = (p) ->
-	debugger
 	h = 0
 	w = 0
 	y = 0

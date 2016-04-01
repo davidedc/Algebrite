@@ -7,7 +7,7 @@ consCount = 0
 cons = ->
 	consCount++
 	console.log "cons tos: " + tos + " # " + consCount
-	if consCount == 1429
+	if consCount == 247
 		debugger
 	# auto var ok, no opportunity for garbage collection after p = alloc()
 	p = new U();

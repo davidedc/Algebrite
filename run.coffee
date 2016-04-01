@@ -9,9 +9,9 @@ stop = (s) ->
 	#	longjmp(draw_stop_return, 1)
 	#else
 		debugger
-		console.log("Stop: ")
-		console.log(s)
-		console.log("\n")
+		errorMessage += "Stop: "
+		errorMessage += s
+		throw new Error(errorMessage)
 		#longjmp(stop_return, 1)
 
 # s a string here
@@ -35,12 +35,23 @@ run = (stringToBeRun) ->
 	n = 0
 	indexOfPartRemainingToBeParsed = 0
 
+	allReturnedStrings = ""
 	while (1)
 
-		n = scan(stringToBeRun.substring(indexOfPartRemainingToBeParsed))
+		try
+			errorMessage = ""
+			check_stack()
+			n = scan(stringToBeRun.substring(indexOfPartRemainingToBeParsed))
+			p1 = pop()
+			check_stack()
+		catch error
+			console.log error
+			debugger
+			allReturnedStrings += error.message
+			init()
+			break
 
-		p1 = pop()
-		check_stack()
+
 
 		if (n == 0)
 			break
@@ -75,7 +86,19 @@ run = (stringToBeRun) ->
 			continue
 
 		# in tty mode
+		console.log "printline"
+		# also you could just have written 
+		# printline(p2)
+		collectedResult = collectResultLine(p2)
+		allReturnedStrings += collectedResult
+		console.log collectedResult
+		console.log "display:"
 		display(p2)
+		allReturnedStrings += "\n"
+
+	if allReturnedStrings[allReturnedStrings.length-1] == "\n"
+		allReturnedStrings = allReturnedStrings.substring(0,allReturnedStrings.length-1)
+	return allReturnedStrings
 
 check_stack = ->
 	if (tos != 0)

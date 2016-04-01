@@ -195,7 +195,7 @@ normalize_angle = ->
 	# integer exponent?
 
 	if (isinteger(p1)) # p1 is A
-		if (p1.q.a[0] & 1) # p1 is A
+		if (p1.q.a.isOdd()) # p1 is A
 			push_integer(-1); # odd exponent
 		else
 			push_integer(1); # even exponent
@@ -230,7 +230,7 @@ normalize_angle = ->
 
 	# negate if quotient is odd
 
-	if (p2.q.a[0] & 1)  # p2 is Q
+	if (p2.q.a.isOdd())  # p2 is Q
 		negate();
 
 	restore();

@@ -112,7 +112,7 @@ test = (s) ->
 
 	run("e=quote(e)");
 
-	for i in [0...s.length/2] by 2
+	for i in [0...s.length] by 2
 
 		console.log(s[i]);
 
@@ -124,6 +124,7 @@ test = (s) ->
 		resultFromRun = run(s[i]);
 
 		if (resultFromRun == s[i+1])
+			console.log("ok example " + s[i+1]);
 			continue;
 
 		console.log("expected to get the following result:\n");

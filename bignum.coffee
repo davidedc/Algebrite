@@ -542,18 +542,25 @@ print_number = (p, accumulator) ->
 	buf = ""
 	switch (p.k)
 		when NUM
-			accumulator += p.q.a.toString()
+			aAsString = p.q.a.toString()
+			if aAsString[0] == "-"
+				aAsString = aAsString.substring(1)
+			accumulator += aAsString
+			stringToBePrinted += aAsString
 			if (isfraction(p))
 				accumulator += ("/")
+				stringToBePrinted += ("/")
 				denominatorString = p.q.b.toString()
-				accumulator += (denominatorString)
+				accumulator += denominatorString
+				stringToBePrinted += denominatorString
 		when DOUBLE
-			accumulator += (p.d)
+			aAsString = "" + p.d
+			if aAsString[0] == "-"
+				aAsString = aAsString.substring(1)
+			accumulator += aAsString
+			stringToBePrinted += aAsString
 
-	if topLevelCall
-		console.log accumulator
-	else
-		return accumulator
+	return accumulator
 
 gcd_numbers = ->
 	save()

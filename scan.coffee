@@ -316,21 +316,22 @@ scan_subexpr = ->
 	get_next_token()
 
 error = (errmsg) ->
-	console.log '\n'
+	errorMessage = ""
 
 	# try not to put question mark on orphan line
 
 	while (input_str != scan_str)
 		if ((scanned[input_str] == '\n' || scanned[input_str] == '\r') && input_str + 1 == scan_str)
 			break
-		console.log scanned[input_str++]
+		errorMessage += scanned[input_str++]
 
-	console.log " ? "
+	errorMessage += " ? "
 
 	while (scanned[input_str] && (scanned[input_str] != '\n' && scanned[input_str] != '\r'))
-		console.log scanned[input_str]
+		debugger
+		errorMessage +=  scanned[input_str++]
 
-	console.log '\n'
+	errorMessage +=  '\n'
 
 	stop(errmsg)
 
@@ -475,43 +476,43 @@ update_token_buf = (a,b) ->
 	token_buf = scanned.substring(a,b)
 
 
-testString = [
-
-	"a^^b",
-	"a^^ ? b\nStop: syntax error",
-
-	"(a+b",
-	"(a+b ? \nStop: ) expected",
-
-	"quote(1/(x*log(a*x)))",	# test case A
-	"1/(x*log(a*x))",
-
-	"\"hello",
-	"\"hello ? \nStop: runaway string",
-
-	# make sure question mark can appear after newlines
-
-	"a+\nb+\nc+",
-	"a+\nb+\nc+ ? \nStop: syntax error",
-
-	# this bug fixed in version 30 (used to give one result, 14)
-
-	"2+2\n(3+3)",
-	"4\n6",
-
-	# plus and minus cannot cross newline
-
-	"1\n-1",
-	"1\n-1",
-
-	"1\n+1",
-	"1\n1",
-]
 
 test_scan = ->
-	a = 0
-	# !!!!!
-	#test(__FILE__, s, sizeof s / sizeof (char *))
+	console.log "test_scan ----------------------------"
+
+	test [
+
+		"a^^b",
+		"a^^ ? b\nStop: syntax error",
+
+		"(a+b",
+		"(a+b ? \nStop: ) expected",
+
+		"quote(1/(x*log(a*x)))",	# test case A
+		"1/(x*log(a*x))",
+
+		"\"hello",
+		"\"hello ? \nStop: runaway string",
+
+		# make sure question mark can appear after newlines
+
+		"a+\nb+\nc+",
+		"a+\nb+\nc+ ? \nStop: syntax error",
+
+		# this bug fixed in version 30 (used to give one result, 14)
+
+		"2+2\n(3+3)",
+		"4\n6",
+
+		# plus and minus cannot cross newline
+
+		"1\n-1",
+		"1\n-1",
+
+		"1\n+1",
+		"1\n1",
+	]
+
 
 
 #	Notes:
