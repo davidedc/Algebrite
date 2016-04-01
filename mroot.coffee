@@ -8,10 +8,9 @@
 #
 #-----------------------------------------------------------------------------
 
-#include "stdafx.h"
-#include "defs.h"
 
 mroot = (n, index) ->
+	# this doesn't quite work
 	#return n.pow(1/index +  0.0000000000000001)
 
 	# sign of radicand ignored
@@ -22,7 +21,7 @@ mroot = (n, index) ->
 	k = 0
 
 	if (index == 0)
-		stop("root index is zero");
+		stop("root index is zero")
 
 	# count number of bits
 	k = 0
@@ -30,14 +29,14 @@ mroot = (n, index) ->
 		k++
 	
 	if (k == 0)
-		return mint(0);
+		return mint(0)
 
 	# initial guess
 
-	k = Math.floor((k - 1) / index);
+	k = Math.floor((k - 1) / index)
 
-	j = Math.floor(k / 32 + 1);
-	x = bigInt(j);
+	j = Math.floor(k / 32 + 1)
+	x = bigInt(j)
 
 	for i in [0...j]
 		# zero-out the ith bit
@@ -47,17 +46,17 @@ mroot = (n, index) ->
 		# set the kth bit
 		x = x.or(bigInt(1).shiftLeft(k))
 
-		y = mpow(x, index);
+		y = mpow(x, index)
 		switch (mcmp(y, n))
 			when 0
-				return x;
+				return x
 			when 1
-				#mp_clr_bit(x, k);
+				#mp_clr_bit(x, k)
 				# clear the kth bit
 				x = x.and(bigInt(1).shiftLeft(k).not())
-		k--;
+		k--
 
-	return 0;
+	return 0
 
 
 #if SELFTEST
@@ -67,32 +66,32 @@ test_mroot = ->
 	j = 0
 	mem = 0
 
-	logout("testing mroot\n");
+	logout("testing mroot\n")
 
 
 	# small numbers
 
 	for i in [0...10]
-		a = mint(i);
+		a = mint(i)
 		for j in [1...10]
-			logout(i + " " + j);
-			b = mpow(a, j);
-			c = mroot(b, j);
+			logout(i + " " + j)
+			b = mpow(a, j)
+			c = mroot(b, j)
 			if (c == 0 || mcmp(a, c) != 0)
 				debugger
-				throw new Error("failed test_mroot");
+				throw new Error("failed test_mroot")
 
-	logout("mroot small numbers ok\n");
+	logout("mroot small numbers ok\n")
 
-	a = mint(12345);
+	a = mint(12345)
 
 	for i in [1...10]
-		logout(i);
-		b = mpow(a, i);
-		c = mroot(b, i);
+		logout(i)
+		b = mpow(a, i)
+		c = mroot(b, i)
 		if (c == 0 || mcmp(a, c) != 0)
-			throw new Error("failed");
+			throw new Error("failed")
 
 
-	logout("mroot big numbers ok\n");
-	logout("mroot all ok\n");
+	logout("mroot big numbers ok\n")
+	logout("mroot all ok\n")
