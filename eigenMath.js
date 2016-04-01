@@ -6961,7 +6961,6 @@ test_mroot = function() {
   for (i = ac = 0; ac < 10; i = ++ac) {
     a = mint(i);
     for (j = ad = 1; ad < 10; j = ++ad) {
-      logout(i + " " + j);
       b = mpow(a, j);
       c = mroot(b, j);
       if (c === 0 || mcmp(a, c) !== 0) {
@@ -6970,18 +6969,17 @@ test_mroot = function() {
       }
     }
   }
-  logout("mroot small numbers ok\n");
+  logout(" ...mroot small numbers ok\n");
   a = mint(12345);
   for (i = ae = 1; ae < 10; i = ++ae) {
-    logout(i);
     b = mpow(a, i);
     c = mroot(b, i);
     if (c === 0 || mcmp(a, c) !== 0) {
       throw new Error("failed");
     }
   }
-  logout("mroot big numbers ok\n");
-  return logout("mroot all ok\n");
+  logout(" ...mroot big numbers ok\n");
+  return logout("ok");
 };
 
 multiply = function() {
