@@ -369,7 +369,7 @@ MSIGN = (p) ->
 	else
 		return -1
 
-MLENGTH = (p) -> p[-1]
+MLENGTH = (p) -> p.toString.length
 
 MZERO = (p) -> p.isZero()
 MEQUAL = (p, n) -> p.equals(n)
