@@ -16,6 +16,17 @@ mint = (a) ->
 	return bigInt a
 
 
+# b is +1 or -1, a is a bigint
+setSignTo = (a,b) ->
+	if a.isPositive
+		if b < 0
+			a = a.multiply bigInt -1
+	else
+		# a is negative
+		if b > 0
+			a = a.multiply bigInt -1
+
+
 makeSignSameAs = (a,b) ->
 	if a.isPositive
 		if b.isNegative

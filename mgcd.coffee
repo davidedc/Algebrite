@@ -24,10 +24,8 @@ mgcd = (u,v) ->
 
 #if SELFTEST
 
-###
 test_mgcd = ->
 	logout("testing mgcd\n");
-	n = mtotal;
 	for i in [1...100]
 		a = mint(i);
 		for j in [1...100]
@@ -35,45 +33,25 @@ test_mgcd = ->
 			c = mgcd(a, b);
 			d = egcd(a, b);
 			if (mcmp(c, d) != 0)
-				logout("failed\n");
-				errout();
-			mfree(b);
-			mfree(c);
-			mfree(d);
-		}
-		mfree(a);
-	}
-	if (n != mtotal) {
-		logout("memory leak\n");
-		errout();
-	}
+				throw new Error("test_mgcd failed")
 	logout("ok\n");
-}
 
 # Euclid's algorithm
 
-static unsigned int *
-egcd(unsigned int *a, unsigned int *b)
-{
-	int sign;
-	unsigned int *c;
+egcd = (a, b) ->
+	sign = 0
 	if (MZERO(b))
 		stop("divide by zero");
-	b = mcopy(b);
+	#b = mcopy(b);
 	if (MZERO(a))
 		return b;
 	sign = MSIGN(b);
-	a = mcopy(a);
-	while (!MZERO(b)) {
+	#a = mcopy(a);
+	while (!MZERO(b))
 		c = mmod(a, b);
-		mfree(a);
+		#mfree(a);
 		a = b;
 		b = c;
-	}
-	mfree(b);
-	MSIGN(a) = sign;
+	setSignTo(a,sign)
 	return a;
-}
 
-#endif
-###
