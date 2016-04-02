@@ -26,9 +26,17 @@
 tos = 0
 
 # p is a U
+nil_symbols = 0
 push = (p) ->
 	if !p?
 		debugger
+	if p.isZero?
+		debugger
+	if p == symbol(NIL)
+		nil_symbols++
+		console.log "pushing symbol(NIL) #" + nil_symbols
+		if nil_symbols == 827
+			debugger
 	if (tos >= frame)
 		stop("stack overflow")
 	stack[tos++] = p

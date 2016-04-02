@@ -10,12 +10,14 @@ selftest  = ->
 
 	#if SELFTEST
 
+	###
 	test_low_level();
 
 	test_multiply();
 	test_scan();
 	test_power();
 	test_factor_number();
+	###
 	test_test();
 	test_tensor();
 

@@ -90,7 +90,7 @@ bake_poly = ->
 	push(p2);		# x
 	k = coeff();
 	h = tos;
-	for i in[(k - 1)...0] by -1
+	for i in[(k - 1)..0] by -1
 		p1 = stack[a+i];
 		bake_poly_term(i);
 	n = tos - h;

@@ -223,6 +223,26 @@ print_term = (p) ->
 	else
 		print_factor(p);
 
+print_tensor = (p) ->
+	print_tensor_inner(p, 0, 0);
+
+print_tensor_inner = (p, j, k) ->
+	i = 0
+	print_str("(");
+	for i in [0...p.tensor.dim[j]]
+		if (j + 1 == p.tensor.ndim)
+			print_expr(p.tensor.elem[k]);
+			k++
+		else
+			k = print_tensor_inner(p, j + 1, k);
+		if (i + 1 < p.tensor.dim[j])
+			if (test_flag == 0)
+				print_str(",");
+			else
+				print_str(",");
+	print_str(")");
+	return k
+
 print_factor = (p) ->
 	if (isnum(p))
 		print_number(p);

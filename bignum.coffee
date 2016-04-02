@@ -418,6 +418,8 @@ convert_bignum_to_double = (p) ->
 
 # p is a U
 convert_rational_to_double = (p) ->
+	if !p.q?
+		debugger
 	quotientAndRemainder = p.q.a.divmod(p.q.b)
 	result = quotientAndRemainder.quotient + quotientAndRemainder.remainder / p.q.b.toJSNumber()
 
@@ -632,7 +634,7 @@ __factorial = (n) ->
 
 	if 3 <= n
 		for i in [3..n]
-			b[0] = Math.floor(i)
+			b = bigInt(i)
 			t = mmul(a, b)
 			a = t
 
