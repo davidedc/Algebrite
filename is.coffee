@@ -139,7 +139,7 @@ iscomplexnumber = (p) ->
 		return 0;
 
 iseveninteger = (p) ->
-	if (isinteger(p) && (p.q.a.isEven()) == 0)
+	if isinteger(p) && p.q.a.isEven()
 		return 1;
 	else
 		return 0;

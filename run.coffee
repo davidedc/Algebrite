@@ -8,7 +8,6 @@ stop = (s) ->
 	#if (draw_flag == 2)
 	#	longjmp(draw_stop_return, 1)
 	#else
-		debugger
 		errorMessage += "Stop: "
 		errorMessage += s
 		throw new Error(errorMessage)
@@ -46,7 +45,6 @@ run = (stringToBeRun) ->
 			check_stack()
 		catch error
 			console.log error
-			debugger
 			allReturnedStrings += error.message
 			init()
 			break

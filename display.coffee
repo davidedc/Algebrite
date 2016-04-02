@@ -810,7 +810,7 @@ emit_number = (p, emit_sign) ->
 				__emit_char(tmpString[i]);
 
 		when DOUBLE
-			tmpString = p.d.toString();
+			tmpString = doubleToReasonableString(p.d)
 			if (tmpString[0] == '-' && emit_sign == 0)
 				tmpString = tmpString.substring(1);
 			for i in [0...tmpString.length]

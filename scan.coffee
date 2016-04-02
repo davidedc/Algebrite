@@ -328,7 +328,6 @@ error = (errmsg) ->
 	errorMessage += " ? "
 
 	while (scanned[input_str] && (scanned[input_str] != '\n' && scanned[input_str] != '\r'))
-		debugger
 		errorMessage +=  scanned[input_str++]
 
 	errorMessage +=  '\n'

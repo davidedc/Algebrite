@@ -153,7 +153,8 @@ add_numbers = ->
 	restore()
 
 subtract_numbers = ->
-	double a, b
+	a = 0.0
+	b = 0.0
 
 	if (isrational(stack[tos - 1]) && isrational(stack[tos - 2]))
 		qsub()
@@ -488,7 +489,7 @@ pop_integer = ->
 # p is a U, flag is an int
 print_double = (p,flag) ->
 	buf = ""
-	buf = "" + p.d
+	buf = "" + doubleToReasonableString(p.d)
 	if (flag == 1 && buf == '-')
 		# !!!! passing a pointer willy-nilly
 		print_str(buf + 1)
@@ -527,7 +528,7 @@ bignum_scan_integer = (s) ->
 
 # s a string
 bignum_scan_float = (s) ->
-	push_double(parseInt(s))
+	push_double(parseFloat(s))
 
 # print as unsigned
 
@@ -554,7 +555,7 @@ print_number = (p, accumulator) ->
 				accumulator += denominatorString
 				stringToBePrinted += denominatorString
 		when DOUBLE
-			aAsString = "" + p.d
+			aAsString = "" + doubleToReasonableString(p.d)
 			if aAsString[0] == "-"
 				aAsString = aAsString.substring(1)
 			accumulator += aAsString
@@ -586,7 +587,7 @@ gcd_numbers = ->
 	restore()
 
 pop_double = ->
-	double d
+	d = 0.0
 	save()
 	p1 = pop()
 	switch (p1.k)
@@ -600,7 +601,7 @@ pop_double = ->
 	return d
 
 bignum_float = ->
-	double d
+	d = 0.0
 	d = convert_rational_to_double(pop())
 	push_double(d)
 

@@ -59,8 +59,8 @@ get_binding = (p) ->
 	if symtab.indexOf(p, indexFound + 1) != -1
 		console.log("ops, more than one element!");
 	console.log("lookup >> get_binding lookup " + indexFound);
-	if indexFound == 162
-		debugger
+	#if indexFound == 162
+	#	debugger
 	#if indexFound == 137
 	#	debugger
 	return binding[indexFound]
@@ -98,8 +98,8 @@ symnum = (p) ->
 	if symtab.indexOf(p, indexFound + 1) != -1
 		console.log("ops, more than one element!");
 	console.log("lookup >> symnum lookup " + indexFound + " lookup # " + lookupsTotal);
-	#if lookupsTotal == 140
-	#	debugger
+	if lookupsTotal == 19
+		debugger
 	#if indexFound == 79
 	#	debugger
 	return indexFound

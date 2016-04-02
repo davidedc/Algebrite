@@ -123,8 +123,8 @@ qpowf = ->
 		list(3);
 		return;
 
-	a = p2.q.a[0];  # p2 is EXPO
-	b = p2.q.b[0]; # p2 is EXPO
+	a = p2.q.a;  # p2 is EXPO
+	b = p2.q.b; # p2 is EXPO
 
 	x = mroot(p1.q.a, b);  # p1 is BASE
 

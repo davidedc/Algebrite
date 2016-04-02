@@ -2,6 +2,14 @@
 # The C library function int isspace(int c) checks
 # whether the passed character is white-space.
 
+
+# does the equivalent of printf %g
+# the parseFloat piece is needed to
+# remove insignificant trailing zeroes
+# (beyond the decimal point)
+doubleToReasonableString = (d) ->
+	return parseFloat(d.toPrecision(6));
+
 # s is a string here anyways
 isspace = (s) ->
 	if !s? then return false
