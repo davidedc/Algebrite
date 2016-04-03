@@ -223,6 +223,20 @@ print_term = (p) ->
 	else
 		print_factor(p);
 
+print_subexpr = (p) ->
+	print_char('(');
+	print_expr(p);
+	print_char(')');
+
+print_factorial_function = (p) ->
+	p = cadr(p);
+	if (car(p) == symbol(ADD) || car(p) == symbol(MULTIPLY) || car(p) == symbol(POWER) || car(p) == symbol(FACTORIAL))
+		print_subexpr(p);
+	else
+		print_expr(p);
+	print_char('!');
+
+
 print_tensor = (p) ->
 	print_tensor_inner(p, 0, 0);
 

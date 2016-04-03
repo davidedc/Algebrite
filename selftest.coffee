@@ -25,13 +25,13 @@ selftest  = ->
 	test_arg();
 	test_besselj();
 	test_bessely();
+	test_ceiling();
 	###
 
-	test_ceiling();
+	test_choose();
 
 	return
 
-	test_choose();
 	test_circexp();
 	test_clock();
 	test_cofactor();
