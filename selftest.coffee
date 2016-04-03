@@ -21,13 +21,13 @@ selftest  = ->
 	test_tensor();
 	test_bake();
 	test_abs();
+	test_adj();
 	###
 
-	test_adj();
+	test_arg();
 
 	return
 
-	test_arg();
 	test_besselj();
 	test_bessely();
 	test_ceiling();

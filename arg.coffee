@@ -101,22 +101,22 @@ yyarg = ->
 		p1 = pop();
 		push(p1);
 		real();
-		RE = pop();
+		p2 = pop();
 		push(p1);
 		imag();
-		IM = pop();
-		if (iszero(RE))
+		p3 = pop();
+		if (iszero(p2))
 			push(symbol(PI));
-			if (isnegative(IM))
+			if (isnegative(p3))
 				negate();
 		else
-			push(IM);
-			push(RE);
+			push(p3);
+			push(p2);
 			divide();
 			arctan();
-			if (isnegative(RE))
+			if (isnegative(p2))
 				push_symbol(PI);
-				if (isnegative(IM))
+				if (isnegative(p3))
 					subtract();	# quadrant 1 -> 3
 				else
 					add();		# quadrant 4 -> 2
@@ -125,65 +125,55 @@ yyarg = ->
 		push_integer(0);
 	restore();
 
-#if SELFTEST
 
-s = [
+test_arg = ->
+	run_test [
 
-	"arg(1+i)",
-	"1/4*pi",
+		"arg(1+i)",
+		"1/4*pi",
 
-	"arg(1-i)",
-	"-1/4*pi",
+		"arg(1-i)",
+		"-1/4*pi",
 
-	"arg(-1+i)",
-	"3/4*pi",
+		"arg(-1+i)",
+		"3/4*pi",
 
-	"arg(-1-i)",
-	"-3/4*pi",
+		"arg(-1-i)",
+		"-3/4*pi",
 
-	"arg((-1)^(1/3))",
-	"1/3*pi",
+		"arg((-1)^(1/3))",
+		"1/3*pi",
 
-	"arg(1+exp(i*pi/3))",
-	"1/6*pi",
+		"arg(1+exp(i*pi/3))",
+		"1/6*pi",
 
-	"arg((-1)^(1/6)*exp(i*pi/6))",
-	"1/3*pi",
+		"arg((-1)^(1/6)*exp(i*pi/6))",
+		"1/3*pi",
 
-	"arg(a)",
-	"0",
+		"arg(a)",
+		"0",
 
-	"arg(a*exp(b+i*pi/5))",
-	"1/5*pi",
+		"arg(a*exp(b+i*pi/5))",
+		"1/5*pi",
 
-	"arg(-1)",
-	"-pi",
+		"arg(-1)",
+		"-pi",
 
-	"arg(a)",
-	"0",
+		"arg(a)",
+		"0",
 
-	"arg(-a)",
-	"-pi",
+		"arg(-a)",
+		"-pi",
 
-	"arg(-(-1)^(1/3))",
-	"-2/3*pi",
+		"arg(-(-1)^(1/3))",
+		"-2/3*pi",
 
-	"arg(-exp(i*pi/3))",
-	"-2/3*pi",
+		"arg(-exp(i*pi/3))",
+		"-2/3*pi",
 
-	"arg(-i)",
-	"-1/2*pi",
+		"arg(-i)",
+		"-1/2*pi",
 
-	"arg((a+b*i)/(c+d*i))",
-	"arctan(b/a)-arctan(d/c)",
-]
-
-###
-void
-test_arg(void)
-{
-	test(__FILE__, s, sizeof s / sizeof (char *));
-}
-
-#endif
-###
+		"arg((a+b*i)/(c+d*i))",
+		"arctan(b/a)-arctan(d/c)",
+	]
