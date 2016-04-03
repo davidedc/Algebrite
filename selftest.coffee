@@ -10,15 +10,17 @@ selftest  = ->
 
 	#if SELFTEST
 
-	###
 	test_low_level();
 
+	###
 	test_multiply();
 	test_scan();
 	test_power();
 	test_factor_number();
 	###
 	test_test();
+
+	return
 	test_tensor();
 
 	test_bake();
@@ -104,7 +106,7 @@ logout = (s) ->
 	console.log s
 
 
-test = (s) ->
+run_test = (s) ->
 	i = 0;
 	t = "";
 
@@ -116,7 +118,7 @@ test = (s) ->
 
 	for i in [0...s.length] by 2
 
-		console.log(s[i]);
+		console.log("starting example: " + s[i]);
 
 		if (s[i][0] == '#')
 			continue;
@@ -126,7 +128,7 @@ test = (s) ->
 		resultFromRun = run(s[i]);
 
 		if (resultFromRun == s[i+1])
-			console.log("ok example " + s[i+1]);
+			console.log("ok example: " + s[i]);
 			continue;
 
 		console.log("expected to get the following result:\n");

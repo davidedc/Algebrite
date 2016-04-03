@@ -383,7 +383,7 @@ simplify_polar = ->
 
 
 test_power = ->
-	test [
+	run_test [
 
 		"2^(1/2)",
 		"2^(1/2)",

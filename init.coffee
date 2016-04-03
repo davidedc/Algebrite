@@ -231,10 +231,8 @@ defn_str = ["e=exp(1)",
 ]
 
 defn = ->
-	i = 0
-	n = defn_str.length
-	for i in [0...n]
-		definitionOfInterest = defn_str[i]
+	for defn_i in [0...defn_str.length]
+		definitionOfInterest = defn_str[defn_i]
 		scan(definitionOfInterest)
 		console.log "... evaling " + definitionOfInterest
 		console.log("top of stack:")

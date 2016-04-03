@@ -121,7 +121,7 @@ factor_small_number = ->
 
 
 test_factor_number = ->
-	test [
+	run_test [
 
 		"factor(0)",
 		"0",

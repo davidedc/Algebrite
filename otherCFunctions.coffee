@@ -10,6 +10,9 @@
 doubleToReasonableString = (d) ->
 	return parseFloat(d.toPrecision(6));
 
+# does nothing
+clear_term = ->
+
 # s is a string here anyways
 isspace = (s) ->
 	if !s? then return false

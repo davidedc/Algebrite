@@ -403,7 +403,7 @@ get_token = ->
 			scan_str++
 			while (isdigit(scanned[scan_str]))
 				scan_str++
-			if (scanned[scan_str] == 'e' && (scan_str[1] == '+' || scan_str[1] == '-' || isdigit(scan_str[1])))
+			if (scanned[scan_str] == 'e' && (scanned[scan_str+1] == '+' || scanned[scan_str+1] == '-' || isdigit(scanned[scan_str+1])))
 				scan_str += 2
 				while (isdigit(scanned[scan_str]))
 					scan_str++
@@ -440,7 +440,7 @@ get_token = ->
 
 	# comment?
 
-	if (scanned[scan_str] == '#' || scanned[scan_str] == '-' && scan_str[1] == '-')
+	if (scanned[scan_str] == '#' || scanned[scan_str] == '-' && scanned[scan_str+1] == '-')
 		while (scanned[scan_str] && scanned[scan_str] != '\n' && scanned[scan_str] != '\r')
 			scan_str++
 		if (scanned[scan_str])
@@ -450,17 +450,17 @@ get_token = ->
 
 	# relational operator?
 
-	if (scanned[scan_str] == '=' && scan_str[1] == '=')
+	if (scanned[scan_str] == '=' && scanned[scan_str+1] == '=')
 		scan_str += 2
 		token = T_EQ
 		return
 
-	if (scanned[scan_str] == '<' && scan_str[1] == '=')
+	if (scanned[scan_str] == '<' && scanned[scan_str+1] == '=')
 		scan_str += 2
 		token = T_LTEQ
 		return
 
-	if (scanned[scan_str] == '>' && scan_str[1] == '=')
+	if (scanned[scan_str] == '>' && scanned[scan_str+1] == '=')
 		scan_str += 2
 		token = T_GTEQ
 		return
@@ -479,7 +479,7 @@ update_token_buf = (a,b) ->
 test_scan = ->
 	console.log "test_scan ----------------------------"
 
-	test [
+	run_test [
 
 		"a^^b",
 		"a^^ ? b\nStop: syntax error",
