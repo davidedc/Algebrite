@@ -18,12 +18,13 @@ selftest  = ->
 	test_power();
 	test_factor_number();
 	test_test();
+	test_tensor();
 	###
 
-	test_tensor();
+	test_bake();
+
 	return
 
-	test_bake();
 
 
 	test_abs();

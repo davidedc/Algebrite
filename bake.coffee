@@ -155,22 +155,13 @@ bake_poly_term = (k) ->
 		swap();
 		cons();
 
-#if SELFTEST
 
-s = [
+test_bake = ->
+	run_test [
 
-	"(x+3)^3",
-	"x^3+9*x^2+27*x+27",
+		"(x+3)^3",
+		"x^3+9*x^2+27*x+27",
 
-	"factor",
-	"(x+3)^3",
-]
-
-###
-void
-test_bake(void)
-{
-	test(__FILE__, s, sizeof s / sizeof (char *));
-}
-###
-#endif
+		"factor",
+		"(x+3)^3",
+	]
