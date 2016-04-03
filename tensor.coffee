@@ -525,47 +525,36 @@ compatible = (p,q) ->
 
 	return 1;
 
-#if SELFTEST
 
-s = [
+test_tensor = ->
+	run_test [
 
-	"#test_tensor",
+		"a=(1,2,3)",
+		"",
 
-	"a=(1,2,3)",
-	"",
+		"b=(4,5,6)",
+		"",
 
-	"b=(4,5,6)",
-	"",
+		"c=(7,8,9)",
+		"",
 
-	"c=(7,8,9)",
-	"",
+		"rank((a,b,c))",
+		"2",
 
-	"rank((a,b,c))",
-	"2",
+		"(a,b,c)",
+		"((1,2,3),(4,5,6),(7,8,9))",
 
-	"(a,b,c)",
-	"((1,2,3),(4,5,6),(7,8,9))",
+		# check tensor promotion
 
-	# check tensor promotion
+		"((1,0),(0,0))",
+		"((1,0),(0,0))",
 
-	"((1,0),(0,0))",
-	"((1,0),(0,0))",
+		"a=quote(a)",
+		"",
 
-	"a=quote(a)",
-	"",
+		"b=quote(b)",
+		"",
 
-	"b=quote(b)",
-	"",
-
-	"c=quote(c)",
-	"",
-]
-
-###
-void
-test_tensor(void)
-{
-	test(__FILE__, s, sizeof s / sizeof (char *));
-}
-###
-#endif
+		"c=quote(c)",
+		"",
+	]

@@ -17,11 +17,11 @@ selftest  = ->
 	test_scan();
 	test_power();
 	test_factor_number();
-	###
 	test_test();
+	###
 
-	return
 	test_tensor();
+	return
 
 	test_bake();
 
@@ -119,9 +119,6 @@ run_test = (s) ->
 	for i in [0...s.length] by 2
 
 		console.log("starting example: " + s[i]);
-
-		if (s[i][0] == '#')
-			continue;
 
 		out_count = 0;
 
