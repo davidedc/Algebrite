@@ -30,13 +30,13 @@ selftest  = ->
 	test_circexp();
 	test_clock();
 	test_cofactor();
+	test_condense();
 	###
 
-	test_condense();
+	test_contract();
 
 	return
 
-	test_contract();
 	test_defint();
 	test_denominator();
 	test_derivative();
