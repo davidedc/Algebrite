@@ -22,13 +22,13 @@ selftest  = ->
 	test_bake();
 	test_abs();
 	test_adj();
+	test_arg();
 	###
 
-	test_arg();
+	test_besselj();
 
 	return
 
-	test_besselj();
 	test_bessely();
 	test_ceiling();
 	test_choose();
