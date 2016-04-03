@@ -31,13 +31,13 @@ selftest  = ->
 	test_clock();
 	test_cofactor();
 	test_condense();
+	test_contract();
 	###
 
-	test_contract();
+	test_defint();
 
 	return
 
-	test_defint();
 	test_denominator();
 	test_derivative();
 	test_dirac();
@@ -118,6 +118,7 @@ run_test = (s) ->
 	for i in [0...s.length] by 2
 
 		console.log("starting example: " + s[i]);
+		debugger
 
 		out_count = 0;
 

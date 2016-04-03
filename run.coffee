@@ -90,6 +90,7 @@ run = (stringToBeRun) ->
 		collectedResult = collectResultLine(p2)
 		allReturnedStrings += collectedResult
 		console.log collectedResult
+		alert collectedResult
 		console.log "display:"
 		display(p2)
 		allReturnedStrings += "\n"
@@ -100,8 +101,10 @@ run = (stringToBeRun) ->
 
 check_stack = ->
 	if (tos != 0)
+		debugger
 		stop("stack error")
 	if (frame != TOS)
+		debugger
 		stop("frame error")
 
 # cannot reference symbols yet

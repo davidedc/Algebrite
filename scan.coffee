@@ -66,6 +66,7 @@ scan = (s) ->
 
 # takes a string
 scan_meta = (s) ->
+	scanned = s
 	meta_mode = 1
 	expanding++
 	input_str = 0
@@ -256,7 +257,7 @@ scan_factor = ->
 scan_symbol = ->
 	if (token != T_SYMBOL)
 		error("symbol expected")
-	if (meta_mode && strlen(token_buf) == 1)
+	if (meta_mode && token_buf.length == 1)
 		switch (token_buf[0])
 			when 'a'
 				push(symbol(METAA))
