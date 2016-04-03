@@ -19,15 +19,13 @@ selftest  = ->
 	test_factor_number();
 	test_test();
 	test_tensor();
+	test_bake();
 	###
 
-	test_bake();
+	test_abs();
 
 	return
 
-
-
-	test_abs();
 	test_adj();
 	test_arg();
 	test_besselj();

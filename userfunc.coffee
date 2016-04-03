@@ -10,7 +10,6 @@
 
 Eval_user_function = ->
 
-	debugger
 	# Use "derivative" instead of "d" if there is no user function "d"
 
 	if (car(p1) == symbol(SYMBOL_D) && get_arglist(symbol(SYMBOL_D)) == symbol(NIL))

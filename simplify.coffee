@@ -12,7 +12,6 @@ simplify = ->
 	restore();
 
 simplify_main = ->
-	debugger
 	p1 = pop();
 
 	if (istensor(p1))
