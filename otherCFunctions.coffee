@@ -2,6 +2,18 @@
 # The C library function int isspace(int c) checks
 # whether the passed character is white-space.
 
+strcmp = (str1, str2) ->
+  # http://kevin.vanzonneveld.net
+  # +   original by: Waldo Malqui Silva
+  # +      input by: Steve Hilder
+  # +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  # +    revised by: gorthaur
+  # *     example 1: strcmp( 'waldo', 'owald' );
+  # *     returns 1: 1
+  # *     example 2: strcmp( 'owald', 'waldo' );
+  # *     returns 2: -1
+  if str1 == str2 then 0 else if str1 > str2 then 1 else -1
+
 
 # does the equivalent of printf %g
 # the parseFloat piece is needed to

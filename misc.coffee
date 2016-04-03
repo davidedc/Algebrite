@@ -89,7 +89,7 @@ cmp_expr = (p1, p2) ->
 		return 1;
 
 	if (isstr(p1) && isstr(p2))
-		return sign(p1.str.localeCompare(p2.str));
+		return sign(strcmp(p1.str,p2.str));
 
 	if (isstr(p1))
 		return -1;
@@ -98,7 +98,7 @@ cmp_expr = (p1, p2) ->
 		return 1;
 
 	if (issymbol(p1) && issymbol(p2))
-		return sign(get_printname(p1).localeCompare(get_printname(p2)));
+		return sign(strcmp(get_printname(p1),get_printname(p2)));
 
 	if (issymbol(p1))
 		return -1;

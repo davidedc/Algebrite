@@ -28,14 +28,14 @@ selftest  = ->
 	test_ceiling();
 	test_choose();
 	test_circexp();
+	test_clock();
+	test_cofactor();
 	###
 
-	test_clock();
+	test_condense();
 
 	return
 
-	test_cofactor();
-	test_condense();
 	test_contract();
 	test_defint();
 	test_denominator();
