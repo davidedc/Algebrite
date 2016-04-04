@@ -43,16 +43,16 @@ selftest  = ->
 	test_expand();
 	test_expcos();
 	test_expsin();
+	test_factorpoly();
 	###
 
 
-	test_factorpoly();
+	test_float();
+	test_floor();
 
 	alert "ok tests: " + ok_tests + " ko tests: " + ko_tests
 	return
 
-	test_float();
-	test_floor();
 	test_gamma();
 	test_gcd();
 	test_imag();

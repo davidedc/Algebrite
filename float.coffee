@@ -32,9 +32,9 @@ yyfloat = ->
 		push(p1);
 		bignum_float();
 	else if (p1 == symbol(PI))
-		push_double(M_PI);
+		push_double(Math.PI);
 	else if (p1 == symbol(E))
-		push_double(M_E);
+		push_double(Math.E);
 	else
 		push(p1);
 	restore();
