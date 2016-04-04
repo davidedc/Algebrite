@@ -47,17 +47,17 @@ selftest  = ->
 	test_float();
 	test_floor();
 	test_gamma();
+	test_gcd();
+	test_imag();
+	test_inner();
 	###
 
 
-	test_gcd();
+	test_lcm();
 
 	alert "ok tests: " + ok_tests + " ko tests: " + ko_tests
 	return
 
-	test_imag();
-	test_inner();
-	test_lcm();
 	test_log();
 	test_mag();
 	test_mod();

@@ -40,28 +40,17 @@ yylcm = ->
 
 	inverse();
 
-#if SELFTEST
+test_lcm = ->
+	run_test [
 
-s = [
+		"lcm(4,6)",
+		"12",
 
-	"lcm(4,6)",
-	"12",
+		"lcm(4*x,6*x*y)",
+		"12*x*y",
 
-	"lcm(4*x,6*x*y)",
-	"12*x*y",
+		# multiple arguments
 
-	# multiple arguments
-
-	"lcm(2,3,4)",
-	"12",
-]
-
-###
-void
-test_lcm(void)
-{
-	test(__FILE__, s, sizeof (s) / sizeof (char *));
-}
-
-#endif
-###
+		"lcm(2,3,4)",
+		"12",
+	]

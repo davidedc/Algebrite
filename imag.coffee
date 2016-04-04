@@ -31,32 +31,21 @@ imag = ->
 	divide();
 	restore();
 
-#if SELFTEST
+test_imag = ->
+	run_test [
 
-s = [
+		"imag(a+i*b)",
+		"b",
 
-	"imag(a+i*b)",
-	"b",
+		"imag(1+exp(i*pi/3))",
+		"1/2*3^(1/2)",
 
-	"imag(1+exp(i*pi/3))",
-	"1/2*3^(1/2)",
+		"imag(i)",
+		"1",
 
-	"imag(i)",
-	"1",
+		"imag((-1)^(1/3))",
+		"1/2*3^(1/2)",
 
-	"imag((-1)^(1/3))",
-	"1/2*3^(1/2)",
-
-	"imag(-i)",
-	"-1",
-]
-
-###
-void
-test_imag(void)
-{
-	test(__FILE__, s, sizeof s / sizeof (char *));
-}
-
-#endif
-###
+		"imag(-i)",
+		"-1",
+	]
