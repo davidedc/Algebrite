@@ -41,7 +41,7 @@ factor_a = ->
 	k = 0
 
 	if (n_factor_number.isNegative())
-		setSignTo(n_factor_number, 1);
+		n_factor_number = setSignTo(n_factor_number, 1);
 		push_integer(-1);
 
 	for k in [0...10000]
@@ -119,7 +119,7 @@ factor_b = ->
 			# g = gcd(x' - x, n_factor_number)
 
 			t = msub(xprime, x);
-			setSignTo(t,1);
+			t = setSignTo(t,1);
 			g = mgcd(t, n_factor_number);
 
 			if (MEQUAL(g, 1))

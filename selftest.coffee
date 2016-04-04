@@ -4,6 +4,8 @@
 #include "defs.h"
 #include "selftest.h"
 
+ok_tests = 0
+ko_tests = 0
 
 selftest  = ->
 	# for handling "errout"
@@ -12,7 +14,6 @@ selftest  = ->
 
 	test_low_level();
 
-	###
 	test_multiply();
 	test_scan();
 	test_power();
@@ -33,13 +34,12 @@ selftest  = ->
 	test_condense();
 	test_contract();
 	test_defint(); # very long
-	###
-
 	test_denominator();
+	test_derivative();
 
+	alert "ok tests: " + ok_tests + " ko tests: " + ko_tests
 	return
 
-	test_derivative();
 	test_dirac();
 	test_erf();
 	test_erfc();
@@ -126,8 +126,10 @@ run_test = (s) ->
 
 		if (resultFromRun == s[i+1])
 			console.log("ok example: " + s[i]);
+			ok_tests++
 			continue;
 
+		ko_tests++
 		console.log("expected to get the following result:\n");
 		console.log(s[i+1]);
 
@@ -143,6 +145,7 @@ run_test = (s) ->
 test_low_level = ->
 	run("clear"); # to initialize stack and memory
 
+	test_signs_in_rationals();
 	test_madd();
 	test_msub();
 	test_mmul();

@@ -57,8 +57,8 @@ qpowf = ->
 			t = x;
 			x = y;
 			y = t;
-			makeSignSameAs(x,y)
-			makePositive(y)
+			x = makeSignSameAs(x,y)
+			y = makePositive(y)
 
 		p3 = new U()
 		p3.k = NUM;

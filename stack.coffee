@@ -21,8 +21,6 @@
 #include "stdafx.h"
 #include "defs.h"
 
-# !!!!
-# U **frame, *stack[TOS]
 tos = 0
 
 # p is a U
@@ -32,6 +30,10 @@ push = (p) ->
 		debugger
 	if p.isZero?
 		debugger
+
+	#console.log "pushing "
+	#print1(p)
+
 	if p == symbol(NIL)
 		nil_symbols++
 		console.log "pushing symbol(NIL) #" + nil_symbols

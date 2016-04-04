@@ -45,6 +45,7 @@ run = (stringToBeRun) ->
 			check_stack()
 		catch error
 			console.log error
+			debugger
 			allReturnedStrings += error.message
 			init()
 			break
@@ -118,7 +119,6 @@ echo_input = (s) ->
 
 top_level_eval = ->
 	console.log "#### top level eval"
-	#debugger
 	save()
 
 	trigmode = 0

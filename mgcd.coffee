@@ -52,6 +52,6 @@ egcd = (a, b) ->
 		#mfree(a);
 		a = b;
 		b = c;
-	setSignTo(a,sign)
+	a = setSignTo(a,sign)
 	return a;
 

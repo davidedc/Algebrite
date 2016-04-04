@@ -88,7 +88,7 @@ add_terms = (n) ->
 			cons();
 
 	console.log "stack after adding terms #" + stackAddsCount
-	if stackAddsCount == 26
+	if stackAddsCount == 5
 		debugger
 	for i in [0...tos]
 		print1 stack[i]

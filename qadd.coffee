@@ -37,7 +37,7 @@ qadd = ->
 
 	c = mgcd(a, b);
 
-	makeSignSameAs(c,b);
+	c = makeSignSameAs(c,b);
 
 	p1 = new U()
 

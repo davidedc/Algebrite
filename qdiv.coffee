@@ -30,7 +30,7 @@ qdiv = ->
 
 	c = mgcd(aa, bb);
 
-	makeSignSameAs(c,bb)
+	c = makeSignSameAs(c,bb)
 
 	p1 = new U();
 

@@ -376,4 +376,7 @@ MSIGN = (p) ->
 MLENGTH = (p) -> p.toString.length
 
 MZERO = (p) -> p.isZero()
-MEQUAL = (p, n) -> p.equals(n)
+MEQUAL = (p, n) ->
+	if !p?
+		debugger
+	p.equals(n)

@@ -199,13 +199,14 @@ square = ->
 	push_integer(2);
 	power();
 
-__cmp = (p1, p2) ->
-	# !!!! this is likely to be mangles
-	console.log "__cmp(p1, p2) likely to be mangled"
-	return cmp_expr(p1, p2);
+#__cmp = (p1, p2) ->
+#	return cmp_expr(p1, p2);
 
 # n an integer
 sort_stack = (n) ->
-	# !!!!! not yet translated
-	console.log "!!! sort_stack not yet translated"
-	qsort(stack[tos - n], n, aaa , __cmp);
+	#qsort(stack + tos - n, n, sizeof (U *), __cmp);
+
+	h = tos - n
+	subsetOfStack = stack.slice(h,h+n)
+	subsetOfStack.sort(cmp_expr)
+	stack = stack.slice(0,h).concat(subsetOfStack).concat(stack.slice(h+n))

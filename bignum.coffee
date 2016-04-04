@@ -18,27 +18,30 @@ mint = (a) ->
 
 # b is +1 or -1, a is a bigint
 setSignTo = (a,b) ->
-	if a.isPositive
+	if a.isPositive()
 		if b < 0
-			a = a.multiply bigInt -1
+			return a.multiply bigInt -1
 	else
 		# a is negative
 		if b > 0
-			a = a.multiply bigInt -1
+			return a.multiply bigInt -1
+	return a
 
 
 makeSignSameAs = (a,b) ->
-	if a.isPositive
-		if b.isNegative
-			b = b.multiply bigInt -1
+	if a.isPositive()
+		if b.isNegative()
+			return a.multiply bigInt -1
 	else
 		# a is negative
-		if b.isPositive
-			b = b.multiply bigInt -1
+		if b.isPositive()
+			return a.multiply bigInt -1
+	return a
 
 makePositive = (a) ->
-	if a.isNegative
-		a = a.multiply bigInt -1
+	if a.isNegative()
+		return a.multiply bigInt -1
+	return a
 
 # n is an int
 ###
@@ -254,14 +257,11 @@ invert_number = ->
 	a = bigInt(p1.q.a)
 	b = bigInt(p1.q.b)
 
-	# !!! fu
-	#MSIGN(b) = MSIGN(a)
-	# MSIGN(a) = 1
+	b = makeSignSameAs(b,a)
+	a = setSignTo(a,1)
 
 	p1 = new U()
-
 	p1.k = NUM
-
 	p1.q.a = b
 	p1.q.b = a
 
@@ -371,9 +371,7 @@ mp_denominator = ->
 		return
 
 	p2 = new U()
-
 	p2.k = NUM
-
 	p2.q.a = bigInt(p1.q.b)
 	p2.q.b = bigInt(1)
 
@@ -393,13 +391,13 @@ bignum_power_number = (expo) ->
 	b = mpow(p1.q.b, Math.abs(expo))
 
 	if (expo < 0)
+		# swap a and b
 		t = a
 		a = b
 		b = t
-		# !!! fu
-		#MSIGN(a) = MSIGN(b)
-		# !!! fu
-		#MSIGN(b) = 1
+
+		a = makeSignSameAs(a,b)
+		b = setSignTo(b,1)
 
 	p1 = new U()
 
@@ -581,8 +579,7 @@ gcd_numbers = ->
 	p3.q.a = mgcd(p1.q.a, p2.q.a)
 	p3.q.b = mgcd(p1.q.b, p2.q.b)
 
-	# !!! fu
-	#MSIGN(p3.q.a) = 1
+	p3.q.a = setSignTo(p3.q.a,1)
 
 	push(p3)
 
@@ -691,3 +688,24 @@ mp_clr_bit = (x,k) ->
 # unsigned int *a
 mshiftright = (a) ->
 	a = a.shiftRight()
+
+test_signs_in_rationals = ->
+	run_test [
+
+		# I found out about basic mistakes in
+		# these very very late, better to
+		# have those tests early on.
+
+		"1/1",
+		"1",
+
+		"-1/1",
+		"-1",
+
+		"1/(-1)",
+		"-1",
+
+		"(-1)/(-1)",
+		"1",
+
+	]
