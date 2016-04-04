@@ -38,17 +38,18 @@ selftest  = ->
 	test_denominator();
 	test_derivative();
 	test_dirac();
+	test_erf();
+	test_erfc();
 	###
 
-	test_erf();
+
+	test_expand();
+	test_expcos();
+	test_expsin();
 
 	alert "ok tests: " + ok_tests + " ko tests: " + ko_tests
 	return
 
-	test_erfc();
-	test_expand();
-	test_expcos();
-	test_expsin();
 	test_factorpoly();
 	test_float();
 	test_floor();

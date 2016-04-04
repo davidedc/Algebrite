@@ -38,6 +38,7 @@ inner_f = ->
 	n = p1.tensor.dim[p1.tensor.ndim - 1];
 
 	if (n != p2.tensor.dim[0])
+		debugger
 		stop("inner: tensor dimension check");
 
 	ndim = p1.tensor.ndim + p2.tensor.ndim - 2;
@@ -128,39 +129,30 @@ inner_f = ->
 			p3.tensor.dim[j + i] = p2.tensor.dim[i + 1];
 		push(p3);
 
-s = [
+test_inner = ->
+	run_test [
 
-	"inner(a,b)",
-	"a*b",
+		"inner(a,b)",
+		"a*b",
 
-	"inner(a,(b1,b2))",
-	"(a*b1,a*b2)",
+		"inner(a,(b1,b2))",
+		"(a*b1,a*b2)",
 
-	"inner((a1,a2),b)",
-	"(a1*b,a2*b)",
+		"inner((a1,a2),b)",
+		"(a1*b,a2*b)",
 
-	"inner(((a11,a12),(a21,a22)),(x1,x2))",
-	"(a11*x1+a12*x2,a21*x1+a22*x2)",
+		"inner(((a11,a12),(a21,a22)),(x1,x2))",
+		"(a11*x1+a12*x2,a21*x1+a22*x2)",
 
-	"inner((1,2),(3,4))",
-	"11",
+		"inner((1,2),(3,4))",
+		"11",
 
-	"inner(inner((1,2),((3,4),(5,6))),(7,8))",
-	"219",
+		"inner(inner((1,2),((3,4),(5,6))),(7,8))",
+		"219",
 
-	"inner((1,2),inner(((3,4),(5,6)),(7,8)))",
-	"219",
+		"inner((1,2),inner(((3,4),(5,6)),(7,8)))",
+		"219",
 
-	"inner((1,2),((3,4),(5,6)),(7,8))",
-	"219",
-]
-
-###
-void
-test_inner(void)
-{
-	test(__FILE__, s, sizeof s / sizeof (char *));
-}
-
-#endif
-###
+		"inner((1,2),((3,4),(5,6)),(7,8))",
+		"219",
+	]
