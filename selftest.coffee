@@ -40,17 +40,17 @@ selftest  = ->
 	test_dirac();
 	test_erf();
 	test_erfc();
-	###
-
-
 	test_expand();
 	test_expcos();
 	test_expsin();
+	###
+
+
+	test_factorpoly();
 
 	alert "ok tests: " + ok_tests + " ko tests: " + ko_tests
 	return
 
-	test_factorpoly();
 	test_float();
 	test_floor();
 	test_gamma();
