@@ -37,7 +37,7 @@ yylog = ->
 		return;
 
 	if (isdouble(p1))
-		d = log(p1.d);
+		d = Math.log(p1.d);
 		push_double(d);
 		return;
 
@@ -78,59 +78,48 @@ yylog = ->
 	push(p1);
 	list(2);
 
-#if SELFTEST
+test_log = ->
+	run_test [
 
-s = [
+		"log(1)",
+		"0",
 
-	"log(1)",
-	"0",
+		"log(exp(1))",
+		"1",
 
-	"log(exp(1))",
-	"1",
+		"log(exp(x))",
+		"x",
 
-	"log(exp(x))",
-	"x",
+		"exp(log(x))",
+		"x",
 
-	"exp(log(x))",
-	"x",
+		"log(x^2)",
+		"2*log(x)",
 
-	"log(x^2)",
-	"2*log(x)",
+		"log(1/x)",
+		"-log(x)",
 
-	"log(1/x)",
-	"-log(x)",
+		"log(a^b)",
+		"b*log(a)",
 
-	"log(a^b)",
-	"b*log(a)",
+		"log(2)",
+		"log(2)",
 
-	"log(2)",
-	"log(2)",
+		"log(2.0)",
+		"0.693147",
 
-	"log(2.0)",
-	"0.693147",
+		"float(log(2))",
+		"0.693147",
 
-	"float(log(2))",
-	"0.693147",
+		"log(a*b)",
+		"log(a)+log(b)",
 
-	"log(a*b)",
-	"log(a)+log(b)",
+		"log(1/3)+log(3)",
+		"0",
 
-	"log(1/3)+log(3)",
-	"0",
+		"log(-1)",
+		"i*pi",
 
-	"log(-1)",
-	"i*pi",
-
-	"log(-1.0)",
-	"i*pi",
-]
-
-###
-void
-test_log(void)
-{
-	test(__FILE__, s, sizeof s / sizeof (char *));
-}
-
-#endif
-###
+		"log(-1.0)",
+		"i*pi",
+	]

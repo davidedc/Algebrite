@@ -50,15 +50,15 @@ selftest  = ->
 	test_gcd();
 	test_imag();
 	test_inner();
+	test_lcm();
 	###
 
 
-	test_lcm();
+	test_log();
 
 	alert "ok tests: " + ok_tests + " ko tests: " + ko_tests
 	return
 
-	test_log();
 	test_mag();
 	test_mod();
 	test_nroots();
