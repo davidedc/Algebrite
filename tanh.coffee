@@ -15,7 +15,7 @@ Eval_tanh = ->
 		return;
 	if (isdouble(p1))
 		d = tanh(p1.d);
-		if (fabs(d) < 1e-10)
+		if (Math.abs(d) < 1e-10)
 			d = 0.0;
 		push_double(d);
 		return;
