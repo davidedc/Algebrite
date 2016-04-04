@@ -16,7 +16,7 @@ selftest  = ->
 	test_multiply();
 	test_scan();
 	test_power();
-	test_factor_number();
+	test_factor_number(); # long
 	test_test();
 	test_tensor();
 	test_bake();
@@ -32,13 +32,13 @@ selftest  = ->
 	test_cofactor();
 	test_condense();
 	test_contract();
+	test_defint(); # very long
 	###
 
-	test_defint();
+	test_denominator();
 
 	return
 
-	test_denominator();
 	test_derivative();
 	test_dirac();
 	test_erf();
@@ -118,7 +118,7 @@ run_test = (s) ->
 	for i in [0...s.length] by 2
 
 		console.log("starting example: " + s[i]);
-		debugger
+		#debugger
 
 		out_count = 0;
 

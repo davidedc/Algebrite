@@ -90,7 +90,7 @@ run = (stringToBeRun) ->
 		collectedResult = collectResultLine(p2)
 		allReturnedStrings += collectedResult
 		console.log collectedResult
-		alert collectedResult
+		#alert collectedResult
 		console.log "display:"
 		display(p2)
 		allReturnedStrings += "\n"
