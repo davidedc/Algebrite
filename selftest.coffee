@@ -14,6 +14,7 @@ selftest  = ->
 
 	test_low_level();
 
+	###
 	test_multiply();
 	test_scan();
 	test_power();
@@ -36,12 +37,14 @@ selftest  = ->
 	test_defint(); # very long
 	test_denominator();
 	test_derivative();
+	test_dirac();
+	###
+
+	test_erf();
 
 	alert "ok tests: " + ok_tests + " ko tests: " + ko_tests
 	return
 
-	test_dirac();
-	test_erf();
 	test_erfc();
 	test_expand();
 	test_expcos();
