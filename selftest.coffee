@@ -46,15 +46,15 @@ selftest  = ->
 	test_factorpoly();
 	test_float();
 	test_floor();
+	test_gamma();
 	###
 
 
-	test_gamma();
+	test_gcd();
 
 	alert "ok tests: " + ok_tests + " ko tests: " + ko_tests
 	return
 
-	test_gcd();
 	test_imag();
 	test_inner();
 	test_lcm();
