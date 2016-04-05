@@ -14199,14 +14199,14 @@ selftest = function() {
   	test_cosh();
   	test_tanh();
   	test_arcsin();
+  	test_arcsinh();
+  	test_arccos();
+  	test_arccosh();
+  	test_arctan();
    */
-  test_arcsinh();
-  test_arccos();
-  test_arccosh();
-  test_arctan();
+  test_arctanh();
   alert("ok tests: " + ok_tests + " , ko tests: " + ko_tests);
   return;
-  test_arctanh();
   test_index();
   test_isprime();
   test_integral();
