@@ -235,42 +235,30 @@ __factor_add = ->
 
 	restore();
 
+test_divisors = ->
+	run_test [
 
-#if SELFTEST
+		"divisors(12)",
+		"(1,2,3,4,6,12)",
 
-s = [
+		"divisors(-12)",
+		"(1,2,3,4,6,12)",
 
-	"divisors(12)",
-	"(1,2,3,4,6,12)",
+		"divisors(a)",
+		"(1,a)",
 
-	"divisors(-12)",
-	"(1,2,3,4,6,12)",
+		"divisors(-a)",
+		"(1,a)",
 
-	"divisors(a)",
-	"(1,a)",
+		"divisors(+3*x+3)",
+		"(1,3,1+x,3+3*x)",
 
-	"divisors(-a)",
-	"(1,a)",
+		"divisors(+3*x-3)",
+		"(1,3,-3+3*x,-1+x)",
 
-	"divisors(+3*x+3)",
-	"(1,3,1+x,3+3*x)",
+		"divisors(-3*x+3)",
+		"(1,3,1-x,3-3*x)",
 
-	"divisors(+3*x-3)",
-	"(1,3,-3+3*x,-1+x)",
-
-	"divisors(-3*x+3)",
-	"(1,3,1-x,3-3*x)",
-
-	"divisors(-3*x-3)",
-	"(1,3,1+x,3+3*x)",
-]
-
-###
-void
-test_divisors(void)
-{
-	test(__FILE__, s, sizeof s / sizeof (char *));
-}
-
-#endif
-###
+		"divisors(-3*x-3)",
+		"(1,3,1+x,3+3*x)",
+	]
