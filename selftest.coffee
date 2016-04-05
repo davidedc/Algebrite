@@ -66,17 +66,17 @@ selftest  = ->
 	test_taylor();
 	test_transpose();
 	test_zero();
+	test_hermite();
+	test_laguerre();
 	###
 
 
-	test_hermite();
+	test_legendre();
 
 	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
 	return
 
 
-	test_laguerre();
-	test_legendre();
 	test_binomial();
 	test_divisors();
 	test_coeff();
