@@ -36,32 +36,21 @@ numerator = ->
 
 	restore();
 
-#if SELFTEST
+test_numerator = ->
+	run_test [
 
-s = [
+		"numerator(2/3)",
+		"2",
 
-	"numerator(2/3)",
-	"2",
+		"numerator(x)",
+		"x",
 
-	"numerator(x)",
-	"x",
+		"numerator(1/x)",
+		"1",
 
-	"numerator(1/x)",
-	"1",
+		"numerator(a+b)",
+		"a+b",
 
-	"numerator(a+b)",
-	"a+b",
-
-	"numerator(1/a+1/b)",
-	"a+b",
-]
-
-###
-void
-test_numerator(void)
-{
-	test(__FILE__, s, sizeof s / sizeof (char *));
-}
-
-#endif
-###
+		"numerator(1/a+1/b)",
+		"a+b",
+	]

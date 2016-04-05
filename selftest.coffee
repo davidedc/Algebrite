@@ -54,15 +54,15 @@ selftest  = ->
 	test_log();
 	test_mag();
 	test_mod();
+	test_nroots();
 	###
 
 
-	test_nroots();
+	test_numerator();
 
 	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
 	return
 
-	test_numerator();
 	test_outer();
 	test_polar();
 	test_quotient();
