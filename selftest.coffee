@@ -70,16 +70,16 @@ selftest  = ->
 	test_laguerre();
 	test_legendre();
 	test_binomial();
+	test_divisors();
 	###
 
 
-	test_divisors();
+	test_coeff();
 
 	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
 	return
 
 
-	test_coeff();
 	test_sin();
 	test_cos();
 	test_tan();
