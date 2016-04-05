@@ -14202,11 +14202,11 @@ selftest = function() {
   	test_divisors();
   	test_coeff();
   	test_sin();
+  	test_cos();
    */
-  test_cos();
+  test_tan();
   alert("ok tests: " + ok_tests + " , ko tests: " + ko_tests);
   return;
-  test_tan();
   test_sinh();
   test_cosh();
   test_tanh();
@@ -15047,7 +15047,7 @@ yytangent = function() {
     return;
   }
   if (isdouble(p1)) {
-    d = tan(p1.d);
+    d = Math.tan(p1.d);
     if (Math.abs(d) < 1e-10) {
       d = 0.0;
     }
