@@ -14205,11 +14205,11 @@ selftest = function() {
   	test_cos();
   	test_tan();
   	test_sinh();
+  	test_cosh();
    */
-  test_cosh();
+  test_tanh();
   alert("ok tests: " + ok_tests + " , ko tests: " + ko_tests);
   return;
-  test_tanh();
   test_arcsin();
   test_arcsinh();
   test_arccos();
@@ -15130,7 +15130,7 @@ Eval_tanh = function() {
     return;
   }
   if (isdouble(p1)) {
-    d = tanh(p1.d);
+    d = Math.tanh(p1.d);
     if (Math.abs(d) < 1e-10) {
       d = 0.0;
     }
