@@ -86,16 +86,16 @@ selftest  = ->
 	test_arctanh();
 	test_index();
 	test_isprime();
+	test_integral();
 	###
 
 
-	test_integral();
+	test_simplify();
 
 	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
 	return
 
 
-	test_simplify();
 	test_roots();
 	test_eigen();
 
@@ -122,7 +122,7 @@ run_test = (s) ->
 	for i in [0...s.length] by 2
 
 		console.log("starting example: " + s[i]);
-		alert("starting example: " + s[i]);
+		#alert("starting example: " + s[i]);
 		document.write("starting example: " + s[i] );
 		
 
