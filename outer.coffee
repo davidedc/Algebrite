@@ -39,7 +39,6 @@ yyouter = ->
 	nelem = 0
 
 	ndim = p1.tensor.ndim + p2.tensor.ndim;
-	debugger
 
 	if (ndim > MAXDIM)
 		stop("outer: rank of result exceeds maximum");
@@ -54,7 +53,6 @@ yyouter = ->
 		p3.tensor.dim[i] = p1.tensor.dim[i];
 
 	j = i;
-	debugger
 
 	for i in [0...p2.tensor.ndim]
 		p3.tensor.dim[j + i] = p2.tensor.dim[i];

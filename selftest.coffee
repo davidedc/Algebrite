@@ -89,9 +89,10 @@ selftest  = ->
 	test_integral();
 	test_simplify();
 	test_roots();
+	test_eigen();
 	###
 
-	test_eigen();
+	mini_test();
 
 
 	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
@@ -101,7 +102,6 @@ selftest  = ->
 
 	#endif
 
-	mini_test();
 
 	console.log("OK, all tests passed.");
 
