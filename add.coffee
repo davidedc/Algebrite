@@ -53,8 +53,8 @@ add_terms = (n) ->
 	console.log "stack before adding terms #" + stackAddsCount
 	if stackAddsCount == 137
 		debugger
-	#for i in [0...tos]
-	#	print1 stack[i]
+	for i in [0...tos]
+		print1 stack[i]
 
 	for i in [0...10]
 
@@ -90,8 +90,8 @@ add_terms = (n) ->
 	console.log "stack after adding terms #" + stackAddsCount
 	if stackAddsCount == 5
 		debugger
-	#for i in [0...tos]
-	#	print1 stack[i]
+	for i in [0...tos]
+		print1 stack[i]
 
 # Compare terms for order, clobbers p1 and p2.
 

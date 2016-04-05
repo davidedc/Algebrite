@@ -126,7 +126,7 @@ run_test = (s) ->
 		if (resultFromRun == s[i+1])
 			document.write(" ...ok</br>");
 			console.log("ok example: " + s[i]);
-			#alert("ok example: " + s[i]);
+			alert("ok example: " + s[i]);
 			ok_tests++
 			continue;
 

@@ -361,7 +361,7 @@ Evalpoly = ->
 		multiply();
 		push(stack[polycoeff+i]);
 		console.log("Evalpoly top of stack:")
-		#print1(stack[tos-i])
+		print1(stack[tos-i])
 		add();
 	p6 = pop();
 

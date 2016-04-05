@@ -816,7 +816,7 @@ Eval_add = function() {
 stackAddsCount = 0;
 
 add_terms = function(n) {
-  var h, i, o, s, subsetOfStack;
+  var ac, ad, h, i, o, ref, ref1, results, s, subsetOfStack;
   stackAddsCount++;
   i = 0;
   h = tos - n;
@@ -825,7 +825,10 @@ add_terms = function(n) {
   if (stackAddsCount === 137) {
     debugger;
   }
-  for (i = o = 0; o < 10; i = ++o) {
+  for (i = o = 0, ref = tos; 0 <= ref ? o < ref : o > ref; i = 0 <= ref ? ++o : --o) {
+    print1(stack[i]);
+  }
+  for (i = ac = 0; ac < 10; i = ++ac) {
     if (n < 2) {
       break;
     }
@@ -856,6 +859,11 @@ add_terms = function(n) {
   if (stackAddsCount === 5) {
     debugger;
   }
+  results = [];
+  for (i = ad = 0, ref1 = tos; 0 <= ref1 ? ad < ref1 : ad > ref1; i = 0 <= ref1 ? ++ad : --ad) {
+    results.push(print1(stack[i]));
+  }
+  return results;
 };
 
 cmp_terms_count = 0;
@@ -3318,6 +3326,7 @@ consCount = 0;
 cons = function() {
   var p;
   consCount++;
+  console.log("cons tos: " + tos + " # " + consCount);
   if (consCount === 444) {
     debugger;
   }
@@ -8166,6 +8175,7 @@ Evalpoly = function() {
     multiply();
     push(stack[polycoeff + i]);
     console.log("Evalpoly top of stack:");
+    print1(stack[tos - i]);
     add();
   }
   return p6 = pop();
@@ -14607,6 +14617,7 @@ run_test = function(s) {
     if (resultFromRun === s[i + 1]) {
       document.write(" ...ok</br>");
       console.log("ok example: " + s[i]);
+      alert("ok example: " + s[i]);
       ok_tests++;
       continue;
     }
@@ -15572,7 +15583,7 @@ symnum = function(p) {
     console.log("ops, more than one element!");
   }
   console.log("lookup >> symnum lookup " + indexFound + " lookup # " + lookupsTotal);
-  if (lookupsTotal === 19) {
+  if (lookupsTotal === 21) {
     debugger;
   }
   return indexFound;
