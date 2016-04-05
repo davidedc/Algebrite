@@ -64,15 +64,15 @@ selftest  = ->
 	test_rect();
 	test_sgn();
 	test_taylor();
+	test_transpose();
 	###
 
+	test_zero();
 
-	test_transpose();
 
 	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
 	return
 
-	test_zero();
 
 	test_hermite();
 	test_laguerre();
