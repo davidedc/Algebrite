@@ -84,16 +84,16 @@ selftest  = ->
 	test_arccosh();
 	test_arctan();
 	test_arctanh();
+	test_index();
 	###
 
 
-	test_index();
+	test_isprime();
 
 	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
 	return
 
 
-	test_isprime();
 	test_integral();
 	test_simplify();
 	test_roots();
