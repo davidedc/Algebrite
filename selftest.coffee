@@ -75,16 +75,16 @@ selftest  = ->
 	test_sin();
 	test_cos();
 	test_tan();
+	test_sinh();
 	###
 
-	test_sinh();
 
+	test_cosh();
 
 	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
 	return
 
 
-	test_cosh();
 	test_tanh();
 	test_arcsin();
 	test_arcsinh();

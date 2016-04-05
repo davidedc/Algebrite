@@ -3626,7 +3626,7 @@ yycosh = function() {
     return;
   }
   if (isdouble(p1)) {
-    d = cosh(p1.d);
+    d = Math.cosh(p1.d);
     if (Math.abs(d) < 1e-10) {
       d = 0.0;
     }
@@ -14204,11 +14204,11 @@ selftest = function() {
   	test_sin();
   	test_cos();
   	test_tan();
+  	test_sinh();
    */
-  test_sinh();
+  test_cosh();
   alert("ok tests: " + ok_tests + " , ko tests: " + ko_tests);
   return;
-  test_cosh();
   test_tanh();
   test_arcsin();
   test_arcsinh();
