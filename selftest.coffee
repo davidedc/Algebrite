@@ -57,16 +57,16 @@ selftest  = ->
 	test_nroots();
 	test_numerator();
 	test_outer();
+	test_polar();
+	test_quotient();
 	###
 
 
-	test_polar();
+	test_rationalize();
 
 	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
 	return
 
-	test_quotient();
-	test_rationalize();
 	test_real();
 	test_rect();
 	test_sgn();
