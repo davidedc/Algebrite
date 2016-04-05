@@ -17,7 +17,7 @@ arcsinh = ->
 
 	if (isdouble(p1))
 		d = p1.d;
-		d = log(d + sqrt(d * d + 1.0));
+		d = Math.log(d + Math.sqrt(d * d + 1.0));
 		push_double(d);
 		restore();
 		return;

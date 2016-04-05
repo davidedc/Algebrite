@@ -19,7 +19,7 @@ arctanh = ->
 		d = p1.d;
 		if (d < -1.0 || d > 1.0)
 			stop("arctanh function argument is not in the interval [-1,1]");
-		d = log((1.0 + d) / (1.0 - d)) / 2.0;
+		d = Math.log((1.0 + d) / (1.0 - d)) / 2.0;
 		push_double(d);
 		restore();
 		return;

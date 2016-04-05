@@ -78,19 +78,19 @@ selftest  = ->
 	test_sinh();
 	test_cosh();
 	test_tanh();
-	###
-
-
 	test_arcsin();
-
-	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
-	return
-
+	###
 
 	test_arcsinh();
 	test_arccos();
 	test_arccosh();
 	test_arctan();
+
+
+	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
+	return
+
+
 	test_arctanh();
 	test_index();
 	test_isprime();

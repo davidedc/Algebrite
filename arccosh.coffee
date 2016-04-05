@@ -19,7 +19,7 @@ arccosh = ->
 		d = p1.d;
 		if (d < 1.0)
 			stop("arccosh function argument is less than 1.0");
-		d = log(d + sqrt(d * d - 1.0));
+		d = Math.log(d + Math.sqrt(d * d - 1.0));
 		push_double(d);
 		restore();
 		return;
