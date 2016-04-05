@@ -29,29 +29,18 @@ real = ->
 	divide();
 	restore();
 
-#if SELFTEST
+test_real = ->
+	run_test [
 
-s = [
+		"real(a+i*b)",
+		"a",
 
-	"real(a+i*b)",
-	"a",
+		"real(1+exp(i*pi/3))",
+		"3/2",
 
-	"real(1+exp(i*pi/3))",
-	"3/2",
+		"real(i)",
+		"0",
 
-	"real(i)",
-	"0",
-
-	"real((-1)^(1/3))",
-	"1/2",
-]
-
-###
-void
-test_real(void)
-{
-	test(__FILE__, s, sizeof s / sizeof (char *));
-}
-
-#endif
-###
+		"real((-1)^(1/3))",
+		"1/2",
+	]
