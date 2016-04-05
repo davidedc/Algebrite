@@ -72,16 +72,16 @@ selftest  = ->
 	test_binomial();
 	test_divisors();
 	test_coeff();
+	test_sin();
 	###
 
 
-	test_sin();
+	test_cos();
 
 	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
 	return
 
 
-	test_cos();
 	test_tan();
 	test_sinh();
 	test_cosh();
