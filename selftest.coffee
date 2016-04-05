@@ -65,16 +65,16 @@ selftest  = ->
 	test_sgn();
 	test_taylor();
 	test_transpose();
+	test_zero();
 	###
 
-	test_zero();
 
+	test_hermite();
 
 	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
 	return
 
 
-	test_hermite();
 	test_laguerre();
 	test_legendre();
 	test_binomial();

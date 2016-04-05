@@ -90,7 +90,7 @@ cosine_of_angle = ->
 
 	n = pop_integer();
 
-	if (n < 0)
+	if (n < 0 || n == 0x80000000)
 		push(symbol(COS));
 		push(p1);
 		list(2);
