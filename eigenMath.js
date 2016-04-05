@@ -14203,11 +14203,11 @@ selftest = function() {
   	test_coeff();
   	test_sin();
   	test_cos();
+  	test_tan();
    */
-  test_tan();
+  test_sinh();
   alert("ok tests: " + ok_tests + " , ko tests: " + ko_tests);
   return;
-  test_sinh();
   test_cosh();
   test_tanh();
   test_arcsin();
@@ -14710,7 +14710,7 @@ yysinh = function() {
     return;
   }
   if (isdouble(p1)) {
-    d = sinh(p1.d);
+    d = Math.sinh(p1.d);
     if (Math.abs(d) < 1e-10) {
       d = 0.0;
     }
