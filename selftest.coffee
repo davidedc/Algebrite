@@ -85,16 +85,16 @@ selftest  = ->
 	test_arctan();
 	test_arctanh();
 	test_index();
+	test_isprime();
 	###
 
 
-	test_isprime();
+	test_integral();
 
 	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
 	return
 
 
-	test_integral();
 	test_simplify();
 	test_roots();
 	test_eigen();
@@ -122,22 +122,35 @@ run_test = (s) ->
 	for i in [0...s.length] by 2
 
 		console.log("starting example: " + s[i]);
-		#debugger
+		alert("starting example: " + s[i]);
+		document.write("starting example: " + s[i] );
+		
 
 		out_count = 0;
 
-		resultFromRun = run(s[i]);
+		try
+			resultFromRun = run(s[i]);
+		catch error
+			console.log error
+			init()
+
 
 		if (resultFromRun == s[i+1])
+			document.write(" ...ok</br>");
 			console.log("ok example: " + s[i]);
+			#alert("ok example: " + s[i]);
 			ok_tests++
 			continue;
 
 		ko_tests++
-		console.log("expected to get the following result:\n");
+		document.write(" ...fail</br>");
+		console.log("test failed: \n");
+		console.log(s[i]);
+
+		console.log("expected: \n");
 		console.log(s[i+1]);
 
-		console.log("got this result instead:\n");
+		console.log("obtained:\n");
 		console.log(resultFromRun);
 
 

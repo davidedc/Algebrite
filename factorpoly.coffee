@@ -193,7 +193,7 @@ rationalize_coefficients = (h) ->
 	reciprocate();
 	p7 = pop();
 	console.log("rationalize_coefficients result");
-	print1(p7);
+	#print1(p7);
 
 get_factor = ->
 
@@ -351,7 +351,7 @@ yydivpoly = ->
 		stack[polycoeff+i - 1] = pop();
 	stack[polycoeff+0] = p6;
 	console.log("yydivpoly Q:")
-	print1(p6)
+	#print1(p6)
 
 Evalpoly = ->
 	i = 0
@@ -361,7 +361,7 @@ Evalpoly = ->
 		multiply();
 		push(stack[polycoeff+i]);
 		console.log("Evalpoly top of stack:")
-		print1(stack[tos-i])
+		#print1(stack[tos-i])
 		add();
 	p6 = pop();
 

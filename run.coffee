@@ -10,6 +10,7 @@ stop = (s) ->
 	#else
 		errorMessage += "Stop: "
 		errorMessage += s
+		debugger
 		throw new Error(errorMessage)
 		#longjmp(stop_return, 1)
 
@@ -69,32 +70,39 @@ run = (stringToBeRun) ->
 
 		push(p1)
 		#debugger
-		top_level_eval()
+		try
+			top_level_eval()
 
-		p2 = pop()
-		check_stack()
+			p2 = pop()
+			check_stack()
 
-		if (p2 == symbol(NIL))
-			continue
+			if (p2 == symbol(NIL))
+				continue
 
-		# print string w/o quotes
+			# print string w/o quotes
 
-		if (isstr(p2))
-			console.log(p2.str)
-			console.log("\n")
-			continue
+			if (isstr(p2))
+				console.log(p2.str)
+				console.log("\n")
+				continue
 
-		# in tty mode
-		console.log "printline"
-		# also you could just have written 
-		# printline(p2)
-		collectedResult = collectResultLine(p2)
-		allReturnedStrings += collectedResult
-		console.log collectedResult
-		#alert collectedResult
-		console.log "display:"
-		display(p2)
-		allReturnedStrings += "\n"
+			# in tty mode
+			console.log "printline"
+			# also you could just have written 
+			# printline(p2)
+			collectedResult = collectResultLine(p2)
+			allReturnedStrings += collectedResult
+			console.log collectedResult
+			#alert collectedResult
+			console.log "display:"
+			display(p2)
+			allReturnedStrings += "\n"
+		catch error
+			collectedResult = error.message
+			console.log collectedResult
+			allReturnedStrings += collectedResult
+			allReturnedStrings += "\n"
+			init()
 
 	if allReturnedStrings[allReturnedStrings.length-1] == "\n"
 		allReturnedStrings = allReturnedStrings.substring(0,allReturnedStrings.length-1)

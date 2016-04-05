@@ -37,14 +37,18 @@ push = (p) ->
 	if p == symbol(NIL)
 		nil_symbols++
 		console.log "pushing symbol(NIL) #" + nil_symbols
-		if nil_symbols == 827
+		if nil_symbols == 111
 			debugger
 	if (tos >= frame)
 		stop("stack overflow")
 	stack[tos++] = p
 
 # returns a U
+
+#popsNum = 0
 pop = ->
+	#popsNum++
+	#console.log "pop #" + popsNum
 	if (tos == 0)
 		debugger
 		stop("stack underflow")

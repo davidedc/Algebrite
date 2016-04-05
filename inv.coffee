@@ -105,7 +105,7 @@ yyinvg = ->
 	for i in [0...(n * n)]
 		push(p1.tensor.elem[i]);
 
-	decomp(n);
+	INV_decomp(n);
 
 	p1 = alloc_tensor(n * n);
 
@@ -137,7 +137,7 @@ yyinvg = ->
 #define A(i, j) stack[a + n * (i) + (j)]
 #define U(i, j) stack[u + n * (i) + (j)]
 
-decomp = (n) ->
+INV_decomp = (n) ->
 	a = 0
 	d = 0
 	i = 0
