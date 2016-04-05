@@ -41,35 +41,24 @@ rect = ->
 		multiply();
 	restore();
 
-#if SELFTEST
+test_rect = ->
+	run_test [
 
-s = [
+		"rect(a+i*b)",
+		"a+i*b",
 
-	"rect(a+i*b)",
-	"a+i*b",
+		"rect(exp(a+i*b))",
+		"i*exp(a)*sin(b)+exp(a)*cos(b)",
 
-	"rect(exp(a+i*b))",
-	"i*exp(a)*sin(b)+exp(a)*cos(b)",
+		"rect(1+exp(i*pi/3))",
+		"3/2+1/2*i*3^(1/2)",
 
-	"rect(1+exp(i*pi/3))",
-	"3/2+1/2*i*3^(1/2)",
+		"z=(a+b*i)/(c+d*i)",
+		"",
 
-	"z=(a+b*i)/(c+d*i)",
-	"",
+		"rect(z)-real(z)-i*imag(z)",
+		"0",
 
-	"rect(z)-real(z)-i*imag(z)",
-	"0",
-
-	"z=quote(z)",
-	"",
-]
-
-###
-void
-test_rect(void)
-{
-	test(__FILE__, s, sizeof s / sizeof (char *));
-}
-
-#endif
-###
+		"z=quote(z)",
+		"",
+	]
