@@ -88,16 +88,16 @@ selftest  = ->
 	test_isprime();
 	test_integral();
 	test_simplify();
+	test_roots();
 	###
 
+	test_eigen();
 
-	test_roots();
 
 	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
 	return
 
 
-	test_eigen();
 
 	#endif
 
