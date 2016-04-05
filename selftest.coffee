@@ -61,15 +61,15 @@ selftest  = ->
 	test_quotient();
 	test_rationalize();
 	test_real();
+	test_rect();
 	###
 
-	test_rect();
 
+	test_sgn();
 
 	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
 	return
 
-	test_sgn();
 	test_taylor();
 	test_transpose();
 	test_zero();

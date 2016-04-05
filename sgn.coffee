@@ -24,7 +24,7 @@ sgn = ->
 
 yysgn = ->
 	
-	X = pop();
+	p1 = pop();
 
 	
 	if (isdouble(p1))
@@ -51,19 +51,19 @@ yysgn = ->
 				push_integer(1);
 				return;
 
-	if (iscomplexnumber(X))
+	if (iscomplexnumber(p1))
 		push_integer(-1);
-		push(X);
+		push(p1);
 		absval();
 		power();
-		push(X);
+		push(p1);
 		multiply();
 		return;
 	
 	
-	if (isnegativeterm(X))
+	if (isnegativeterm(p1))
 		push_symbol(SGN);
-		push(X);
+		push(p1);
 		negate();
 		list(2);
 		push_integer(-1);
@@ -72,7 +72,7 @@ yysgn = ->
 	
 	###
 	push_integer(2);
-	push(X);
+	push(p1);
 	heaviside();
 	multiply();
 	push_integer(-1);
@@ -80,7 +80,7 @@ yysgn = ->
 	###
 	
 	push_symbol(SGN);
-	push(X);
+	push(p1);
 	list(2);
 
 

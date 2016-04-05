@@ -13957,11 +13957,11 @@ selftest = function() {
   	test_quotient();
   	test_rationalize();
   	test_real();
+  	test_rect();
    */
-  test_rect();
+  test_sgn();
   alert("ok tests: " + ok_tests + " , ko tests: " + ko_tests);
   return;
-  test_sgn();
   test_taylor();
   test_transpose();
   test_zero();
@@ -14049,8 +14049,7 @@ sgn = function() {
 };
 
 yysgn = function() {
-  var X;
-  X = pop();
+  p1 = pop();
   if (isdouble(p1)) {
     if (p1.d > 0) {
       push_integer(1);
@@ -14079,18 +14078,18 @@ yysgn = function() {
       }
     }
   }
-  if (iscomplexnumber(X)) {
+  if (iscomplexnumber(p1)) {
     push_integer(-1);
-    push(X);
+    push(p1);
     absval();
     power();
-    push(X);
+    push(p1);
     multiply();
     return;
   }
-  if (isnegativeterm(X)) {
+  if (isnegativeterm(p1)) {
     push_symbol(SGN);
-    push(X);
+    push(p1);
     negate();
     list(2);
     push_integer(-1);
@@ -14100,14 +14099,14 @@ yysgn = function() {
 
   /*
   	push_integer(2);
-  	push(X);
+  	push(p1);
   	heaviside();
   	multiply();
   	push_integer(-1);
   	add();
    */
   push_symbol(SGN);
-  push(X);
+  push(p1);
   return list(2);
 };
 
