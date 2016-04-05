@@ -13,6 +13,7 @@ collectResultLine = (p) ->
 	return stringToBePrinted
 
 printline = (p) ->
+	debugger
 	stringToBePrinted = ""
 	print_expr(p)
 	console.log stringToBePrinted

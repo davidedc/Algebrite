@@ -34,6 +34,7 @@ inner = ->
 # inner product of tensors p1 and p2
 inner_f = ->
 
+	debugger
 	i = 0
 	n = p1.tensor.dim[p1.tensor.ndim - 1];
 
@@ -124,7 +125,7 @@ inner_f = ->
 		j = 0
 		for i in [0...(p1.tensor.ndim - 1)]
 			p3.tensor.dim[i] = p1.tensor.dim[i];
-			j = i;
+		j = p1.tensor.ndim - 1;
 		for i in [0...(p2.tensor.ndim - 1)]
 			p3.tensor.dim[j + i] = p2.tensor.dim[i + 1];
 		push(p3);
