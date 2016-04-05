@@ -18,7 +18,7 @@
 #include "stdafx.h"
 #include "defs.h"
 
-check_arg = ->
+INV_check_arg = ->
 	if (!istensor(p1))
 		return 0;
 	else if (p1.tensor.ndim != 2)
@@ -37,7 +37,7 @@ inv = ->
 
 	p1 = pop();
 
-	if (check_arg() == 0)
+	if (INV_check_arg() == 0)
 		push_symbol(INV);
 		push(p1);
 		list(2);
@@ -72,7 +72,7 @@ invg = ->
 
 	p1 = pop();
 
-	if (check_arg() == 0)
+	if (INV_check_arg() == 0)
 		push_symbol(INVG);
 		push(p1);
 		list(2);

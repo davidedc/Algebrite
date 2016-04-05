@@ -18,7 +18,7 @@
 #include "stdafx.h"
 #include "defs.h"
 
-check_arg = ->
+DET_check_arg = ->
 	if (!istensor(p1))
 		return 0;
 	else if (p1.tensor.ndim != 2)
@@ -37,7 +37,7 @@ det = ->
 
 	p1 = pop();
 
-	if (check_arg() == 0)
+	if (DET_check_arg() == 0)
 		push_symbol(DET);
 		push(p1);
 		list(2);
@@ -163,7 +163,7 @@ detg = ->
 
 	p1 = pop();
 
-	if (check_arg() == 0)
+	if (DET_check_arg() == 0)
 		push_symbol(DET);
 		push(p1);
 		list(2);

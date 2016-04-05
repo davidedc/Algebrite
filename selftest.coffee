@@ -8,13 +8,9 @@ ok_tests = 0
 ko_tests = 0
 
 selftest  = ->
-	# for handling "errout"
-
-	#if SELFTEST
 
 	test_low_level();
 
-	###
 	test_multiply();
 	test_scan();
 	test_power();
@@ -90,20 +86,12 @@ selftest  = ->
 	test_simplify();
 	test_roots();
 	test_eigen();
-	###
-
 	mini_test();
 
 
-	alert "ok tests: " + ok_tests + " , ko tests: " + ko_tests
+	alert "passed tests: " + ok_tests + " / failed tests: " + ko_tests
 	return
 
-
-
-	#endif
-
-
-	console.log("OK, all tests passed.");
 
 logout = (s) ->
 	console.log s
@@ -152,6 +140,7 @@ run_test = (s) ->
 
 		console.log("obtained:\n");
 		console.log(resultFromRun);
+		alert "test failed: " + s[i] + " expected: " + s[i+1] + " obtained: " + resultFromRun
 
 
 	test_flag = 0;
@@ -176,3 +165,4 @@ test_low_level = ->
 	# with the current logging. But it works now
 	# as I'm commenting it out.
 	#test_quickfactor();
+
