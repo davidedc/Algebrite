@@ -58,7 +58,7 @@ transform = (s) ->
 	decomp();
 
 	for eachEntry in s
-		console.log "scanning table entry " + eachEntry
+		if DEBUG then console.log "scanning table entry " + eachEntry
 		if eachEntry
 			scan_meta(eachEntry);
 			p1 = pop();

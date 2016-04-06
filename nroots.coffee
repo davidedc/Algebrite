@@ -168,7 +168,7 @@ findroot = (n) ->
 			compute_fa(n);
 
 			nrabs = NROOTS_ABS(nroots_fa)
-			console.log "nrabs: " + nrabs
+			if DEBUG then console.log "nrabs: " + nrabs
 			if ( nrabs < NROOTS_EPSILON)
 				return;
 

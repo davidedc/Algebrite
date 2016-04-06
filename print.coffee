@@ -13,7 +13,7 @@ collectResultLine = (p) ->
 	return stringToBePrinted
 
 printline = (p) ->
-	debugger
+	#debugger
 	stringToBePrinted = ""
 	print_expr(p)
 	console.log stringToBePrinted
@@ -389,17 +389,17 @@ print1 = (p, accumulator) ->
 		when CONS
 			accumulator += ("(");
 			accumulator = print1(car(p), accumulator);
-			#if p == cdr(p)
-			#	console.log "oh no recursive!"
-			#	debugger
+			if p == cdr(p)
+				console.log "oh no recursive!"
+				debugger
 			p = cdr(p);
 			while (iscons(p))
 				accumulator += (" ");
 				accumulator = print1(car(p), accumulator);
 				p = cdr(p);
-				#if p == cdr(p)
-				#	console.log "oh no recursive!"
-				#	debugger
+				if p == cdr(p)
+					console.log "oh no recursive!"
+					debugger
 			if (p != symbol(NIL))
 				accumulator += (" . ");
 				accumulator = print1(p, accumulator);

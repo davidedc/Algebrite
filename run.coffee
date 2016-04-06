@@ -10,7 +10,7 @@ stop = (s) ->
 	#else
 		errorMessage += "Stop: "
 		errorMessage += s
-		debugger
+		#debugger
 		throw new Error(errorMessage)
 		#longjmp(stop_return, 1)
 
@@ -46,7 +46,7 @@ run = (stringToBeRun) ->
 			check_stack()
 		catch error
 			console.log error
-			debugger
+			#debugger
 			allReturnedStrings += error.message
 			init()
 			break
@@ -126,7 +126,7 @@ echo_input = (s) ->
 # returns nil on stack if no result to print
 
 top_level_eval = ->
-	console.log "#### top level eval"
+	if DEBUG then console.log "#### top level eval"
 	save()
 
 	trigmode = 0

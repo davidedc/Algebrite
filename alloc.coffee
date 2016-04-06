@@ -47,8 +47,8 @@ alloc_tensor = (nelem) ->
 		p.tensor.elem[i] = zero;
 
 	p.tensor.allocatedId = allocatedId
-	if allocatedId == 9
-		debugger
+	#if allocatedId == 9
+	#	debugger
 	allocatedId++
 
 	if p.tensor.nelem != p.tensor.elem.length

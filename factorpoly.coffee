@@ -192,7 +192,7 @@ rationalize_coefficients = (h) ->
 	push(p7);
 	reciprocate();
 	p7 = pop();
-	console.log("rationalize_coefficients result");
+	if DEBUG then console.log("rationalize_coefficients result");
 	#print1(p7);
 
 get_factor = ->
@@ -250,7 +250,7 @@ get_factor = ->
 	for rootsTries_i in [0...nan]
 		for rootsTries_j in [0...na0]
 
-			#console.log "nan: " + nan + " na0: " + na0 + " i: " + rootsTries_i + " j: " + rootsTries_j
+			#if DEBUG then console.log "nan: " + nan + " na0: " + na0 + " i: " + rootsTries_i + " j: " + rootsTries_j
 
 			p4 = stack[an + rootsTries_i];
 			p5 = stack[a0 + rootsTries_j];
@@ -280,7 +280,7 @@ get_factor = ->
 
 			if (iszero(p6))
 				tos = h;
-				console.log "get_factor returning 1"
+				if DEBUG then console.log "get_factor returning 1"
 				return 1;
 
 			push(p5);
@@ -310,12 +310,12 @@ get_factor = ->
 
 			if (iszero(p6))
 				tos = h;
-				console.log "get_factor returning 1"
+				if DEBUG then console.log "get_factor returning 1"
 				return 1;
 
 	tos = h;
 
-	console.log "get_factor returning 0"
+	if DEBUG then console.log "get_factor returning 0"
 	return 0;
 
 #-----------------------------------------------------------------------------
@@ -350,7 +350,7 @@ yydivpoly = ->
 		subtract();
 		stack[polycoeff+i - 1] = pop();
 	stack[polycoeff+0] = p6;
-	console.log("yydivpoly Q:")
+	if DEBUG then console.log("yydivpoly Q:")
 	#print1(p6)
 
 Evalpoly = ->
@@ -360,8 +360,9 @@ Evalpoly = ->
 		push(p3);
 		multiply();
 		push(stack[polycoeff+i]);
-		console.log("Evalpoly top of stack:")
-		print1(stack[tos-i])
+		if DEBUG
+			console.log("Evalpoly top of stack:")
+			print1(stack[tos-i])
 		add();
 	p6 = pop();
 

@@ -5,6 +5,8 @@ SELFTEST = 1;
 
 NSYM = 1000;
 
+DEBUG = false;
+
 primetab = [];
 
 rational = (function() {
@@ -821,12 +823,13 @@ add_terms = function(n) {
   i = 0;
   h = tos - n;
   s = h;
-  console.log("stack before adding terms #" + stackAddsCount);
-  if (stackAddsCount === 137) {
-    debugger;
+  if (DEBUG) {
+    console.log("stack before adding terms #" + stackAddsCount);
   }
-  for (i = o = 0, ref = tos; 0 <= ref ? o < ref : o > ref; i = 0 <= ref ? ++o : --o) {
-    print1(stack[i]);
+  if (DEBUG) {
+    for (i = o = 0, ref = tos; 0 <= ref ? o < ref : o > ref; i = 0 <= ref ? ++o : --o) {
+      print1(stack[i]);
+    }
   }
   for (i = ac = 0; ac < 10; i = ++ac) {
     if (n < 2) {
@@ -855,15 +858,16 @@ add_terms = function(n) {
       push(p1);
       cons();
   }
-  console.log("stack after adding terms #" + stackAddsCount);
-  if (stackAddsCount === 5) {
-    debugger;
+  if (DEBUG) {
+    console.log("stack after adding terms #" + stackAddsCount);
   }
-  results = [];
-  for (i = ad = 0, ref1 = tos; 0 <= ref1 ? ad < ref1 : ad > ref1; i = 0 <= ref1 ? ++ad : --ad) {
-    results.push(print1(stack[i]));
+  if (DEBUG) {
+    results = [];
+    for (i = ad = 0, ref1 = tos; 0 <= ref1 ? ad < ref1 : ad > ref1; i = 0 <= ref1 ? ++ad : --ad) {
+      results.push(print1(stack[i]));
+    }
+    return results;
   }
-  return results;
 };
 
 cmp_terms_count = 0;
@@ -871,9 +875,6 @@ cmp_terms_count = 0;
 cmp_terms = function(p1, p2) {
   var i, o, ref, t;
   cmp_terms_count++;
-  if (cmp_terms_count === 52) {
-    debugger;
-  }
   i = 0;
   if (isnum(p1) && isnum(p2)) {
     flag = 1;
@@ -1178,9 +1179,6 @@ alloc_tensor = function(nelem) {
     p.tensor.elem[i] = zero;
   }
   p.tensor.allocatedId = allocatedId;
-  if (allocatedId === 9) {
-    debugger;
-  }
   allocatedId++;
   if (p.tensor.nelem !== p.tensor.elem.length) {
     console.log("something wrong in tensor dimensions");
@@ -2586,7 +2584,9 @@ convert_rational_to_double = function(p) {
 };
 
 push_integer = function(n) {
-  console.log("pushing integer " + n);
+  if (DEBUG) {
+    console.log("pushing integer " + n);
+  }
   save();
   p1 = new U();
   p1.k = NUM;
@@ -3326,9 +3326,8 @@ consCount = 0;
 cons = function() {
   var p;
   consCount++;
-  console.log("cons tos: " + tos + " # " + consCount);
-  if (consCount === 444) {
-    debugger;
+  if (DEBUG) {
+    console.log("cons tos: " + tos + " # " + consCount);
   }
   p = new U();
   p.k = CONS;
@@ -8031,7 +8030,9 @@ rationalize_coefficients = function(h) {
   push(p7);
   reciprocate();
   p7 = pop();
-  return console.log("rationalize_coefficients result");
+  if (DEBUG) {
+    return console.log("rationalize_coefficients result");
+  }
 };
 
 get_factor = function() {
@@ -8108,7 +8109,9 @@ get_factor = function() {
       }
       if (iszero(p6)) {
         tos = h;
-        console.log("get_factor returning 1");
+        if (DEBUG) {
+          console.log("get_factor returning 1");
+        }
         return 1;
       }
       push(p5);
@@ -8135,13 +8138,17 @@ get_factor = function() {
       }
       if (iszero(p6)) {
         tos = h;
-        console.log("get_factor returning 1");
+        if (DEBUG) {
+          console.log("get_factor returning 1");
+        }
         return 1;
       }
     }
   }
   tos = h;
-  console.log("get_factor returning 0");
+  if (DEBUG) {
+    console.log("get_factor returning 0");
+  }
   return 0;
 };
 
@@ -8163,7 +8170,9 @@ yydivpoly = function() {
     stack[polycoeff + i - 1] = pop();
   }
   stack[polycoeff + 0] = p6;
-  return console.log("yydivpoly Q:");
+  if (DEBUG) {
+    return console.log("yydivpoly Q:");
+  }
 };
 
 Evalpoly = function() {
@@ -8174,8 +8183,10 @@ Evalpoly = function() {
     push(p3);
     multiply();
     push(stack[polycoeff + i]);
-    console.log("Evalpoly top of stack:");
-    print1(stack[tos - i]);
+    if (DEBUG) {
+      console.log("Evalpoly top of stack:");
+      print1(stack[tos - i]);
+    }
     add();
   }
   return p6 = pop();
@@ -9235,13 +9246,21 @@ init = function() {
   push_integer(1);
   one = pop();
   push_symbol(POWER);
-  print1(stack[tos - 1]);
+  if (DEBUG) {
+    print1(stack[tos - 1]);
+  }
   push_integer(-1);
-  print1(stack[tos - 1]);
+  if (DEBUG) {
+    print1(stack[tos - 1]);
+  }
   push_rational(1, 2);
-  print1(stack[tos - 1]);
+  if (DEBUG) {
+    print1(stack[tos - 1]);
+  }
   list(3);
-  print1(stack[tos - 1]);
+  if (DEBUG) {
+    print1(stack[tos - 1]);
+  }
   imaginaryunit = pop();
   return defn();
 };
@@ -9254,9 +9273,11 @@ defn = function() {
   for (defn_i = ad = 0, ref1 = defn_str.length; 0 <= ref1 ? ad < ref1 : ad > ref1; defn_i = 0 <= ref1 ? ++ad : --ad) {
     definitionOfInterest = defn_str[defn_i];
     scan(definitionOfInterest);
-    console.log("... evaling " + definitionOfInterest);
-    console.log("top of stack:");
-    print1(stack[tos - 1]);
+    if (DEBUG) {
+      console.log("... evaling " + definitionOfInterest);
+      console.log("top of stack:");
+      print1(stack[tos - 1]);
+    }
     Eval();
     results.push(pop());
   }
@@ -10493,7 +10514,9 @@ ucmp = function(a, b) {
 test_madd = function() {
   var ad, ae, i, j, m;
   i = 0;
-  console.log("test madd");
+  if (DEBUG) {
+    console.log("test madd");
+  }
   m = mtotal;
   for (i = ad = -100; ad < 100; i = ++ad) {
     for (j = ae = -100; ae < 100; j = ++ae) {
@@ -11711,7 +11734,9 @@ __is_radical_number = function(p) {
 };
 
 test_multiply = function() {
-  console.log("test_multiply ----------------------------");
+  if (DEBUG) {
+    console.log("test_multiply ----------------------------");
+  }
   return run_test(["0*a", "0", "a*0", "0", "1*a", "a", "a*1", "a", "a*a", "a^2", "a^2*a", "a^3", "a*a^2", "a^3", "a^2*a^2", "a^4", "2^a*2^(3-a)", "8", "sqrt(2)/2", "2^(-1/2)", "2/sqrt(2)", "2^(1/2)", "-sqrt(2)/2", "-1/(2^(1/2))", "2^(1/2-a)*2^a/10", "1/(5*2^(1/2))", "i/4", "1/4*i", "1/(4 i)", "-1/4*i", "1.0 pi 1/2", "0.5*pi", "1.0 1/2 pi", "0.5*pi"]);
 };
 
@@ -11878,7 +11903,9 @@ findroot = function(n) {
     for (k = af = 0; af < 1000; k = ++af) {
       compute_fa(n);
       nrabs = NROOTS_ABS(nroots_fa);
-      console.log("nrabs: " + nrabs);
+      if (DEBUG) {
+        console.log("nrabs: " + nrabs);
+      }
       if (nrabs < NROOTS_EPSILON) {
         return;
       }
@@ -12636,7 +12663,6 @@ collectResultLine = function(p) {
 };
 
 printline = function(p) {
-  debugger;
   stringToBePrinted = "";
   print_expr(p);
   return console.log(stringToBePrinted);
@@ -13009,11 +13035,19 @@ print1 = function(p, accumulator) {
     case CONS:
       accumulator += "(";
       accumulator = print1(car(p), accumulator);
+      if (p === cdr(p)) {
+        console.log("oh no recursive!");
+        debugger;
+      }
       p = cdr(p);
       while (iscons(p)) {
         accumulator += " ";
         accumulator = print1(car(p), accumulator);
         p = cdr(p);
+        if (p === cdr(p)) {
+          console.log("oh no recursive!");
+          debugger;
+        }
       }
       if (p !== symbol(NIL)) {
         accumulator += " . ";
@@ -13882,7 +13916,6 @@ test_roots = function() {
 stop = function(s) {
   errorMessage += "Stop: ";
   errorMessage += s;
-  debugger;
   throw new Error(errorMessage);
 };
 
@@ -13913,7 +13946,6 @@ run = function(stringToBeRun) {
     } catch (error1) {
       error = error1;
       console.log(error);
-      debugger;
       allReturnedStrings += error.message;
       init();
       break;
@@ -13975,7 +14007,9 @@ echo_input = function(s) {
 
 top_level_eval = function() {
   var doNothing;
-  console.log("#### top level eval");
+  if (DEBUG) {
+    console.log("#### top level eval");
+  }
   save();
   trigmode = 0;
   p1 = symbol(AUTOEXPAND);
@@ -14059,7 +14093,9 @@ token_buf = 0;
 scanned = "";
 
 scan = function(s) {
-  console.log("#### scanning " + s);
+  if (DEBUG) {
+    console.log("#### scanning " + s);
+  }
   scanned = s;
   meta_mode = 0;
   expanding++;
@@ -14406,7 +14442,9 @@ get_next_token = function() {
     }
     newline_flag = 1;
   }
-  return console.log("get_next_token token: " + token);
+  if (DEBUG) {
+    return console.log("get_next_token token: " + token);
+  }
 };
 
 get_token = function() {
@@ -14503,7 +14541,9 @@ update_token_buf = function(a, b) {
 };
 
 test_scan = function() {
-  console.log("test_scan ----------------------------");
+  if (DEBUG) {
+    console.log("test_scan ----------------------------");
+  }
   return run_test(["a^^b", "a^^ ? b\nStop: syntax error", "(a+b", "(a+b ? \nStop: ) expected", "quote(1/(x*log(a*x)))", "1/(x*log(a*x))", "\"hello", "\"hello ? \nStop: runaway string", "a+\nb+\nc+", "a+\nb+\nc+ ? \nStop: syntax error", "2+2\n(3+3)", "4\n6", "1\n-1", "1\n-1", "1\n+1", "1\n1"]);
 };
 
@@ -15325,9 +15365,8 @@ push = function(p) {
   }
   if (p === symbol(NIL)) {
     nil_symbols++;
-    console.log("pushing symbol(NIL) #" + nil_symbols);
-    if (nil_symbols === 111) {
-      debugger;
+    if (DEBUG) {
+      console.log("pushing symbol(NIL) #" + nil_symbols);
     }
   }
   if (tos >= frame) {
@@ -15524,8 +15563,11 @@ set_binding = function(p, q) {
   indexFound = symtab.indexOf(p);
   if (symtab.indexOf(p, indexFound + 1) !== -1) {
     console.log("ops, more than one element!");
+    debugger;
   }
-  console.log("lookup >> set_binding lookup " + indexFound);
+  if (DEBUG) {
+    console.log("lookup >> set_binding lookup " + indexFound);
+  }
   binding[indexFound] = q;
   return arglist[indexFound] = symbol(NIL);
 };
@@ -15538,8 +15580,11 @@ get_binding = function(p) {
   indexFound = symtab.indexOf(p);
   if (symtab.indexOf(p, indexFound + 1) !== -1) {
     console.log("ops, more than one element!");
+    debugger;
   }
-  console.log("lookup >> get_binding lookup " + indexFound);
+  if (DEBUG) {
+    console.log("lookup >> get_binding lookup " + indexFound);
+  }
   return binding[indexFound];
 };
 
@@ -15551,8 +15596,11 @@ set_binding_and_arglist = function(p, q, r) {
   indexFound = symtab.indexOf(p);
   if (symtab.indexOf(p, indexFound + 1) !== -1) {
     console.log("ops, more than one element!");
+    debugger;
   }
-  console.log("lookup >> set_binding_and_arglist lookup " + indexFound);
+  if (DEBUG) {
+    console.log("lookup >> set_binding_and_arglist lookup " + indexFound);
+  }
   binding[indexFound] = q;
   return arglist[indexFound] = r;
 };
@@ -15565,8 +15613,11 @@ get_arglist = function(p) {
   indexFound = symtab.indexOf(p);
   if (symtab.indexOf(p, indexFound + 1) !== -1) {
     console.log("ops, more than one element!");
+    debugger;
   }
-  console.log("lookup >> get_arglist lookup " + indexFound);
+  if (DEBUG) {
+    console.log("lookup >> get_arglist lookup " + indexFound);
+  }
   return arglist[indexFound];
 };
 
@@ -15581,10 +15632,10 @@ symnum = function(p) {
   indexFound = symtab.indexOf(p);
   if (symtab.indexOf(p, indexFound + 1) !== -1) {
     console.log("ops, more than one element!");
-  }
-  console.log("lookup >> symnum lookup " + indexFound + " lookup # " + lookupsTotal);
-  if (lookupsTotal === 21) {
     debugger;
+  }
+  if (DEBUG) {
+    console.log("lookup >> symnum lookup " + indexFound + " lookup # " + lookupsTotal);
   }
   return indexFound;
 };
@@ -16436,7 +16487,9 @@ transform = function(s) {
   decomp();
   for (ae = 0, len1 = s.length; ae < len1; ae++) {
     eachEntry = s[ae];
-    console.log("scanning table entry " + eachEntry);
+    if (DEBUG) {
+      console.log("scanning table entry " + eachEntry);
+    }
     if (eachEntry) {
       scan_meta(eachEntry);
       p1 = pop();

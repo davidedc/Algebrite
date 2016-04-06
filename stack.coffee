@@ -36,9 +36,9 @@ push = (p) ->
 
 	if p == symbol(NIL)
 		nil_symbols++
-		console.log "pushing symbol(NIL) #" + nil_symbols
-		if nil_symbols == 111
-			debugger
+		if DEBUG then console.log "pushing symbol(NIL) #" + nil_symbols
+		#if nil_symbols == 111
+		#	debugger
 	if (tos >= frame)
 		stop("stack overflow")
 	stack[tos++] = p

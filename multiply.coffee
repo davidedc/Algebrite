@@ -574,7 +574,7 @@ __is_radical_number = (p) ->
 
 
 test_multiply = ->
-	console.log "test_multiply ----------------------------"
+	if DEBUG then console.log "test_multiply ----------------------------"
 	run_test [
 
 			"0*a",

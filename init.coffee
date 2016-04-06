@@ -204,13 +204,13 @@ init = ->
 
 	# i is the square root of -1 i.e. -1 ^ 1/2
 	push_symbol(POWER)
-	print1(stack[tos-1])
+	if DEBUG then print1(stack[tos-1])
 	push_integer(-1)
-	print1(stack[tos-1])
+	if DEBUG then print1(stack[tos-1])
 	push_rational(1, 2)
-	print1(stack[tos-1])
+	if DEBUG then print1(stack[tos-1])
 	list(3)
-	print1(stack[tos-1])
+	if DEBUG then print1(stack[tos-1])
 	imaginaryunit = pop()	# must be untagged in gc
 
 	defn()
@@ -234,8 +234,9 @@ defn = ->
 	for defn_i in [0...defn_str.length]
 		definitionOfInterest = defn_str[defn_i]
 		scan(definitionOfInterest)
-		console.log "... evaling " + definitionOfInterest
-		console.log("top of stack:")
-		print1(stack[tos-1])
+		if DEBUG
+			console.log "... evaling " + definitionOfInterest
+			console.log("top of stack:")
+			print1(stack[tos-1])
 		Eval()
 		pop()

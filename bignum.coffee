@@ -129,7 +129,7 @@ add_numbers = ->
 	a = 1.0
 	b = 1.0
 
-	#console.log("add_numbers adding numbers: " + print1(stack[tos - 1], "") + " and " + print1(stack[tos - 2], ""))
+	#if DEBUG then console.log("add_numbers adding numbers: " + print1(stack[tos - 1], "") + " and " + print1(stack[tos - 2], ""))
 
 	if (isrational(stack[tos - 1]) && isrational(stack[tos - 2]))
 		qadd()
@@ -425,7 +425,7 @@ convert_rational_to_double = (p) ->
 
 # n an integer
 push_integer = (n) ->
-	console.log "pushing integer " + n
+	if DEBUG then console.log "pushing integer " + n
 	save()
 	p1 = new U()
 	p1.k = NUM

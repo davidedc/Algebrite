@@ -47,7 +47,8 @@ set_binding = (p, q) ->
 	indexFound = symtab.indexOf(p)
 	if symtab.indexOf(p, indexFound + 1) != -1
 		console.log("ops, more than one element!");
-	console.log("lookup >> set_binding lookup " + indexFound);
+		debugger
+	if DEBUG then console.log("lookup >> set_binding lookup " + indexFound);
 	binding[indexFound] = q
 	arglist[indexFound] = symbol(NIL)
 
@@ -58,7 +59,8 @@ get_binding = (p) ->
 	indexFound = symtab.indexOf(p)
 	if symtab.indexOf(p, indexFound + 1) != -1
 		console.log("ops, more than one element!");
-	console.log("lookup >> get_binding lookup " + indexFound);
+		debugger
+	if DEBUG then console.log("lookup >> get_binding lookup " + indexFound);
 	#if indexFound == 139
 	#	debugger
 	#if indexFound == 137
@@ -72,7 +74,8 @@ set_binding_and_arglist = (p, q, r) ->
 	indexFound = symtab.indexOf(p)
 	if symtab.indexOf(p, indexFound + 1) != -1
 		console.log("ops, more than one element!");
-	console.log("lookup >> set_binding_and_arglist lookup " + indexFound);
+		debugger
+	if DEBUG then console.log("lookup >> set_binding_and_arglist lookup " + indexFound);
 	binding[indexFound] = q
 	arglist[indexFound] = r
 
@@ -83,7 +86,8 @@ get_arglist = (p) ->
 	indexFound = symtab.indexOf(p)
 	if symtab.indexOf(p, indexFound + 1) != -1
 		console.log("ops, more than one element!");
-	console.log("lookup >> get_arglist lookup " + indexFound);
+		debugger
+	if DEBUG then console.log("lookup >> get_arglist lookup " + indexFound);
 	return arglist[indexFound]
 
 # get symbol's number from ptr
@@ -97,9 +101,10 @@ symnum = (p) ->
 	indexFound = symtab.indexOf(p)
 	if symtab.indexOf(p, indexFound + 1) != -1
 		console.log("ops, more than one element!");
-	console.log("lookup >> symnum lookup " + indexFound + " lookup # " + lookupsTotal);
-	if lookupsTotal == 21
 		debugger
+	if DEBUG then console.log("lookup >> symnum lookup " + indexFound + " lookup # " + lookupsTotal);
+	#if lookupsTotal == 21
+	#	debugger
 	#if indexFound == 79
 	#	debugger
 	return indexFound

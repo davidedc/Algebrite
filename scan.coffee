@@ -43,7 +43,7 @@ token_buf = 0
 
 scanned = ""
 scan = (s) ->
-	console.log "#### scanning " + s
+	if DEBUG then console.log "#### scanning " + s
 	#if s=="y=x"
 	#	debugger
 	#if s=="y"
@@ -373,7 +373,7 @@ get_next_token = ->
 		if (token != T_NEWLINE)
 			break
 		newline_flag = 1
-	console.log "get_next_token token: " + token
+	if DEBUG then console.log "get_next_token token: " + token
 	#if token == ')'
 	#	debugger
 
@@ -478,7 +478,7 @@ update_token_buf = (a,b) ->
 
 
 test_scan = ->
-	console.log "test_scan ----------------------------"
+	if DEBUG then console.log "test_scan ----------------------------"
 
 	run_test [
 

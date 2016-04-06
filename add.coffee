@@ -50,11 +50,13 @@ add_terms = (n) ->
 
 	# ensure no infinite loop, use "for"
 
-	console.log "stack before adding terms #" + stackAddsCount
-	if stackAddsCount == 137
-		debugger
-	for i in [0...tos]
-		print1 stack[i]
+	if DEBUG then console.log "stack before adding terms #" + stackAddsCount
+	#if stackAddsCount == 137
+	#	debugger
+
+	if DEBUG
+		for i in [0...tos]
+			print1 stack[i]
 
 	for i in [0...10]
 
@@ -87,46 +89,48 @@ add_terms = (n) ->
 			push(p1);
 			cons();
 
-	console.log "stack after adding terms #" + stackAddsCount
-	if stackAddsCount == 5
-		debugger
-	for i in [0...tos]
-		print1 stack[i]
+	if DEBUG then console.log "stack after adding terms #" + stackAddsCount
+	#if stackAddsCount == 5
+	#	debugger
+
+	if DEBUG
+		for i in [0...tos]
+			print1 stack[i]
 
 # Compare terms for order, clobbers p1 and p2.
 
 cmp_terms_count = 0
 cmp_terms = (p1, p2) ->
 	cmp_terms_count++
-	if cmp_terms_count == 52
-		debugger
+	#if cmp_terms_count == 52
+	#	debugger
 
 	i = 0
 	# numbers can be combined
 
 	if (isnum(p1) && isnum(p2))
 		flag = 1;
-		#console.log "cmp_terms #" + cmp_terms_count + " returns 0"
+		#if DEBUG then console.log "cmp_terms #" + cmp_terms_count + " returns 0"
 		return 0;
 
 	# congruent tensors can be combined
 
 	if (istensor(p1) && istensor(p2))
 		if (p1.tensor.ndim < p2.tensor.ndim)
-			#console.log "cmp_terms #" + cmp_terms_count + " returns -1"
+			#if DEBUG then console.log "cmp_terms #" + cmp_terms_count + " returns -1"
 			return -1;
 		if (p1.tensor.ndim > p2.tensor.ndim)
-			#console.log "cmp_terms #" + cmp_terms_count + " returns 1"
+			#if DEBUG then console.log "cmp_terms #" + cmp_terms_count + " returns 1"
 			return 1;
 		for i in [0...p1.tensor.ndim]
 			if (p1.tensor.dim[i] < p2.tensor.dim[i])
-				#console.log "cmp_terms #" + cmp_terms_count + " returns -1"
+				#if DEBUG then console.log "cmp_terms #" + cmp_terms_count + " returns -1"
 				return -1;
 			if (p1.tensor.dim[i] > p2.tensor.dim[i])
-				#console.log "cmp_terms #" + cmp_terms_count + " returns 1"
+				#if DEBUG then console.log "cmp_terms #" + cmp_terms_count + " returns 1"
 				return 1;
 		flag = 1;
-		#console.log "cmp_terms #" + cmp_terms_count + " returns 0"
+		#if DEBUG then console.log "cmp_terms #" + cmp_terms_count + " returns 0"
 		return 0;
 
 	if (car(p1) == symbol(MULTIPLY))
@@ -148,7 +152,7 @@ cmp_terms = (p1, p2) ->
 	if (t == 0)
 		flag = 1;
 
-	#console.log "cmp_terms #" + cmp_terms_count + " returns " + t
+	#if DEBUG then console.log "cmp_terms #" + cmp_terms_count + " returns " + t
 	return t;
 
 ###
