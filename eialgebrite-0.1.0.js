@@ -1140,31 +1140,31 @@ test_adj = function() {
 #define M 100
 #define N 100000
 
-U *mem[M]
-int mcount
+U *mem[M];
+int mcount;
 
-U *free_list
-int free_count
+U *free_list;
+int free_count;
 
 U *
 alloc(void)
 {
-	U *p
+	U *p;
 	if (free_count == 0) {
 		if (mcount == 0)
-			alloc_mem()
+			alloc_mem();
 		else {
-			gc()
+			gc();
 			if (free_count < N * mcount / 2)
-				alloc_mem()
+				alloc_mem();
 		}
 		if (free_count == 0)
-			stop("atom space exhausted")
+			stop("atom space exhausted");
 	}
-	p = free_list
-	free_list = free_list->u.cons.cdr
-	free_count--
-	return p
+	p = free_list;
+	free_list = free_list->u.cons.cdr;
+	free_count--;
+	return p;
 }
  */
 
@@ -1196,71 +1196,71 @@ alloc_tensor = function(nelem) {
 void
 gc(void)
 {
-	int i, j
-	U *p
+	int i, j;
+	U *p;
 
 	// tag everything
 
 	for (i = 0; i < mcount; i++) {
-		p = mem[i]
+		p = mem[i];
 		for (j = 0; j < N; j++)
-			p[j].tag = 1
+			p[j].tag = 1;
 	}
 
 	// untag what's used
 
-	untag(p0)
-	untag(p1)
-	untag(p2)
-	untag(p3)
-	untag(p4)
-	untag(p5)
-	untag(p6)
-	untag(p7)
-	untag(p8)
-	untag(p9)
+	untag(p0);
+	untag(p1);
+	untag(p2);
+	untag(p3);
+	untag(p4);
+	untag(p5);
+	untag(p6);
+	untag(p7);
+	untag(p8);
+	untag(p9);
 
-	untag(one)
-	untag(zero)
-	untag(imaginaryunit)
+	untag(one);
+	untag(zero);
+	untag(imaginaryunit);
 
 	for (i = 0; i < NSYM; i++) {
-		untag(binding[i])
-		untag(arglist[i])
+		untag(binding[i]);
+		untag(arglist[i]);
 	}
 
 	for (i = 0; i < tos; i++)
-		untag(stack[i])
+		untag(stack[i]);
 
 	for (i = (int) (frame - stack); i < TOS; i++)
-		untag(stack[i])
+		untag(stack[i]);
 
 	// collect everything that's still tagged
 
-	free_count = 0
+	free_count = 0;
 
 	for (i = 0; i < mcount; i++) {
-		p = mem[i]
+		p = mem[i];
 		for (j = 0; j < N; j++) {
 			if (p[j].tag == 0)
-				continue
+				continue;
 			// still tagged so it's unused, put on free list
 			switch (p[j].k) {
 			case TENSOR:
-				free(p[j].u.tensor)
-				break
+				free(p[j].u.tensor);
+				break;
 			case STR:
-				free(p[j].u.str)
-				break
+				free(p[j].u.str);
+				break;
 			case NUM:
-				mfree(p[j].u.q.a)
-				mfree(p[j].u.q.b)
-				break
+				mfree(p[j].u.q.a);
+				mfree(p[j].u.q.b);
+				break;
 			}
 			p[j].k = CONS; // so no double free occurs above
-			p[j].u.cons.cdr = free_list
-			free_list = p + j
-			free_count++
+			p[j].u.cons.cdr = free_list;
+			free_list = p + j;
+			free_count++;
 		}
 	}
 }
@@ -1268,25 +1268,25 @@ gc(void)
 void
 untag(U *p)
 {
-	int i
+	int i;
 
 	if (iscons(p)) {
 		do {
 			if (p->tag == 0)
-				return
-			p->tag = 0
-			untag(p->u.cons.car)
-			p = p->u.cons.cdr
-		} while (iscons(p))
-		untag(p)
-		return
+				return;
+			p->tag = 0;
+			untag(p->u.cons.car);
+			p = p->u.cons.cdr;
+		} while (iscons(p));
+		untag(p);
+		return;
 	}
 
 	if (p->tag) {
-		p->tag = 0
+		p->tag = 0;
  		if (istensor(p)) {
 			for (i = 0; i < p->u.tensor->nelem; i++)
-				untag(p->u.tensor->elem[i])
+				untag(p->u.tensor->elem[i]);
 		}
 	}
 }
@@ -1296,36 +1296,36 @@ untag(U *p)
 void
 alloc_mem(void)
 {
-	int i
-	U *p
+	int i;
+	U *p;
 	if (mcount == M)
-		return
-	p = (U *) malloc(N * sizeof (struct U))
+		return;
+	p = (U *) malloc(N * sizeof (struct U));
 	if (p == NULL)
-		return
-	mem[mcount++] = p
+		return;
+	mem[mcount++] = p;
 	for (i = 0; i < N; i++) {
 		p[i].k = CONS; // so no free in gc
-		p[i].u.cons.cdr = p + i + 1
+		p[i].u.cons.cdr = p + i + 1;
 	}
-	p[N - 1].u.cons.cdr = free_list
-	free_list = p
-	free_count += N
+	p[N - 1].u.cons.cdr = free_list;
+	free_list = p;
+	free_count += N;
 }
 
 void
 print_mem_info(void)
 {
-	char buf[100]
+	char buf[100];
 
-	sprintf(buf, "%d blocks (%d bytes/block)\n", N * mcount, (int) sizeof (U))
-	printstr(buf)
+	sprintf(buf, "%d blocks (%d bytes/block)\n", N * mcount, (int) sizeof (U));
+	printstr(buf);
 
-	sprintf(buf, "%d free\n", free_count)
-	printstr(buf)
+	sprintf(buf, "%d free\n", free_count);
+	printstr(buf);
 
-	sprintf(buf, "%d used\n", N * mcount - free_count)
-	printstr(buf)
+	sprintf(buf, "%d used\n", N * mcount - free_count);
+	printstr(buf);
 }
  */
 
@@ -3125,16 +3125,16 @@ clockform = function() {
   multiply();
 
   /*
-  	p1 = pop()
-  	push(p1)
-  	mag()
-  	push(symbol(E))
-  	push(p1)
-  	arg()
-  	push(imaginaryunit)
-  	multiply()
-  	power()
-  	multiply()
+  	p1 = pop();
+  	push(p1);
+  	mag();
+  	push(symbol(E));
+  	push(p1);
+  	arg();
+  	push(imaginaryunit);
+  	multiply();
+  	power();
+  	multiply();
    */
   return restore();
 };
@@ -6001,27 +6001,27 @@ emit_tensor = function(p) {
   
   		for (i = 0; i < h; i++) {
   			if (yindex == YMAX)
-  				break
-  			chartab[yindex].c = '|'
-  			chartab[yindex].x = x - 2
-  			chartab[yindex].y = y + i
-  			yindex++
+  				break;
+  			chartab[yindex].c = '|';
+  			chartab[yindex].x = x - 2;
+  			chartab[yindex].y = y + i;
+  			yindex++;
   		}
   
   		 * right brace
   
-  		emit_x++
+  		emit_x++;
   
   		for (i = 0; i < h; i++) {
   			if (yindex == YMAX)
-  				break
-  			chartab[yindex].c = '|'
-  			chartab[yindex].x = emit_x
-  			chartab[yindex].y = y + i
-  			yindex++
+  				break;
+  			chartab[yindex].c = '|';
+  			chartab[yindex].x = emit_x;
+  			chartab[yindex].y = y + i;
+  			yindex++;
   		}
   
-  		emit_x++
+  		emit_x++;
   
   	endif
    */
@@ -6057,13 +6057,11 @@ s = ["format=1", "", "((a,b),(c,d))", "a   b\n", "\n", "c   d", "1/sqrt(-15)", "
 void
 test_display(void)
 {
-	test(__FILE__, s, sizeof s / sizeof (char *))
+	test(__FILE__, s, sizeof s / sizeof (char *));
 }
 
 #endif
  */
-
-BY;
 
 divisors = function() {
   var ad, h, i, n, ref1, subsetOfStack;
@@ -7963,12 +7961,12 @@ yyfactorpoly = function() {
 
     /*
     		if (isnegativeterm(p4))
-    			push(p8)
-    			negate()
-    			p8 = pop()
-    			push(p7)
-    			negate_noexpand()
-    			p7 = pop()
+    			push(p8);
+    			negate();
+    			p8 = pop();
+    			push(p7);
+    			negate_noexpand();
+    			p7 = pop();
      */
     push(p7);
     push(p8);
@@ -8837,8 +8835,6 @@ yyhermite2 = function(n) {
 test_hermite = function() {
   return run_test(["hermite(x,n)", "hermite(x,n)", "hermite(x,0)-1", "0", "hermite(x,1)-2*x", "0", "hermite(x,2)-(4*x^2-2)", "0", "hermite(x,3)-(8*x^3-12*x)", "0", "hermite(x,4)-(16*x^4-48*x^2+12)", "0", "hermite(x,5)-(32*x^5-160*x^3+120*x)", "0", "hermite(x,6)-(64*x^6-480*x^4+720*x^2-120)", "0", "hermite(x,7)-(128*x^7-1344*x^5+3360*x^3-1680*x)", "0", "hermite(x,8)-(256*x^8-3584*x^6+13440*x^4-13440*x^2+1680)", "0", "hermite(x,9)-(512*x^9-9216*x^7+48384*x^5-80640*x^3+30240*x)", "0", "hermite(x,10)-(1024*x^10-23040*x^8+161280*x^6-403200*x^4+302400*x^2-30240)", "0", "hermite(a-b,10)-eval(subst(a-b,x,hermite(x,10)))", "0"]);
 };
-
-BY;
 
 hilbert = function() {
   var ad, ae, i, j, n, ref1, ref2;
@@ -10694,31 +10690,31 @@ mcmpint = function(a, n) {
 void
 test_mcmp(void)
 {
-	int i, j, k
-	unsigned int *x, *y
-	logout("testing mcmp\n")
+	int i, j, k;
+	unsigned int *x, *y;
+	logout("testing mcmp\n");
 	for (i = -1000; i < 1000; i++) {
-		x = mint(i)
+		x = mint(i);
 		for (j = -1000; j < 1000; j++) {
-			y = mint(j)
-			k = mcmp(x, y)
+			y = mint(j);
+			k = mcmp(x, y);
 			if (i == j && k != 0) {
-				logout("failed\n")
-				errout()
+				logout("failed\n");
+				errout();
 			}
 			if (i < j && k != -1) {
-				logout("failed\n")
-				errout()
+				logout("failed\n");
+				errout();
 			}
 			if (i > j && k != 1) {
-				logout("failed\n")
-				errout()
+				logout("failed\n");
+				errout();
 			}
-			mfree(y)
+			mfree(y);
 		}
-		mfree(x)
+		mfree(x);
 	}
-	logout("ok\n")
+	logout("ok\n");
 }
 
 #endif
@@ -10961,14 +10957,14 @@ unique_f = function(p) {
 void
 check_endianess(void)
 {
-	int tmp = 1
+	int tmp = 1;
 	if (((char *) &tmp)[0] == 1 && Y_LITTLE_ENDIAN == 0) {
-		printf("Please change Y_LITTLE_ENDIAN to 1 in defs.h and recompile.\n")
-		Exit(1)
+		printf("Please change Y_LITTLE_ENDIAN to 1 in defs.h and recompile.\n");
+		Exit(1);
 	}
 	if (((char *) &tmp)[0] == 0 && Y_LITTLE_ENDIAN != 0) {
-		printf("Please change Y_LITTLE_ENDIAN to 0 in defs.h and recompile.\n")
-		Exit(1)
+		printf("Please change Y_LITTLE_ENDIAN to 0 in defs.h and recompile.\n");
+		Exit(1);
 	}
 }
  */
@@ -11018,12 +11014,12 @@ mdiv = function(a, b) {
 static void
 addf(unsigned int *a, unsigned int *b, int len)
 {
-	int i
+	int i;
 	long long t = 0; # can be signed or unsigned 
 	for (i = 0; i < len; i++) {
-		t += (long long) a[i] + b[i]
-		a[i] = (unsigned int) t
-		t >>= 32
+		t += (long long) a[i] + b[i];
+		a[i] = (unsigned int) t;
+		t >>= 32;
 	}
 }
 
@@ -11032,12 +11028,12 @@ addf(unsigned int *a, unsigned int *b, int len)
 static void
 subf(unsigned int *a, unsigned int *b, int len)
 {
-	int i
+	int i;
 	long long t = 0; # must be signed
 	for (i = 0; i < len; i++) {
-		t += (long long) a[i] - b[i]
-		a[i] = (unsigned int) t
-		t >>= 32
+		t += (long long) a[i] - b[i];
+		a[i] = (unsigned int) t;
+		t >>= 32;
 	}
 }
 
@@ -11048,14 +11044,14 @@ subf(unsigned int *a, unsigned int *b, int len)
 static void
 mulf(unsigned int *a, unsigned int *b, int len, unsigned int c)
 {
-	int i
+	int i;
 	unsigned long long t = 0; # must be unsigned
 	for (i = 0; i < len; i++) {
-		t += (unsigned long long) b[i] * c
-		a[i] = (unsigned int) t
-		t >>= 32
+		t += (unsigned long long) b[i] * c;
+		a[i] = (unsigned int) t;
+		t >>= 32;
 	}
-	a[i] = (unsigned int) t
+	a[i] = (unsigned int) t;
 }
  */
 
@@ -11159,8 +11155,6 @@ test_mmodf = function(na, nb, nc) {
     throw new Error("test_mmodf error");
   }
 };
-
-BY;
 
 Eval_mod = function() {
   push(cadr(p1));
@@ -12515,19 +12509,19 @@ yypower = function() {
       return;
 
       /*
-      			push(p1)
-      			mag()
-      			push(p2)
-      			power()
-      			push(symbol(E))
-      			push(p1)
-      			arg()
-      			push(p2)
-      			multiply()
-      			push(imaginaryunit)
-      			multiply()
-      			power()
-      			multiply()
+      			push(p1);
+      			mag();
+      			push(p2);
+      			power();
+      			push(symbol(E));
+      			push(p1);
+      			arg();
+      			push(p2);
+      			multiply();
+      			push(imaginaryunit);
+      			multiply();
+      			power();
+      			multiply();
        */
     }
   }
@@ -14768,12 +14762,12 @@ yysgn = function() {
   }
 
   /*
-  	push_integer(2)
-  	push(p1)
-  	heaviside()
-  	multiply()
-  	push_integer(-1)
-  	add()
+  	push_integer(2);
+  	push(p1);
+  	heaviside();
+  	multiply();
+  	push_integer(-1);
+  	add();
    */
   push_symbol(SGN);
   push(p1);
@@ -14844,31 +14838,31 @@ simfac = function() {
 void
 simfac(void)
 {
-	int h
-	save()
-	p1 = pop()
+	int h;
+	save();
+	p1 = pop();
 	if (car(p1) == symbol(ADD)) {
-		h = tos
-		p1 = cdr(p1)
+		h = tos;
+		p1 = cdr(p1);
 		while (p1 != symbol(NIL)) {
-			push(car(p1))
-			simfac_term()
-			p1 = cdr(p1)
+			push(car(p1));
+			simfac_term();
+			p1 = cdr(p1);
 		}
-		addk(tos - h)
-		p1 = pop()
+		addk(tos - h);
+		p1 = pop();
 		if (find(p1, symbol(FACTORIAL))) {
-			push(p1)
+			push(p1);
 			if (car(p1) == symbol(ADD)) {
-				Condense()
-				simfac_term()
+				Condense();
+				simfac_term();
 			}
 		}
 	} else {
-		push(p1)
-		simfac_term()
+		push(p1);
+		simfac_term();
 	}
-	restore()
+	restore();
 }
 
 #endif
@@ -15903,8 +15897,6 @@ taylor = function() {
 test_taylor = function() {
   return run_test(["taylor(1/(5+4*cos(x)),x,6,0)-(1/9+2/81*x^2+5/1458*x^4+49/131220*x^6)", "0", "taylor(1/(5+4*cos(x)),x,6)-(1/9+2/81*x^2+5/1458*x^4+49/131220*x^6)", "0"]);
 };
-
-BY;
 
 Eval_tensor = function() {
   var a, ae, af, b, i, ndim, nelem, ref2, ref3;
