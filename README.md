@@ -12,7 +12,7 @@ Algebrite is...
 * free: MIT-Licenced
 
 # Features
-Algebrite supports: arbitrary-precision arithmetic, complex quantities, simplification, expansion , substitution, units of measurement, derivatives and gradients, tensors, integrals, multi-integrals, computing integrals and much more!
+Algebrite supports: arbitrary-precision arithmetic, complex quantities, simplification, expansion , substitution, symbolic and numeric roots, units of measurement, derivatives and gradients, tensors, integrals, multi-integrals, computing integrals and much more!
 
 # Examples and manual
 
