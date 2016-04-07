@@ -1,4 +1,5 @@
-# Intro
+
+<img src="https://raw.githubusercontent.com/davidedc/Algebrite/master/readme-images/algebrite-logo-for-readme.png" width="150px" alt="algebrite header"/>
 
 Algebrite is a Javascript library for symbolic mathematics (actually, mostly coffeescript resulting in Javascript) keeping the code as simple as possible in order to be comprehensible and easily extensible.
 
@@ -7,7 +8,7 @@ Algebrite is a Javascript library for symbolic mathematics (actually, mostly cof
 Algebrite is...
 * lightweight: made to be simple to comprehend and extend, it only depends on BigInteger.js by Peter Olson.
 * self-contained: doesn't need connection to servers or another "backend" CAS
-* a library: beyond use as an interactive tool, Algebrite can be embedded in your applications and extended with custom functions.
+* a library: beyond use as an interactive tool, algebrite can be embedded in your applications and extended with custom functions.
 * free: MIT-Licenced
 
 # Features
@@ -19,7 +20,7 @@ Please refer to [http://algebrite.org/](http://algebrite.org/)
 
 # The MIT License (MIT)
 
-Copyright © `2016` `all Algebrite contributors`
+Copyright © `2016` `all algebrite contributors`
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
