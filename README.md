@@ -15,7 +15,7 @@ Algebrite supports: arbitrary-precision arithmetic, complex quantities, simplifi
 
 # Examples and manual
 
-please refer to [http://algebrite.org/](http://algebrite.org/)
+Please refer to [http://algebrite.org/](http://algebrite.org/)
 
 # The MIT License (MIT)
 
