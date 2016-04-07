@@ -45,7 +45,7 @@ run = (stringToBeRun) ->
 			p1 = pop()
 			check_stack()
 		catch error
-			console.log error
+			if PRINTOUTRESULT then console.log error
 			#debugger
 			allReturnedStrings += error.message
 			init()
@@ -87,19 +87,21 @@ run = (stringToBeRun) ->
 				continue
 
 			# in tty mode
-			console.log "printline"
 			# also you could just have written 
 			# printline(p2)
 			collectedResult = collectResultLine(p2)
 			allReturnedStrings += collectedResult
-			console.log collectedResult
+			if PRINTOUTRESULT
+				console.log "printline"
+				console.log collectedResult
 			#alert collectedResult
-			console.log "display:"
-			display(p2)
+			if PRINTOUTRESULT
+				console.log "display:"
+				display(p2)
 			allReturnedStrings += "\n"
 		catch error
 			collectedResult = error.message
-			console.log collectedResult
+			if PRINTOUTRESULT then console.log collectedResult
 			allReturnedStrings += collectedResult
 			allReturnedStrings += "\n"
 			init()

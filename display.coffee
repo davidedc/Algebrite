@@ -861,7 +861,7 @@ print_it = ->
 
 		x++;
 
-	console.log accumulatedPrint
+	if PRINTOUTRESULT then console.log accumulatedPrint
 
 buffer = "";
 
