@@ -29,6 +29,16 @@ To recompile the tables (this should almost never be needed):
 
 ```coffee --watch  -c --bare --join algebrite-0.1.0.js  *.coffee```
 
+# References
+
+[The EigenMath CAS by George Weigt](http://eigenmath.sourceforge.net/Eigenmath.pdf)
+Also you might want to check another fork of EigenMath: [SMIB by Philippe Billet](http://smib.sourceforge.net/).
+
+Another CAS of similar nature is [SimPy](http://www.sympy.org/en/index.html) made in Python.
+
+Two Javascript CAS are [javascript-cas by Anthony Foster](http://www.sympy.org/en/index.html) supporting "differentiation, complex numbers, sums, vectors (dot products, cross products, gradient/curl etc)" and [Coffeequate by Matthew Alger](http://coffeequate.readthedocs.org/) supporting "quadratic and linear equations, simplification of most algebraic expressions, uncertainties propagation, substitutions, variables, constants, and symbolic constants".
+
+
 # The MIT License (MIT)
 
 Copyright © `2016` `all algebrite contributors`
