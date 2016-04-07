@@ -31,8 +31,7 @@ To recompile the tables (this should almost never be needed):
 
 # References
 
-[The EigenMath CAS by George Weigt](http://eigenmath.sourceforge.net/Eigenmath.pdf)
-Also you might want to check another fork of EigenMath: [SMIB by Philippe Billet](http://smib.sourceforge.net/).
+[The EigenMath CAS by George Weigt](http://eigenmath.sourceforge.net/Eigenmath.pdf). Also you might want to check another fork of EigenMath: [SMIB by Philippe Billet](http://smib.sourceforge.net/).
 
 Another CAS of similar nature is [SimPy](http://www.sympy.org/en/index.html) made in Python.
 
