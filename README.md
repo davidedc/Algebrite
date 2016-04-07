@@ -18,6 +18,17 @@ Algebrite supports: arbitrary-precision arithmetic, complex quantities, simplifi
 
 Please refer to [http://algebrite.org/](http://algebrite.org/)
 
+# How to build it
+To recompile the tables (this should almost never be needed):
+
+```coffee --compile --bare tables/itab.coffee```
+
+```coffee --compile --bare tables/primetab.coffee```
+
+...to recompile the actual sources as soon as they change:
+
+```coffee --watch  -c --bare --join algebrite-0.1.0.js  *.coffee```
+
 # The MIT License (MIT)
 
 Copyright © `2016` `all algebrite contributors`
