@@ -1,7 +1,6 @@
 # get the coefficient of x^n in polynomial p(x)
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 #define P p1
 #define X p2
@@ -9,13 +8,13 @@
 
 Eval_coeff = ->
 	push(cadr(p1));			# 1st arg, p
-	Eval();
+	Eval()
 
 	push(caddr(p1));		# 2nd arg, x
-	Eval();
+	Eval()
 
 	push(cadddr(p1));		# 3rd arg, n
-	Eval();
+	Eval()
 
 	p3 = pop(); # p3 is N
 	p2 = pop(); # p2 is X
@@ -28,11 +27,11 @@ Eval_coeff = ->
 	push(p1);  # p1 is P			# divide p by x^n
 	push(p2);  # p2 is X
 	push(p3);  # p3 is N
-	power();
-	divide();
+	power()
+	divide()
 
 	push(p2);  # p2 is X			# keep the constant part
-	filter();
+	filter()
 
 #-----------------------------------------------------------------------------
 #
@@ -52,39 +51,39 @@ Eval_coeff = ->
 
 coeff = ->
 
-	save();
+	save()
 
-	p2 = pop();
-	p1 = pop();
+	p2 = pop()
+	p1 = pop()
 
-	h = tos;
+	h = tos
 
 	while 1
 
-		push(p1);
-		push(p2);
-		push(zero);
-		subst();
-		Eval();
+		push(p1)
+		push(p2)
+		push(zero)
+		subst()
+		Eval()
 
-		p3 = pop();
-		push(p3);
+		p3 = pop()
+		push(p3)
 
-		push(p1);
-		push(p3);
-		subtract();
+		push(p1)
+		push(p3)
+		subtract()
 
-		p1 = pop();
+		p1 = pop()
 
 		if (equal(p1, zero))
-			n = tos - h;
-			restore();
-			return n;
+			n = tos - h
+			restore()
+			return n
 
-		push(p1);
-		push(p2);
-		divide();
-		p1 = pop();
+		push(p1)
+		push(p2)
+		divide()
+		p1 = pop()
 
 
 test_coeff = ->

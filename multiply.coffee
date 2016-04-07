@@ -1,22 +1,21 @@
 # Symbolic multiplication
 
-#include "stdafx.h"
-#include "defs.h"
 
-#extern void append(void);
-#static void parse_p1(void);
-#static void parse_p2(void);
-#static void __normalize_radical_factors(int);
+
+#extern void append(void)
+#static void parse_p1(void)
+#static void parse_p2(void)
+#static void __normalize_radical_factors(int)
 
 multiply = ->
 	if (esc_flag)
-		stop("escape key stop");
+		stop("escape key stop")
 	if (isnum(stack[tos - 2]) && isnum(stack[tos - 1]))
-		multiply_numbers();
+		multiply_numbers()
 	else
-		save();
-		yymultiply();
-		restore();
+		save()
+		yymultiply()
+		restore()
 
 yymultiply = ->
 	h = 0
@@ -25,143 +24,143 @@ yymultiply = ->
 
 	# pop operands
 
-	p2 = pop();
-	p1 = pop();
+	p2 = pop()
+	p1 = pop()
 
-	h = tos;
+	h = tos
 
 	# is either operand zero?
 
 	if (iszero(p1) || iszero(p2))
-		push(zero);
-		return;
+		push(zero)
+		return
 
 	# is either operand a sum?
 
 	if (expanding && isadd(p1))
-		p1 = cdr(p1);
-		push(zero);
+		p1 = cdr(p1)
+		push(zero)
 		while (iscons(p1))
-			push(car(p1));
-			push(p2);
-			multiply();
-			add();
-			p1 = cdr(p1);
-		return;
+			push(car(p1))
+			push(p2)
+			multiply()
+			add()
+			p1 = cdr(p1)
+		return
 
 	if (expanding && isadd(p2))
-		p2 = cdr(p2);
-		push(zero);
+		p2 = cdr(p2)
+		push(zero)
 		while (iscons(p2))
-			push(p1);
-			push(car(p2));
-			multiply();
-			add();
-			p2 = cdr(p2);
-		return;
+			push(p1)
+			push(car(p2))
+			multiply()
+			add()
+			p2 = cdr(p2)
+		return
 
 	# scalar times tensor?
 
 	if (!istensor(p1) && istensor(p2))
-		push(p1);
-		push(p2);
-		scalar_times_tensor();
-		return;
+		push(p1)
+		push(p2)
+		scalar_times_tensor()
+		return
 
 	# tensor times scalar?
 
 	if (istensor(p1) && !istensor(p2))
-		push(p1);
-		push(p2);
-		tensor_times_scalar();
-		return;
+		push(p1)
+		push(p2)
+		tensor_times_scalar()
+		return
 
 	# adjust operands
 
 	if (car(p1) == symbol(MULTIPLY))
-		p1 = cdr(p1);
+		p1 = cdr(p1)
 	else
-		push(p1);
-		list(1);
-		p1 = pop();
+		push(p1)
+		list(1)
+		p1 = pop()
 
 	if (car(p2) == symbol(MULTIPLY))
-		p2 = cdr(p2);
+		p2 = cdr(p2)
 	else
-		push(p2);
-		list(1);
-		p2 = pop();
+		push(p2)
+		list(1)
+		p2 = pop()
 
 	# handle numerical coefficients
 
 	if (isnum(car(p1)) && isnum(car(p2)))
-		push(car(p1));
-		push(car(p2));
-		multiply_numbers();
-		p1 = cdr(p1);
-		p2 = cdr(p2);
+		push(car(p1))
+		push(car(p2))
+		multiply_numbers()
+		p1 = cdr(p1)
+		p2 = cdr(p2)
 	else if (isnum(car(p1)))
-		push(car(p1));
-		p1 = cdr(p1);
+		push(car(p1))
+		p1 = cdr(p1)
 	else if (isnum(car(p2)))
-		push(car(p2));
-		p2 = cdr(p2);
+		push(car(p2))
+		p2 = cdr(p2)
 	else
-		push(one);
+		push(one)
 
-	parse_p1();
-	parse_p2();
+	parse_p1()
+	parse_p2()
 
 	while (iscons(p1) && iscons(p2))
 
 		#		if (car(p1)->gamma && car(p2)->gamma) {
-		#			combine_gammas(h);
-		#			p1 = cdr(p1);
-		#			p2 = cdr(p2);
-		#			parse_p1();
-		#			parse_p2();
-		#			continue;
+		#			combine_gammas(h)
+		#			p1 = cdr(p1)
+		#			p2 = cdr(p2)
+		#			parse_p1()
+		#			parse_p2()
+		#			continue
 		#		}
 
 		if (caar(p1) == symbol(OPERATOR) && caar(p2) == symbol(OPERATOR))
-			push_symbol(OPERATOR);
-			push(cdar(p1));
-			push(cdar(p2));
-			append();
-			cons();
-			p1 = cdr(p1);
-			p2 = cdr(p2);
-			parse_p1();
-			parse_p2();
-			continue;
+			push_symbol(OPERATOR)
+			push(cdar(p1))
+			push(cdar(p2))
+			append()
+			cons()
+			p1 = cdr(p1)
+			p2 = cdr(p2)
+			parse_p1()
+			parse_p2()
+			continue
 
 		switch (cmp_expr(p3, p4))
 			when -1
-				push(car(p1));
-				p1 = cdr(p1);
-				parse_p1();
+				push(car(p1))
+				p1 = cdr(p1)
+				parse_p1()
 			when 1
-				push(car(p2));
-				p2 = cdr(p2);
-				parse_p2();
+				push(car(p2))
+				p2 = cdr(p2)
+				parse_p2()
 			when 0
-				combine_factors(h);
-				p1 = cdr(p1);
-				p2 = cdr(p2);
-				parse_p1();
-				parse_p2();
+				combine_factors(h)
+				p1 = cdr(p1)
+				p2 = cdr(p2)
+				parse_p1()
+				parse_p2()
 			else
-				stop("internal error 2");
+				stop("internal error 2")
 
 	# push remaining factors, if any
 
 	while (iscons(p1))
-		push(car(p1));
-		p1 = cdr(p1);
+		push(car(p1))
+		p1 = cdr(p1)
 
 	while (iscons(p2))
-		push(car(p2));
-		p2 = cdr(p2);
+		push(car(p2))
+		p2 = cdr(p2)
 
 	# normalize radical factors
 
@@ -171,47 +170,47 @@ yymultiply = ->
 
 	# example: 2^(1/2-a)*2^a -> 2^(1/2)
 
-	__normalize_radical_factors(h);
+	__normalize_radical_factors(h)
 
 	# this hack should not be necessary, unless power returns a multiply
 
 	#for (i = h; i < tos; i++) {
 	#	if (car(stack[i]) == symbol(MULTIPLY)) {
-	#		multiply_all(tos - h);
-	#		return;
+	#		multiply_all(tos - h)
+	#		return
 	#	}
 	#}
 
 	if (expanding)
 		for i in [h...tos]
 			if (isadd(stack[i]))
-				multiply_all(tos - h);
-				return;
+				multiply_all(tos - h)
+				return
 
 	# n is the number of result factors on the stack
 
-	n = tos - h;
+	n = tos - h
 
 	if (n == 1)
-		return;
+		return
 
 	# discard integer 1
 
 	if (isrational(stack[h]) && equaln(stack[h], 1))
 		if (n == 2)
-			p7 = pop();
-			pop();
-			push(p7);
+			p7 = pop()
+			pop()
+			push(p7)
 		else
-			stack[h] = symbol(MULTIPLY);
-			list(n);
-		return;
+			stack[h] = symbol(MULTIPLY)
+			list(n)
+		return
 
-	list(n);
-	p7 = pop();
-	push_symbol(MULTIPLY);
-	push(p7);
-	cons();
+	list(n)
+	p7 = pop()
+	push_symbol(MULTIPLY)
+	push(p7)
+	cons()
 
 # Decompose a factor into base and power.
 #
@@ -225,8 +224,8 @@ parse_p1 = ->
 	p3 = car(p1)
 	p5 = one
 	if (car(p3) == symbol(POWER))
-		p5 = caddr(p3);
-		p3 = cadr(p3);
+		p5 = caddr(p3)
+		p3 = cadr(p3)
 
 # Decompose a factor into base and power.
 #
@@ -237,37 +236,37 @@ parse_p1 = ->
 #		p6		factor's power (possibly 1)
 
 parse_p2 = ->
-	p4 = car(p2);
-	p6 = one;
+	p4 = car(p2)
+	p6 = one
 	if (car(p4) == symbol(POWER))
-		p6 = caddr(p4);
-		p4 = cadr(p4);
+		p6 = caddr(p4)
+		p4 = cadr(p4)
 
 # h an integer
 combine_factors = (h) ->
-	push(p4);
-	push(p5);
-	push(p6);
-	add();
-	power();
-	p7 = pop();
+	push(p4)
+	push(p5)
+	push(p6)
+	add()
+	power()
+	p7 = pop()
 	if (isnum(p7))
-		push(stack[h]);
-		push(p7);
-		multiply_numbers();
-		stack[h] = pop();
+		push(stack[h])
+		push(p7)
+		multiply_numbers()
+		stack[h] = pop()
 	else if (car(p7) == symbol(MULTIPLY))
 		# power can return number * factor (i.e. -1 * i)
 		if (isnum(cadr(p7)) && cdddr(p7) == symbol(NIL))
-			push(stack[h]);
-			push(cadr(p7));
-			multiply_numbers();
-			stack[h] = pop();
-			push(caddr(p7));
+			push(stack[h])
+			push(cadr(p7))
+			multiply_numbers()
+			stack[h] = pop()
+			push(caddr(p7))
 		else
-			push(p7);
+			push(p7)
 	else
-		push(p7);
+		push(p7)
 
 gp = [
 	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -287,28 +286,28 @@ gp = [
 	[0,0,10,-8,-16,6,-5,-12,3,15,-2,-13,7,11,-1,-9,4],
 	[0,0,11,7,-6,-16,4,-3,-12,-14,13,-2,8,-10,9,-1,5],
 	[0,0,12,13,14,15,9,10,11,-6,-7,-8,-2,-3,-4,-5,-1]
-];
+]
 
 #if 0
 
 # h an int
 combine_gammas = (h) ->
-	n = gp[Math.floor(p1.gamma)][Math.floor(p2.gamma)];
+	n = gp[Math.floor(p1.gamma)][Math.floor(p2.gamma)]
 	if (n < 0)
-		n = -n;
-		push(stack[h]);
-		negate();
-		stack[h] = pop();
+		n = -n
+		push(stack[h])
+		negate()
+		stack[h] = pop()
 	if (n > 1)
-		push(_gamma[n]);
+		push(_gamma[n])
 
 #endif
 
 multiply_noexpand = ->
-	x = expanding;
-	expanding = 0;
-	multiply();
-	expanding = x;
+	x = expanding
+	expanding = 0
+	multiply()
+	expanding = x
 
 # multiply n factors on stack
 
@@ -316,24 +315,24 @@ multiply_noexpand = ->
 multiply_all = (n) ->
 	i = 0
 	if (n == 1)
-		return;
+		return
 	if (n == 0)
-		push(one);
-		return;
-	h = tos - n;
-	push(stack[h]);
+		push(one)
+		return
+	h = tos - n
+	push(stack[h])
 	for i in [1...n]
-		push(stack[h + i]);
-		multiply();
-	stack[h] = pop();
-	tos = h + 1;
+		push(stack[h + i])
+		multiply()
+	stack[h] = pop()
+	tos = h + 1
 
 # n an integer
 multiply_all_noexpand = (n) ->
-	x = expanding;
-	expanding = 0;
-	multiply_all(n);
-	expanding = x;
+	x = expanding
+	expanding = 0
+	multiply_all(n)
+	expanding = x
 
 #-----------------------------------------------------------------------------
 #
@@ -347,43 +346,43 @@ multiply_all_noexpand = (n) ->
 
 divide = ->
 	if (isnum(stack[tos - 2]) && isnum(stack[tos - 1]))
-		divide_numbers();
+		divide_numbers()
 	else
-		inverse();
-		multiply();
+		inverse()
+		multiply()
 
 inverse = ->
 	if (isnum(stack[tos - 1]))
-		invert_number();
+		invert_number()
 	else
-		push_integer(-1);
-		power();
+		push_integer(-1)
+		power()
 
 reciprocate = ->
 	if (isnum(stack[tos - 1]))
-		invert_number();
+		invert_number()
 	else
-		push_integer(-1);
-		power();
+		push_integer(-1)
+		power()
 
 negate = ->
 	if (isnum(stack[tos - 1]))
-		negate_number();
+		negate_number()
 	else
-		push_integer(-1);
-		multiply();
+		push_integer(-1)
+		multiply()
 
 negate_expand = ->
-	x = expanding;
-	expanding = 1;
-	negate();
-	expanding = x;
+	x = expanding
+	expanding = 1
+	negate()
+	expanding = x
 
 negate_noexpand = ->
-	x = expanding;
-	expanding = 0;
-	negate();
-	expanding = x;
+	x = expanding
+	expanding = 0
+	negate()
+	expanding = x
 
 #-----------------------------------------------------------------------------
 #
@@ -425,34 +424,34 @@ __normalize_radical_factors = (h) ->
 	# if coeff is 1 or floating then don't bother
 
 	if (isplusone(stack[h]) || isminusone(stack[h]) || isdouble(stack[h]))
-		return;
+		return
 
 	# if no radicals then don't bother
 
 	for i in [(h + 1)...tos]
 		if (__is_radical_number(stack[i]))
-			break;
+			break
 
 	if (i == tos)
-		return;
+		return
 
 	# ok, try to simplify
 
-	save();
+	save()
 
 	# numerator
 
-	push(stack[h]);
-	mp_numerator();
+	push(stack[h])
+	mp_numerator()
 	p1 = pop(); # p1 is A
 
 	for i in [(h + 1)...tos]
 
 		if (isplusone(p1) || isminusone(p1)) # p1 is A
-			break;
+			break
 
 		if (!__is_radical_number(stack[i]))
-			continue;
+			continue
 
 		p3 = cadr(stack[i]); #p3 is BASE
 		p4 = caddr(stack[i]); #p4 is EXPO
@@ -460,18 +459,18 @@ __normalize_radical_factors = (h) ->
 		# exponent must be negative
 
 		if (!isnegativenumber(p4)) #p4 is EXPO
-			continue;
+			continue
 
 		# numerator divisible by p3 (base)?
 
 		push(p1); # p1 is A
 		push(p3); #p3 is BASE
-		divide();
+		divide()
 
 		p5 = pop(); #p5 is TMP
 
 		if (!isinteger(p5)) #p5 is TMP
-			continue;
+			continue
 
 		# reduce numerator
 
@@ -479,27 +478,27 @@ __normalize_radical_factors = (h) ->
 
 		# invert radical
 
-		push_symbol(POWER);
+		push_symbol(POWER)
 		push(p3); #p3 is BASE
-		push(one);
+		push(one)
 		push(p4); #p4 is EXPO
-		add();
-		list(3);
-		stack[i] = pop();
+		add()
+		list(3)
+		stack[i] = pop()
 
 	# denominator
 
-	push(stack[h]);
-	mp_denominator();
+	push(stack[h])
+	mp_denominator()
 	p2 = pop(); # p2 is B
 
 	for i in [(h + 1)...tos]
 
 		if (isplusone(p2)) # p2 is B
-			break;
+			break
 
 		if (!__is_radical_number(stack[i]))
-			continue;
+			continue
 
 		p3 = cadr(stack[i]); #p3 is BASE
 		p4 = caddr(stack[i]); #p4 is EXPO
@@ -507,18 +506,18 @@ __normalize_radical_factors = (h) ->
 		# exponent must be positive
 
 		if (isnegativenumber(p4)) #p4 is EXPO
-			continue;
+			continue
 
 		# denominator divisible by p3? #p3 is BASE
 
 		push(p2); # p2 is B
 		push(p3); #p3 is BASE
-		divide();
+		divide()
 
 		p5 = pop(); #p5 is TMP
 
 		if (!isinteger(p5)) #p5 is TMP
-			continue;
+			continue
 
 		# reduce denominator
 
@@ -526,22 +525,22 @@ __normalize_radical_factors = (h) ->
 
 		# invert radical
 
-		push_symbol(POWER);
+		push_symbol(POWER)
 		push(p3); #p3 is BASE
 		push(p4);  #p4 is EXPO
-		push(one);
-		subtract();
-		list(3);
-		stack[i] = pop();
+		push(one)
+		subtract()
+		list(3)
+		stack[i] = pop()
 
 	# reconstitute the coefficient
 
 	push(p1); # p1 is A
 	push(p2); # p2 is B
-	divide();
-	stack[h] = pop();
+	divide()
+	stack[h] = pop()
 
-	restore();
+	restore()
 
 # don't include i
 
@@ -550,9 +549,9 @@ __is_radical_number = (p) ->
 	# don't use i
 
 	if (car(p) == symbol(POWER) && isnum(cadr(p)) && isnum(caddr(p)) && !isminusone(cadr(p)))
-		return 1;
+		return 1
 	else
-		return 0;
+		return 0
 
 #-----------------------------------------------------------------------------
 #

@@ -15,73 +15,72 @@
 #
 #-----------------------------------------------------------------------------
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 INV_check_arg = ->
 	if (!istensor(p1))
-		return 0;
+		return 0
 	else if (p1.tensor.ndim != 2)
-		return 0;
+		return 0
 	else if (p1.tensor.dim[0] != p1.tensor.dim[1])
-		return 0;
+		return 0
 	else
-		return 1;
+		return 1
 
 inv = ->
 	i = 0
 	n = 0
-	#U **a;
+	#U **a
 
-	save();
+	save()
 
-	p1 = pop();
+	p1 = pop()
 
 	if (INV_check_arg() == 0)
-		push_symbol(INV);
-		push(p1);
-		list(2);
-		restore();
-		return;
+		push_symbol(INV)
+		push(p1)
+		list(2)
+		restore()
+		return
 
-	n = p1.tensor.nelem;
+	n = p1.tensor.nelem
 
-	a = p1.tensor.elem;
+	a = p1.tensor.elem
 
 	for i in [0...n]
 		if (!isnum(a[i]))
-			break;
+			break
 
 	if (i == n)
-		yyinvg();
+		yyinvg()
 	else
-		push(p1);
-		adj();
-		push(p1);
-		det();
-		p2 = pop();
+		push(p1)
+		adj()
+		push(p1)
+		det()
+		p2 = pop()
 		if (iszero(p2))
-			stop("inverse of singular matrix");
-		push(p2);
-		divide();
+			stop("inverse of singular matrix")
+		push(p2)
+		divide()
 
-	restore();
+	restore()
 
 invg = ->
-	save();
+	save()
 
-	p1 = pop();
+	p1 = pop()
 
 	if (INV_check_arg() == 0)
-		push_symbol(INVG);
-		push(p1);
-		list(2);
-		restore();
-		return;
+		push_symbol(INVG)
+		push(p1)
+		list(2)
+		restore()
+		return
 
-	yyinvg();
+	yyinvg()
 
-	restore();
+	restore()
 
 # inverse using gaussian elimination
 
@@ -91,34 +90,34 @@ yyinvg = ->
 	j = 0
 	n = 0
 
-	n = p1.tensor.dim[0];
+	n = p1.tensor.dim[0]
 
-	h = tos;
+	h = tos
 
 	for i in [0...n]
 		for j in [0...n]
 			if (i == j)
-				push(one);
+				push(one)
 			else
-				push(zero);
+				push(zero)
 
 	for i in [0...(n * n)]
-		push(p1.tensor.elem[i]);
+		push(p1.tensor.elem[i])
 
-	INV_decomp(n);
+	INV_decomp(n)
 
-	p1 = alloc_tensor(n * n);
+	p1 = alloc_tensor(n * n)
 
-	p1.tensor.ndim = 2;
-	p1.tensor.dim[0] = n;
-	p1.tensor.dim[1] = n;
+	p1.tensor.ndim = 2
+	p1.tensor.dim[0] = n
+	p1.tensor.dim[1] = n
 
 	for i in [0...(n * n)]
-		p1.tensor.elem[i] = stack[h + i];
+		p1.tensor.elem[i] = stack[h + i]
 
-	tos -= 2 * n * n;
+	tos -= 2 * n * n
 
-	push(p1);
+	push(p1)
 
 #-----------------------------------------------------------------------------
 #
@@ -144,9 +143,9 @@ INV_decomp = (n) ->
 	j = 0
 	u = 0
 
-	a = tos - n * n;
+	a = tos - n * n
 
-	u = a - n * n;
+	u = a - n * n
 
 	for d in [0...n]
 
@@ -158,66 +157,66 @@ INV_decomp = (n) ->
 
 			for i in [(d + 1)...n]
 				if (!equal( (stack[a + n * (i) + (d)]) , zero))
-					break;
+					break
 
 			if (i == n)
-				stop("inverse of singular matrix");
+				stop("inverse of singular matrix")
 
 			# exchange rows
 
 			for j in [0...n]
 
-				p2 = stack[a + n * (d) + (j)];
+				p2 = stack[a + n * (d) + (j)]
 				stack[a + n * (d) + (j)] = stack[a + n * (i) + (j)]
-				stack[a + n * (i) + (j)] = p2;
+				stack[a + n * (i) + (j)] = p2
 
 				p2 = stack[u + n * (d) + (j)]
-				stack[u + n * (d) + (j)] = stack[u + n * (i) + (j)];
-				stack[u + n * (i) + (j)] = p2;
+				stack[u + n * (d) + (j)] = stack[u + n * (i) + (j)]
+				stack[u + n * (i) + (j)] = p2
 
 		# multiply the pivot row by 1 / pivot
 
-		p2 = stack[a + n * (d) + (d)];
+		p2 = stack[a + n * (d) + (d)]
 
 		for j in [0...n]
 
 			if (j > d)
-				push(stack[a + n * (d) + (j)]);
-				push(p2);
-				divide();
-				stack[a + n * (d) + (j)] = pop();
+				push(stack[a + n * (d) + (j)])
+				push(p2)
+				divide()
+				stack[a + n * (d) + (j)] = pop()
 
-			push(stack[u + n * (d) + (j)]);
-			push(p2);
-			divide();
-			stack[u + n * (d) + (j)] = pop();
+			push(stack[u + n * (d) + (j)])
+			push(p2)
+			divide()
+			stack[u + n * (d) + (j)] = pop()
 
 		# clear out the column above and below the pivot
 
 		for i in [0...n]
 
 			if (i == d)
-				continue;
+				continue
 
 			# multiplier
 
-			p2 = stack[a + n * (i) + (d)];
+			p2 = stack[a + n * (i) + (d)]
 
 			# add pivot row to i-th row
 
 			for j in [0...n]
 
 				if (j > d)
-					push(stack[a + n * (i) + (j)]);
-					push(stack[a + n * (d) + (j)]);
-					push(p2);
-					multiply();
-					subtract();
-					stack[a + n * (i) + (j)] = pop();
+					push(stack[a + n * (i) + (j)])
+					push(stack[a + n * (d) + (j)])
+					push(p2)
+					multiply()
+					subtract()
+					stack[a + n * (i) + (j)] = pop()
 
-				push(stack[u + n * (i) + (j)]);
-				push(stack[u + n * (d) + (j)]);
-				push(p2);
-				multiply();
-				subtract();
-				stack[u + n * (i) + (j)] = pop();
+				push(stack[u + n * (i) + (j)])
+				push(stack[u + n * (d) + (j)])
+				push(p2)
+				multiply()
+				subtract()
+				stack[u + n * (i) + (j)] = pop()

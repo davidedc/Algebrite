@@ -10,8 +10,7 @@
 #
 #-----------------------------------------------------------------------------
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 #define BASE p1
 #define EXPO p2
@@ -19,27 +18,27 @@
 
 quickfactor = ->
 	i = 0
-	save();
+	save()
 
 	p2 = pop(); # p2 is EXPO
 	p1 = pop(); # p1 is BASE
 
-	h = tos;
+	h = tos
 
 	push(p1);  # p1 is BASE
 
-	factor_small_number();
+	factor_small_number()
 
-	n = tos - h;
+	n = tos - h
 
-	stackIndex = h;
+	stackIndex = h
 
 	for i in [0...n] by 2
 		push(stack[stackIndex+i]);		# factored base
 		push(stack[stackIndex + i + 1]);		# factored exponent
 		push(p2);  # p2 is EXPO
-		multiply();
-		quickpower();
+		multiply()
+		quickpower()
 
 	# stack has n results from factor_number_raw()
 
@@ -47,96 +46,96 @@ quickfactor = ->
 
 	# multiply the quickpower() results
 
-	multiply_all(tos - h - n);
+	multiply_all(tos - h - n)
 
-	p1 = pop();
+	p1 = pop()
 
-	tos = h;
+	tos = h
 
-	push(p1);
+	push(p1)
 
-	restore();
+	restore()
 
 # p1 (BASE) is a prime number so power is simpler
 
 quickpower = ->
 	expo = 0
 
-	save();
+	save()
 
 	p2 = pop(); # p2 is EXPO
 	p1 = pop();  # p1 is BASE
 
 	push(p2); # p2 is EXPO
-	bignum_truncate();
-	p3 = pop();
+	bignum_truncate()
+	p3 = pop()
 
 	push(p2); # p2 is EXPO
-	push(p3);
-	subtract();
-	p4 = pop();
+	push(p3)
+	subtract()
+	p4 = pop()
 
 	# fractional part of p2 (EXPO)
 
 	if (!iszero(p4))
-		push_symbol(POWER);
+		push_symbol(POWER)
 		push(p1);  # p1 is BASE
-		push(p4);
-		list(3);
+		push(p4)
+		list(3)
 
-	push(p3);
-	expo = pop_integer();
+	push(p3)
+	expo = pop_integer()
 
 	if (expo == 0x80000000)
-		push_symbol(POWER);
+		push_symbol(POWER)
 		push(p1);  # p1 is BASE
-		push(p3);
-		list(3);
-		restore();
-		return;
+		push(p3)
+		list(3)
+		restore()
+		return
 
 	if (expo == 0)
-		restore();
-		return;
+		restore()
+		return
 
 	push(p1);  # p1 is BASE
-	bignum_power_number(expo);
+	bignum_power_number(expo)
 
-	restore();
+	restore()
 
 #if SELFTEST
 
 test_quickfactor = ->
 	i = 0
-	logout("testing quickfactor\n");
+	logout("testing quickfactor\n")
 	for i in [2...10001]
 		if i % 1000 == 0
 			alert i
-		base = i;
-		push_integer(base);
-		push_integer(1);
-		quickfactor();
-		h = tos;
-		j = 0;
+		base = i
+		push_integer(base)
+		push_integer(1)
+		quickfactor()
+		h = tos
+		j = 0
 		while (base > 1)
-			expo = 0;
+			expo = 0
 			while (base % primetab[j] == 0)
-				base /= primetab[j];
-				expo++;
+				base /= primetab[j]
+				expo++
 			if (expo)
-				push_integer(primetab[j]);
-				push_integer(expo);
-				quickpower();
-			j++;
-		multiply_all(tos - h);
-		p2 = pop();
-		p1 = pop();
+				push_integer(primetab[j])
+				push_integer(expo)
+				quickpower()
+			j++
+		multiply_all(tos - h)
+		p2 = pop()
+		p1 = pop()
 		if (!equal(p1, p2))
-			logout("failed\n");
-			print_lisp(p1);
-			print_lisp(p2);
-			errout();
+			logout("failed\n")
+			print_lisp(p1)
+			print_lisp(p2)
+			errout()
 	alert "quickfactor is ok"
-	logout("ok\n");
+	logout("ok\n")
 
 #endif

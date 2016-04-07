@@ -8,9 +8,9 @@ strcmp = (str1, str2) ->
   # +      input by: Steve Hilder
   # +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
   # +    revised by: gorthaur
-  # *     example 1: strcmp( 'waldo', 'owald' );
+  # *     example 1: strcmp( 'waldo', 'owald' )
   # *     returns 1: 1
-  # *     example 2: strcmp( 'owald', 'waldo' );
+  # *     example 2: strcmp( 'owald', 'waldo' )
   # *     returns 2: -1
   if str1 == str2 then 0 else if str1 > str2 then 1 else -1
 
@@ -20,7 +20,7 @@ strcmp = (str1, str2) ->
 # remove insignificant trailing zeroes
 # (beyond the decimal point)
 doubleToReasonableString = (d) ->
-	return parseFloat(d.toPrecision(6));
+	return parseFloat(d.toPrecision(6))
 
 # does nothing
 clear_term = ->
@@ -32,7 +32,7 @@ isspace = (s) ->
 
 isdigit = (str) ->
 	if !str? then return false
-	return /^\d+$/.test(str);
+	return /^\d+$/.test(str)
 
 isalpha = (str) ->
 	if !str? then return false

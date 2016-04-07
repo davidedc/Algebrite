@@ -1,53 +1,52 @@
 # Do the inner product of tensors.
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 Eval_inner = ->
-	p1 = cdr(p1);
-	push(car(p1));
-	Eval();
-	p1 = cdr(p1);
+	p1 = cdr(p1)
+	push(car(p1))
+	Eval()
+	p1 = cdr(p1)
 	while (iscons(p1))
-		push(car(p1));
-		Eval();
-		inner();
-		p1 = cdr(p1);
+		push(car(p1))
+		Eval()
+		inner()
+		p1 = cdr(p1)
 
 inner = ->
-	save();
-	p2 = pop();
-	p1 = pop();
+	save()
+	p2 = pop()
+	p1 = pop()
 	if (istensor(p1) && istensor(p2))
-		inner_f();
+		inner_f()
 	else
-		push(p1);
-		push(p2);
+		push(p1)
+		push(p2)
 		if (istensor(p1))
-			tensor_times_scalar();
+			tensor_times_scalar()
 		else if (istensor(p2))
-			scalar_times_tensor();
+			scalar_times_tensor()
 		else
-			multiply();
-	restore();
+			multiply()
+	restore()
 
 # inner product of tensors p1 and p2
 inner_f = ->
 
 	i = 0
-	n = p1.tensor.dim[p1.tensor.ndim - 1];
+	n = p1.tensor.dim[p1.tensor.ndim - 1]
 
 	if (n != p2.tensor.dim[0])
 		debugger
-		stop("inner: tensor dimension check");
+		stop("inner: tensor dimension check")
 
-	ndim = p1.tensor.ndim + p2.tensor.ndim - 2;
+	ndim = p1.tensor.ndim + p2.tensor.ndim - 2
 
 	if (ndim > MAXDIM)
-		stop("inner: rank of result exceeds maximum");
+		stop("inner: rank of result exceeds maximum")
 
-	a = p1.tensor.elem;
-	b = p2.tensor.elem;
+	a = p1.tensor.elem
+	b = p2.tensor.elem
 
 	#---------------------------------------------------------------------
 	#
@@ -65,30 +64,30 @@ inner_f = ->
 	#
 	#---------------------------------------------------------------------
 
-	ak = 1;
+	ak = 1
 	for i in [0...(p1.tensor.ndim - 1)]
-		ak *= p1.tensor.dim[i];
+		ak *= p1.tensor.dim[i]
 
-	bk = 1;
+	bk = 1
 	for i in [1...p2.tensor.ndim]
-		bk *= p2.tensor.dim[i];
+		bk *= p2.tensor.dim[i]
 
-	p3 = alloc_tensor(ak * bk);
+	p3 = alloc_tensor(ak * bk)
 
-	c = p3.tensor.elem;
+	c = p3.tensor.elem
 
 	# new method copied from ginac http://www.ginac.de/
 	for i in [0...ak]
 		for j in [0...n]
 			if (iszero(a[i * n + j]))
-				continue;
+				continue
 			for k in [0...bk]
-				push(a[i * n + j]);
-				push(b[j * bk + k]);
-				multiply();
-				push(c[i * bk + k]);
-				add();
-				c[i * bk + k] = pop();
+				push(a[i * n + j])
+				push(b[j * bk + k])
+				multiply()
+				push(c[i * bk + k])
+				add()
+				c[i * bk + k] = pop()
 
 	#---------------------------------------------------------------------
 	#
@@ -118,16 +117,16 @@ inner_f = ->
 	#---------------------------------------------------------------------
 
 	if (ndim == 0)
-		push(p3.tensor.elem[0]);
+		push(p3.tensor.elem[0])
 	else
-		p3.tensor.ndim = ndim;
+		p3.tensor.ndim = ndim
 		j = 0
 		for i in [0...(p1.tensor.ndim - 1)]
-			p3.tensor.dim[i] = p1.tensor.dim[i];
-		j = p1.tensor.ndim - 1;
+			p3.tensor.dim[i] = p1.tensor.dim[i]
+		j = p1.tensor.ndim - 1
 		for i in [0...(p2.tensor.ndim - 1)]
-			p3.tensor.dim[j + i] = p2.tensor.dim[i + 1];
-		push(p3);
+			p3.tensor.dim[j + i] = p2.tensor.dim[i + 1]
+		push(p3)
 
 test_inner = ->
 	run_test [

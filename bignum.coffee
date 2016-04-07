@@ -1,5 +1,4 @@
-#include "stdafx.h"
-#include "defs.h"
+
 
 MP_MIN_SIZE = 2
 MP_MAX_FREE  = 1000

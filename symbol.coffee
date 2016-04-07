@@ -1,7 +1,6 @@
 # The symbol table is a simple array of struct U.
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 # put symbol at index n
 
@@ -46,9 +45,9 @@ set_binding = (p, q) ->
 		stop("symbol error")
 	indexFound = symtab.indexOf(p)
 	if symtab.indexOf(p, indexFound + 1) != -1
-		console.log("ops, more than one element!");
+		console.log("ops, more than one element!")
 		debugger
-	if DEBUG then console.log("lookup >> set_binding lookup " + indexFound);
+	if DEBUG then console.log("lookup >> set_binding lookup " + indexFound)
 	binding[indexFound] = q
 	arglist[indexFound] = symbol(NIL)
 
@@ -58,9 +57,9 @@ get_binding = (p) ->
 		stop("symbol error")
 	indexFound = symtab.indexOf(p)
 	if symtab.indexOf(p, indexFound + 1) != -1
-		console.log("ops, more than one element!");
+		console.log("ops, more than one element!")
 		debugger
-	if DEBUG then console.log("lookup >> get_binding lookup " + indexFound);
+	if DEBUG then console.log("lookup >> get_binding lookup " + indexFound)
 	#if indexFound == 139
 	#	debugger
 	#if indexFound == 137
@@ -73,9 +72,9 @@ set_binding_and_arglist = (p, q, r) ->
 		stop("symbol error")
 	indexFound = symtab.indexOf(p)
 	if symtab.indexOf(p, indexFound + 1) != -1
-		console.log("ops, more than one element!");
+		console.log("ops, more than one element!")
 		debugger
-	if DEBUG then console.log("lookup >> set_binding_and_arglist lookup " + indexFound);
+	if DEBUG then console.log("lookup >> set_binding_and_arglist lookup " + indexFound)
 	binding[indexFound] = q
 	arglist[indexFound] = r
 
@@ -85,9 +84,9 @@ get_arglist = (p) ->
 		stop("symbol error")
 	indexFound = symtab.indexOf(p)
 	if symtab.indexOf(p, indexFound + 1) != -1
-		console.log("ops, more than one element!");
+		console.log("ops, more than one element!")
 		debugger
-	if DEBUG then console.log("lookup >> get_arglist lookup " + indexFound);
+	if DEBUG then console.log("lookup >> get_arglist lookup " + indexFound)
 	return arglist[indexFound]
 
 # get symbol's number from ptr
@@ -100,9 +99,9 @@ symnum = (p) ->
 		stop("symbol error")
 	indexFound = symtab.indexOf(p)
 	if symtab.indexOf(p, indexFound + 1) != -1
-		console.log("ops, more than one element!");
+		console.log("ops, more than one element!")
 		debugger
-	if DEBUG then console.log("lookup >> symnum lookup " + indexFound + " lookup # " + lookupsTotal);
+	if DEBUG then console.log("lookup >> symnum lookup " + indexFound + " lookup # " + lookupsTotal)
 	#if lookupsTotal == 21
 	#	debugger
 	#if indexFound == 79

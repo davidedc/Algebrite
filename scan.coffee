@@ -13,8 +13,7 @@
 #	  ^
 #	  token_buf
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 T_INTEGER = 1001
 T_DOUBLE = 1002

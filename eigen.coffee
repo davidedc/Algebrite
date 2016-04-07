@@ -32,81 +32,80 @@
 #
 #-----------------------------------------------------------------------------
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 #define D(i, j) yydd[EIG_N * (i) + (j)]
 #define Q(i, j) yyqq[EIG_N * (i) + (j)]
 
 EIG_N = 0
-EIG_yydd = [];
-EIG_yyqq = [];
+EIG_yydd = []
+EIG_yyqq = []
 
 Eval_eigen = ->
 	if (EIG_check_arg() == 0)
-		stop("eigen: argument is not a square matrix");
+		stop("eigen: argument is not a square matrix")
 
-	eigen(EIGEN);
+	eigen(EIGEN)
 
-	p1 = usr_symbol("D");
-	set_binding(p1, p2);
+	p1 = usr_symbol("D")
+	set_binding(p1, p2)
 
-	p1 = usr_symbol("Q");
-	set_binding(p1, p3);
+	p1 = usr_symbol("Q")
+	set_binding(p1, p3)
 
-	push(symbol(NIL));
+	push(symbol(NIL))
 
 Eval_eigenval = ->
 	if (EIG_check_arg() == 0)
-		push_symbol(EIGENVAL);
-		push(p1);
-		list(2);
-		return;
+		push_symbol(EIGENVAL)
+		push(p1)
+		list(2)
+		return
 
-	eigen(EIGENVAL);
+	eigen(EIGENVAL)
 
-	push(p2);
+	push(p2)
 
 Eval_eigenvec = ->
 	if (EIG_check_arg() == 0)
-		push_symbol(EIGENVEC);
-		push(p1);
-		list(2);
-		return;
+		push_symbol(EIGENVEC)
+		push(p1)
+		list(2)
+		return
 
-	eigen(EIGENVEC);
+	eigen(EIGENVEC)
 
-	push(p3);
+	push(p3)
 
 EIG_check_arg = ->
 	i = 0
 	j = 0
 
-	push(cadr(p1));
-	Eval();
-	yyfloat();
-	Eval();
-	p1 = pop();
+	push(cadr(p1))
+	Eval()
+	yyfloat()
+	Eval()
+	p1 = pop()
 
 	if (!istensor(p1))
-		return 0;
+		return 0
 
 	if (p1.tensor.ndim != 2 || p1.tensor.dim[0] != p1.tensor.dim[1])
-		stop("eigen: argument is not a square matrix");
+		stop("eigen: argument is not a square matrix")
 
-	EIG_N = p1.tensor.dim[0];
+	EIG_N = p1.tensor.dim[0]
 
 	for i in [0...EIG_N]
 		for j in [0...EIG_N]
 			if (!isdouble(p1.tensor.elem[EIG_N * i + j]))
-				stop("eigen: matrix is not numerical");
+				stop("eigen: matrix is not numerical")
 
 	for i in [0...(EIG_N-1)]
 		for j in [(i+1)...EIG_N]
 			if (Math.abs(p1.tensor.elem[EIG_N * i + j].d - p1.tensor.elem[EIG_N * j + i].d) > 1e-10)
-				stop("eigen: matrix is not symmetrical");
+				stop("eigen: matrix is not symmetrical")
 
-	return 1;
+	return 1
 
 #-----------------------------------------------------------------------------
 #
@@ -124,70 +123,70 @@ eigen = (op) ->
 
 	# malloc working vars
 
-	#EIG_yydd = (double *) malloc(n * n * sizeof (double));
+	#EIG_yydd = (double *) malloc(n * n * sizeof (double))
 	for i in [0...(EIG_N*EIG_N)]
 		EIG_yydd[i] = 0.0
 
 	#if (EIG_yydd == NULL)
-	#	stop("malloc failure");
+	#	stop("malloc failure")
 
-	#EIG_yyqq = (double *) malloc(n * n * sizeof (double));
+	#EIG_yyqq = (double *) malloc(n * n * sizeof (double))
 	for i in [0...(EIG_N*EIG_N)]
 		EIG_yyqq[i] = 0.0
 
 	#if (EIG_yyqq == NULL)
-	#	stop("malloc failure");
+	#	stop("malloc failure")
 
 	# initialize D
 
 	for i in [0...EIG_N]
-		EIG_yydd[EIG_N * (i) + (i)] = p1.tensor.elem[EIG_N * i + i].d;
+		EIG_yydd[EIG_N * (i) + (i)] = p1.tensor.elem[EIG_N * i + i].d
 		for j in [(i+1)...EIG_N]
-			EIG_yydd[EIG_N * (i) + (j)] = p1.tensor.elem[EIG_N * i + j].d;
-			EIG_yydd[EIG_N * (j) + (i)] = p1.tensor.elem[EIG_N * i + j].d;
+			EIG_yydd[EIG_N * (i) + (j)] = p1.tensor.elem[EIG_N * i + j].d
+			EIG_yydd[EIG_N * (j) + (i)] = p1.tensor.elem[EIG_N * i + j].d
 
 	# initialize Q
 
 	for i in [0...EIG_N]
-		EIG_yyqq[EIG_N * (i) + (i)] = 1.0;
+		EIG_yyqq[EIG_N * (i) + (i)] = 1.0
 		for j in [(i+1)...EIG_N]
-			EIG_yyqq[EIG_N * (i) + (j)] = 0.0;
-			EIG_yyqq[EIG_N * (j) + (i)] = 0.0;
+			EIG_yyqq[EIG_N * (i) + (j)] = 0.0
+			EIG_yyqq[EIG_N * (j) + (i)] = 0.0
 
 	# step up to 100 times
 
 	for i in [0...100]
 		if (step() == 0)
-			break;
+			break
 
 	if (i == 100)
-		printstr("\nnote: eigen did not converge\n");
+		printstr("\nnote: eigen did not converge\n")
 
 	# p2 = D
 
 	if (op == EIGEN || op == EIGENVAL)
 
-		push(p1);
-		copy_tensor();
-		p2 = pop();
+		push(p1)
+		copy_tensor()
+		p2 = pop()
 
 		for i in [0...EIG_N]
 			for j in [0...EIG_N]
-				push_double(EIG_yydd[EIG_N * (i) + (j)]);
-				p2.tensor.elem[EIG_N * i + j] = pop();
+				push_double(EIG_yydd[EIG_N * (i) + (j)])
+				p2.tensor.elem[EIG_N * i + j] = pop()
 
 	# p3 = Q
 
 	if (op == EIGEN || op == EIGENVEC)
 
-		push(p1);
-		copy_tensor();
-		p3 = pop();
+		push(p1)
+		copy_tensor()
+		p3 = pop()
 
 		for i in [0...EIG_N]
 			for j in [0...EIG_N]
-				push_double(EIG_yyqq[EIG_N * (i) + (j)]);
-				p3.tensor.elem[EIG_N * i + j] = pop();
+				push_double(EIG_yyqq[EIG_N * (i) + (j)])
+				p3.tensor.elem[EIG_N * i + j] = pop()
 
 	# free working vars
 
@@ -392,17 +391,17 @@ eigen = (op) ->
 step = ->
 	i = 0
 	j = 0
-	count = 0;
+	count = 0
 
 	# for each upper triangle "off-diagonal" component do step2
 
 	for i in [0...(EIG_N-1)]
 		for j in [(i+1)...EIG_N]
 			if (EIG_yydd[EIG_N * (i) + (j)] != 0.0)
-				step2(i, j);
-				count++;
+				step2(i, j)
+				count++
 
-	return count;
+	return count
 
 step2 = (p,q) ->
 	k = 0
@@ -417,16 +416,16 @@ step2 = (p,q) ->
 
 	# from Numerical Recipes (except they have a_qq - a_pp)
 
-	theta = 0.5 * (EIG_yydd[EIG_N * (p) + (p)] - EIG_yydd[EIG_N * (q) + (q)]) / EIG_yydd[EIG_N * (p) + (q)];
+	theta = 0.5 * (EIG_yydd[EIG_N * (p) + (p)] - EIG_yydd[EIG_N * (q) + (q)]) / EIG_yydd[EIG_N * (p) + (q)]
 
-	t = 1.0 / (Math.abs(theta) + Math.sqrt(theta * theta + 1.0));
+	t = 1.0 / (Math.abs(theta) + Math.sqrt(theta * theta + 1.0))
 
 	if (theta < 0.0)
-		t = -t;
+		t = -t
 
-	c = 1.0 / Math.sqrt(t * t + 1.0);
+	c = 1.0 / Math.sqrt(t * t + 1.0)
 
-	s = t * c;
+	s = t * c
 
 	# D = GD
 
@@ -435,31 +434,31 @@ step2 = (p,q) ->
 	for k in [0...EIG_N]
 		cc = EIG_yydd[EIG_N * (p) + (k)]
 		ss = EIG_yydd[EIG_N * (q) + (k)]
-		EIG_yydd[EIG_N * (p) + (k)] = c * cc + s * ss;
-		EIG_yydd[EIG_N * (q) + (k)] = c * ss - s * cc;
+		EIG_yydd[EIG_N * (p) + (k)] = c * cc + s * ss
+		EIG_yydd[EIG_N * (q) + (k)] = c * ss - s * cc
 
 	# D = D transpose(G)
 
 	# which means "add columns"
 
 	for k in [0...EIG_N]
-		cc = EIG_yydd[EIG_N * (k) + (p)];
-		ss = EIG_yydd[EIG_N * (k) + (q)];
-		EIG_yydd[EIG_N * (k) + (p)] = c * cc + s * ss;
-		EIG_yydd[EIG_N * (k) + (q)] = c * ss - s * cc;
+		cc = EIG_yydd[EIG_N * (k) + (p)]
+		ss = EIG_yydd[EIG_N * (k) + (q)]
+		EIG_yydd[EIG_N * (k) + (p)] = c * cc + s * ss
+		EIG_yydd[EIG_N * (k) + (q)] = c * ss - s * cc
 
 	# Q = GQ
 
 	# which means "add rows"
 
 	for k in [0...EIG_N]
-		cc = EIG_yyqq[EIG_N * (p) + (k)];
-		ss = EIG_yyqq[EIG_N * (q) + (k)];
-		EIG_yyqq[EIG_N * (p) + (k)] = c * cc + s * ss;
-		EIG_yyqq[EIG_N * (q) + (k)] = c * ss - s * cc;
+		cc = EIG_yyqq[EIG_N * (p) + (k)]
+		ss = EIG_yyqq[EIG_N * (q) + (k)]
+		EIG_yyqq[EIG_N * (p) + (k)] = c * cc + s * ss
+		EIG_yyqq[EIG_N * (q) + (k)] = c * ss - s * cc
 
-	EIG_yydd[EIG_N * (p) + (q)] = 0.0;
-	EIG_yydd[EIG_N * (q) + (p)] = 0.0;
+	EIG_yydd[EIG_N * (p) + (q)] = 0.0
+	EIG_yydd[EIG_N * (q) + (p)] = 0.0
 
 
 test_eigen = ->

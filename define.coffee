@@ -26,8 +26,7 @@
 #	cdadr(p1) points to the list (x y)
 #	caddr(p1) points to (power x y)
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 #define F p3 # F points to the function name
 #define A p4 # A points to the argument list
@@ -39,17 +38,17 @@ define_user_function = ->
 	p5 = caddr(p1); # p5 is B
 
 	if (!issymbol(p3)) # p3 is F
-		stop("function name?");
+		stop("function name?")
 
 	# evaluate function body (maybe)
 
 	if (car(p5) == symbol(EVAL))  # p5 is B
 		push(cadr(p5));  # p5 is B
-		Eval();
+		Eval()
 		p5 = pop();  # p5 is B
 
 	set_binding_and_arglist(p3, p5, p4);  # p3 is F  # p4 is A  # p5 is B
 
 	# return value is nil
 
-	push_symbol(NIL);
+	push_symbol(NIL)

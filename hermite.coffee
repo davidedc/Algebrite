@@ -10,13 +10,12 @@
 #
 #-----------------------------------------------------------------------------
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 hermite = ->
-	save();
-	yyhermite();
-	restore();
+	save()
+	yyhermite()
+	restore()
 
 # uses the recurrence relation H(x,n+1)=2*x*H(x,n)-2*n*H(x,n-1)
 
@@ -30,57 +29,57 @@ yyhermite = ->
 
 	n = 0
 
-	p2 = pop();
-	p1 = pop();
+	p2 = pop()
+	p1 = pop()
 
-	push(p2);
-	n = pop_integer();
+	push(p2)
+	n = pop_integer()
 
 	if (n < 0 || n == 0x80000000)
-		push_symbol(HERMITE);
-		push(p1);
-		push(p2);
-		list(3);
-		return;
+		push_symbol(HERMITE)
+		push(p1)
+		push(p2)
+		list(3)
+		return
 
 	if (issymbol(p1))
-		yyhermite2(n);
+		yyhermite2(n)
 	else
 		p3 = p1;			# do this when X is an expr
-		p1 = symbol(SECRETX);
-		yyhermite2(n);
-		p1 = p3;
-		push(symbol(SECRETX));
-		push(p1);
-		subst();
-		Eval();
+		p1 = symbol(SECRETX)
+		yyhermite2(n)
+		p1 = p3
+		push(symbol(SECRETX))
+		push(p1)
+		subst()
+		Eval()
 
 yyhermite2 = (n) ->
 	i = 0
 
-	push_integer(1);
-	push_integer(0);
+	push_integer(1)
+	push_integer(0)
 
-	p4 = pop();
+	p4 = pop()
 
 	for i in [0...n]
 
-		p5 = p4;
+		p5 = p4
 
-		p4 = pop();
+		p4 = pop()
 
-		push(p1);
-		push(p4);
-		multiply();
+		push(p1)
+		push(p4)
+		multiply()
 
-		push_integer(i);
-		push(p5);
-		multiply();
+		push_integer(i)
+		push(p5)
+		multiply()
 
-		subtract();
+		subtract()
 
-		push_integer(2);
-		multiply();
+		push_integer(2)
+		multiply()
 
 test_hermite = ->
 	run_test [

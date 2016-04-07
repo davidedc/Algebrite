@@ -28,70 +28,69 @@ Notes
 	   automatic.
 ###
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 Eval_mag = ->
-	push(cadr(p1));
-	Eval();
-	mag();
+	push(cadr(p1))
+	Eval()
+	mag()
 
 mag = ->
-	save();
-	p1 = pop();
-	push(p1);
-	numerator();
-	yymag();
-	push(p1);
-	denominator();
-	yymag();
-	divide();
-	restore();
+	save()
+	p1 = pop()
+	push(p1)
+	numerator()
+	yymag()
+	push(p1)
+	denominator()
+	yymag()
+	divide()
+	restore()
 
 yymag = ->
-	save();
-	p1 = pop();
+	save()
+	p1 = pop()
 	if (isnegativenumber(p1))
-		push(p1);
-		negate();
+		push(p1)
+		negate()
 	else if (car(p1) == symbol(POWER) && equaln(cadr(p1), -1))
 		# -1 to a power
-		push_integer(1);
+		push_integer(1)
 	else if (car(p1) == symbol(POWER) && cadr(p1) == symbol(E))
 		# exponential
-		push(caddr(p1));
-		real();
-		exponential();
+		push(caddr(p1))
+		real()
+		exponential()
 	else if (car(p1) == symbol(MULTIPLY))
 		# product
-		push_integer(1);
-		p1 = cdr(p1);
+		push_integer(1)
+		p1 = cdr(p1)
 		while (iscons(p1))
-			push(car(p1));
-			mag();
-			multiply();
-			p1 = cdr(p1);
+			push(car(p1))
+			mag()
+			multiply()
+			p1 = cdr(p1)
 	else if (car(p1) == symbol(ADD))
 		# sum
-		push(p1);
+		push(p1)
 		rect(); # convert polar terms, if any
-		p1 = pop();
-		push(p1);
-		real();
-		push_integer(2);
-		power();
-		push(p1);
-		imag();
-		push_integer(2);
-		power();
-		add();
-		push_rational(1, 2);
-		power();
-		simplify_trig();
+		p1 = pop()
+		push(p1)
+		real()
+		push_integer(2)
+		power()
+		push(p1)
+		imag()
+		push_integer(2)
+		power()
+		add()
+		push_rational(1, 2)
+		power()
+		simplify_trig()
 	else
 		# default (all real)
-		push(p1);
-	restore();
+		push(p1)
+	restore()
 
 
 test_mag = ->

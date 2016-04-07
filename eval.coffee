@@ -4,8 +4,7 @@
 #	Eval()
 #	p2 = pop()
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 Eval = ->
 	#debugger

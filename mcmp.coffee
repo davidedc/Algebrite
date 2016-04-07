@@ -8,17 +8,16 @@
 #
 #	1		a > b
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 mcmp = (a,b) ->
 	return a.compare b
 
 # a is a bigint, n is a normal int
 mcmpint = (a,n) ->
-	b = bigInt(n);
-	t = mcmp(a, b);
-	return t;
+	b = bigInt(n)
+	t = mcmp(a, b)
+	return t
 
 ###
 #if SELFTEST
@@ -26,31 +25,31 @@ mcmpint = (a,n) ->
 void
 test_mcmp(void)
 {
-	int i, j, k;
-	unsigned int *x, *y;
-	logout("testing mcmp\n");
+	int i, j, k
+	unsigned int *x, *y
+	logout("testing mcmp\n")
 	for (i = -1000; i < 1000; i++) {
-		x = mint(i);
+		x = mint(i)
 		for (j = -1000; j < 1000; j++) {
-			y = mint(j);
-			k = mcmp(x, y);
+			y = mint(j)
+			k = mcmp(x, y)
 			if (i == j && k != 0) {
-				logout("failed\n");
-				errout();
+				logout("failed\n")
+				errout()
 			}
 			if (i < j && k != -1) {
-				logout("failed\n");
-				errout();
+				logout("failed\n")
+				errout()
 			}
 			if (i > j && k != 1) {
-				logout("failed\n");
-				errout();
+				logout("failed\n")
+				errout()
 			}
-			mfree(y);
+			mfree(y)
 		}
-		mfree(x);
+		mfree(x)
 	}
-	logout("ok\n");
+	logout("ok\n")
 }
 
 #endif

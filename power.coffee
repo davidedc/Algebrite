@@ -7,132 +7,131 @@
 	Output:		Result on stack
 ###
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 Eval_power = ->
-	push(cadr(p1));
-	Eval();
-	push(caddr(p1));
-	Eval();
-	power();
+	push(cadr(p1))
+	Eval()
+	push(caddr(p1))
+	Eval()
+	power()
 
 power = ->
-	save();
-	yypower();
-	restore();
+	save()
+	yypower()
+	restore()
 
 yypower = ->
 	n = 0
 
-	p2 = pop();
-	p1 = pop();
+	p2 = pop()
+	p1 = pop()
 
 	# both base and exponent are rational numbers?
 
 	if (isrational(p1) && isrational(p2))
-		push(p1);
-		push(p2);
-		qpow();
-		return;
+		push(p1)
+		push(p2)
+		qpow()
+		return
 
 	# both base and exponent are either rational or double?
 
 	if (isnum(p1) && isnum(p2))
-		push(p1);
-		push(p2);
-		dpow();
-		return;
+		push(p1)
+		push(p2)
+		dpow()
+		return
 
 	if (istensor(p1))
-		power_tensor();
-		return;
+		power_tensor()
+		return
 
 	if (p1 == symbol(E) && car(p2) == symbol(LOG))
-		push(cadr(p2));
-		return;
+		push(cadr(p2))
+		return
 
 	if (p1 == symbol(E) && isdouble(p2))
-		push_double(exp(p2.d));
-		return;
+		push_double(exp(p2.d))
+		return
 
 	#	1 ^ a		->	1
 	#	a ^ 0		->	1
 
 	if (equal(p1, one) || iszero(p2))
-		push(one);
-		return;
+		push(one)
+		return
 
 	#	a ^ 1		->	a
 
 	if (equal(p2, one))
-		push(p1);
-		return;
+		push(p1)
+		return
 
 	#	(a * b) ^ c	->	(a ^ c) * (b ^ c)
 
 	if (car(p1) == symbol(MULTIPLY))
-		p1 = cdr(p1);
-		push(car(p1));
-		push(p2);
-		power();
-		p1 = cdr(p1);
+		p1 = cdr(p1)
+		push(car(p1))
+		push(p2)
+		power()
+		p1 = cdr(p1)
 		while (iscons(p1))
-			push(car(p1));
-			push(p2);
-			power();
-			multiply();
-			p1 = cdr(p1);
-		return;
+			push(car(p1))
+			push(p2)
+			power()
+			multiply()
+			p1 = cdr(p1)
+		return
 
 	#	(a ^ b) ^ c	->	a ^ (b * c)
 
 	if (car(p1) == symbol(POWER))
-		push(cadr(p1));
-		push(caddr(p1));
-		push(p2);
-		multiply();
-		power();
-		return;
+		push(cadr(p1))
+		push(caddr(p1))
+		push(p2)
+		multiply()
+		power()
+		return
 
 	#	(a + b) ^ n	->	(a + b) * (a + b) ...
 
 	if (expanding && isadd(p1) && isnum(p2))
-		push(p2);
-		n = pop_integer();
+		push(p2)
+		n = pop_integer()
 		if (n > 1 && n != 0x80000000)
-			power_sum(n);
-			return;
+			power_sum(n)
+			return
 
 	#	sin(x) ^ 2n -> (1 - cos(x) ^ 2) ^ n
 
 	if (trigmode == 1 && car(p1) == symbol(SIN) && iseveninteger(p2))
-		push_integer(1);
-		push(cadr(p1));
-		cosine();
-		push_integer(2);
-		power();
-		subtract();
-		push(p2);
-		push_rational(1, 2);
-		multiply();
-		power();
-		return;
+		push_integer(1)
+		push(cadr(p1))
+		cosine()
+		push_integer(2)
+		power()
+		subtract()
+		push(p2)
+		push_rational(1, 2)
+		multiply()
+		power()
+		return
 
 	#	cos(x) ^ 2n -> (1 - sin(x) ^ 2) ^ n
 
 	if (trigmode == 2 && car(p1) == symbol(COS) && iseveninteger(p2))
-		push_integer(1);
-		push(cadr(p1));
-		sine();
-		push_integer(2);
-		power();
-		subtract();
-		push(p2);
-		push_rational(1, 2);
-		multiply();
-		power();
-		return;
+		push_integer(1)
+		push(cadr(p1))
+		sine()
+		push_integer(2)
+		power()
+		subtract()
+		push(p2)
+		push_rational(1, 2)
+		multiply()
+		power()
+		return
 
 	# complex number? (just number, not expression)
 
@@ -150,60 +149,60 @@ yypower = ->
 			#              |   2   2  |
 			#               \ a + b  /
 
-			push(p1);
-			conjugate();
-			p3 = pop();
-			push(p3);
-			push(p3);
-			push(p1);
-			multiply();
-			divide();
-			push(p2);
-			negate();
-			power();
-			return;
+			push(p1)
+			conjugate()
+			p3 = pop()
+			push(p3)
+			push(p3)
+			push(p1)
+			multiply()
+			divide()
+			push(p2)
+			negate()
+			power()
+			return
 
 		# noninteger or floating power?
 
 		if (isnum(p2))
-			push(p1);
-			mag();
-			push(p2);
-			power();
-			push_integer(-1);
-			push(p1);
-			arg();
-			push(p2);
-			multiply();
-			push(symbol(PI));
-			divide();
-			power();
-			multiply();
-			return;
+			push(p1)
+			mag()
+			push(p2)
+			power()
+			push_integer(-1)
+			push(p1)
+			arg()
+			push(p2)
+			multiply()
+			push(symbol(PI))
+			divide()
+			power()
+			multiply()
+			return
 
 			###
-			push(p1);
-			mag();
-			push(p2);
-			power();
-			push(symbol(E));
-			push(p1);
-			arg();
-			push(p2);
-			multiply();
-			push(imaginaryunit);
-			multiply();
-			power();
-			multiply();
+			push(p1)
+			mag()
+			push(p2)
+			power()
+			push(symbol(E))
+			push(p1)
+			arg()
+			push(p2)
+			multiply()
+			push(imaginaryunit)
+			multiply()
+			power()
+			multiply()
 			###
 
 	if (simplify_polar())
-		return;
+		return
 
-	push_symbol(POWER);
-	push(p1);
-	push(p2);
-	list(3);
+	push_symbol(POWER)
+	push(p1)
+	push(p2)
+	list(3)
 
 #-----------------------------------------------------------------------------
 #
@@ -239,35 +238,35 @@ power_sum = (n) ->
 
 	# number of terms in the sum
 
-	k = length(p1) - 1;
+	k = length(p1) - 1
 
 	# local frame
 
-	push_frame(k * (n + 1));
+	push_frame(k * (n + 1))
 
 	# array of powers
 
-	p1 = cdr(p1);
+	p1 = cdr(p1)
 	for i in [0...k]
 		for j in [0..n]
-			push(car(p1));
-			push_integer(j);
-			power();
-			stack[frame + (i) * (n + 1) + (j)] = pop();
-		p1 = cdr(p1);
+			push(car(p1))
+			push_integer(j)
+			power()
+			stack[frame + (i) * (n + 1) + (j)] = pop()
+		p1 = cdr(p1)
 
-	push_integer(n);
-	factorial();
-	p1 = pop();
+	push_integer(n)
+	factorial()
+	p1 = pop()
 
 	for i in [0...k]
 		a[i] = 0
 
-	push(zero);
+	push(zero)
 
-	multinomial_sum(k, n, a, 0, n);
+	multinomial_sum(k, n, a, 0, n)
 
-	pop_frame(k * (n + 1));
+	pop_frame(k * (n + 1))
 
 #-----------------------------------------------------------------------------
 #
@@ -301,28 +300,28 @@ multinomial_sum = (k,n,a,i,m) ->
 
 	if (i < k - 1)
 		for j in [0..m]
-			a[i] = j;
-			multinomial_sum(k, n, a, i + 1, m - j);
-		return;
+			a[i] = j
+			multinomial_sum(k, n, a, i + 1, m - j)
+		return
 
-	a[i] = m;
+	a[i] = m
 
 	# coefficient
 
-	push(p1);
+	push(p1)
 
 	for j in [0...k]
-		push_integer(a[j]);
-		factorial();
-		divide();
+		push_integer(a[j])
+		factorial()
+		divide()
 
 	# factors
 
 	for j in [0...k]
-		push(stack[frame + (j) * (n + 1) + a[j]]);
-		multiply();
+		push(stack[frame + (j) * (n + 1) + a[j]])
+		multiply()
 
-	add();
+	add()
 
 # exp(n/2 i pi) ?
 
@@ -331,54 +330,54 @@ multinomial_sum = (k,n,a,i,m) ->
 # clobbers p3
 
 simplify_polar = ->
-	n = 0;
+	n = 0
 
-	n = isquarterturn(p2);
+	n = isquarterturn(p2)
 
 	switch(n)
 		when 0
-			doNothing = 1;
+			doNothing = 1
 		when 1
-			push_integer(1);
-			return 1;
+			push_integer(1)
+			return 1
 		when 2
-			push_integer(-1);
-			return 1;
+			push_integer(-1)
+			return 1
 		when 3
-			push(imaginaryunit);
-			return 1;
+			push(imaginaryunit)
+			return 1
 		when 4
-			push(imaginaryunit);
-			negate();
-			return 1;
+			push(imaginaryunit)
+			negate()
+			return 1
 
 	if (car(p2) == symbol(ADD))
-		p3 = cdr(p2);
+		p3 = cdr(p2)
 		while (iscons(p3))
-			n = isquarterturn(car(p3));
+			n = isquarterturn(car(p3))
 			if (n)
-				break;
-			p3 = cdr(p3);
+				break
+			p3 = cdr(p3)
 		switch (n)
 			when 0
-				return 0;
+				return 0
 			when 1
-				push_integer(1);
+				push_integer(1)
 			when 2
-				push_integer(-1);
+				push_integer(-1)
 			when 3
-				push(imaginaryunit);
+				push(imaginaryunit)
 			when 4
-				push(imaginaryunit);
-				negate();
-		push(p2);
-		push(car(p3));
-		subtract();
-		exponential();
-		multiply();
-		return 1;
+				push(imaginaryunit)
+				negate()
+		push(p2)
+		push(car(p3))
+		subtract()
+		exponential()
+		multiply()
+		return 1
 
-	return 0;
+	return 0
 
 
 

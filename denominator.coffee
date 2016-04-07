@@ -1,41 +1,40 @@
-#include "stdafx.h"
-#include "defs.h"
+
 
 Eval_denominator = ->
-	push(cadr(p1));
-	Eval();
-	denominator();
+	push(cadr(p1))
+	Eval()
+	denominator()
 
 denominator = ->
 	h = 0
 
-	save();
+	save()
 
-	p1 = pop();
+	p1 = pop()
 
 	if (car(p1) == symbol(ADD))
-		push(p1);
-		rationalize();
-		p1 = pop();
+		push(p1)
+		rationalize()
+		p1 = pop()
 
 	if (car(p1) == symbol(MULTIPLY))
-		h = tos;
-		p1 = cdr(p1);
+		h = tos
+		p1 = cdr(p1)
 		while (iscons(p1))
-			push(car(p1));
-			denominator();
-			p1 = cdr(p1);
-		multiply_all(tos - h);
+			push(car(p1))
+			denominator()
+			p1 = cdr(p1)
+		multiply_all(tos - h)
 	else if (isrational(p1))
-		push(p1);
-		mp_denominator();
+		push(p1)
+		mp_denominator()
 	else if (car(p1) == symbol(POWER) && isnegativeterm(caddr(p1)))
-		push(p1);
-		reciprocate();
+		push(p1)
+		reciprocate()
 	else
-		push(one);
+		push(one)
 
-	restore();
+	restore()
 
 test_denominator = ->
 	run_test [

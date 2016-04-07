@@ -14,36 +14,35 @@
 		variable expression
 ###
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 partition = ->
-	save();
+	save()
 
-	p2 = pop();
-	p1 = pop();
+	p2 = pop()
+	p1 = pop()
 
-	push_integer(1);
+	push_integer(1)
 
-	p3 = pop();
-	p4 = p3;
+	p3 = pop()
+	p4 = p3
 
-	p1 = cdr(p1);
+	p1 = cdr(p1)
 
 	while (iscons(p1))
 		if (Find(car(p1), p2))
-			push(p4);
-			push(car(p1));
-			multiply();
-			p4 = pop();
+			push(p4)
+			push(car(p1))
+			multiply()
+			p4 = pop()
 		else
-			push(p3);
-			push(car(p1));
-			multiply();
-			p3 = pop();
-		p1 = cdr(p1);
+			push(p3)
+			push(car(p1))
+			multiply()
+			p3 = pop()
+		p1 = cdr(p1)
 
-	push(p3);
-	push(p4);
+	push(p3)
+	push(p4)
 
-	restore();
+	restore()

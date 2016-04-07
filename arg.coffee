@@ -47,83 +47,82 @@ Notes
 	   automatic.
 ###
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 Eval_arg = ->
-	push(cadr(p1));
-	Eval();
-	arg();
+	push(cadr(p1))
+	Eval()
+	arg()
 
 arg = ->
-	save();
-	p1 = pop();
-	push(p1);
-	numerator();
-	yyarg();
-	push(p1);
-	denominator();
-	yyarg();
-	subtract();
-	restore();
+	save()
+	p1 = pop()
+	push(p1)
+	numerator()
+	yyarg()
+	push(p1)
+	denominator()
+	yyarg()
+	subtract()
+	restore()
 
 #define RE p2
 #define IM p3
 
 yyarg = ->
-	save();
-	p1 = pop();
+	save()
+	p1 = pop()
 	if (isnegativenumber(p1))
-		push(symbol(PI));
-		negate();
+		push(symbol(PI))
+		negate()
 	else if (car(p1) == symbol(POWER) && equaln(cadr(p1), -1))
 		# -1 to a power
-		push(symbol(PI));
-		push(caddr(p1));
-		multiply();
+		push(symbol(PI))
+		push(caddr(p1))
+		multiply()
 	else if (car(p1) == symbol(POWER) && cadr(p1) == symbol(E))
 		# exponential
-		push(caddr(p1));
-		imag();
+		push(caddr(p1))
+		imag()
 	else if (car(p1) == symbol(MULTIPLY))
 		# product of factors
-		push_integer(0);
-		p1 = cdr(p1);
+		push_integer(0)
+		p1 = cdr(p1)
 		while (iscons(p1))
-			push(car(p1));
-			arg();
-			add();
-			p1 = cdr(p1);
+			push(car(p1))
+			arg()
+			add()
+			p1 = cdr(p1)
 	else if (car(p1) == symbol(ADD))
 		# sum of terms
-		push(p1);
-		rect();
-		p1 = pop();
-		push(p1);
-		real();
-		p2 = pop();
-		push(p1);
-		imag();
-		p3 = pop();
+		push(p1)
+		rect()
+		p1 = pop()
+		push(p1)
+		real()
+		p2 = pop()
+		push(p1)
+		imag()
+		p3 = pop()
 		if (iszero(p2))
-			push(symbol(PI));
+			push(symbol(PI))
 			if (isnegative(p3))
-				negate();
+				negate()
 		else
-			push(p3);
-			push(p2);
-			divide();
-			arctan();
+			push(p3)
+			push(p2)
+			divide()
+			arctan()
 			if (isnegative(p2))
-				push_symbol(PI);
+				push_symbol(PI)
 				if (isnegative(p3))
 					subtract();	# quadrant 1 -> 3
 				else
 					add();		# quadrant 4 -> 2
 	else
 		# pure real
-		push_integer(0);
-	restore();
+		push_integer(0)
+	restore()
 
 
 test_arg = ->

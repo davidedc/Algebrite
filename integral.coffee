@@ -1,5 +1,4 @@
-#include "stdafx.h"
-#include "defs.h"
+
 
 #define F p3
 #define X p4
@@ -11,9 +10,9 @@ Eval_integral = ->
 
 	# evaluate 1st arg to get function F
 
-	p1 = cdr(p1);
-	push(car(p1));
-	Eval();
+	p1 = cdr(p1)
+	push(car(p1))
+	Eval()
 
 	# evaluate 2nd arg and then...
 
@@ -25,57 +24,57 @@ Eval_integral = ->
 	# integral(f,x,2)	x			X = x, N = 2
 	# integral(f,x,y)	x			X = x, N = y
 
-	p1 = cdr(p1);
-	push(car(p1));
-	Eval();
+	p1 = cdr(p1)
+	push(car(p1))
+	Eval()
 
-	p2 = pop();
+	p2 = pop()
 	if (p2 == symbol(NIL))
-		guess();
-		push(symbol(NIL));
+		guess()
+		push(symbol(NIL))
 	else if (isnum(p2))
-		guess();
-		push(p2);
+		guess()
+		push(p2)
 	else
-		push(p2);
-		p1 = cdr(p1);
-		push(car(p1));
-		Eval();
+		push(p2)
+		p1 = cdr(p1)
+		push(car(p1))
+		Eval()
 
-	p5 = pop();
-	p4 = pop();
-	p3 = pop();
+	p5 = pop()
+	p4 = pop()
+	p3 = pop()
 
 	while (1)
 
 		# N might be a symbol instead of a number
 
 		if (isnum(p5))
-			push(p5);
-			n = pop_integer();
+			push(p5)
+			n = pop_integer()
 			if (n == 0x80000000)
-				stop("nth integral: check n");
+				stop("nth integral: check n")
 		else
-			n = 1;
+			n = 1
 
-		push(p3);
+		push(p3)
 
 		if (n >= 0)
 			for i in [0...n]
-				push(p4);
-				integral();
+				push(p4)
+				integral()
 		else
-			n = -n;
+			n = -n
 			for i in [0...n]
-				push(p4);
-				derivative();
+				push(p4)
+				derivative()
 
-		p3 = pop();
+		p3 = pop()
 
 		# if N is nil then arglist is exhausted
 
 		if (p5 == symbol(NIL))
-			break;
+			break
 
 		# otherwise...
 
@@ -90,80 +89,80 @@ Eval_integral = ->
 		# symbol	symbol		X = N, N = arg1, continue
 
 		if (isnum(p5))
-			p1 = cdr(p1);
-			push(car(p1));
-			Eval();
-			p5 = pop();
+			p1 = cdr(p1)
+			push(car(p1))
+			Eval()
+			p5 = pop()
 			if (p5 == symbol(NIL))
 				break;		# arglist exhausted
 			if (isnum(p5))
 				doNothing = 1		# N = arg1
 			else
 				p4 = p5;		# X = arg1
-				p1 = cdr(p1);
-				push(car(p1));
-				Eval();
+				p1 = cdr(p1)
+				push(car(p1))
+				Eval()
 				p5 = pop();	# N = arg2
 		else
 			p4 = p5;			# X = N
-			p1 = cdr(p1);
-			push(car(p1));
-			Eval();
+			p1 = cdr(p1)
+			push(car(p1))
+			Eval()
 			p5 = pop();		# N = arg1
 
 	push(p3);	# final result
 
 integral = ->
-	save();
-	p2 = pop();
-	p1 = pop();
+	save()
+	p2 = pop()
+	p1 = pop()
 	if (car(p1) == symbol(ADD))
-		integral_of_sum();
+		integral_of_sum()
 	else if (car(p1) == symbol(MULTIPLY))
-		integral_of_product();
+		integral_of_product()
 	else
-		integral_of_form();
-	p1 = pop();
+		integral_of_form()
+	p1 = pop()
 	if (Find(p1, symbol(INTEGRAL)))
-		stop("integral: sorry, could not find a solution");
-	push(p1);
+		stop("integral: sorry, could not find a solution")
+	push(p1)
 	simplify();	# polish the result
 	Eval();		# normalize the result
-	restore();
+	restore()
 
 integral_of_sum = ->
-	p1 = cdr(p1);
-	push(car(p1));
-	push(p2);
-	integral();
-	p1 = cdr(p1);
+	p1 = cdr(p1)
+	push(car(p1))
+	push(p2)
+	integral()
+	p1 = cdr(p1)
 	while (iscons(p1))
-		push(car(p1));
-		push(p2);
-		integral();
-		add();
-		p1 = cdr(p1);
+		push(car(p1))
+		push(p2)
+		integral()
+		add()
+		p1 = cdr(p1)
 
 integral_of_product = ->
-	push(p1);
-	push(p2);
-	partition();
+	push(p1)
+	push(p2)
+	partition()
 	p1 = pop();			# pop variable part
-	integral_of_form();
+	integral_of_form()
 	multiply();			# multiply constant part
 
 integral_of_form = ->
-	push(p1);
-	push(p2);
-	transform(itab);
-	p3 = pop();
+	push(p1)
+	push(p2)
+	transform(itab)
+	p3 = pop()
 	if (p3 == symbol(NIL))
-		push_symbol(INTEGRAL);
-		push(p1);
-		push(p2);
-		list(3);
+		push_symbol(INTEGRAL)
+		push(p1)
+		push(p2)
+		list(3)
 	else
-		push(p3);
+		push(p3)
 
 
 test_integral = ->

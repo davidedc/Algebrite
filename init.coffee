@@ -1,5 +1,4 @@
-#include "stdafx.h"
-#include "defs.h"
+
 
 init = ->
 	i = 0

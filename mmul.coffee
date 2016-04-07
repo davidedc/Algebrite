@@ -1,7 +1,6 @@
 # Bignum multiplication and division
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 
 
@@ -18,12 +17,12 @@ mdiv = (a, b) ->
 static void
 addf(unsigned int *a, unsigned int *b, int len)
 {
-	int i;
+	int i
 	long long t = 0; # can be signed or unsigned 
 	for (i = 0; i < len; i++) {
-		t += (long long) a[i] + b[i];
-		a[i] = (unsigned int) t;
-		t >>= 32;
+		t += (long long) a[i] + b[i]
+		a[i] = (unsigned int) t
+		t >>= 32
 	}
 }
 
@@ -32,12 +31,12 @@ addf(unsigned int *a, unsigned int *b, int len)
 static void
 subf(unsigned int *a, unsigned int *b, int len)
 {
-	int i;
+	int i
 	long long t = 0; # must be signed
 	for (i = 0; i < len; i++) {
-		t += (long long) a[i] - b[i];
-		a[i] = (unsigned int) t;
-		t >>= 32;
+		t += (long long) a[i] - b[i]
+		a[i] = (unsigned int) t
+		t >>= 32
 	}
 }
 
@@ -48,14 +47,14 @@ subf(unsigned int *a, unsigned int *b, int len)
 static void
 mulf(unsigned int *a, unsigned int *b, int len, unsigned int c)
 {
-	int i;
+	int i
 	unsigned long long t = 0; # must be unsigned
 	for (i = 0; i < len; i++) {
-		t += (unsigned long long) b[i] * c;
-		a[i] = (unsigned int) t;
-		t >>= 32;
+		t += (unsigned long long) b[i] * c
+		a[i] = (unsigned int) t
+		t >>= 32
 	}
-	a[i] = (unsigned int) t;
+	a[i] = (unsigned int) t
 }
 ###
 
@@ -78,22 +77,22 @@ test_mmul = ->
 	i = 0
 	j = 0
 	m = 0
-	logout("test mmul\n");
+	logout("test mmul\n")
 	for i in [-100..100]
 		for j in [-100..100]
-			test_mmulf(i, j, i * j);
-	logout("ok\n");
+			test_mmulf(i, j, i * j)
+	logout("ok\n")
 
 test_mmulf = (na, nb, nc) ->
 
-	a = mint(na);
-	b = mint(nb);
-	c = mint(nc);
+	a = mint(na)
+	b = mint(nb)
+	c = mint(nc)
 
-	d = mmul(a, b);
+	d = mmul(a, b)
 
 	if (mcmp(c, d) == 0)
-		return;
+		return
 	else
 		throw new Error("test_mmulf error")
 
@@ -101,7 +100,7 @@ test_mdiv = ->
 	i = 0
 	j = 0
 	m = 0
-	logout("test mdiv\n");
+	logout("test mdiv\n")
 	for i in [-100..100]
 		for j in [-100..100]
 			if (j)
@@ -109,19 +108,19 @@ test_mdiv = ->
 					expectedResult = Math.floor(i / j)
 				else
 					expectedResult = Math.ceil(i / j)
-				test_mdivf(i, j, expectedResult);
-	logout("ok\n");
+				test_mdivf(i, j, expectedResult)
+	logout("ok\n")
 
 test_mdivf = (na, nb, nc) ->
 
-	a = mint(na);
-	b = mint(nb);
-	c = mint(nc);
+	a = mint(na)
+	b = mint(nb)
+	c = mint(nc)
 
-	d = mdiv(a, b);
+	d = mdiv(a, b)
 
 	if (mcmp(c, d) == 0)
-		return;
+		return
 	else
 		debugger
 		throw new Error("test_mdivf error")
@@ -131,23 +130,23 @@ test_mmod = ->
 	i = 0
 	j = 0
 	m = 0
-	logout("test mmod\n");
+	logout("test mmod\n")
 	for i in [-100..100]
 		for j in [-100..100]
 			if (j)
-				test_mmodf(i, j, i % j);
-	logout("ok\n");
+				test_mmodf(i, j, i % j)
+	logout("ok\n")
 
 test_mmodf = (na,nb,nc) ->
 
-	a = mint(na);
-	b = mint(nb);
-	c = mint(nc);
+	a = mint(na)
+	b = mint(nb)
+	c = mint(nc)
 
-	d = mmod(a, b);
+	d = mmod(a, b)
 
 	if (mcmp(c, d) == 0)
-		return;
+		return
 	else
 		throw new Error("test_mmodf error")
 

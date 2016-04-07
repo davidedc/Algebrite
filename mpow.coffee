@@ -1,32 +1,31 @@
 # Bignum power
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 # a is a bigint, n is a small normal int
 mpow = (a,n) ->
 
-	return a.pow n;
+	return a.pow n
 
 #if SELFTEST
 
 test_mpow = ->
-	logout("testing mpow\n");
+	logout("testing mpow\n")
 
 
 	# small numbers
 
 	for i  in [-10...10]
-		a = mint(i);
-		x = 1;
+		a = mint(i)
+		x = 1
 		for j in [0...10]
-			b = mpow(a, j);
-			c = mint(x);
+			b = mpow(a, j)
+			c = mint(x)
 			if (mcmp(b, c) != 0)
-				throw new Error("failed test_mpow");
-			x *= i;
+				throw new Error("failed test_mpow")
+			x *= i
 
 
-	logout("ok\n");
+	logout("ok\n")
 
 #endif

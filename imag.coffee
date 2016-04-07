@@ -9,27 +9,26 @@
 	exp(i a)	sin(a)
 ###
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 Eval_imag = ->
-	push(cadr(p1));
-	Eval();
-	imag();
+	push(cadr(p1))
+	Eval()
+	imag()
 
 imag = ->
-	save();
-	rect();
-	p1 = pop();
-	push(p1);
-	push(p1);
-	conjugate();
-	subtract();
-	push_integer(2);
-	divide();
-	push(imaginaryunit);
-	divide();
-	restore();
+	save()
+	rect()
+	p1 = pop()
+	push(p1)
+	push(p1)
+	conjugate()
+	subtract()
+	push_integer(2)
+	divide()
+	push(imaginaryunit)
+	divide()
+	restore()
 
 test_imag = ->
 	run_test [

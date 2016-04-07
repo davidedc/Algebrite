@@ -8,26 +8,25 @@ Convert complex z to polar form
 	polar(z) = mag(z) * exp(i * arg(z))
 ###
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 Eval_polar = ->
-	push(cadr(p1));
-	Eval();
-	polar();
+	push(cadr(p1))
+	Eval()
+	polar()
 
 polar = ->
-	save();
-	p1 = pop();
-	push(p1);
-	mag();
-	push(imaginaryunit);
-	push(p1);
-	arg();
-	multiply();
-	exponential();
-	multiply();
-	restore();
+	save()
+	p1 = pop()
+	push(p1)
+	mag()
+	push(imaginaryunit)
+	push(p1)
+	arg()
+	multiply()
+	exponential()
+	multiply()
+	restore()
 
 
 test_polar = ->

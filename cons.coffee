@@ -1,7 +1,6 @@
 # Cons two things on the stack.
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 consCount = 0
 cons = ->
@@ -10,14 +9,14 @@ cons = ->
 	#if consCount == 444
 	#	debugger
 	# auto var ok, no opportunity for garbage collection after p = alloc()
-	p = new U();
-	p.k = CONS;
-	p.cons.cdr = pop();
+	p = new U()
+	p.k = CONS
+	p.cons.cdr = pop()
 	if p == p.cons.cdr
 		debugger
 		console.log "something wrong p == its cdr"
 
-	p.cons.car = pop();
+	p.cons.car = pop()
 
 
 	###
@@ -27,4 +26,4 @@ cons = ->
 	print1 p.cons.car
 	###
 
-	push(p);
+	push(p)

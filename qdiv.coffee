@@ -6,40 +6,39 @@
 #
 #	Output:		quotient on stack
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 qdiv = ->
-	save();
+	save()
 
-	p2 = pop();
-	p1 = pop();
+	p2 = pop()
+	p1 = pop()
 
 	# zero?
 
 	if (MZERO(p2.q.a))
-		stop("divide by zero");
+		stop("divide by zero")
 
 	if (MZERO(p1.q.a))
-		push(zero);
-		restore();
-		return;
+		push(zero)
+		restore()
+		return
 
-	aa = mmul(p1.q.a, p2.q.b);
-	bb = mmul(p1.q.b, p2.q.a);
+	aa = mmul(p1.q.a, p2.q.b)
+	bb = mmul(p1.q.b, p2.q.a)
 
-	c = mgcd(aa, bb);
+	c = mgcd(aa, bb)
 
 	c = makeSignSameAs(c,bb)
 
-	p1 = new U();
+	p1 = new U()
 
-	p1.k = NUM;
+	p1.k = NUM
 
-	p1.q.a = mdiv(aa, c);
-	p1.q.b = mdiv(bb, c);
+	p1.q.a = mdiv(aa, c)
+	p1.q.b = mdiv(bb, c)
 
 
-	push(p1);
+	push(p1)
 
-	restore();
+	restore()

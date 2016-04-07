@@ -7,41 +7,40 @@
 #  
 #-----------------------------------------------------------------------------
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 Eval_erf = ->
-	push(cadr(p1));
-	Eval();
-	yerf();
+	push(cadr(p1))
+	Eval()
+	yerf()
 
 yerf = ->
-	save();
-	yyerf();
-	restore();
+	save()
+	yyerf()
+	restore()
 
 yyerf = ->
 	d = 0.0
 
-	p1 = pop();
+	p1 = pop()
 
 	if (isdouble(p1))
-		d = 1.0 - erfc(p1.d);
-		push_double(d);
-		return;
+		d = 1.0 - erfc(p1.d)
+		push_double(d)
+		return
 
 	if (isnegativeterm(p1))
-		push_symbol(ERF);
-		push(p1);
-		negate();
-		list(2);
-		negate();
-		return;
+		push_symbol(ERF)
+		push(p1)
+		negate()
+		list(2)
+		negate()
+		return
 	
-	push_symbol(ERF);
-	push(p1);
-	list(2);
-	return;
+	push_symbol(ERF)
+	push(p1)
+	list(2)
+	return
 
 test_erf = ->
 	run_test [

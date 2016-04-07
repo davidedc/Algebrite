@@ -15,51 +15,50 @@
 #
 #-----------------------------------------------------------------------------
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 DET_check_arg = ->
 	if (!istensor(p1))
-		return 0;
+		return 0
 	else if (p1.tensor.ndim != 2)
-		return 0;
+		return 0
 	else if (p1.tensor.dim[0] != p1.tensor.dim[1])
-		return 0;
+		return 0
 	else
-		return 1;
+		return 1
 
 det = ->
 	i = 0
 	n = 0
-	#U **a;
+	#U **a
 
-	save();
+	save()
 
-	p1 = pop();
+	p1 = pop()
 
 	if (DET_check_arg() == 0)
-		push_symbol(DET);
-		push(p1);
-		list(2);
-		restore();
-		return;
+		push_symbol(DET)
+		push(p1)
+		list(2)
+		restore()
+		return
 
-	n = p1.tensor.nelem;
+	n = p1.tensor.nelem
 
-	a = p1.tensor.elem;
+	a = p1.tensor.elem
 
 	for i in [0...n]
 		if (!isnum(a[i]))
-			break;
+			break
 
 	if (i == n)
-		yydetg();
+		yydetg()
 	else
 		for i in [0...p1.tensor.nelem]
-			push(p1.tensor.elem[i]);
-		determinant(p1.tensor.dim[0]);
+			push(p1.tensor.elem[i])
+		determinant(p1.tensor.dim[0])
 
-	restore();
+	restore()
 
 # determinant of n * n matrix elements on the stack
 
@@ -74,74 +73,74 @@ determinant = (n) ->
 	t = 0
 
 	a = []
-	#int *a, *c, *d;
+	#int *a, *c, *d
 
-	h = tos - n * n;
+	h = tos - n * n
 
-	#a = (int *) malloc(3 * n * sizeof (int));
+	#a = (int *) malloc(3 * n * sizeof (int))
 
 	#if (a == NULL)
-	#	out_of_memory();
+	#	out_of_memory()
 
 	for i in [0...n]
-		a[i] = i;
+		a[i] = i
 		a[i+n] = 0
 		a[i+n+n] = 1
 
-	sign = 1;
+	sign = 1
 
-	push(zero);
+	push(zero)
 
 	while 1
 
 		if (sign == 1)
-			push_integer(1);
+			push_integer(1)
 		else
-			push_integer(-1);
+			push_integer(-1)
 
 		for i in [0...n]
-			k = n * a[i] + i;
-			push(stack[h + k]);
+			k = n * a[i] + i
+			push(stack[h + k])
 			multiply(); # FIXME -- problem here
 
-		add();
+		add()
 
 		# next permutation (Knuth's algorithm P)
 
-		j = n - 1;
-		s = 0;
+		j = n - 1
+		s = 0
 
 		breakFromOutherWhile = false
 		while 1
-			q = a[n+j] + a[n+n+j];
+			q = a[n+j] + a[n+n+j]
 			if (q < 0)
-				a[n+n+j] = -a[n+n+j];
-				j--;
-				continue;
+				a[n+n+j] = -a[n+n+j]
+				j--
+				continue
 			if (q == j + 1)
 				if (j == 0)
 					breakFromOutherWhile = true
-					break;
-				s++;
-				a[n+n+j] = -a[n+n+j];
-				j--;
+					break
+				s++
+				a[n+n+j] = -a[n+n+j]
+				j--
 				continue
 			break
 
 		if breakFromOutherWhile
 			break
 
-		t = a[j - a[n+j] + s];
-		a[j - a[n+j] + s] = a[j - q + s];
-		a[j - q + s] = t;
-		a[n+j] = q;
+		t = a[j - a[n+j] + s]
+		a[j - a[n+j] + s] = a[j - q + s]
+		a[j - q + s] = t
+		a[n+j] = q
 
-		sign = -sign;
+		sign = -sign
 
 
-	stack[h] = stack[tos - 1];
+	stack[h] = stack[tos - 1]
 
-	tos = h + 1;
+	tos = h + 1
 
 #-----------------------------------------------------------------------------
 #
@@ -159,35 +158,35 @@ determinant = (n) ->
 #-----------------------------------------------------------------------------
 
 detg = ->
-	save();
+	save()
 
-	p1 = pop();
+	p1 = pop()
 
 	if (DET_check_arg() == 0)
-		push_symbol(DET);
-		push(p1);
-		list(2);
-		restore();
-		return;
+		push_symbol(DET)
+		push(p1)
+		list(2)
+		restore()
+		return
 
-	yydetg();
+	yydetg()
 
-	restore();
+	restore()
 
 yydetg = ->
 	i = 0
 	n = 0
 
-	n = p1.tensor.dim[0];
+	n = p1.tensor.dim[0]
 
 	for i in [0...(n * n)]
-		push(p1.tensor.elem[i]);
+		push(p1.tensor.elem[i])
 
-	lu_decomp(n);
+	lu_decomp(n)
 
-	tos -= n * n;
+	tos -= n * n
 
-	push(p1);
+	push(p1)
 
 #-----------------------------------------------------------------------------
 #
@@ -213,9 +212,9 @@ lu_decomp = (n) ->
 	i = 0
 	j = 0
 
-	h = tos - n * n;
+	h = tos - n * n
 
-	p1 = one;
+	p1 = one
 
 	for d in [0...(n - 1)]
 
@@ -227,31 +226,31 @@ lu_decomp = (n) ->
 
 			for i in [(d + 1)...n]
 				if (!equal(M(h,n,i, d), zero))
-					break;
+					break
 
 			if (i == n)
-				p1 = zero;
-				break;
+				p1 = zero
+				break
 
 			# exchange rows
 
 			for j in [d...n]
-				p2 = M(h,n,d, j);
+				p2 = M(h,n,d, j)
 				setM(h,n,d, j, M(h,n,i, j))
 				setM(h,n,i, j, p2)
 
 			# negate det
 
-			push(p1);
-			negate();
-			p1 = pop();
+			push(p1)
+			negate()
+			p1 = pop()
 
 		# update det
 
-		push(p1);
-		push(M(h,n,d, d));
-		multiply();
-		p1 = pop();
+		push(p1)
+		push(M(h,n,d, d))
+		multiply()
+		p1 = pop()
 
 		# update lower diagonal matrix
 
@@ -259,28 +258,28 @@ lu_decomp = (n) ->
 
 			# multiplier
 
-			push(M(h,n,i, d));
-			push(M(h,n,d, d));
-			divide();
-			negate();
+			push(M(h,n,i, d))
+			push(M(h,n,d, d))
+			divide()
+			negate()
 
-			p2 = pop();
+			p2 = pop()
 
 			# update one row
 
 			setM(h,n,i, d, zero); # clear column below pivot d
 
 			for j in [(d + 1)...n]
-				push(M(h,n,d, j));
-				push(p2);
-				multiply();
-				push(M(h,n,i, j));
-				add();
+				push(M(h,n,d, j))
+				push(p2)
+				multiply()
+				push(M(h,n,i, j))
+				add()
 				setM(h,n,i, j, pop())
 
 	# last diagonal element
 
-	push(p1);
-	push(M(h,n,n - 1, n - 1));
-	multiply();
-	p1 = pop();
+	push(p1)
+	push(M(h,n,n - 1, n - 1))
+	multiply()
+	p1 = pop()

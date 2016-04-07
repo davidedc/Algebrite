@@ -1,20 +1,19 @@
 # Transpose tensor indices
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 Eval_transpose = ->
-	push(cadr(p1));
-	Eval();
+	push(cadr(p1))
+	Eval()
 	if (cddr(p1) == symbol(NIL))
-		push_integer(1);
-		push_integer(2);
+		push_integer(1)
+		push_integer(2)
 	else
-		push(caddr(p1));
-		Eval();
-		push(cadddr(p1));
-		Eval();
-	transpose();
+		push(caddr(p1))
+		Eval()
+		push(cadddr(p1))
+		Eval()
+	transpose()
 
 transpose = ->
 	i = 0
@@ -31,61 +30,61 @@ transpose = ->
 		ai[i] = 0
 		an[i] = 0
 
-	#U **a, **b;
+	#U **a, **b
 
-	save();
+	save()
 
-	p3 = pop();
-	p2 = pop();
-	p1 = pop();
+	p3 = pop()
+	p2 = pop()
+	p1 = pop()
 
 	if (!istensor(p1))
 		if (!iszero(p1))
-			stop("transpose: tensor expected, 1st arg is not a tensor");
-		push(zero);
-		restore();
-		return;
+			stop("transpose: tensor expected, 1st arg is not a tensor")
+		push(zero)
+		restore()
+		return
 
-	ndim = p1.tensor.ndim;
-	nelem = p1.tensor.nelem;
+	ndim = p1.tensor.ndim
+	nelem = p1.tensor.nelem
 
 	# vector?
 
 	if (ndim == 1)
-		push(p1);
-		restore();
-		return;
+		push(p1)
+		restore()
+		return
 
-	push(p2);
-	l = pop_integer();
+	push(p2)
+	l = pop_integer()
 
-	push(p3);
-	m = pop_integer();
+	push(p3)
+	m = pop_integer()
 
 	if (l < 1 || l > ndim || m < 1 || m > ndim)
-		stop("transpose: index out of range");
+		stop("transpose: index out of range")
 
-	l--;
-	m--;
+	l--
+	m--
 
-	p2 = alloc_tensor(nelem);
+	p2 = alloc_tensor(nelem)
 
-	p2.tensor.ndim = ndim;
+	p2.tensor.ndim = ndim
 
 	for i in [0...ndim]
-		p2.tensor.dim[i] = p1.tensor.dim[i];
+		p2.tensor.dim[i] = p1.tensor.dim[i]
 
-	p2.tensor.dim[l] = p1.tensor.dim[m];
-	p2.tensor.dim[m] = p1.tensor.dim[l];
+	p2.tensor.dim[l] = p1.tensor.dim[m]
+	p2.tensor.dim[m] = p1.tensor.dim[l]
 
-	a = p1.tensor.elem;
-	b = p2.tensor.elem;
+	a = p1.tensor.elem
+	b = p2.tensor.elem
 
 	# init tensor index
 
 	for i in [0...ndim]
-		ai[i] = 0;
-		an[i] = p1.tensor.dim[i];
+		ai[i] = 0
+		an[i] = p1.tensor.dim[i]
 
 	# copy components from a to b
 
@@ -98,9 +97,9 @@ transpose = ->
 
 		# convert tensor index to linear index k
 
-		k = 0;
+		k = 0
 		for j in [0...ndim]
-			k = (k * an[j]) + ai[j];
+			k = (k * an[j]) + ai[j]
 
 		# swap indices back
 
@@ -109,7 +108,7 @@ transpose = ->
 
 		# copy one element
 
-		b[k] = a[i];
+		b[k] = a[i]
 
 		# increment tensor index
 
@@ -124,11 +123,11 @@ transpose = ->
 
 		for j in [(ndim - 1)..0]
 			if (++ai[j] < an[j])
-				break;
-			ai[j] = 0;
+				break
+			ai[j] = 0
 
-	push(p2);
-	restore();
+	push(p2)
+	restore()
 
 test_transpose = ->
 	run_test [

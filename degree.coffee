@@ -1,17 +1,16 @@
-#include "stdafx.h"
-#include "defs.h"
+
 
 Eval_degree = ->
-	push(cadr(p1));
-	Eval();
-	push(caddr(p1));
-	Eval();
-	p1 = pop();
+	push(cadr(p1))
+	Eval()
+	push(caddr(p1))
+	Eval()
+	p1 = pop()
 	if (p1 == symbol(NIL))
-		guess();
+		guess()
 	else
-		push(p1);
-	degree();
+		push(p1)
+	degree()
 
 #-----------------------------------------------------------------------------
 #
@@ -33,23 +32,23 @@ Eval_degree = ->
 #define DEGREE p3
 
 degree = ->
-	save();
-	p2 = pop();
-	p1 = pop();
-	p3 = zero;
-	yydegree(p1);
-	push(p3);
-	restore();
+	save()
+	p2 = pop()
+	p1 = pop()
+	p3 = zero
+	yydegree(p1)
+	push(p3)
+	restore()
 
 yydegree = (p) ->
 	if (equal(p, p2))
 		if (iszero(p3))
-			p3 = one;
+			p3 = one
 	else if (car(p) == symbol(POWER))
 		if (equal(cadr(p), p2) && isnum(caddr(p)) && lessp(p3, caddr(p)))
-			p3 = caddr(p);
+			p3 = caddr(p)
 	else if (iscons(p))
-		p = cdr(p);
+		p = cdr(p)
 		while (iscons(p))
-			yydegree(car(p));
-			p = cdr(p);
+			yydegree(car(p))
+			p = cdr(p)

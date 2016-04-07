@@ -1,5 +1,4 @@
-#include "stdafx.h"
-#include "defs.h"
+
 
 # n is the total number of things on the stack. The first thing on the stack
 # is the object to be indexed, followed by the indices themselves.
@@ -12,57 +11,57 @@ index_function = (n) ->
 	nelem = 0
 	t = 0
 
-	save();
-	s = tos - n;
-	p1 = stack[s];
+	save()
+	s = tos - n
+	p1 = stack[s]
 
 	# index of scalar ok
 
 	if (!istensor(p1))
-		tos -= n;
-		push(p1);
-		restore();
-		return;
+		tos -= n
+		push(p1)
+		restore()
+		return
 
-	ndim = p1.tensor.ndim;
+	ndim = p1.tensor.ndim
 
-	m = n - 1;
+	m = n - 1
 
 	if (m > ndim)
-		stop("too many indices for tensor");
+		stop("too many indices for tensor")
 
-	k = 0;
+	k = 0
 
 	for i in [0...m]
-		push(stack[s + i + 1]);
-		t = pop_integer();
+		push(stack[s + i + 1])
+		t = pop_integer()
 		if (t < 1 || t > p1.tensor.dim[i])
-			stop("index out of range");
-		k = k * p1.tensor.dim[i] + t - 1;
+			stop("index out of range")
+		k = k * p1.tensor.dim[i] + t - 1
 
 	if (ndim == m)
-		tos -= n;
-		push(p1.tensor.elem[k]);
-		restore();
-		return;
+		tos -= n
+		push(p1.tensor.elem[k])
+		restore()
+		return
 
 	for i in [m...ndim]
-		k = k * p1.tensor.dim[i] + 0;
+		k = k * p1.tensor.dim[i] + 0
 
-	nelem = 1;
-
-	for i in [m...ndim]
-		nelem *= p1.tensor.dim[i];
-
-	p2 = alloc_tensor(nelem);
-
-	p2.tensor.ndim = ndim - m;
+	nelem = 1
 
 	for i in [m...ndim]
-		p2.tensor.dim[i - m] = p1.tensor.dim[i];
+		nelem *= p1.tensor.dim[i]
+
+	p2 = alloc_tensor(nelem)
+
+	p2.tensor.ndim = ndim - m
+
+	for i in [m...ndim]
+		p2.tensor.dim[i - m] = p1.tensor.dim[i]
 
 	for i in [0...nelem]
-		p2.tensor.elem[i] = p1.tensor.elem[k + i];
+		p2.tensor.elem[i] = p1.tensor.elem[k + i]
 
 	if p1.tensor.nelem != p1.tensor.elem.length
 		console.log "something wrong in tensor dimensions"
@@ -72,9 +71,9 @@ index_function = (n) ->
 		console.log "something wrong in tensor dimensions"
 		debugger
 
-	tos -= n;
-	push(p2);
-	restore();
+	tos -= n
+	push(p2)
+	restore()
 
 #-----------------------------------------------------------------------------
 #
@@ -107,38 +106,38 @@ set_component = (n) ->
 	ndim = 0
 	t = 0
 
-	save();
+	save()
 
 	if (n < 3)
-		stop("error in indexed assign");
+		stop("error in indexed assign")
 
-	s = tos - n;
+	s = tos - n
 
 	p2 = stack[s]; # p2 is RVALUE
 
 	p1 = stack[s+1]; # p1 is LVALUE
 
 	if (!istensor(p1)) # p1 is LVALUE
-		stop("error in indexed assign");
+		stop("error in indexed assign")
 
 	ndim = p1.tensor.ndim;  # p1 is LVALUE
 
-	m = n - 2;
+	m = n - 2
 
 	if (m > ndim)
-		stop("error in indexed assign");
+		stop("error in indexed assign")
 
-	k = 0;
+	k = 0
 
 	for i in [0...m]
-		push(stack[ s + i + 2]);
-		t = pop_integer();
+		push(stack[ s + i + 2])
+		t = pop_integer()
 		if (t < 1 || t > p1.tensor.dim[i]) # p1 is LVALUE
-			stop("error in indexed assign\n");
-		k = k * p1.tensor.dim[i] + t - 1;
+			stop("error in indexed assign\n")
+		k = k * p1.tensor.dim[i] + t - 1
 
 	for i in [m...ndim]
-		k = k * p1.tensor.dim[i] + 0;
+		k = k * p1.tensor.dim[i] + 0
 
 	# copy
 
@@ -164,30 +163,30 @@ set_component = (n) ->
 
 	if (ndim == m)
 		if (istensor(p2)) # p2 is RVALUE
-			stop("error in indexed assign");
+			stop("error in indexed assign")
 		p1.tensor.elem[k] = p2; # p1 is LVALUE # p2 is RVALUE
 
 		if p1.tensor.nelem != p1.tensor.elem.length
 			console.log "something wrong in tensor dimensions"
 			debugger
 
-		tos -= n;
+		tos -= n
 		push(p1); # p1 is LVALUE
-		restore();
-		return;
+		restore()
+		return
 
 
 	# see if the rvalue matches
 
 	if (!istensor(p2)) # p2 is RVALUE
-		stop("error in indexed assign");
+		stop("error in indexed assign")
 
 	if (ndim - m != p2.tensor.ndim) # p2 is RVALUE
-		stop("error in indexed assign");
+		stop("error in indexed assign")
 
 	for i in [0...p2.tensor.ndim] # p2 is RVALUE
 		if (p1.tensor.dim[m + i] != p2.tensor.dim[i]) # p1 is LVALUE # p2 is RVALUE
-			stop("error in indexed assign");
+			stop("error in indexed assign")
 
 	# copy rvalue
 
@@ -203,11 +202,11 @@ set_component = (n) ->
 		debugger
 
 
-	tos -= n;
+	tos -= n
 
 	push(p1); # p1 is LVALUE
 
-	restore();
+	restore()
 
 test_index = ->
 	run_test [

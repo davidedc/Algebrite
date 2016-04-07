@@ -10,42 +10,41 @@
 	For example, clock(exp(i pi/3)) gives the result (-1)^(1/3)
 ###
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 Eval_clock = ->
-	push(cadr(p1));
-	Eval();
-	clockform();
+	push(cadr(p1))
+	Eval()
+	clockform()
 
 clockform = ->
-	save();
+	save()
 	#if 1
-	p1 = pop();
-	push(p1);
-	mag();
-	push_integer(-1);
-	push(p1);
-	arg();
-	push(symbol(PI));
-	divide();
-	power();
-	multiply();
+	p1 = pop()
+	push(p1)
+	mag()
+	push_integer(-1)
+	push(p1)
+	arg()
+	push(symbol(PI))
+	divide()
+	power()
+	multiply()
 	#else
 	###
-	p1 = pop();
-	push(p1);
-	mag();
-	push(symbol(E));
-	push(p1);
-	arg();
-	push(imaginaryunit);
-	multiply();
-	power();
-	multiply();
+	p1 = pop()
+	push(p1)
+	mag()
+	push(symbol(E))
+	push(p1)
+	arg()
+	push(imaginaryunit)
+	multiply()
+	power()
+	multiply()
 	###
 	#endif
-	restore();
+	restore()
 
 
 

@@ -28,32 +28,31 @@ For m > 0
 	P(x,n,m) = (-1)^m * (1-x^2)^(m/2) * d^m/dx^m P(x,n)
 ###
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 Eval_legendre = ->
 	# 1st arg
 
-	push(cadr(p1));
-	Eval();
+	push(cadr(p1))
+	Eval()
 
 	# 2nd arg
 
-	push(caddr(p1));
-	Eval();
+	push(caddr(p1))
+	Eval()
 
 	# 3rd arg (optional)
 
-	push(cadddr(p1));
-	Eval();
+	push(cadddr(p1))
+	Eval()
 
-	p2 = pop();
+	p2 = pop()
 	if (p2 == symbol(NIL))
-		push_integer(0);
+		push_integer(0)
 	else
-		push(p2);
+		push(p2)
 
-	legendre();
+	legendre()
 
 #define X p1
 #define N p2
@@ -64,53 +63,53 @@ Eval_legendre = ->
 
 
 legendre = ->
-	save();
-	__legendre();
-	restore();
+	save()
+	__legendre()
+	restore()
 
 __legendre = ->
 	m = 0
 	n = 0
 
-	p3 = pop();
-	p2 = pop();
-	p1 = pop();
+	p3 = pop()
+	p2 = pop()
+	p1 = pop()
 
-	push(p2);
-	n = pop_integer();
+	push(p2)
+	n = pop_integer()
 
-	push(p3);
-	m = pop_integer();
+	push(p3)
+	m = pop_integer()
 
 	if (n < 0 || n == 0x80000000 || m < 0 || m == 0x80000000)
-		push_symbol(LEGENDRE);
-		push(p1);
-		push(p2);
-		push(p3);
-		list(4);
-		return;
+		push_symbol(LEGENDRE)
+		push(p1)
+		push(p2)
+		push(p3)
+		list(4)
+		return
 
 	if (issymbol(p1))
-		__legendre2(n, m);
+		__legendre2(n, m)
 	else
 		p4 = p1;			# do this when X is an expr
-		p1 = symbol(SECRETX);
-		__legendre2(n, m);
-		p1 = p4;
-		push(symbol(SECRETX));
-		push(p1);
-		subst();
-		Eval();
+		p1 = symbol(SECRETX)
+		__legendre2(n, m)
+		p1 = p4
+		push(symbol(SECRETX))
+		push(p1)
+		subst()
+		Eval()
 
-	__legendre3(m);
+	__legendre3(m)
 
 __legendre2 = (n, m) ->
 	i = 0
 
-	push_integer(1);
-	push_integer(0);
+	push_integer(1)
+	push_integer(0)
 
-	p6 = pop();
+	p6 = pop()
 
 	#	i=1	p5 = 0 
 	#		p6 = 1 
@@ -126,57 +125,57 @@ __legendre2 = (n, m) ->
 
 	for i in [0...n]
 
-		p5 = p6;
+		p5 = p6
 
-		p6 = pop();
+		p6 = pop()
 
-		push_integer(2 * i + 1);
-		push(p1);
-		multiply();
-		push(p6);
-		multiply();
+		push_integer(2 * i + 1)
+		push(p1)
+		multiply()
+		push(p6)
+		multiply()
 
-		push_integer(i);
-		push(p5);
-		multiply();
+		push_integer(i)
+		push(p5)
+		multiply()
 
-		subtract();
+		subtract()
 
-		push_integer(i + 1);
-		divide();
+		push_integer(i + 1)
+		divide()
 
 	for i in [0...m]
-		push(p1);
-		derivative();
+		push(p1)
+		derivative()
 
 # tos = tos * (-1)^m * (1-x^2)^(m/2)
 
 __legendre3 = (m) ->
 	if (m == 0)
-		return;
+		return
 
 	if (car(p1) == symbol(COS))
-		push(cadr(p1));
-		sine();
-		square();
+		push(cadr(p1))
+		sine()
+		square()
 	else if (car(p1) == symbol(SIN))
-		push(cadr(p1));
-		cosine();
-		square();
+		push(cadr(p1))
+		cosine()
+		square()
 	else
-		push_integer(1);
-		push(p1);
-		square();
-		subtract();
+		push_integer(1)
+		push(p1)
+		square()
+		subtract()
 
-	push_integer(m);
-	push_rational(1, 2);
-	multiply();
-	power();
-	multiply();
+	push_integer(m)
+	push_rational(1, 2)
+	multiply()
+	power()
+	multiply()
 
 	if (m % 2)
-		negate();
+		negate()
 
 test_legendre = ->
 	run_test [

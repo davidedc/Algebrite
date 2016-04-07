@@ -1,5 +1,4 @@
-#include "stdafx.h"
-#include "defs.h"
+
 
 #jmp_buf stop_return, draw_stop_return
 

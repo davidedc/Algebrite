@@ -18,8 +18,7 @@
 #	low memory. The frame area makes local variables visible to the garbage
 #	collector.
 
-#include "stdafx.h"
-#include "defs.h"
+
 
 tos = 0
 
