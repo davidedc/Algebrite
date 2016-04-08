@@ -1,4 +1,3 @@
-BY
 
 
 Eval_mod = ->
