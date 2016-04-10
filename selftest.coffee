@@ -1,8 +1,6 @@
 # self test functions
 
 
-#include "selftest.h"
-
 ok_tests = 0
 ko_tests = 0
 

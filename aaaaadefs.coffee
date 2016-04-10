@@ -248,15 +248,6 @@ MAXPRIMETAB = 10000
 
 #define _USE_MATH_DEFINES // for MS C++
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <fcntl.h>
-#include <string.h>
-#include <setjmp.h>
-#include <math.h>
-#include <errno.h>
-
 MAXDIM = 24
 
 class tensor
@@ -324,10 +315,6 @@ out_buf = ""
 out_count = 0
 test_flag = 0
 draw_stop_return = null # extern jmp_buf ?????
-endian = 0
-#define little_endian() (*((unsigned char *) &endian))
-
-#include "prototypes.h"
 
 symbol = (x) -> (symtab[x])
 iscons = (p) -> (p.k == CONS)

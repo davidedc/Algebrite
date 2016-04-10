@@ -10,9 +10,6 @@ The symbol f is just a dummy symbol for creating a list f(A,B,C,C,...) where
 	C	is an optional list of conditional expressions
 ###
 
-#include "stdafx.h"
-#include "defs.h"
-
 itab = [
 	# 1
 	"f(a,a*x)",
