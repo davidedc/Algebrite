@@ -315,8 +315,6 @@ out_buf = ""
 out_count = 0
 test_flag = 0
 draw_stop_return = null # extern jmp_buf ?????
-endian = 0
-#define little_endian() (*((unsigned char *) &endian))
 
 symbol = (x) -> (symtab[x])
 iscons = (p) -> (p.k == CONS)
