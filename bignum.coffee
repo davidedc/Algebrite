@@ -109,8 +109,14 @@ mcopy = (a) ->
 	return b
 ###
 
-# a >= b ?
 
+###
+# 
+# ge not invoked from anywhere - is you need ge
+# just use the bigNum's ge implementation
+# leaving it here just in case I decide to backport to C
+#
+# a >= b ?
 # and and b arrays of ints, len is an int
 ge = (a, b, len) ->
 	i = 0
@@ -123,6 +129,7 @@ ge = (a, b, len) ->
 		return 1
 	else
 		return 0
+###
 
 add_numbers = ->
 	a = 1.0
