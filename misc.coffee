@@ -161,24 +161,6 @@ unique_f = (p) ->
 		p = cdr(p)
 
 
-#if 0
-###
-void
-check_endianess(void)
-{
-	int tmp = 1
-	if (((char *) &tmp)[0] == 1 && Y_LITTLE_ENDIAN == 0) {
-		printf("Please change Y_LITTLE_ENDIAN to 1 in defs.h and recompile.\n")
-		Exit(1)
-	}
-	if (((char *) &tmp)[0] == 0 && Y_LITTLE_ENDIAN != 0) {
-		printf("Please change Y_LITTLE_ENDIAN to 0 in defs.h and recompile.\n")
-		Exit(1)
-	}
-}
-###
-#endif
-
 ssqrt = ->
 	push_rational(1, 2)
 	power()
