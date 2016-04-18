@@ -8335,6 +8335,50 @@
     return n;
   };
 
+  $.iszero = iszero;
+
+  $.isnegativenumber = isnegativenumber;
+
+  $.isplusone = isplusone;
+
+  $.isminusone = isminusone;
+
+  $.isinteger = isinteger;
+
+  $.isnonnegativeinteger = isnonnegativeinteger;
+
+  $.isposint = isposint;
+
+  $.isnegativeterm = isnegativeterm;
+
+  $.isimaginarynumber = isimaginarynumber;
+
+  $.iscomplexnumber = iscomplexnumber;
+
+  $.iseveninteger = iseveninteger;
+
+  $.isnegative = isnegative;
+
+  $.issymbolic = issymbolic;
+
+  $.isintegerfactor = isintegerfactor;
+
+  $.isoneover = isoneover;
+
+  $.isfraction = isfraction;
+
+  $.isoneoversqrttwo = isoneoversqrttwo;
+
+  $.isminusoneoversqrttwo = isminusoneoversqrttwo;
+
+  $.isfloating = isfloating;
+
+  $.isimaginaryunit = isimaginaryunit;
+
+  $.isquarterturn = isquarterturn;
+
+  $.isnpi = isnpi;
+
   Eval_isprime = function() {
     push(cadr(p1));
     Eval();
@@ -16126,6 +16170,8 @@
     inited = true;
     init();
   }
+
+  $.init = init;
 
   parse_internal = function(arg) {
     if (typeof arg === 'string') {

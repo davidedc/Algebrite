@@ -348,3 +348,29 @@ isnpi = (p) ->
 	else
 		n = 1 + (n - 1) % 4
 	return n
+
+
+
+$.iszero                   = iszero
+$.isnegativenumber         = isnegativenumber          
+$.isplusone                = isplusone   
+$.isminusone               = isminusone    
+$.isinteger                = isinteger   
+$.isnonnegativeinteger     = isnonnegativeinteger              
+$.isposint                 = isposint  
+$.isnegativeterm           = isnegativeterm        
+$.isimaginarynumber        = isimaginarynumber           
+$.iscomplexnumber          = iscomplexnumber         
+$.iseveninteger            = iseveninteger       
+$.isnegative               = isnegative    
+$.issymbolic               = issymbolic    
+$.isintegerfactor          = isintegerfactor         
+$.isoneover                = isoneover   
+$.isfraction               = isfraction    
+$.isoneoversqrttwo         = isoneoversqrttwo          
+$.isminusoneoversqrttwo    = isminusoneoversqrttwo               
+$.isfloating               = isfloating    
+$.isimaginaryunit          = isimaginaryunit         
+$.isquarterturn            = isquarterturn       
+$.isnpi                    = isnpi
+
