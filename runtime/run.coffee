@@ -10,7 +10,13 @@ stop = (s) ->
 		errorMessage += "Stop: "
 		errorMessage += s
 		#debugger
-		throw new Error(errorMessage)
+		message = errorMessage
+
+		errorMessage = ''
+		tos = 0
+
+		throw new Error(message)
+		
 		#longjmp(stop_return, 1)
 
 # s a string here

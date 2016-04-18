@@ -27,15 +27,51 @@ parse = (arg) ->
 
 exec = (name, args...) ->
 	fn = get_binding(usr_symbol(name))
-	
+	check_stack()
 	push(fn)
 
 	for arg in args
 		parse_internal(arg)
 	
 	list(1 + args.length)
+	
+	p1 = pop()
+	push(p1)
+	fixed_top_level_eval()
+	result = pop()
+	check_stack()
+	return result
+
+
+fixed_top_level_eval = ->
+	save()
+
+	trigmode = 0
+
+	p1 = symbol(AUTOEXPAND)
+	if (iszero(get_binding(p1)))
+		expanding = 0
+	else
+		expanding = 1
+
+	p1 = pop()
+	push(p1)
 	Eval()
-	return pop()
+	p2 = pop()
+	
+	if (p2 == symbol(NIL))
+		push(p2)
+		restore()
+		return
+
+	if (!iszero(get_binding(symbol(BAKE))))
+		push(p2)
+		bake()
+		p2 = pop()
+
+	push(p2)
+	restore()
+
 
 $.exec = exec
 $.parse = parse
