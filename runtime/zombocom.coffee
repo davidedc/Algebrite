@@ -5,6 +5,8 @@ if !inited
 	init()
 
 
+$.init = init
+
 parse_internal = (arg) ->
 	if typeof arg == 'string'
 		scan(arg)
