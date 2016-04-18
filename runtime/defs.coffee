@@ -370,6 +370,7 @@ cdddaddr = (p) -> cdr(cdr(cdr(car(cdr(cdr(p))))))
 caddaddr = (p) -> car(cdr(cdr(car(cdr(cdr(p))))))
 
 isadd = (p) -> (car(p) == symbol(ADD))
+ismultiply = (p) -> (car(p) == symbol(MULTIPLY))
 ispower = (p) -> (car(p) == symbol(POWER))
 isfactorial = (p) -> (car(p) == symbol(FACTORIAL))
 
@@ -381,7 +382,7 @@ MSIGN = (p) ->
 	else
 		return -1
 
-MLENGTH = (p) -> p.toString.length
+MLENGTH = (p) -> p.toString().length
 
 MZERO = (p) -> p.isZero()
 MEQUAL = (p, n) ->
@@ -389,10 +390,42 @@ MEQUAL = (p, n) ->
 		debugger
 	p.equals(n)
 
+
+
 $ = (exports ? this)
 
-$.car = car
-$.cdr = cdr
+$.isadd = isadd
+$.ismultiply = ismultiply
+$.ispower = ispower
+$.isfactorial = isfactorial
+
+
+
+$.car            = car   
+$.cdr            = cdr   
+$.caar           = caar    
+$.cadr           = cadr    
+$.cdar           = cdar    
+$.cddr           = cddr    
+$.caadr          = caadr     
+$.caddr          = caddr     
+$.cadar          = cadar     
+$.cdadr          = cdadr     
+$.cddar          = cddar     
+$.cdddr          = cdddr     
+$.caaddr         = caaddr      
+$.cadadr         = cadadr      
+$.caddar         = caddar      
+$.cdaddr         = cdaddr      
+$.cadddr         = cadddr      
+$.cddddr         = cddddr      
+$.caddddr        = caddddr       
+$.cadaddr        = cadaddr       
+$.cddaddr        = cddaddr       
+$.caddadr        = caddadr       
+$.cdddaddr       = cdddaddr        
+$.caddaddr       = caddaddr        
+
 
 
 $.symbol         = symbol  

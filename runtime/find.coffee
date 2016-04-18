@@ -20,3 +20,5 @@ Find = (p, q) ->
 		p = cdr(p)
 
 	return 0
+
+$.Find = Find
