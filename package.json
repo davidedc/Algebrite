@@ -1,0 +1,35 @@
+{
+  "name": "algebrite",
+  "version": "0.1.0",
+  "description": "Computer Algebra System in Coffeescript",
+  "main": "algebrite-0.1.0.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidedc/Algebrite.git"
+  },
+  "keywords": [
+    "cas",
+    "algebra",
+    "computer",
+    "algebra",
+    "system",
+    "eigenmath",
+    "math",
+    "symbolic"
+  ],
+  "author": "Davide Della Casa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/davidedc/Algebrite/issues"
+  },
+  "homepage": "https://github.com/davidedc/Algebrite#readme",
+  "dependencies": {
+    "big-integer": "^1.6.15"
+  }
+}
