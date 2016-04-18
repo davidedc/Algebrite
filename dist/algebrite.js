@@ -9102,6 +9102,10 @@
     return stack = stack.slice(0, h).concat(subsetOfStack).concat(stack.slice(h + n));
   };
 
+  $.equal = equal;
+
+  $.length = length;
+
   mmul = function(a, b) {
     return a.multiply(b);
   };

@@ -191,3 +191,7 @@ sort_stack = (n) ->
 	subsetOfStack = stack.slice(h,h+n)
 	subsetOfStack.sort(cmp_expr)
 	stack = stack.slice(0,h).concat(subsetOfStack).concat(stack.slice(h+n))
+
+
+$.equal = equal
+$.length = length
