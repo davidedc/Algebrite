@@ -121,5 +121,6 @@ clear_symbols = ->
 		arglist[i] = symbol(NIL)
 
 
-(exports ? this).get_binding = get_binding
-(exports ? this).set_binding = set_binding
+$.get_binding = get_binding
+$.set_binding = set_binding
+$.usr_symbol = usr_symbol
