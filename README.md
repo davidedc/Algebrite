@@ -1,5 +1,6 @@
 <img src="https://raw.githubusercontent.com/davidedc/Algebrite/master/readme-images/algebrite-logo-for-readme.png" width="150px" alt="algebrite header"/>
 
+[![npm version](https://badge.fury.io/js/algebrite.svg)](https://badge.fury.io/js/algebrite)
 
 Algebrite is a pure Javascript (technically, Coffeescript) port of the lightweight EigenMath Computer Algebra System. 
 
