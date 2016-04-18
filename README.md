@@ -1,32 +1,27 @@
-
 <img src="https://raw.githubusercontent.com/davidedc/Algebrite/master/readme-images/algebrite-logo-for-readme.png" width="150px" alt="algebrite header"/>
 
-Algebrite is a Javascript library for symbolic mathematics (actually, mostly coffeescript resulting in Javascript) keeping the code as simple as possible in order to be comprehensible and easily extensible.
 
-This is a fork of Algebrite which has a nicer Javascript interface and packaged in a format appropriate for NPM. 
+Algebrite is a pure Javascript (technically, Coffeescript) port of the lightweight EigenMath Computer Algebra System. 
 
-# Why Algebrite
 
-Algebrite is...
-* lightweight: made to be simple to comprehend and extend, it only depends on BigInteger.js by Peter Olson.
-* self-contained: doesn't need connection to servers or another "backend" CAS
-* a library: beyond use as an interactive tool, algebrite can be embedded in your applications and extended with custom functions.
-* free: MIT-Licenced
+```
+	var Algebrite = require('algebrite')
+	
+	Algebrite.run('x + x') // => "2 x"
+
+	Algebrite.factor('10!').toString() // => "2^8 3^4 5^2 7"
+
+	Algebrite.eval('integral(x^2)') // => "1/3 x^3"
+
+```
 
 # Features
+
 Algebrite supports: arbitrary-precision arithmetic, complex quantities, simplification, expansion , substitution, symbolic and numeric roots, units of measurement, matrices, derivatives and gradients, tensors, integrals, multi-integrals, computing integrals and much more!
 
 # Examples and manual
 
 Please refer to [http://algebrite.org/](http://algebrite.org/)
-
-```
-	var Algebrite = require('algebrite')
-	Algebrite.run('x + x') // => 2 x
-
-	Algebrite.factor('10!').toString() // => 2^8 3^4 5^2 7
-
-```
 
 All the built-in methods in EigenMath/Algebrite are exposed through a javascript interface. Strings are automatically parsed as expressions, numbers are converted into the appropriate representation, and the internal cons objects are returned. 
 

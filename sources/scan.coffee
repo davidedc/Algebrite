@@ -230,7 +230,7 @@ scan_factor = ->
 	else if (token == T_STRING)
 		scan_string()
 	else
-		error("syntax error")
+		scan_error("syntax error")
 
 	# index
 
@@ -243,7 +243,7 @@ scan_factor = ->
 			get_next_token()
 			scan_expression()
 		if (token != ']')
-			error("] expected")
+			scan_error("] expected")
 		get_next_token()
 		list(tos - h)
 
@@ -255,7 +255,7 @@ scan_factor = ->
 
 scan_symbol = ->
 	if (token != T_SYMBOL)
-		error("symbol expected")
+		scan_error("symbol expected")
 	if (meta_mode && token_buf.length == 1)
 		switch (token_buf[0])
 			when 'a'
@@ -291,7 +291,7 @@ scan_function_call = ->
 			n++
 
 	if (token != ')')
-		error(") expected")
+		scan_error(") expected")
 
 	get_next_token()
 	list(n)
@@ -301,7 +301,7 @@ scan_function_call = ->
 scan_subexpr = ->
 	n = 0
 	if (token != '(')
-		error("( expected")
+		scan_error("( expected")
 	get_next_token()
 	scan_stmt()
 	if (token == ',')
@@ -312,10 +312,10 @@ scan_subexpr = ->
 			n++
 		build_tensor(n)
 	if (token != ')')
-		error(") expected")
+		scan_error(") expected")
 	get_next_token()
 
-error = (errmsg) ->
+scan_error = (errmsg) ->
 	errorMessage = ""
 
 	# try not to put question mark on orphan line
@@ -431,7 +431,7 @@ get_token = ->
 		scan_str++
 		while (scanned[scan_str] != '"')
 			if (scan_str == scanned.length || scanned[scan_str] == '\n' || scanned[scan_str] == '\r')
-				error("runaway string")
+				scan_error("runaway string")
 			scan_str++
 		scan_str++
 		token = T_STRING
