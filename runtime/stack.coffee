@@ -120,3 +120,10 @@ dupl = ->
 	p = pop()
 	push(p)
 	push(p)
+
+$.dupl = dupl
+$.swap = swap
+$.restore = restore
+$.save = save
+$.push = push
+$.pop = pop

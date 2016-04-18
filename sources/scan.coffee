@@ -475,4 +475,4 @@ update_token_buf = (a,b) ->
 	token_buf = scanned.substring(a,b)
 
 
-
+$.scan = scan
