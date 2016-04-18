@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/algebrite.svg)](https://badge.fury.io/js/algebrite)
 
-Algebrite is a pure Javascript (technically, Coffeescript) port of the lightweight EigenMath Computer Algebra System. 
+Algebrite is a Javascript library for symbolic mathematics (technically, CoffeeScript) designed to be comprehensible and easily extensible.
 
 
 ```js
@@ -24,7 +24,7 @@ Algebrite supports: arbitrary-precision arithmetic, complex quantities, simplifi
 
 Please refer to [http://algebrite.org/](http://algebrite.org/)
 
-All the built-in methods in EigenMath/Algebrite are exposed through a javascript interface. Strings are automatically parsed as expressions, numbers are converted into the appropriate representation, and the internal cons objects are returned. 
+All the built-in methods in Algebrite are exposed through a javascript interface. Strings are automatically parsed as expressions, numbers are converted into the appropriate representation, and the internal cons objects are returned. 
 
 The cons objects have a `toString` method which converts it into a pretty-print notation.
 
