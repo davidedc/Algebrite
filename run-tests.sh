@@ -1,1 +1,0 @@
-cat runtime/defs.coffee  sources/*.coffee runtime/alloc.coffee runtime/display.coffee runtime/find.coffee runtime/init.coffee runtime/mcmp.coffee runtime/otherCFunctions.coffee runtime/run.coffee runtime/stack.coffee runtime/symbol.coffee runtime/zombocom.coffee tests/*.coffee run-tests.coffee | coffee -cs | node

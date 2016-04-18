@@ -7,7 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cat runtime/defs.coffee  sources/*.coffee runtime/alloc.coffee runtime/display.coffee runtime/find.coffee runtime/init.coffee runtime/mcmp.coffee runtime/otherCFunctions.coffee runtime/run.coffee runtime/stack.coffee runtime/symbol.coffee runtime/zombocom.coffee tests/*.coffee run-tests.coffee | coffee -cs | node",
+    "build": "cat runtime/defs.coffee  sources/*.coffee runtime/alloc.coffee runtime/display.coffee runtime/find.coffee runtime/init.coffee runtime/mcmp.coffee runtime/otherCFunctions.coffee runtime/run.coffee runtime/stack.coffee runtime/symbol.coffee runtime/zombocom.coffee | coffee -sc > dist/algebrite.js"
   },
   "repository": {
     "type": "git",

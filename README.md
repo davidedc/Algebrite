@@ -5,13 +5,13 @@ Algebrite is a pure Javascript (technically, Coffeescript) port of the lightweig
 
 
 ```
-	var Algebrite = require('algebrite')
-	
-	Algebrite.run('x + x') // => "2 x"
+var Algebrite = require('algebrite')
 
-	Algebrite.factor('10!').toString() // => "2^8 3^4 5^2 7"
+Algebrite.run('x + x') // => "2 x"
 
-	Algebrite.eval('integral(x^2)') // => "1/3 x^3"
+Algebrite.factor('10!').toString() // => "2^8 3^4 5^2 7"
+
+Algebrite.eval('integral(x^2)') // => "1/3 x^3"
 
 ```
 
@@ -29,12 +29,15 @@ The cons objects have a `toString` method which converts it into a pretty-print 
 
 # How to build
 
-`sh compile.sh`
+```
+npm run build
+```
 
 # How to test
 
-1. `npm install`
-2. `sh run-tests.sh`
+```
+npm test
+```
 
 # Contribute
 please take a look at the [contributing](https://github.com/davidedc/Algebrite/blob/master/contributing.md) file.
