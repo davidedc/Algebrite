@@ -3,6 +3,8 @@
 
 Algebrite is a Javascript library for symbolic mathematics (actually, mostly coffeescript resulting in Javascript) keeping the code as simple as possible in order to be comprehensible and easily extensible.
 
+This is a fork of Algebrite which has a nicer Javascript interface and packaged in a format appropriate for NPM. 
+
 # Why Algebrite
 
 Algebrite is...
@@ -18,33 +20,26 @@ Algebrite supports: arbitrary-precision arithmetic, complex quantities, simplifi
 
 Please refer to [http://algebrite.org/](http://algebrite.org/)
 
+```
+	var Algebrite = require('algebrite')
+	Algebrite.run('x + x') // => 2 x
+
+	Algebrite.factor('10!').toString() // => 2^8 3^4 5^2 7
+
+```
+
+All the built-in methods in EigenMath/Algebrite are exposed through a javascript interface. Strings are automatically parsed as expressions, numbers are converted into the appropriate representation, and the internal cons objects are returned. 
+
+The cons objects have a `toString` method which converts it into a pretty-print notation.
+
 # How to build
-To recompile the tables (this should almost never be needed):
 
-```coffee --compile --bare tables/itab.coffee```
-
-```coffee --compile --bare tables/primetab.coffee```
-
-...to recompile the actual sources as soon as they change:
-
-```coffee --watch  -c --bare --join algebrite-0.1.0.js  *.coffee```
-
-The "log diffing" page is a simple tool for comparing traces of EigenMath and Algebrite. This might go away eventually but it's a reassuring piece of tool to keep until the two code-bases are similar.
+`sh compile.sh`
 
 # How to test
-The testing process is a little involved at the moment:
 
-1. open Chrome at the index.html page
-2. open the console
-3. ```run("selftest")```
-4. the tests will start spewing-out alert messages
-5. check the "don't bring-up pop-ups again" (or similar) message in one of the alerts
-6. the tests will keep running showing progress in both the console and in the page
-7. some individual tests can take a minute or two to complete, during which the page/console might be unresponsive
-8. the "processes" tab of Chrome will keep an eye on CPU utilisation
-9. at the end of the tests the system will go quiet. You can also keep an eye on CPU utilisation going to zero
-10. ```ok_tests``` and ```ko_tests``` variables will show the count of successes/failures
-
+1. `npm install`
+2. `sh run-tests.sh`
 
 # Contribute
 please take a look at the [contributing](https://github.com/davidedc/Algebrite/blob/master/contributing.md) file.

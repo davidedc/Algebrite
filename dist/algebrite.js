@@ -388,28 +388,6 @@
 
   MAXPRIMETAB = 10000;
 
-  primetab = (function() {
-    var ceil, i, j, primes;
-    primes = [2];
-    i = 3;
-    while (primes.length < MAXPRIMETAB) {
-      j = 0;
-      ceil = Math.sqrt(i);
-      while (j < primes.length && primes[j] <= ceil) {
-        if (i % primes[j] === 0) {
-          j = -1;
-          break;
-        }
-        j++;
-      }
-      if (j !== -1) {
-        primes.push(i);
-      }
-      i += 2;
-    }
-    return primes;
-  })();
-
   MAXDIM = 24;
 
   tensor = (function() {
@@ -477,9 +455,28 @@
 
   verbosing = 0;
 
-  primetab = [];
-
-  primetab[MAXPRIMETAB] = 0;
+  primetab = (function() {
+    var ceil, i, j, primes;
+    primes = [2];
+    i = 3;
+    while (primes.length < MAXPRIMETAB) {
+      j = 0;
+      ceil = Math.sqrt(i);
+      while (j < primes.length && primes[j] <= ceil) {
+        if (i % primes[j] === 0) {
+          j = -1;
+          break;
+        }
+        j++;
+      }
+      if (j !== -1) {
+        primes.push(i);
+      }
+      i += 2;
+    }
+    primes[MAXPRIMETAB] = 0;
+    return primes;
+  })();
 
   esc_flag = 0;
 
@@ -2485,11 +2482,11 @@
   };
 
   bignum_scan_integer = function(s) {
-    var a, scounter, sign;
+    var a, scounter, sign_;
     save();
     scounter = 0;
-    sign = s[scounter];
-    if (sign === '+' || sign === '-') {
+    sign_ = s[scounter];
+    if (sign_ === '+' || sign_ === '-') {
       scounter++;
     }
     a = bigInt(s.substring(scounter));
@@ -2498,7 +2495,7 @@
     p1.q.a = a;
     p1.q.b = bigInt(1);
     push(p1);
-    if (sign === '-') {
+    if (sign_ === '-') {
       negate();
     }
     return restore();
@@ -4320,14 +4317,14 @@
   };
 
   determinant = function(n) {
-    var a, breakFromOutherWhile, h, i, j, k, q, s, sign, t, _i, _j;
+    var a, breakFromOutherWhile, h, i, j, k, q, s, sign_, t, _i, _j;
     h = 0;
     i = 0;
     j = 0;
     k = 0;
     q = 0;
     s = 0;
-    sign = 0;
+    sign_ = 0;
     t = 0;
     a = [];
     h = tos - n * n;
@@ -4336,10 +4333,10 @@
       a[i + n] = 0;
       a[i + n + n] = 1;
     }
-    sign = 1;
+    sign_ = 1;
     push(zero);
     while (1) {
-      if (sign === 1) {
+      if (sign_ === 1) {
         push_integer(1);
       } else {
         push_integer(-1);
@@ -4379,7 +4376,7 @@
       a[j - a[n + j] + s] = a[j - q + s];
       a[j - q + s] = t;
       a[n + j] = q;
-      sign = -sign;
+      sign_ = -sign_;
     }
     stack[h] = stack[tos - 1];
     return tos = h + 1;
