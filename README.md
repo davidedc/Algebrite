@@ -4,7 +4,7 @@
 Algebrite is a pure Javascript (technically, Coffeescript) port of the lightweight EigenMath Computer Algebra System. 
 
 
-```
+```js
 var Algebrite = require('algebrite')
 
 Algebrite.run('x + x') // => "2 x"
