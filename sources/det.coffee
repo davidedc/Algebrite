@@ -69,7 +69,7 @@ determinant = (n) ->
 	k = 0
 	q = 0
 	s = 0
-	sign = 0
+	sign_ = 0
 	t = 0
 
 	a = []
@@ -87,13 +87,13 @@ determinant = (n) ->
 		a[i+n] = 0
 		a[i+n+n] = 1
 
-	sign = 1
+	sign_ = 1
 
 	push(zero)
 
 	while 1
 
-		if (sign == 1)
+		if (sign_ == 1)
 			push_integer(1)
 		else
 			push_integer(-1)
@@ -135,7 +135,7 @@ determinant = (n) ->
 		a[j - q + s] = t
 		a[n+j] = q
 
-		sign = -sign
+		sign_ = -sign_
 
 
 	stack[h] = stack[tos - 1]

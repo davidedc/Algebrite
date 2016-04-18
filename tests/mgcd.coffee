@@ -13,19 +13,19 @@ test_mgcd = ->
 # Euclid's algorithm
 
 egcd = (a, b) ->
-	sign = 0
+	sign_ = 0
 	if (MZERO(b))
 		stop("divide by zero")
 	#b = mcopy(b)
 	if (MZERO(a))
 		return b
-	sign = MSIGN(b)
+	sign_ = MSIGN(b)
 	#a = mcopy(a)
 	while (!MZERO(b))
 		c = mmod(a, b)
 		#mfree(a)
 		a = b
 		b = c
-	a = setSignTo(a,sign)
+	a = setSignTo(a,sign_)
 	return a
 

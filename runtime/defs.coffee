@@ -246,21 +246,6 @@ MAX_PROGRAM_SIZE = 100001
 MAXPRIMETAB = 10000
 
 
-primetab = [2]
-i = 3
-while primetab.length < MAXPRIMETAB
-	j = 0
-	ceil = Math.sqrt(i)
-	while j < primetab.length and primetab[j] <= ceil
-		if i % primetab[j] == 0
-			j = -1
-			break
-		j++
-	if j != -1
-		primetab.push(i)
-	i += 2
-
-
 #define _USE_MATH_DEFINES // for MS C++
 
 MAXDIM = 24
@@ -296,8 +281,26 @@ fmt_index = 0
 fmt_level = 0
 verbosing = 0
 
-primetab = []
-primetab[MAXPRIMETAB] = 0
+
+
+primetab = do ->
+	primes = [2]
+	i = 3
+	while primes.length < MAXPRIMETAB
+		j = 0
+		ceil = Math.sqrt(i)
+		while j < primes.length and primes[j] <= ceil
+			if i % primes[j] == 0
+				j = -1
+				break
+			j++
+		if j != -1
+			primes.push(i)
+		i += 2
+	primes[MAXPRIMETAB] = 0
+	return primes
+
+	
 
 esc_flag = 0
 draw_flag = 0

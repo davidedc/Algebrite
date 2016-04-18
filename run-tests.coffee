@@ -86,7 +86,7 @@ selftest  = ->
 	mini_test()
 
 
-	alert "passed tests: " + ok_tests + " / failed tests: " + ko_tests
+	# alert "passed tests: " + ok_tests + " / failed tests: " + ko_tests
 	return
 
 
@@ -108,7 +108,7 @@ run_test = (s) ->
 
 		console.log("starting example: " + s[i])
 		#alert("starting example: " + s[i])
-		document.write("starting example: " + s[i] )
+		# document.write("starting example: " + s[i] )
 		
 
 		out_count = 0
@@ -121,23 +121,23 @@ run_test = (s) ->
 
 
 		if (resultFromRun == s[i+1])
-			document.write(" ...ok</br>")
+			# document.write(" ...ok</br>")
 			console.log("ok example: " + s[i])
-			alert("ok example: " + s[i])
+			# alert("ok example: " + s[i])
 			ok_tests++
 			continue
 
 		ko_tests++
-		document.write(" ...fail</br>")
-		console.log("test failed: \n")
-		console.log(s[i])
+		# document.write(" ...fail</br>")
+		console.log("\n")
+		console.log("test failed: " + s[i])
 
-		console.log("expected: \n")
-		console.log(s[i+1])
+		console.log("expected: " + s[i+1])
 
-		console.log("obtained:\n")
-		console.log(resultFromRun)
-		alert "test failed: " + s[i] + " expected: " + s[i+1] + " obtained: " + resultFromRun
+		console.log("obtained: " + resultFromRun)
+		console.log("\n")
+
+		# alert "test failed: " + s[i] + " expected: " + s[i+1] + " obtained: " + resultFromRun
 
 
 	test_flag = 0
@@ -163,3 +163,4 @@ test_low_level = ->
 	# as I'm commenting it out.
 	#test_quickfactor()
 
+selftest()

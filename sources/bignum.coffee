@@ -510,9 +510,9 @@ bignum_scan_integer = (s) ->
 	save()
 	scounter = 0
 
-	sign = s[scounter]
+	sign_ = s[scounter]
 
-	if (sign == '+' || sign == '-')
+	if (sign_ == '+' || sign_ == '-')
 		scounter++
 
 	# !!!! some mess in here, added an argument
@@ -527,7 +527,7 @@ bignum_scan_integer = (s) ->
 
 	push(p1)
 
-	if (sign == '-')
+	if (sign_ == '-')
 		negate()
 
 	restore()
