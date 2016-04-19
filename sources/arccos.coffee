@@ -20,7 +20,7 @@ arccos = ->
 
 	if (isdouble(p1))
 		errno = 0
-		d = acos(p1.d)
+		d = Math.acos(p1.d)
 		if (errno)
 			stop("arccos function argument is not in the interval [-1,1]")
 		push_double(d)
