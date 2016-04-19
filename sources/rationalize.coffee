@@ -144,3 +144,20 @@ __rationalize_tensor = ->
 
 	push(p1)
 
+
+
+__lcm = ->
+	save()
+
+	p1 = pop()
+	p2 = pop()
+
+	push(p1)
+	push(p2)
+	multiply()
+	push(p1)
+	push(p2)
+	gcd()
+	divide()
+
+	restore()

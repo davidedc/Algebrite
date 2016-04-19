@@ -13,20 +13,3 @@ test_rationalize = ->
 		"rationalize(x^(1/3)+x^(2/3))",
 		"x^(1/3)*(1+x^(1/3))",
 	]
-
-
-__lcm = ->
-	save()
-
-	p1 = pop()
-	p2 = pop()
-
-	push(p1)
-	push(p2)
-	multiply()
-	push(p1)
-	push(p2)
-	gcd()
-	divide()
-
-	restore()
