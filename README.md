@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/davidedc/Algebrite/master/readme-images/algebrite-logo-for-readme.png" width="150px" alt="algebrite header"/>
+<img src="https://raw.githubusercontent.com/davidedc/Algebrite/941de5515ec57baee3f5d2bacbd4db2ee382c461/readme-images/algebrite-logo-for-readme.png" width="150px" alt="algebrite header"/>
 
 [![npm version](https://badge.fury.io/js/algebrite.svg)](https://badge.fury.io/js/algebrite)
 
@@ -30,9 +30,9 @@ The cons objects have a `toString` method which converts it into a pretty-print 
 
 # How to build
 
-```
-npm run build
-```
+1. install npm on your system
+2. ```npm install```
+3. ```npm run build```
 
 # How to test
 
@@ -45,7 +45,7 @@ please take a look at the [contributing](https://github.com/davidedc/Algebrite/b
 
 # References
 
-[The EigenMath CAS by George Weigt](http://eigenmath.sourceforge.net/Eigenmath.pdf). Also you might want to check another fork of EigenMath: [SMIB by Philippe Billet](http://smib.sourceforge.net/).
+Algebrite starts as an adaptation of [the EigenMath CAS by George Weigt](http://eigenmath.sourceforge.net/Eigenmath.pdf). Also you might want to check another fork of EigenMath: [SMIB by Philippe Billet](http://smib.sourceforge.net/).
 
 Another CAS of similar nature is [SymPy](http://www.sympy.org/en/index.html) made in Python.
 
