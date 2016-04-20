@@ -1,0 +1,36 @@
+{
+  "name": "algebrite",
+  "version": "0.2.12",
+  "description": "Computer Algebra System in Coffeescript",
+  "main": "dist/algebrite.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "cat runtime/defs.coffee  sources/*.coffee runtime/alloc.coffee runtime/display.coffee runtime/find.coffee runtime/init.coffee runtime/mcmp.coffee runtime/otherCFunctions.coffee runtime/run.coffee runtime/stack.coffee runtime/symbol.coffee runtime/zombocom.coffee tests/*.coffee run-tests.coffee | coffee -cs | node",
+    "build": "cat runtime/defs.coffee  sources/*.coffee runtime/alloc.coffee runtime/display.coffee runtime/find.coffee runtime/init.coffee runtime/mcmp.coffee runtime/otherCFunctions.coffee runtime/run.coffee runtime/stack.coffee runtime/symbol.coffee runtime/zombocom.coffee | coffee -sc > dist/algebrite.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antimatter15/Algebrite.git"
+  },
+  "keywords": [
+    "cas",
+    "algebra",
+    "computer",
+    "algebra",
+    "system",
+    "eigenmath",
+    "math",
+    "symbolic"
+  ],
+  "author": "Davide Della Casa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/antimatter15/Algebrite/issues"
+  },
+  "homepage": "https://github.com/antimatter15/Algebrite#readme",
+  "dependencies": {
+    "big-integer": "^1.6.15"
+  }
+}
