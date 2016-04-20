@@ -1,17 +1,5 @@
 # Some points of interest / thoughts for contributors
 
-## Modularisation
-
-Algebrite is not very build or integration-friendly at the moment - right now the build process uses a deprecated flag, and four .js files have to be included in the right order, and Algebrite pollutes the global scope.
-
-All it's needed to address all that is the require/export boilerplate that would ensure that the library can be built easily with up-to-date standard tools, that the whole library can be packaged into one minified file, and that the global scope is not polluted.
-
-(the "bad" news is that I suspect this might be an all-or-nothing task. I don't think we can progressively require/export, say, a few files/pieces at a time.)
-
-## Build system for the browser
-
-Because we want to use Algebrite also in the browser, and because we use Coffeescript and a little Javascript, we'll use a build system [Coffeify](https://github.com/substack/coffeeify)
-
 ## SMIB by Philippe Billet has several changes to EigenMath to be looked into.
 
 Philippe Billet has forked EigenMath into his own CAS named [SMIB](http://smib.sourceforge.net/). SMIB keeps very similar structure and intent, and contains several changes that might be of interest.
