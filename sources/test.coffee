@@ -75,6 +75,7 @@ Eval_not = ->
 	else
 		push_integer(0)
 
+# and definition
 Eval_and = ->
 	p1 = cdr(p1)
 	while (iscons(p1))

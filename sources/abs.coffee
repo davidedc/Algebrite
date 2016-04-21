@@ -1,6 +1,5 @@
 # Absolute value, aka vector magnitude
-
-
+# Returns the absolute value or vector length of x.
 
 Eval_abs = ->
 	push(cadr(p1))

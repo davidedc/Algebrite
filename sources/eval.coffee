@@ -181,6 +181,7 @@ Eval_binding = ->
 
 # checks a predicate, i.e. check(A = B)
 
+# check definition
 Eval_check = ->
 	push(cadr(p1))
 	Eval_predicate()
