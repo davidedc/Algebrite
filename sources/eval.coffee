@@ -195,6 +195,7 @@ Eval_det = ->
 	Eval()
 	det()
 
+# dim definition
 Eval_dim = ->
 	#int n
 	push(cadr(p1))
@@ -218,6 +219,7 @@ Eval_divisors = ->
 	Eval()
 	divisors()
 
+# do definition
 Eval_do = ->
 	push(car(p1))
 	p1 = cdr(p1)
@@ -251,6 +253,7 @@ Eval_Eval = ->
 		p1 = cddr(p1)
 	Eval()
 
+# exp definition
 Eval_exp = ->
 	push(cadr(p1))
 	Eval()
@@ -369,9 +372,11 @@ Eval_print = ->
 		p1 = cdr(p1)
 	push(symbol(NIL))
 
+# quote definition
 Eval_quote = ->
 	push(cadr(p1))
 
+# rank definition
 Eval_rank = ->
 	push(cadr(p1))
 	Eval()

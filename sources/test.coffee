@@ -66,6 +66,7 @@ Eval_testlt = ->
 	else
 		push_integer(0)
 
+# not definition
 Eval_not = ->
 	push(cadr(p1))
 	Eval_predicate()
@@ -88,6 +89,7 @@ Eval_and = ->
 		p1 = cdr(p1)
 	push_integer(1)
 
+# or definition
 Eval_or = ->
 	p1 = cdr(p1)
 	while (iscons(p1))
