@@ -39,11 +39,23 @@ exec = (name, args...) ->
 	
 	p1 = pop()
 	push(p1)
-	fixed_top_level_eval()
-	result = pop()
-	check_stack()
+	
+	try
+		fixed_top_level_eval()
+		result = pop()
+		check_stack()
+	catch error
+		reset_after_error()
+		throw error
+
 	return result
 
+
+reset_after_error = ->
+	tos = 0
+	esc_flag = 0
+	draw_flag = 0
+	frame = TOS
 
 fixed_top_level_eval = ->
 	save()
