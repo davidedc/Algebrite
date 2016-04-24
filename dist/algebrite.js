@@ -10321,7 +10321,7 @@
       return;
     }
     if (p1 === symbol(E) && isdouble(p2)) {
-      push_double(exp(p2.d));
+      push_double(Math.exp(p2.d));
       return;
     }
     if (equal(p1, one) || iszero(p2)) {
