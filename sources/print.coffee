@@ -287,6 +287,7 @@ print_factor = (p) ->
 			print_str(")")
 			return
 
+		
 		if (isminusone(caddr(p)))
 			if (test_flag == 0)
 				print_str("1 / ")

@@ -7,35 +7,35 @@ if !inited
 
 $.init = init
 
-parse_internal = (arg) ->
-	if typeof arg == 'string'
-		scan(arg)
+parse_internal = (argu) ->
+	if typeof argu == 'string'
+		scan(argu)
 		# now its in the stack
-	else if typeof arg == 'number'
-		if arg % 1 == 0
-			push_integer(arg)
+	else if typeof argu == 'number'
+		if argu % 1 == 0
+			push_integer(argu)
 		else
-			push_double(arg)
-	else if arg instanceof U
+			push_double(argu)
+	else if argu instanceof U
 		# hey look its a U
-		push(arg)
+		push(argu)
 	else
-		console.warn('unknown argument type', arg)
+		console.warn('unknown argument type', argu)
 		push(symbol(NIL))
 
-parse = (arg) ->
-	parse_internal(arg)
+parse = (argu) ->
+	parse_internal(argu)
 	return pop()
 
-exec = (name, args...) ->
+exec = (name, argus...) ->
 	fn = get_binding(usr_symbol(name))
 	check_stack()
 	push(fn)
 
-	for arg in args
-		parse_internal(arg)
+	for argu in argus
+		parse_internal(argu)
 	
-	list(1 + args.length)
+	list(1 + argus.length)
 	
 	p1 = pop()
 	push(p1)

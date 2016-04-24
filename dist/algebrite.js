@@ -16187,39 +16187,39 @@
 
   $.init = init;
 
-  parse_internal = function(arg) {
-    if (typeof arg === 'string') {
-      return scan(arg);
-    } else if (typeof arg === 'number') {
-      if (arg % 1 === 0) {
-        return push_integer(arg);
+  parse_internal = function(argu) {
+    if (typeof argu === 'string') {
+      return scan(argu);
+    } else if (typeof argu === 'number') {
+      if (argu % 1 === 0) {
+        return push_integer(argu);
       } else {
-        return push_double(arg);
+        return push_double(argu);
       }
-    } else if (arg instanceof U) {
-      return push(arg);
+    } else if (argu instanceof U) {
+      return push(argu);
     } else {
-      console.warn('unknown argument type', arg);
+      console.warn('unknown argument type', argu);
       return push(symbol(NIL));
     }
   };
 
-  parse = function(arg) {
-    parse_internal(arg);
+  parse = function(argu) {
+    parse_internal(argu);
     return pop();
   };
 
   exec = function() {
-    var args, error, fn, name, result, _l, _len;
-    name = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+    var argu, argus, error, fn, name, result, _l, _len;
+    name = arguments[0], argus = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
     fn = get_binding(usr_symbol(name));
     check_stack();
     push(fn);
-    for (_l = 0, _len = args.length; _l < _len; _l++) {
-      arg = args[_l];
-      parse_internal(arg);
+    for (_l = 0, _len = argus.length; _l < _len; _l++) {
+      argu = argus[_l];
+      parse_internal(argu);
     }
-    list(1 + args.length);
+    list(1 + argus.length);
     p1 = pop();
     push(p1);
     try {
