@@ -7,7 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "cat runtime/defs.coffee  sources/*.coffee runtime/alloc.coffee runtime/display.coffee runtime/find.coffee runtime/init.coffee runtime/mcmp.coffee runtime/otherCFunctions.coffee runtime/run.coffee runtime/stack.coffee runtime/symbol.coffee runtime/zombocom.coffee tests/*.coffee run-tests.coffee | coffee -cs | node",
+    "microtest": "cat runtime/defs.coffee  sources/*.coffee runtime/alloc.coffee runtime/display.coffee runtime/find.coffee runtime/init.coffee runtime/mcmp.coffee runtime/otherCFunctions.coffee runtime/run.coffee runtime/stack.coffee runtime/symbol.coffee runtime/zombocom.coffee test-harness.coffee run-micro-tests.coffee | coffee -cs | node",
+    "test": "cat runtime/defs.coffee  sources/*.coffee runtime/alloc.coffee runtime/display.coffee runtime/find.coffee runtime/init.coffee runtime/mcmp.coffee runtime/otherCFunctions.coffee runtime/run.coffee runtime/stack.coffee runtime/symbol.coffee runtime/zombocom.coffee tests/*.coffee test-harness.coffee run-tests.coffee | coffee -cs | node",
     "build": "cat runtime/defs.coffee  sources/*.coffee runtime/alloc.coffee runtime/display.coffee runtime/find.coffee runtime/init.coffee runtime/mcmp.coffee runtime/otherCFunctions.coffee runtime/run.coffee runtime/stack.coffee runtime/symbol.coffee runtime/zombocom.coffee | coffee -sc > dist/algebrite.js"
   },
   "repository": {
