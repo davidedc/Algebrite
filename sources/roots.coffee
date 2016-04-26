@@ -155,36 +155,66 @@ mini_solve = ->
 	# AX^2 + BX + C, X = (-B +/- (B^2 - 4AC)^(1/2)) / (2A)
 
 	if (n == 3)
-		p3 = pop()
-		p4 = pop()
-		p5 = pop()
+		p3 = pop() # A
+		p4 = pop() # B
+		p5 = pop() # C
+
+		# B^2
 		push(p4)
 		push(p4)
 		multiply()
+
+		# 4AC
 		push_integer(4)
 		push(p3)
 		multiply()
 		push(p5)
 		multiply()
+
+		# B^2 - 4AC
 		subtract()
+
+		#(B^2 - 4AC)^(1/2)
 		push_rational(1, 2)
 		power()
+
+		#p6 is (B^2 - 4AC)^(1/2)
 		p6 = pop()
-		push(p6);			# 1st root
+		push(p6);
+
+		# B
 		push(p4)
-		subtract()
+		subtract() # -B + (B^2 - 4AC)^(1/2)
+
+		# 1/2A
 		push(p3)
 		divide()
 		push_rational(1, 2)
 		multiply()
-		push(p6);			# 2nd root
+		# tos now is 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
+
+		push(p6);
+		# tos now is (B^2 - 4AC)^(1/2)
+		# tos - 1: 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
+
+		# add B to tos
 		push(p4)
 		add()
+		# tos now is  B + (B^2 - 4AC)^(1/2)
+		# tos - 1: 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
+
 		negate()
+		# tos now is  -B -(B^2 - 4AC)^(1/2)
+		# tos - 1: 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
+
+		# 1/2A again
 		push(p3)
 		divide()
 		push_rational(1, 2)
 		multiply()
+		# tos: 2nd root: (-B - (B^2 - 4AC)^(1/2)) / (2A)
+		# tos - 1: 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
+
 		restore()
 		return
 
