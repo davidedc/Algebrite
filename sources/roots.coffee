@@ -191,29 +191,29 @@ mini_solve = ->
 		divide()
 		push_rational(1, 2)
 		multiply()
-		# tos now is 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
+		# tos - 1 now is 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
 
 		push(p6);
-		# tos now is (B^2 - 4AC)^(1/2)
-		# tos - 1: 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
+		# tos - 1 now is (B^2 - 4AC)^(1/2)
+		# tos - 2: 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
 
 		# add B to tos
 		push(p4)
 		add()
-		# tos now is  B + (B^2 - 4AC)^(1/2)
-		# tos - 1: 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
+		# tos - 1 now is  B + (B^2 - 4AC)^(1/2)
+		# tos - 2: 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
 
 		negate()
-		# tos now is  -B -(B^2 - 4AC)^(1/2)
-		# tos - 1: 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
+		# tos - 1 now is  -B -(B^2 - 4AC)^(1/2)
+		# tos - 2: 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
 
 		# 1/2A again
 		push(p3)
 		divide()
 		push_rational(1, 2)
 		multiply()
-		# tos: 2nd root: (-B - (B^2 - 4AC)^(1/2)) / (2A)
-		# tos - 1: 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
+		# tos - 1: 2nd root: (-B - (B^2 - 4AC)^(1/2)) / (2A)
+		# tos - 2: 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
 
 		restore()
 		return
