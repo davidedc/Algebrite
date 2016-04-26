@@ -127,6 +127,10 @@ roots3 = ->
 #
 #-----------------------------------------------------------------------------
 
+# note that for many quadratic and cubic polynomials we don't
+# actually end up using the quadratic and cubic formulas in here,
+# since there is a chance we factored the polynomial and in so
+# doing we found some solutions and lowered the degree.
 mini_solve = ->
 	n = 0
 
@@ -214,6 +218,189 @@ mini_solve = ->
 		multiply()
 		# tos - 1: 2nd root: (-B - (B^2 - 4AC)^(1/2)) / (2A)
 		# tos - 2: 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
+
+		restore()
+		return
+
+	if (n == 4)
+		#console.log ">>>>>>>>>>>>>>>> actually using cubic formula <<<<<<<<<<<<<<< "
+		p3 = pop() # A
+		p4 = pop() # B
+		p5 = pop() # C
+		p6 = pop() # D
+
+
+		# B - only related calculations
+		push(p4)
+		push(p4)
+		multiply()
+		bsquared = pop()
+
+		push(bsquared)
+		push(p4)
+		multiply()
+		push_integer(2)
+		multiply()
+		two_bcubed = pop()
+
+		# A - only related calculations
+		push_integer(3)
+		push(p3)
+		multiply()
+		three_a = pop()
+
+		push(three_a)
+		push_integer(9)
+		multiply()
+		push(p3)
+		multiply()
+		push(p6)
+		multiply()
+		twentyseven_asquare_d = pop()
+
+		push(three_a)
+		push_integer(2)
+		multiply()
+		six_a = pop()
+
+		# mixed calculations
+		push_integer(3)
+		push(p3)
+		push(p5)
+		multiply()
+		multiply()
+		three_ac = pop()
+
+		push(three_ac)
+		push_integer(3)
+		push(p4)
+		multiply()
+		multiply()
+		negate()
+		minus_nine_abc = pop()
+
+		push(bsquared)
+		push(three_ac)
+		subtract()
+		bsq_minus_3ac = pop()
+
+		push(bsq_minus_3ac)
+		push_integer(3)
+		power()
+		push_integer(4)
+		multiply()
+		four_bsq_minus_3ac_pow3 = pop()
+
+
+		# K
+		push(two_bcubed)
+		push(minus_nine_abc)
+		push(twentyseven_asquare_d)
+		add()
+		add()
+		K = pop()
+
+		# Q
+		push(K)
+		push_integer(2)
+		power()
+		push(four_bsq_minus_3ac_pow3)
+		subtract()
+		push_rational(1, 2)
+		power()
+		Q = pop()
+
+		# BIGC
+		push(Q)
+		push(K)
+		add()
+		push_rational(1, 2)
+		multiply()
+		push_rational(1, 3)
+		power()
+		BIGC = pop()
+
+		push(BIGC)
+		push(three_a)
+		multiply()
+		three_a_BIGC = pop()
+
+		push(three_a_BIGC)
+		push_integer(2)
+		multiply()
+		six_a_BIGC = pop()
+
+
+		# imaginary parts calculations
+		push(imaginaryunit)
+		push_integer(3)
+		push_rational(1, 2)
+		power()
+		multiply()
+		i_sqrt3 = pop()
+		push_integer(1)
+		push(i_sqrt3)
+		add()
+		one_plus_i_sqrt3 = pop()
+		push_integer(1)
+		push(i_sqrt3)
+		subtract()
+		one_minus_i_sqrt3 = pop()
+
+		push(p4)
+		negate()
+		push(three_a)
+		divide()
+		minus_b_over_3a = pop()
+
+		push(BIGC)
+		push(three_a)
+		divide()
+		BIGC_over_3a = pop()
+
+		# first solution
+		push(minus_b_over_3a) # first term
+		push(BIGC_over_3a)
+		negate() # second term
+		push(bsq_minus_3ac)
+		push(three_a_BIGC)
+		divide()
+		negate() # third term
+		# now add the three terms together
+		add()
+		add()
+
+		# second solution
+		push(minus_b_over_3a) # first term
+		push(BIGC_over_3a)
+		push(one_plus_i_sqrt3)
+		multiply()
+		push_integer(2)
+		divide() # second term
+		push(one_minus_i_sqrt3)
+		push(bsq_minus_3ac)
+		multiply()
+		push(six_a_BIGC)
+		divide() # third term
+		# now add the three terms together
+		add()
+		add()
+
+		# third solution
+		push(minus_b_over_3a) # first term
+		push(BIGC_over_3a)
+		push(one_minus_i_sqrt3)
+		multiply()
+		push_integer(2)
+		divide() # second term
+		push(one_plus_i_sqrt3)
+		push(bsq_minus_3ac)
+		multiply()
+		push(six_a_BIGC)
+		divide() # third term
+		# now add the three terms together
+		add()
+		add()
 
 		restore()
 		return
