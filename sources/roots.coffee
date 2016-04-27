@@ -230,6 +230,17 @@ mini_solve = ->
 		p6 = pop() # D
 
 
+		# C - only related calculations
+		push(p5)
+		push(p5)
+		multiply()
+		csquared = pop()
+
+		push(csquared)
+		push(p5)
+		multiply()
+		ccubed = pop()
+
 		# B - only related calculations
 		push(p4)
 		push(p4)
@@ -239,6 +250,17 @@ mini_solve = ->
 		push(bsquared)
 		push(p4)
 		multiply()
+		bcubed = pop()
+
+		push(bcubed)
+		push(p6)
+		push_integer(-4)
+		multiply()
+		multiply()
+		minus4_bcubed_d = pop()
+
+
+		push(bcubed)
 		push_integer(2)
 		multiply()
 		two_bcubed = pop()
@@ -258,6 +280,12 @@ mini_solve = ->
 		multiply()
 		twentyseven_asquare_d = pop()
 
+		push(twentyseven_asquare_d)
+		push(p6)
+		multiply()
+		negate()
+		minus_twentyseven_asquare_dsquare = pop()
+
 		push(three_a)
 		push_integer(2)
 		multiply()
@@ -271,6 +299,13 @@ mini_solve = ->
 		multiply()
 		three_ac = pop()
 
+		push_integer(-4)
+		push(p3)
+		push(ccubed)
+		multiply()
+		multiply()
+		minus4_a_ccubed = pop()
+
 		push(three_ac)
 		push_integer(3)
 		push(p4)
@@ -279,46 +314,101 @@ mini_solve = ->
 		negate()
 		minus_nine_abc = pop()
 
+		push(minus_nine_abc)
+		push(p6)
+		push_integer(-2)
+		multiply()
+		multiply()
+		a_b_c_d_18 = pop()
+
 		push(bsquared)
 		push(three_ac)
 		subtract()
-		bsq_minus_3ac = pop()
+		ROOTS_DELTA0 = pop()
 
-		push(bsq_minus_3ac)
+		push(bsquared)
+		push(csquared)
+		multiply()
+		bsq_csq = pop()
+
+		push(ROOTS_DELTA0)
 		push_integer(3)
 		power()
 		push_integer(4)
 		multiply()
-		four_bsq_minus_3ac_pow3 = pop()
+		four_ROOTS_DELTA0_pow3 = pop()
+
+		#push(ROOTS_DELTA0)
+		#simplify()
+		#ROOTS_DELTA0_toBeCheckedIfZero = pop()
+		#console.log "D0 " + ROOTS_DELTA0_toBeCheckedIfZero.toString()
+		#if iszero(ROOTS_DELTA0_toBeCheckedIfZero)
+		#	console.log " *********************************** D0 IS ZERO"
 
 
-		# K
+		# DETERMINANT
+		#push(a_b_c_d_18)
+		#push(minus4_bcubed_d)
+		#push(bsq_csq)
+		#push(minus4_a_ccubed)
+		#push(minus_twentyseven_asquare_dsquare)
+		#add()
+		#add()
+		#add()
+		#add()
+		#simplify()
+		#ROOTS_determinant = pop()
+		#console.log "DETERMINANT: " + ROOTS_determinant.toString()
+		#if iszero(ROOTS_determinant)
+		#	console.log " *********************************** DETERMINANT IS ZERO"
+
+		# ROOTS_DELTA1
 		push(two_bcubed)
 		push(minus_nine_abc)
 		push(twentyseven_asquare_d)
 		add()
 		add()
-		K = pop()
+		ROOTS_DELTA1 = pop()
 
-		# Q
-		push(K)
+		# ROOTS_Q
+		push(ROOTS_DELTA1)
 		push_integer(2)
 		power()
-		push(four_bsq_minus_3ac_pow3)
+		push(four_ROOTS_DELTA0_pow3)
 		subtract()
 		push_rational(1, 2)
 		power()
-		Q = pop()
+		ROOTS_Q = pop()
 
-		# BIGC
-		push(Q)
-		push(K)
-		add()
-		push_rational(1, 2)
-		multiply()
-		push_rational(1, 3)
-		power()
-		BIGC = pop()
+		C_CHECKED_AS_NOT_ZERO = false
+		flipSignOFQSoCIsNotZero = false
+		
+		# C will go as denominator, we have to check
+		# that is not zero
+		while !C_CHECKED_AS_NOT_ZERO
+
+			# BIGC
+			push(ROOTS_Q)
+			if flipSignOFQSoCIsNotZero
+				negate()
+			push(ROOTS_DELTA1)
+			add()
+			push_rational(1, 2)
+			multiply()
+			push_rational(1, 3)
+			power()
+			BIGC = pop()
+
+			push(BIGC)
+			simplify()
+			BIGC_simplified_toCheckIfZero = pop()
+			#console.log "C " + BIGC_simplified_toCheckIfZero.toString()
+			if iszero(BIGC_simplified_toCheckIfZero)
+				#console.log " *********************************** C IS ZERO"
+				flipSignOFQSoCIsNotZero = true
+			else
+				C_CHECKED_AS_NOT_ZERO = true
+
 
 		push(BIGC)
 		push(three_a)
@@ -362,7 +452,7 @@ mini_solve = ->
 		push(minus_b_over_3a) # first term
 		push(BIGC_over_3a)
 		negate() # second term
-		push(bsq_minus_3ac)
+		push(ROOTS_DELTA0)
 		push(three_a_BIGC)
 		divide()
 		negate() # third term
@@ -378,7 +468,7 @@ mini_solve = ->
 		push_integer(2)
 		divide() # second term
 		push(one_minus_i_sqrt3)
-		push(bsq_minus_3ac)
+		push(ROOTS_DELTA0)
 		multiply()
 		push(six_a_BIGC)
 		divide() # third term
@@ -394,7 +484,7 @@ mini_solve = ->
 		push_integer(2)
 		divide() # second term
 		push(one_plus_i_sqrt3)
-		push(bsq_minus_3ac)
+		push(ROOTS_DELTA0)
 		multiply()
 		push(six_a_BIGC)
 		divide() # third term
