@@ -53,12 +53,34 @@ Eval_roots = ->
 
 	roots()
 
+
+hasImaginaryCoeff = ->
+
+	polycoeff = tos
+
+	push(p1)
+	push(p2)
+	k = coeff()
+
+	imaginaryCoefficients = false
+	h = tos
+	for i in [k...0] by -1
+		#console.log "hasImaginaryCoeff - coeff.:" + stack[tos-i].toString()
+		if iscomplexnumber(stack[tos-i])
+			imaginaryCoefficients = true
+			break
+	tos -= k
+	return imaginaryCoefficients
+
+
 roots = ->
 	h = 0
 	i = 0
 	n = 0
 	h = tos - 2
+
 	roots2()
+
 	n = tos - h
 	if (n == 0)
 		stop("roots: the polynomial is not factorable, try nroots")
@@ -83,9 +105,14 @@ roots2 = ->
 
 	push(p1)
 	push(p2)
-	factorpoly()
 
-	p1 = pop()
+	if !hasImaginaryCoeff()
+		factorpoly()
+		p1 = pop()
+	else
+		pop()
+		pop()
+
 
 	if (car(p1) == symbol(MULTIPLY))
 		p1 = cdr(p1)
@@ -132,6 +159,7 @@ roots3 = ->
 # since there is a chance we factored the polynomial and in so
 # doing we found some solutions and lowered the degree.
 mini_solve = ->
+	#console.log "mini_solve >>>>>>>>>>>>>>>>>>>>>>>> tos:" + tos
 	n = 0
 
 	save()
@@ -147,6 +175,7 @@ mini_solve = ->
 	# AX + B, X = -B/A
 
 	if (n == 2)
+		#console.log "mini_solve >>>>>>>>> 1st degree"
 		p3 = pop()
 		p4 = pop()
 		push(p4)
@@ -159,6 +188,7 @@ mini_solve = ->
 	# AX^2 + BX + C, X = (-B +/- (B^2 - 4AC)^(1/2)) / (2A)
 
 	if (n == 3)
+		#console.log "mini_solve >>>>>>>>> 2nd degree"
 		p3 = pop() # A
 		p4 = pop() # B
 		p5 = pop() # C
@@ -229,6 +259,10 @@ mini_solve = ->
 		p5 = pop() # C
 		p6 = pop() # D
 
+		#console.log ">>>> A:" + p3.toString()
+		#console.log ">>>> B:" + p4.toString()
+		#console.log ">>>> C:" + p5.toString()
+		#console.log ">>>> D:" + p6.toString()
 
 		# C - only related calculations
 		push(p5)
@@ -292,10 +326,18 @@ mini_solve = ->
 		six_a = pop()
 
 		# mixed calculations
-		push_integer(3)
 		push(p3)
 		push(p5)
 		multiply()
+		a_c = pop()
+
+		push(a_c)
+		push(p4)
+		multiply()
+		a_b_c = pop()
+
+		push(a_c)
+		push_integer(3)
 		multiply()
 		three_ac = pop()
 
@@ -306,10 +348,8 @@ mini_solve = ->
 		multiply()
 		minus4_a_ccubed = pop()
 
-		push(three_ac)
-		push_integer(3)
-		push(p4)
-		multiply()
+		push(a_b_c)
+		push_integer(9)
 		multiply()
 		negate()
 		minus_nine_abc = pop()
@@ -338,29 +378,35 @@ mini_solve = ->
 		multiply()
 		four_ROOTS_DELTA0_pow3 = pop()
 
-		#push(ROOTS_DELTA0)
-		#simplify()
-		#ROOTS_DELTA0_toBeCheckedIfZero = pop()
+		push(ROOTS_DELTA0)
+		simplify()
+		Eval()
+		yyfloat()
+		Eval(); # normalize
+		absval()
+		ROOTS_DELTA0_toBeCheckedIfZero = pop()
 		#console.log "D0 " + ROOTS_DELTA0_toBeCheckedIfZero.toString()
 		#if iszero(ROOTS_DELTA0_toBeCheckedIfZero)
 		#	console.log " *********************************** D0 IS ZERO"
 
 
 		# DETERMINANT
-		#push(a_b_c_d_18)
-		#push(minus4_bcubed_d)
-		#push(bsq_csq)
-		#push(minus4_a_ccubed)
-		#push(minus_twentyseven_asquare_dsquare)
-		#add()
-		#add()
-		#add()
-		#add()
-		#simplify()
-		#ROOTS_determinant = pop()
+		push(a_b_c_d_18)
+		push(minus4_bcubed_d)
+		push(bsq_csq)
+		push(minus4_a_ccubed)
+		push(minus_twentyseven_asquare_dsquare)
+		add()
+		add()
+		add()
+		add()
+		simplify()
+		Eval()
+		yyfloat()
+		Eval(); # normalize
+		absval()
+		ROOTS_determinant = pop()
 		#console.log "DETERMINANT: " + ROOTS_determinant.toString()
-		#if iszero(ROOTS_determinant)
-		#	console.log " *********************************** DETERMINANT IS ZERO"
 
 		# ROOTS_DELTA1
 		push(two_bcubed)
@@ -379,6 +425,74 @@ mini_solve = ->
 		push_rational(1, 2)
 		power()
 		ROOTS_Q = pop()
+
+		push(p4)
+		negate()
+		push(three_a)
+		divide()
+		minus_b_over_3a = pop()
+
+		if iszero(ROOTS_determinant)
+			if iszero(ROOTS_DELTA0_toBeCheckedIfZero)
+				#console.log " *********************************** DETERMINANT IS ZERO and delta0 is zero"
+				push(minus_b_over_3a) # just same solution three times
+				restore()
+				return
+			else
+				#console.log " *********************************** DETERMINANT IS ZERO and delta0 is not zero"
+				push(p3)
+				push(p6)
+				push_integer(9)
+				multiply()
+				multiply()
+				push(p4)
+				push(p5)
+				multiply()
+				subtract()
+				push(ROOTS_DELTA0)
+				push_integer(2)
+				multiply()
+				divide() # first solution
+				root_solution = pop()
+				push(root_solution) # pushing two of them on the stack
+				push(root_solution)
+
+				# second solution here
+				# 4abc
+				push(a_b_c)
+				push_integer(4)
+				multiply()
+
+				# -9a*a*d
+				push(p3)
+				push(p3)
+				push(p6)
+				push_integer(9)
+				multiply()
+				multiply()
+				multiply()
+				negate()
+
+				# -9*b^3
+				push(bcubed)
+				negate()
+
+				# sum the three terms
+				add()
+				add()
+
+				# denominator is a*delta0
+				push(p3)
+				push(ROOTS_DELTA0)
+				multiply()
+
+				# build the fraction
+				divide()
+
+				restore()
+				return
+
+
 
 		C_CHECKED_AS_NOT_ZERO = false
 		flipSignOFQSoCIsNotZero = false
@@ -401,10 +515,14 @@ mini_solve = ->
 
 			push(BIGC)
 			simplify()
+			Eval()
+			yyfloat()
+			Eval(); # normalize
+			absval()
 			BIGC_simplified_toCheckIfZero = pop()
 			#console.log "C " + BIGC_simplified_toCheckIfZero.toString()
 			if iszero(BIGC_simplified_toCheckIfZero)
-				#console.log " *********************************** C IS ZERO"
+				#console.log " *********************************** C IS ZERO flipping the sign"
 				flipSignOFQSoCIsNotZero = true
 			else
 				C_CHECKED_AS_NOT_ZERO = true
@@ -437,11 +555,6 @@ mini_solve = ->
 		subtract()
 		one_minus_i_sqrt3 = pop()
 
-		push(p4)
-		negate()
-		push(three_a)
-		divide()
-		minus_b_over_3a = pop()
 
 		push(BIGC)
 		push(three_a)
@@ -459,6 +572,7 @@ mini_solve = ->
 		# now add the three terms together
 		add()
 		add()
+		simplify()
 
 		# second solution
 		push(minus_b_over_3a) # first term
@@ -475,6 +589,7 @@ mini_solve = ->
 		# now add the three terms together
 		add()
 		add()
+		simplify()
 
 		# third solution
 		push(minus_b_over_3a) # first term
@@ -491,6 +606,7 @@ mini_solve = ->
 		# now add the three terms together
 		add()
 		add()
+		simplify()
 
 		restore()
 		return
