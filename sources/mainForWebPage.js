@@ -1,0 +1,1 @@
+window.Algebrite = require('../dist/algebrite')
