@@ -32,14 +32,32 @@ The cons objects have a `toString` method which converts it into a pretty-print 
 
 # How to build
 
-1. install npm on your system
+For node use:
+
+1. make sure npm is installed
 2. ```npm install```
 3. ```npm run build```
 
+To debug things, better use the debugger from Chrome, so build for the browser like so:
+
+1. make sure npm is installed
+2. make sure browserify is installed
+3. ```npm install```
+4. ```npm run build-for-browser```
+5. open ```index.html```
+
 # How to test
+
+For full tests:
 
 ```
 npm test
+```
+
+For the subset of tests in run-micro-tests.coffee:
+
+```
+npm run microtest
 ```
 
 # Contribute
