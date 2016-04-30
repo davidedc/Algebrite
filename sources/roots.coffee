@@ -268,9 +268,9 @@ mini_solve = ->
 		push(p5)
 		push(p5)
 		multiply()
-		csquared = pop()
+		R_c2 = pop()
 
-		push(csquared)
+		push(R_c2)
 		push(p5)
 		multiply()
 		ccubed = pop()
@@ -279,9 +279,9 @@ mini_solve = ->
 		push(p4)
 		push(p4)
 		multiply()
-		bsquared = pop()
+		R_b2 = pop()
 
-		push(bsquared)
+		push(R_b2)
 		push(p4)
 		multiply()
 		bcubed = pop()
@@ -291,13 +291,13 @@ mini_solve = ->
 		push_integer(-4)
 		multiply()
 		multiply()
-		minus4_bcubed_d = pop()
+		R_m4_b3_d = pop()
 
 
 		push(bcubed)
 		push_integer(2)
 		multiply()
-		two_bcubed = pop()
+		R_2_b3 = pop()
 
 		# A - only related calculations
 		push_integer(3)
@@ -312,13 +312,13 @@ mini_solve = ->
 		multiply()
 		push(p6)
 		multiply()
-		twentyseven_asquare_d = pop()
+		R_27_a2_d = pop()
 
-		push(twentyseven_asquare_d)
+		push(R_27_a2_d)
 		push(p6)
 		multiply()
 		negate()
-		minus_twentyseven_asquare_dsquare = pop()
+		R_m27_a2_d2 = pop()
 
 		push(three_a)
 		push_integer(2)
@@ -329,47 +329,47 @@ mini_solve = ->
 		push(p3)
 		push(p5)
 		multiply()
-		a_c = pop()
+		R_a_c = pop()
 
-		push(a_c)
+		push(R_a_c)
 		push(p4)
 		multiply()
-		a_b_c = pop()
+		R_a_b_c = pop()
 
-		push(a_c)
+		push(R_a_c)
 		push_integer(3)
 		multiply()
-		three_ac = pop()
+		R_3_a_c = pop()
 
 		push_integer(-4)
 		push(p3)
 		push(ccubed)
 		multiply()
 		multiply()
-		minus4_a_ccubed = pop()
+		R_m4_a_c3 = pop()
 
-		push(a_b_c)
+		push(R_a_b_c)
 		push_integer(9)
 		multiply()
 		negate()
-		minus_nine_abc = pop()
+		R_m9_a_b_c = pop()
 
-		push(minus_nine_abc)
+		push(R_m9_a_b_c)
 		push(p6)
 		push_integer(-2)
 		multiply()
 		multiply()
-		a_b_c_d_18 = pop()
+		R_18_a_b_c_d = pop()
 
-		push(bsquared)
-		push(three_ac)
+		push(R_b2)
+		push(R_3_a_c)
 		subtract()
 		ROOTS_DELTA0 = pop()
 
-		push(bsquared)
-		push(csquared)
+		push(R_b2)
+		push(R_c2)
 		multiply()
-		bsq_csq = pop()
+		R_b2_c2 = pop()
 
 		push(ROOTS_DELTA0)
 		push_integer(3)
@@ -391,11 +391,11 @@ mini_solve = ->
 
 
 		# DETERMINANT
-		push(a_b_c_d_18)
-		push(minus4_bcubed_d)
-		push(bsq_csq)
-		push(minus4_a_ccubed)
-		push(minus_twentyseven_asquare_dsquare)
+		push(R_18_a_b_c_d)
+		push(R_m4_b3_d)
+		push(R_b2_c2)
+		push(R_m4_a_c3)
+		push(R_m27_a2_d2)
 		add()
 		add()
 		add()
@@ -409,9 +409,9 @@ mini_solve = ->
 		#console.log "DETERMINANT: " + ROOTS_determinant.toString()
 
 		# ROOTS_DELTA1
-		push(two_bcubed)
-		push(minus_nine_abc)
-		push(twentyseven_asquare_d)
+		push(R_2_b3)
+		push(R_m9_a_b_c)
+		push(R_27_a2_d)
 		add()
 		add()
 		ROOTS_DELTA1 = pop()
@@ -430,12 +430,12 @@ mini_solve = ->
 		negate()
 		push(three_a)
 		divide()
-		minus_b_over_3a = pop()
+		R_m_b_over_3a = pop()
 
 		if iszero(ROOTS_determinant)
 			if iszero(ROOTS_DELTA0_toBeCheckedIfZero)
 				#console.log " *********************************** DETERMINANT IS ZERO and delta0 is zero"
-				push(minus_b_over_3a) # just same solution three times
+				push(R_m_b_over_3a) # just same solution three times
 				restore()
 				return
 			else
@@ -459,7 +459,7 @@ mini_solve = ->
 
 				# second solution here
 				# 4abc
-				push(a_b_c)
+				push(R_a_b_c)
 				push_integer(4)
 				multiply()
 
@@ -562,7 +562,7 @@ mini_solve = ->
 		BIGC_over_3a = pop()
 
 		# first solution
-		push(minus_b_over_3a) # first term
+		push(R_m_b_over_3a) # first term
 		push(BIGC_over_3a)
 		negate() # second term
 		push(ROOTS_DELTA0)
@@ -575,7 +575,7 @@ mini_solve = ->
 		simplify()
 
 		# second solution
-		push(minus_b_over_3a) # first term
+		push(R_m_b_over_3a) # first term
 		push(BIGC_over_3a)
 		push(one_plus_i_sqrt3)
 		multiply()
@@ -592,7 +592,7 @@ mini_solve = ->
 		simplify()
 
 		# third solution
-		push(minus_b_over_3a) # first term
+		push(R_m_b_over_3a) # first term
 		push(BIGC_over_3a)
 		push(one_minus_i_sqrt3)
 		multiply()
