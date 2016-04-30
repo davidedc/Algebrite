@@ -273,7 +273,7 @@ mini_solve = ->
 		push(R_c2)
 		push(p5)
 		multiply()
-		ccubed = pop()
+		R_c3 = pop()
 
 		# B - only related calculations
 		push(p4)
@@ -284,9 +284,9 @@ mini_solve = ->
 		push(R_b2)
 		push(p4)
 		multiply()
-		bcubed = pop()
+		R_b3 = pop()
 
-		push(bcubed)
+		push(R_b3)
 		push(p6)
 		push_integer(-4)
 		multiply()
@@ -294,7 +294,7 @@ mini_solve = ->
 		R_m4_b3_d = pop()
 
 
-		push(bcubed)
+		push(R_b3)
 		push_integer(2)
 		multiply()
 		R_2_b3 = pop()
@@ -303,9 +303,9 @@ mini_solve = ->
 		push_integer(3)
 		push(p3)
 		multiply()
-		three_a = pop()
+		R_3_a = pop()
 
-		push(three_a)
+		push(R_3_a)
 		push_integer(9)
 		multiply()
 		push(p3)
@@ -320,10 +320,10 @@ mini_solve = ->
 		negate()
 		R_m27_a2_d2 = pop()
 
-		push(three_a)
+		push(R_3_a)
 		push_integer(2)
 		multiply()
-		six_a = pop()
+		R_6_a = pop()
 
 		# mixed calculations
 		push(p3)
@@ -343,7 +343,7 @@ mini_solve = ->
 
 		push_integer(-4)
 		push(p3)
-		push(ccubed)
+		push(R_c3)
 		multiply()
 		multiply()
 		R_m4_a_c3 = pop()
@@ -364,29 +364,29 @@ mini_solve = ->
 		push(R_b2)
 		push(R_3_a_c)
 		subtract()
-		ROOTS_DELTA0 = pop()
+		R_DELTA0 = pop()
 
 		push(R_b2)
 		push(R_c2)
 		multiply()
 		R_b2_c2 = pop()
 
-		push(ROOTS_DELTA0)
+		push(R_DELTA0)
 		push_integer(3)
 		power()
 		push_integer(4)
 		multiply()
-		four_ROOTS_DELTA0_pow3 = pop()
+		R_4_DELTA03 = pop()
 
-		push(ROOTS_DELTA0)
+		push(R_DELTA0)
 		simplify()
 		Eval()
 		yyfloat()
 		Eval(); # normalize
 		absval()
-		ROOTS_DELTA0_toBeCheckedIfZero = pop()
-		#console.log "D0 " + ROOTS_DELTA0_toBeCheckedIfZero.toString()
-		#if iszero(ROOTS_DELTA0_toBeCheckedIfZero)
+		R_DELTA0_toBeCheckedIfZero = pop()
+		#console.log "D0 " + R_DELTA0_toBeCheckedIfZero.toString()
+		#if iszero(R_DELTA0_toBeCheckedIfZero)
 		#	console.log " *********************************** D0 IS ZERO"
 
 
@@ -405,35 +405,35 @@ mini_solve = ->
 		yyfloat()
 		Eval(); # normalize
 		absval()
-		ROOTS_determinant = pop()
-		#console.log "DETERMINANT: " + ROOTS_determinant.toString()
+		R_determinant = pop()
+		#console.log "DETERMINANT: " + R_determinant.toString()
 
-		# ROOTS_DELTA1
+		# R_DELTA1
 		push(R_2_b3)
 		push(R_m9_a_b_c)
 		push(R_27_a2_d)
 		add()
 		add()
-		ROOTS_DELTA1 = pop()
+		R_DELTA1 = pop()
 
-		# ROOTS_Q
-		push(ROOTS_DELTA1)
+		# R_Q
+		push(R_DELTA1)
 		push_integer(2)
 		power()
-		push(four_ROOTS_DELTA0_pow3)
+		push(R_4_DELTA03)
 		subtract()
 		push_rational(1, 2)
 		power()
-		ROOTS_Q = pop()
+		R_Q = pop()
 
 		push(p4)
 		negate()
-		push(three_a)
+		push(R_3_a)
 		divide()
 		R_m_b_over_3a = pop()
 
-		if iszero(ROOTS_determinant)
-			if iszero(ROOTS_DELTA0_toBeCheckedIfZero)
+		if iszero(R_determinant)
+			if iszero(R_DELTA0_toBeCheckedIfZero)
 				#console.log " *********************************** DETERMINANT IS ZERO and delta0 is zero"
 				push(R_m_b_over_3a) # just same solution three times
 				restore()
@@ -449,7 +449,7 @@ mini_solve = ->
 				push(p5)
 				multiply()
 				subtract()
-				push(ROOTS_DELTA0)
+				push(R_DELTA0)
 				push_integer(2)
 				multiply()
 				divide() # first solution
@@ -474,7 +474,7 @@ mini_solve = ->
 				negate()
 
 				# -9*b^3
-				push(bcubed)
+				push(R_b3)
 				negate()
 
 				# sum the three terms
@@ -483,7 +483,7 @@ mini_solve = ->
 
 				# denominator is a*delta0
 				push(p3)
-				push(ROOTS_DELTA0)
+				push(R_DELTA0)
 				multiply()
 
 				# build the fraction
@@ -501,42 +501,42 @@ mini_solve = ->
 		# that is not zero
 		while !C_CHECKED_AS_NOT_ZERO
 
-			# BIGC
-			push(ROOTS_Q)
+			# R_C
+			push(R_Q)
 			if flipSignOFQSoCIsNotZero
 				negate()
-			push(ROOTS_DELTA1)
+			push(R_DELTA1)
 			add()
 			push_rational(1, 2)
 			multiply()
 			push_rational(1, 3)
 			power()
-			BIGC = pop()
+			R_C = pop()
 
-			push(BIGC)
+			push(R_C)
 			simplify()
 			Eval()
 			yyfloat()
 			Eval(); # normalize
 			absval()
-			BIGC_simplified_toCheckIfZero = pop()
-			#console.log "C " + BIGC_simplified_toCheckIfZero.toString()
-			if iszero(BIGC_simplified_toCheckIfZero)
+			R_C_simplified_toCheckIfZero = pop()
+			#console.log "C " + R_C_simplified_toCheckIfZero.toString()
+			if iszero(R_C_simplified_toCheckIfZero)
 				#console.log " *********************************** C IS ZERO flipping the sign"
 				flipSignOFQSoCIsNotZero = true
 			else
 				C_CHECKED_AS_NOT_ZERO = true
 
 
-		push(BIGC)
-		push(three_a)
+		push(R_C)
+		push(R_3_a)
 		multiply()
-		three_a_BIGC = pop()
+		R_3_a_C = pop()
 
-		push(three_a_BIGC)
+		push(R_3_a_C)
 		push_integer(2)
 		multiply()
-		six_a_BIGC = pop()
+		R_6_a_C = pop()
 
 
 		# imaginary parts calculations
@@ -556,17 +556,17 @@ mini_solve = ->
 		one_minus_i_sqrt3 = pop()
 
 
-		push(BIGC)
-		push(three_a)
+		push(R_C)
+		push(R_3_a)
 		divide()
-		BIGC_over_3a = pop()
+		R_C_over_3a = pop()
 
 		# first solution
 		push(R_m_b_over_3a) # first term
-		push(BIGC_over_3a)
+		push(R_C_over_3a)
 		negate() # second term
-		push(ROOTS_DELTA0)
-		push(three_a_BIGC)
+		push(R_DELTA0)
+		push(R_3_a_C)
 		divide()
 		negate() # third term
 		# now add the three terms together
@@ -576,15 +576,15 @@ mini_solve = ->
 
 		# second solution
 		push(R_m_b_over_3a) # first term
-		push(BIGC_over_3a)
+		push(R_C_over_3a)
 		push(one_plus_i_sqrt3)
 		multiply()
 		push_integer(2)
 		divide() # second term
 		push(one_minus_i_sqrt3)
-		push(ROOTS_DELTA0)
+		push(R_DELTA0)
 		multiply()
-		push(six_a_BIGC)
+		push(R_6_a_C)
 		divide() # third term
 		# now add the three terms together
 		add()
@@ -593,15 +593,15 @@ mini_solve = ->
 
 		# third solution
 		push(R_m_b_over_3a) # first term
-		push(BIGC_over_3a)
+		push(R_C_over_3a)
 		push(one_minus_i_sqrt3)
 		multiply()
 		push_integer(2)
 		divide() # second term
 		push(one_plus_i_sqrt3)
-		push(ROOTS_DELTA0)
+		push(R_DELTA0)
 		multiply()
-		push(six_a_BIGC)
+		push(R_6_a_C)
 		divide() # third term
 		# now add the three terms together
 		add()
