@@ -791,103 +791,62 @@ mini_solve = ->
 			add()
 			add()
 
+			# DELTA0
+			push(R_c2) # term one of DELTA0
 
-			# C - only related calculations
-			push(p5)
-			push(p5)
-			multiply()
-			R_c2 = pop()
-
-			push(R_c2)
-			push(p5)
-			multiply()
-			R_c3 = pop()
-
-			# B - only related calculations
+			push_integer(-3)
 			push(p4)
-			push(p4)
-			multiply()
-			R_b2 = pop()
-
-			push(R_b2)
-			push(p4)
-			multiply()
-			R_b3 = pop()
-
-			push(R_b3)
 			push(p6)
-			push_integer(-4)
 			multiply()
+			multiply()  # term two of DELTA0
+
+			push_integer(12)
+			push(p3)
+			push(p7)
 			multiply()
-			R_m4_b3_d = pop()
+			multiply()  # term three of DELTA0
 
+			# add the three terms together
+			add()
+			add()
 
-			push(R_b3)
+			# DELTA1
 			push_integer(2)
-			multiply()
-			R_2_b3 = pop()
-
-			# A - only related calculations
-			push_integer(3)
-			push(p3)
-			multiply()
-			R_3_a = pop()
-
-			push(R_3_a)
-			push_integer(9)
-			multiply()
-			push(p3)
-			multiply()
-			push(p6)
-			multiply()
-			R_27_a2_d = pop()
-
-			push(R_27_a2_d)
-			push(p6)
-			multiply()
-			negate()
-			R_m27_a2_d2 = pop()
-
-			push(R_3_a)
-			push_integer(2)
-			multiply()
-			R_6_a = pop()
-
-			# mixed calculations
-			push(p3)
-			push(p5)
-			multiply()
-			R_a_c = pop()
-
-			push(R_a_c)
-			push(p4)
-			multiply()
-			R_a_b_c = pop()
-
-			push(R_a_c)
-			push_integer(3)
-			multiply()
-			R_3_a_c = pop()
-
-			push_integer(-4)
-			push(p3)
 			push(R_c3)
 			multiply()
-			multiply()
-			R_m4_a_c3 = pop()
 
-			push(R_a_b_c)
-			push_integer(9)
-			multiply()
-			negate()
-			R_m9_a_b_c = pop()
-
-			push(R_m9_a_b_c)
+			push_integer(-9)
+			push(p4)
+			push(p5)
 			push(p6)
-			push_integer(-2)
 			multiply()
 			multiply()
-			R_18_a_b_c_d = pop()
+			multiply()
+
+			push_integer(27)
+			push(R_b2)
+			push(p7)
+			multiply()
+			multiply()
+
+			push_integer(27)
+			push(p3)
+			push(R_d2)
+			multiply()
+			multiply()
+
+			push_integer(72)
+			push(R_a_c)
+			push(p7)
+			multiply()
+			multiply()
+
+			# add the five terms together
+			add()
+			add()
+			add()
+			add()
+
 
 			push(R_b2)
 			push(R_3_a_c)
