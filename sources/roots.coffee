@@ -810,6 +810,8 @@ mini_solve = ->
 			add()
 			add()
 
+			R_DELTA0 = pop()
+
 			# DELTA1
 			push_integer(2)
 			push(R_c3)
@@ -847,6 +849,7 @@ mini_solve = ->
 			add()
 			add()
 
+			R_DELTA1 = pop()
 
 			push(R_b2)
 			push(R_3_a_c)
