@@ -851,6 +851,50 @@ mini_solve = ->
 
 			R_DELTA1 = pop()
 
+			# p
+			push_integer(8)
+			push(R_a_c)
+			multiply()
+
+			push_integer(-3)
+			push(R_b2)
+			multiply()
+
+			add()
+
+			push_integer(8)
+			push(R_a2)
+			multiply()
+
+			divide()
+
+			R_p = pop()
+
+			# q
+			push(R_b3)
+
+			push_integer(-4)
+			push(R_a_b_c)
+			multiply()
+
+			push_integer(8)
+			push(R_a2_d)
+			multiply()
+
+			add()
+			add()
+
+			push_integer(8)
+			push(R_a3)
+			multiply()
+
+			divide()
+
+			R_q = pop()
+
+			# ----------------------------
+
+
 			push(R_b2)
 			push(R_3_a_c)
 			subtract()
