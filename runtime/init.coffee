@@ -138,6 +138,7 @@ init = ->
 	std_symbol("simplify", SIMPLIFY)
 	std_symbol("sin", SIN)
 	std_symbol("sinh", SINH)
+	std_symbol("shape", SHAPE)
 	std_symbol("sqrt", SQRT)
 	std_symbol("stop", STOP)
 	std_symbol("subst", SUBST)

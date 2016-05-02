@@ -96,6 +96,7 @@ selftest  = ->
 	test_simplify()
 	test_roots()
 	test_eigen()
+	test_shape()
 	mini_test()
 
 
