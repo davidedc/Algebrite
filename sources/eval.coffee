@@ -157,6 +157,7 @@ Eval_cons = ->
 		when SIMPLIFY then Eval_simplify()
 		when SIN then Eval_sin()
 		when SINH then Eval_sinh()
+		when SHAPE then Eval_shape()
 		when SQRT then Eval_sqrt()
 		when STOP then Eval_stop()
 		when SUBST then Eval_subst()
