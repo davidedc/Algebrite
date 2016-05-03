@@ -894,6 +894,68 @@ mini_solve = ->
 
 			# ----------------------------
 
+			# D1 under the radical
+			push(R_DELTA1)
+
+			# D1^2 under the second radical
+			push(R_DELTA1)
+			push_integer(2)
+			power()
+
+			# 4*D0^3 under the second radical
+			push_integer(-4)
+			push(R_DELTA0)
+			push_integer(3)
+			power()
+
+			# addition under the second radical
+			add()
+
+			# the second radical
+			push_rational(1,2)
+			power()
+
+			# the addition under the first radical
+			add()
+
+			# content of first radical divided by two
+			push_integer(2)
+			divide()
+
+			# the first radical: cubic root
+			push_rational(1,3)
+			power()
+						
+
+			# S
+			push_rational(-2,3)
+			push(R_p)
+			multiply()
+
+			push(R_Q)
+			
+			push(R_DELTA0)
+			push(R_Q)
+			divide()
+
+			add()
+
+			push(R_3_a)
+			divide()
+
+			add()
+
+			push_rational(1,2)
+			power()
+
+			push_integer(2)
+			divide()
+
+			R_S = pop()
+
+			# ----------------------------
+
+
 
 			push(R_b2)
 			push(R_3_a_c)
