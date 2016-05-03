@@ -175,6 +175,7 @@ SGN = counter++
 SIMPLIFY = counter++
 SIN = counter++
 SINH = counter++
+SHAPE = counter++
 SQRT = counter++
 STOP = counter++
 SUBST = counter++

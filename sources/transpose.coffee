@@ -48,7 +48,14 @@ transpose = ->
 	ndim = p1.tensor.ndim
 	nelem = p1.tensor.nelem
 
-	# vector?
+	# is it a vector?
+	# so here it's something curious - note how vectors are
+	# not really special two-dimensional matrices, but rather
+	# 1-dimension objects (like tensors can be). So since
+	# they have one dimension, transposition has no effect.
+	# (as opposed as if they were special two-dimensional
+	# matrices)
+	# see also Ran Pan, Tensor Transpose and Its Properties. CoRR abs/1411.1503 (2014)
 
 	if (ndim == 1)
 		push(p1)

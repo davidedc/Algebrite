@@ -15,7 +15,7 @@ Eval_decomp = ->
 	decomp()
 	list(tos - h)
 
-# returns constant expresions on the stack
+# returns constant expressions on the stack
 
 decomp = ->
 	save()
