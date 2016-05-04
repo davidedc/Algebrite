@@ -145,13 +145,14 @@ gen = (h,k) ->
 	push(p3)
 	expo = pop_integer()
 
-	for i in [0..Math.abs(expo)]
-		push(p1)
-		push(p2)
-		push_integer(sign(expo) * i)
-		power()
-		multiply()
-		gen(h + 2, k)
+	if (expo != 0x80000000)
+		for i in [0..Math.abs(expo)]
+			push(p1)
+			push(p2)
+			push_integer(sign(expo) * i)
+			power()
+			multiply()
+			gen(h + 2, k)
 
 	restore()
 

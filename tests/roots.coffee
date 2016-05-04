@@ -4,6 +4,9 @@ test_roots = ->
 		"roots(x)",
 		"0",
 
+		"roots(2^x-y,y)",
+		"2^x",
+
 		"roots(x^2)",
 		"0",
 
