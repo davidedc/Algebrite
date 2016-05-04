@@ -4674,13 +4674,15 @@
     p3 = stack[h + 1];
     push(p3);
     expo = pop_integer();
-    for (i = o = 0, ref = Math.abs(expo); 0 <= ref ? o <= ref : o >= ref; i = 0 <= ref ? ++o : --o) {
-      push(p1);
-      push(p2);
-      push_integer(sign(expo) * i);
-      power();
-      multiply();
-      gen(h + 2, k);
+    if (expo !== 0x80000000) {
+      for (i = o = 0, ref = Math.abs(expo); 0 <= ref ? o <= ref : o >= ref; i = 0 <= ref ? ++o : --o) {
+        push(p1);
+        push(p2);
+        push_integer(sign(expo) * i);
+        power();
+        multiply();
+        gen(h + 2, k);
+      }
     }
     return restore();
   };
