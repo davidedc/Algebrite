@@ -264,9 +264,9 @@ print_factor = (p) ->
 		return
 
 	if (isstr(p))
-		#print_str("\"")
+		print_str("\"")
 		print_str(p.str)
-		#print_str("\"")
+		print_str("\"")
 		return
 
 	if (istensor(p))

@@ -668,8 +668,10 @@ emit_symbol = (p) ->
 emit_string = (p) ->
 	i = 0
 	pString = p.str
+	__emit_char('"')
 	for i in [0...pString.length]
 		__emit_char(pString[i])
+	__emit_char('"')
 
 fixup_fraction = (x, k1, k2) ->
 	dx = 0
