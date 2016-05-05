@@ -912,346 +912,220 @@ mini_solve = ->
 			absval()
 			R_DELTA0_simplified_toCheckIfZero = pop()
 
+			S_CHECKED_AS_NOT_ZERO = false
+			choiceOfRadicalInQSoSIsNotZero = 0
 
-			Q_CHECKED_AS_NOT_ZERO = false
-			flipSignOFRadicalSoQIsNotZero = false
-			
-			# Q will go as denominator to calculate S
-			# so we have to check
-			# that is not zero
-			while !Q_CHECKED_AS_NOT_ZERO
+			while !S_CHECKED_AS_NOT_ZERO
 
-				# D1 under the outer radical
-				push(R_DELTA1)
+				Q_CHECKED_AS_NOT_ZERO = false
+				flipSignOFRadicalSoQIsNotZero = false
+				
+				# Q will go as denominator to calculate S
+				# so we have to check
+				# that is not zero
+				while !Q_CHECKED_AS_NOT_ZERO
 
-				# D1^2 under the inner radical
-				push(R_DELTA1)
-				push_integer(2)
-				power()
+					# D1 under the outer radical
+					push(R_DELTA1)
 
-				# 4*D0^3 under the inner radical
-				push_integer(-4)
+					# D1^2 under the inner radical
+					push(R_DELTA1)
+					push_integer(2)
+					power()
+
+					# 4*D0^3 under the inner radical
+					push_integer(-4)
+					push(R_DELTA0)
+					push_integer(3)
+					power()
+
+					# addition under the inner radical
+					add()
+
+					# the second radical
+					push_rational(1,2)
+					power()
+
+					if flipSignOFRadicalSoQIsNotZero
+						negate()
+
+					# the addition under the outer radical
+					add()
+
+					# content of outer radical divided by two
+					push_integer(2)
+					divide()
+
+					# outer radical calculation: cubic root
+					# now we actually have to find all the roots
+					# because we have to pick the one that makes S != 0
+					push_rational(1,3)
+					power()
+					R_principalCubicRoot = pop()
+					if choiceOfRadicalInQSoSIsNotZero == 0
+						push(R_principalCubicRoot)
+					else if choiceOfRadicalInQSoSIsNotZero == 1
+						push(R_principalCubicRoot)
+						push_rational(-1,2)
+						multiply()
+
+						push_integer(3)
+						push_rational(1,2)
+						power()
+						push(imaginaryunit)
+						multiply()
+						push_rational(-1,2)
+						multiply()
+						push(R_principalCubicRoot)
+						multiply()
+						add()
+					else if choiceOfRadicalInQSoSIsNotZero == 1
+						push(R_principalCubicRoot)
+						push_rational(-1,2)
+						multiply()
+
+						push_integer(3)
+						push_rational(1,2)
+						power()
+						push(imaginaryunit)
+						multiply()
+						push_rational(1,2)
+						multiply()
+						push(R_principalCubicRoot)
+						multiply()
+						add()
+
+
+
+					R_Q = pop()
+
+
+					push(R_Q)
+					simplify()
+					Eval()
+					yyfloat()
+					Eval(); # normalize
+					absval()
+
+					R_Q_simplified_toCheckIfZero = pop()
+					#console.log "Q " + R_Q_simplified_toCheckIfZero.toString()
+					if iszero(R_Q_simplified_toCheckIfZero) and (!iszero(R_determinant_simplified_toCheckIfZero) and iszero(R_DELTA0_simplified_toCheckIfZero))
+						#console.log " *********************************** Q IS ZERO flipping the sign"
+						flipSignOFRadicalSoQIsNotZero = true
+					else
+						Q_CHECKED_AS_NOT_ZERO = true
+
+							
+
+				# S
+				push_rational(-2,3)
+				push(R_p)
+				multiply()
+
+				push(R_Q)
+				
 				push(R_DELTA0)
-				push_integer(3)
-				power()
+				push(R_Q)
+				divide()
 
-				# addition under the inner radical
 				add()
 
-				# the second radical
+				push(R_3_a)
+				divide()
+
+				add()
+
 				push_rational(1,2)
 				power()
 
-				if flipSignOFRadicalSoQIsNotZero
-					negate()
-
-				# the addition under the outer radical
-				add()
-
-				# content of outer radical divided by two
 				push_integer(2)
 				divide()
 
-				# outer radical calculation: cubic root
-				push_rational(1,3)
-				power()
+				R_S = pop()
 
-				R_Q = pop()
-
-
-				push(R_Q)
+				# now check is S is zero
+				push(R_S)
 				simplify()
 				Eval()
 				yyfloat()
 				Eval(); # normalize
 				absval()
 
-				R_Q_simplified_toCheckIfZero = pop()
-				#console.log "Q " + R_Q_simplified_toCheckIfZero.toString()
-				if iszero(R_Q_simplified_toCheckIfZero) and (!iszero(R_determinant_simplified_toCheckIfZero) and iszero(R_DELTA0_simplified_toCheckIfZero))
-					#console.log " *********************************** Q IS ZERO flipping the sign"
-					flipSignOFRadicalSoQIsNotZero = true
+				R_S_simplified_toCheckIfZero = pop()
+				#console.log "S " + R_S_simplified_toCheckIfZero.toString()
+				if iszero(R_S_simplified_toCheckIfZero)
+					#console.log " *********************************** S IS ZERO chosing another cubic root"
+					choiceOfRadicalInQSoSIsNotZero++
 				else
-					Q_CHECKED_AS_NOT_ZERO = true
-
-						
-
-			# S
-			push_rational(-2,3)
-			push(R_p)
-			multiply()
-
-			push(R_Q)
-			
-			push(R_DELTA0)
-			push(R_Q)
-			divide()
-
-			add()
-
-			push(R_3_a)
-			divide()
-
-			add()
-
-			push_rational(1,2)
-			power()
-
-			push_integer(2)
-			divide()
-
-			R_S = pop()
+					S_CHECKED_AS_NOT_ZERO = true
 
 			# ----------------------------
 
-
-
-			push(R_b2)
-			push(R_3_a_c)
-			subtract()
-			R_DELTA0 = pop()
-
-			push(R_b2)
-			push(R_c2)
-			multiply()
-			R_b2_c2 = pop()
-
-			push(R_DELTA0)
-			push_integer(3)
-			power()
-			push_integer(4)
-			multiply()
-			R_4_DELTA03 = pop()
-
-			push(R_DELTA0)
-			simplify()
-			Eval()
-			yyfloat()
-			Eval(); # normalize
-			absval()
-			R_DELTA0_toBeCheckedIfZero = pop()
-			#console.log "D0 " + R_DELTA0_toBeCheckedIfZero.toString()
-			#if iszero(R_DELTA0_toBeCheckedIfZero)
-			#	console.log " *********************************** D0 IS ZERO"
-
-
-			# DETERMINANT
-			push(R_18_a_b_c_d)
-			push(R_m4_b3_d)
-			push(R_b2_c2)
-			push(R_m4_a_c3)
-			push(R_m27_a2_d2)
-			add()
-			add()
-			add()
-			add()
-			simplify()
-			Eval()
-			yyfloat()
-			Eval(); # normalize
-			absval()
-			R_determinant = pop()
-			#console.log "DETERMINANT: " + R_determinant.toString()
-
-			# R_DELTA1
-			push(R_2_b3)
-			push(R_m9_a_b_c)
-			push(R_27_a2_d)
-			add()
-			add()
-			R_DELTA1 = pop()
-
-			# R_Q
-			push(R_DELTA1)
-			push_integer(2)
-			power()
-			push(R_4_DELTA03)
-			subtract()
-			push_rational(1, 2)
-			power()
-			R_Q = pop()
-
-			push(p4)
+			push(R_m_b_over_3a) # first term
+			push(p3)
+			divide()
 			negate()
-			push(R_3_a)
-			divide()
-			R_m_b_over_3a = pop()
+			R_minus_b_over_4a = pop()
 
-			if iszero(R_determinant)
-				if iszero(R_DELTA0_toBeCheckedIfZero)
-					#console.log " *********************************** DETERMINANT IS ZERO and delta0 is zero"
-					push(R_m_b_over_3a) # just same solution three times
-					restore()
-					return
-				else
-					#console.log " *********************************** DETERMINANT IS ZERO and delta0 is not zero"
-					push(p3)
-					push(p6)
-					push_integer(9)
-					multiply()
-					multiply()
-					push(p4)
-					push(p5)
-					multiply()
-					subtract()
-					push(R_DELTA0)
-					push_integer(2)
-					multiply()
-					divide() # first solution
-					root_solution = pop()
-					push(root_solution) # pushing two of them on the stack
-					push(root_solution)
-
-					# second solution here
-					# 4abc
-					push(R_a_b_c)
-					push_integer(4)
-					multiply()
-
-					# -9a*a*d
-					push(p3)
-					push(p3)
-					push(p6)
-					push_integer(9)
-					multiply()
-					multiply()
-					multiply()
-					negate()
-
-					# -9*b^3
-					push(R_b3)
-					negate()
-
-					# sum the three terms
-					add()
-					add()
-
-					# denominator is a*delta0
-					push(p3)
-					push(R_DELTA0)
-					multiply()
-
-					# build the fraction
-					divide()
-
-					restore()
-					return
-
-
-
-			C_CHECKED_AS_NOT_ZERO = false
-			flipSignOFQSoCIsNotZero = false
-			
-			# C will go as denominator, we have to check
-			# that is not zero
-			while !C_CHECKED_AS_NOT_ZERO
-
-				# R_C
-				push(R_Q)
-				if flipSignOFQSoCIsNotZero
-					negate()
-				push(R_DELTA1)
-				add()
-				push_rational(1, 2)
-				multiply()
-				push_rational(1, 3)
-				power()
-				R_C = pop()
-
-				push(R_C)
-				simplify()
-				Eval()
-				yyfloat()
-				Eval(); # normalize
-				absval()
-				R_C_simplified_toCheckIfZero = pop()
-				#console.log "C " + R_C_simplified_toCheckIfZero.toString()
-				if iszero(R_C_simplified_toCheckIfZero)
-					#console.log " *********************************** C IS ZERO flipping the sign"
-					flipSignOFQSoCIsNotZero = true
-				else
-					C_CHECKED_AS_NOT_ZERO = true
-
-
-			push(R_C)
-			push(R_3_a)
-			multiply()
-			R_3_a_C = pop()
-
-			push(R_3_a_C)
+			push_integer(-4)
+			push(R_S)
 			push_integer(2)
-			multiply()
-			R_6_a_C = pop()
-
-
-			# imaginary parts calculations
-			push(imaginaryunit)
-			push_integer(3)
-			push_rational(1, 2)
 			power()
 			multiply()
-			i_sqrt3 = pop()
-			push_integer(1)
-			push(i_sqrt3)
-			add()
-			one_plus_i_sqrt3 = pop()
-			push_integer(1)
-			push(i_sqrt3)
+			push_integer(2)
+			push(R_p)
+			multiply()
 			subtract()
-			one_minus_i_sqrt3 = pop()
+			R_minus_4S2_minus_2p = pop()
 
-
-			push(R_C)
-			push(R_3_a)
+			push(R_q)
+			push(R_S)
 			divide()
-			R_C_over_3a = pop()
+			R_q_over_S = pop()
 
 			# first solution
-			push(R_m_b_over_3a) # first term
-			push(R_C_over_3a)
-			negate() # second term
-			push(R_DELTA0)
-			push(R_3_a_C)
-			divide()
-			negate() # third term
-			# now add the three terms together
+			push(R_minus_b_over_4a) # first term
+			push(R_S)
+			subtract()
+			push(R_minus_4S2_minus_2p)
+			push(R_q_over_S)
 			add()
+			push_rational(1,2)
+			power()
 			add()
-			simplify()
 
 			# second solution
-			push(R_m_b_over_3a) # first term
-			push(R_C_over_3a)
-			push(one_plus_i_sqrt3)
-			multiply()
-			push_integer(2)
-			divide() # second term
-			push(one_minus_i_sqrt3)
-			push(R_DELTA0)
-			multiply()
-			push(R_6_a_C)
-			divide() # third term
-			# now add the three terms together
+			push(R_minus_b_over_4a) # first term
+			push(R_S)
+			subtract()
+			push(R_minus_4S2_minus_2p)
+			push(R_q_over_S)
 			add()
-			add()
-			simplify()
+			push_rational(1,2)
+			power()
+			subtract()
 
 			# third solution
-			push(R_m_b_over_3a) # first term
-			push(R_C_over_3a)
-			push(one_minus_i_sqrt3)
-			multiply()
-			push_integer(2)
-			divide() # second term
-			push(one_plus_i_sqrt3)
-			push(R_DELTA0)
-			multiply()
-			push(R_6_a_C)
-			divide() # third term
-			# now add the three terms together
+			push(R_minus_b_over_4a) # first term
+			push(R_S)
 			add()
+			push(R_minus_4S2_minus_2p)
+			push(R_q_over_S)
+			subtract()
+			push_rational(1,2)
+			power()
 			add()
-			simplify()
+
+			# fourth solution
+			push(R_minus_b_over_4a) # first term
+			push(R_S)
+			add()
+			push(R_minus_4S2_minus_2p)
+			push(R_q_over_S)
+			subtract()
+			push_rational(1,2)
+			power()
+			subtract()
 
 			restore()
 			return
