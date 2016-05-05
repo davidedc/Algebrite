@@ -24,8 +24,14 @@ parse_internal = (argu) ->
 		push(symbol(NIL))
 
 parse = (argu) ->
-	parse_internal(argu)
-	return pop()
+	try
+		parse_internal(argu)
+		data = pop()
+		check_stack()
+	catch error
+		reset_after_error()
+		throw error
+	return data
 
 exec = (name, argus...) ->
 	fn = get_binding(usr_symbol(name))
