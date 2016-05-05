@@ -394,6 +394,7 @@ mini_solve = ->
 		divide()
 		R_m_b_over_3a = pop()
 
+
 		if (n == 4)
 			#console.log ">>>>>>>>>>>>>>>> actually using cubic formula <<<<<<<<<<<<<<< "
 
@@ -815,6 +816,7 @@ mini_solve = ->
 			add()
 
 			R_DELTA0 = pop()
+			console.log("R_DELTA0: " + R_DELTA0.toString())
 
 			# DELTA1
 			push_integer(2)
@@ -854,6 +856,7 @@ mini_solve = ->
 			add()
 
 			R_DELTA1 = pop()
+			console.log("R_DELTA1: " + R_DELTA1.toString())
 
 			# p
 			push_integer(8)
@@ -873,6 +876,7 @@ mini_solve = ->
 			divide()
 
 			R_p = pop()
+			console.log("p: " + R_p.toString())
 
 			# q
 			push(R_b3)
@@ -895,6 +899,7 @@ mini_solve = ->
 			divide()
 
 			R_q = pop()
+			console.log("q: " + R_q.toString())
 
 			# Q ---------------------------
 
@@ -961,12 +966,15 @@ mini_solve = ->
 					push_integer(2)
 					divide()
 
+					console.log("content of cubic root: " + stack[tos-1].toString())
+
 					# outer radical calculation: cubic root
 					# now we actually have to find all the roots
 					# because we have to pick the one that makes S != 0
 					push_rational(1,3)
 					power()
 					R_principalCubicRoot = pop()
+					console.log("principal cubic root: " + R_principalCubicRoot.toString())
 
 					console.log("tos aaaadddddfffffffffd: " + tos)
 
@@ -1010,6 +1018,7 @@ mini_solve = ->
 
 
 					R_Q = pop()
+					console.log "Q " + R_Q.toString()
 					console.log("tos dddddfffd: " + tos)
 
 
@@ -1021,7 +1030,7 @@ mini_solve = ->
 					absval()
 
 					R_Q_simplified_toCheckIfZero = pop()
-					console.log "Q " + R_Q_simplified_toCheckIfZero.toString()
+					console.log "Q simplified and abs" + R_Q_simplified_toCheckIfZero.toString()
 					if iszero(R_Q_simplified_toCheckIfZero) and (!iszero(R_determinant_simplified_toCheckIfZero) and iszero(R_DELTA0_simplified_toCheckIfZero))
 						console.log " *********************************** Q IS ZERO and it matters, flipping the sign"
 						flipSignOFRadicalSoQIsNotZero = true
@@ -1056,6 +1065,7 @@ mini_solve = ->
 				divide()
 
 				R_S = pop()
+				console.log "S " + R_S.toString()
 
 				# now check is S is zero
 				push(R_S)
@@ -1080,10 +1090,12 @@ mini_solve = ->
 
 			console.log("tos aaa: " + tos)
 
-			push(R_m_b_over_3a) # first term
-			push(p3)
-			divide()
+			push(p4)
 			negate()
+			push(p3)
+			push_integer(4)
+			multiply()
+			divide()
 			R_minus_b_over_4a = pop()
 
 			push_integer(-4)
@@ -1113,6 +1125,8 @@ mini_solve = ->
 			add()
 			push_rational(1,2)
 			power()
+			push_integer(2)
+			divide()
 			add()
 			simplify()
 
@@ -1125,6 +1139,8 @@ mini_solve = ->
 			add()
 			push_rational(1,2)
 			power()
+			push_integer(2)
+			divide()
 			subtract()
 			simplify()
 
@@ -1137,6 +1153,8 @@ mini_solve = ->
 			subtract()
 			push_rational(1,2)
 			power()
+			push_integer(2)
+			divide()
 			add()
 			simplify()
 
@@ -1149,6 +1167,8 @@ mini_solve = ->
 			subtract()
 			push_rational(1,2)
 			power()
+			push_integer(2)
+			divide()
 			subtract()
 			simplify()
 
