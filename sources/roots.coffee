@@ -791,6 +791,8 @@ mini_solve = ->
 			add()
 			add()
 
+			R_determinant = pop()
+
 			# DELTA0
 			push(R_c2) # term one of DELTA0
 
