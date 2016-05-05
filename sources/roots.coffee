@@ -894,39 +894,86 @@ mini_solve = ->
 
 			R_q = pop()
 
-			# ----------------------------
+			# Q ---------------------------
 
-			# D1 under the radical
-			push(R_DELTA1)
+			push(R_determinant)
+			simplify()
+			Eval()
+			yyfloat()
+			Eval(); # normalize
+			absval()
+			R_determinant_simplified_toCheckIfZero = pop()
 
-			# D1^2 under the second radical
-			push(R_DELTA1)
-			push_integer(2)
-			power()
-
-			# 4*D0^3 under the second radical
-			push_integer(-4)
 			push(R_DELTA0)
-			push_integer(3)
-			power()
+			simplify()
+			Eval()
+			yyfloat()
+			Eval(); # normalize
+			absval()
+			R_DELTA0_simplified_toCheckIfZero = pop()
 
-			# addition under the second radical
-			add()
 
-			# the second radical
-			push_rational(1,2)
-			power()
+			Q_CHECKED_AS_NOT_ZERO = false
+			flipSignOFRadicalSoQIsNotZero = false
+			
+			# Q will go as denominator to calculate S
+			# so we have to check
+			# that is not zero
+			while !Q_CHECKED_AS_NOT_ZERO
 
-			# the addition under the first radical
-			add()
+				# D1 under the outer radical
+				push(R_DELTA1)
 
-			# content of first radical divided by two
-			push_integer(2)
-			divide()
+				# D1^2 under the inner radical
+				push(R_DELTA1)
+				push_integer(2)
+				power()
 
-			# the first radical: cubic root
-			push_rational(1,3)
-			power()
+				# 4*D0^3 under the inner radical
+				push_integer(-4)
+				push(R_DELTA0)
+				push_integer(3)
+				power()
+
+				# addition under the inner radical
+				add()
+
+				# the second radical
+				push_rational(1,2)
+				power()
+
+				if flipSignOFRadicalSoQIsNotZero
+					negate()
+
+				# the addition under the outer radical
+				add()
+
+				# content of outer radical divided by two
+				push_integer(2)
+				divide()
+
+				# outer radical calculation: cubic root
+				push_rational(1,3)
+				power()
+
+				R_Q = pop()
+
+
+				push(R_Q)
+				simplify()
+				Eval()
+				yyfloat()
+				Eval(); # normalize
+				absval()
+
+				R_Q_simplified_toCheckIfZero = pop()
+				#console.log "Q " + R_Q_simplified_toCheckIfZero.toString()
+				if iszero(R_Q_simplified_toCheckIfZero) and (!iszero(R_determinant_simplified_toCheckIfZero) and iszero(R_DELTA0_simplified_toCheckIfZero))
+					#console.log " *********************************** Q IS ZERO flipping the sign"
+					flipSignOFRadicalSoQIsNotZero = true
+				else
+					Q_CHECKED_AS_NOT_ZERO = true
+
 						
 
 			# S
