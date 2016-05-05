@@ -252,13 +252,147 @@ mini_solve = ->
 		restore()
 		return
 
-	if (n == 4)
-	#if (n == 4 or n == 5)
+	#if (n == 4)
+	if (n == 4 or n == 5)
 
 		p3 = pop() # A
 		p4 = pop() # B
 		p5 = pop() # C
 		p6 = pop() # D
+
+		# C - only related calculations
+		push(p5)
+		push(p5)
+		multiply()
+		R_c2 = pop()
+
+		push(R_c2)
+		push(p5)
+		multiply()
+		R_c3 = pop()
+
+		# B - only related calculations
+		push(p4)
+		push(p4)
+		multiply()
+		R_b2 = pop()
+
+		push(R_b2)
+		push(p4)
+		multiply()
+		R_b3 = pop()
+
+		push(R_b3)
+		push(p6)
+		multiply()
+		R_b3_d = pop()
+
+		push(R_b3_d)
+		push_integer(-4)
+		multiply()
+		R_m4_b3_d = pop()
+
+
+		push(R_b3)
+		push_integer(2)
+		multiply()
+		R_2_b3 = pop()
+
+		# A - only related calculations
+		push(p3)
+		push(p3)
+		multiply()
+		R_a2 = pop()
+
+		push(R_a2)
+		push(p3)
+		multiply()
+		R_a3 = pop()
+
+		push_integer(3)
+		push(p3)
+		multiply()
+		R_3_a = pop()
+
+		push(R_a2)
+		push(p6)
+		multiply()
+		R_a2_d = pop()
+
+		push(R_a2_d)
+		push(p6)
+		multiply()
+		R_a2_d2 = pop()
+
+		push(R_a2_d)
+		push_integer(27)
+		multiply()
+		R_27_a2_d = pop()
+
+		push(R_a2_d2)
+		push_integer(-27)
+		multiply()
+		R_m27_a2_d2 = pop()
+
+		push(R_3_a)
+		push_integer(2)
+		multiply()
+		R_6_a = pop()
+
+		# mixed calculations
+		push(p3)
+		push(p5)
+		multiply()
+		R_a_c = pop()
+
+		push(R_a_c)
+		push(p4)
+		multiply()
+		R_a_b_c = pop()
+
+		push(R_a_b_c)
+		push(p6)
+		multiply()
+		R_a_b_c_d = pop()
+
+		push(R_a_c)
+		push_integer(3)
+		multiply()
+		R_3_a_c = pop()
+
+		push_integer(-4)
+		push(p3)
+		push(R_c3)
+		multiply()
+		multiply()
+		R_m4_a_c3 = pop()
+
+		push(R_a_b_c)
+		push_integer(9)
+		multiply()
+		negate()
+		R_m9_a_b_c = pop()
+
+		push(R_a_b_c_d)
+		push_integer(18)
+		multiply()
+		R_18_a_b_c_d = pop()
+
+		push(R_b2)
+		push(R_3_a_c)
+		subtract()
+		R_DELTA0 = pop()
+
+		push(R_b2)
+		push(R_c2)
+		multiply()
+		R_b2_c2 = pop()
+
+		push(p4)
+		negate()
+		push(R_3_a)
+		divide()
+		R_m_b_over_3a = pop()
 
 		if (n == 4)
 			#console.log ">>>>>>>>>>>>>>>> actually using cubic formula <<<<<<<<<<<<<<< "
@@ -268,133 +402,6 @@ mini_solve = ->
 			#console.log ">>>> C:" + p5.toString()
 			#console.log ">>>> D:" + p6.toString()
 
-			# C - only related calculations
-			push(p5)
-			push(p5)
-			multiply()
-			R_c2 = pop()
-
-			push(R_c2)
-			push(p5)
-			multiply()
-			R_c3 = pop()
-
-			# B - only related calculations
-			push(p4)
-			push(p4)
-			multiply()
-			R_b2 = pop()
-
-			push(R_b2)
-			push(p4)
-			multiply()
-			R_b3 = pop()
-
-			push(R_b3)
-			push(p6)
-			multiply()
-			R_b3_d = pop()
-
-			push(R_b3_d)
-			push_integer(-4)
-			multiply()
-			R_m4_b3_d = pop()
-
-
-			push(R_b3)
-			push_integer(2)
-			multiply()
-			R_2_b3 = pop()
-
-			# A - only related calculations
-			push(p3)
-			push(p3)
-			multiply()
-			R_a2 = pop()
-
-			push(R_a2)
-			push(p3)
-			multiply()
-			R_a3 = pop()
-
-			push_integer(3)
-			push(p3)
-			multiply()
-			R_3_a = pop()
-
-			push(R_a2)
-			push(p6)
-			multiply()
-			R_a2_d = pop()
-
-			push(R_a2_d)
-			push(p6)
-			multiply()
-			R_a2_d2 = pop()
-
-			push(R_a2_d)
-			push_integer(27)
-			multiply()
-			R_27_a2_d = pop()
-
-			push(R_a2_d2)
-			push_integer(-27)
-			multiply()
-			R_m27_a2_d2 = pop()
-
-			push(R_3_a)
-			push_integer(2)
-			multiply()
-			R_6_a = pop()
-
-			# mixed calculations
-			push(p3)
-			push(p5)
-			multiply()
-			R_a_c = pop()
-
-			push(R_a_c)
-			push(p4)
-			multiply()
-			R_a_b_c = pop()
-
-			push(R_a_b_c)
-			push(p6)
-			multiply()
-			R_a_b_c_d = pop()
-
-			push(R_a_c)
-			push_integer(3)
-			multiply()
-			R_3_a_c = pop()
-
-			push_integer(-4)
-			push(p3)
-			push(R_c3)
-			multiply()
-			multiply()
-			R_m4_a_c3 = pop()
-
-			push(R_a_b_c)
-			push_integer(9)
-			multiply()
-			negate()
-			R_m9_a_b_c = pop()
-
-			push(R_a_b_c_d)
-			push_integer(18)
-			multiply()
-			R_18_a_b_c_d = pop()
-
-			push(R_b2)
-			push(R_3_a_c)
-			subtract()
-			R_DELTA0 = pop()
-
-			push(R_b2)
-			push(R_c2)
-			multiply()
-			R_b2_c2 = pop()
 
 			push(R_DELTA0)
 			push_integer(3)
@@ -451,11 +458,6 @@ mini_solve = ->
 			power()
 			R_Q = pop()
 
-			push(p4)
-			negate()
-			push(R_3_a)
-			divide()
-			R_m_b_over_3a = pop()
 
 			if iszero(R_determinant)
 				if iszero(R_DELTA0_toBeCheckedIfZero)
@@ -637,7 +639,7 @@ mini_solve = ->
 			return
 
 		if (n == 5)
-			#console.log ">>>>>>>>>>>>>>>> actually using quartic formula <<<<<<<<<<<<<<< "
+			console.log ">>>>>>>>>>>>>>>> actually using quartic formula <<<<<<<<<<<<<<< "
 			p7 = pop() # E
 
 			# D - only related calculations
@@ -912,6 +914,8 @@ mini_solve = ->
 			absval()
 			R_DELTA0_simplified_toCheckIfZero = pop()
 
+			console.log("tos dddddfffffffffd: " + tos)
+
 			S_CHECKED_AS_NOT_ZERO = false
 			choiceOfRadicalInQSoSIsNotZero = 0
 
@@ -938,6 +942,7 @@ mini_solve = ->
 					push(R_DELTA0)
 					push_integer(3)
 					power()
+					multiply()
 
 					# addition under the inner radical
 					add()
@@ -962,9 +967,14 @@ mini_solve = ->
 					push_rational(1,3)
 					power()
 					R_principalCubicRoot = pop()
+
+					console.log("tos aaaadddddfffffffffd: " + tos)
+
 					if choiceOfRadicalInQSoSIsNotZero == 0
+						console.log("chosing principal cubic root")
 						push(R_principalCubicRoot)
 					else if choiceOfRadicalInQSoSIsNotZero == 1
+						console.log("chosing cubic root beyond principal")
 						push(R_principalCubicRoot)
 						push_rational(-1,2)
 						multiply()
@@ -980,6 +990,7 @@ mini_solve = ->
 						multiply()
 						add()
 					else if choiceOfRadicalInQSoSIsNotZero == 1
+						console.log("chosing cubic root beyond beyond principal")
 						push(R_principalCubicRoot)
 						push_rational(-1,2)
 						multiply()
@@ -994,10 +1005,12 @@ mini_solve = ->
 						push(R_principalCubicRoot)
 						multiply()
 						add()
+
 
 
 
 					R_Q = pop()
+					console.log("tos dddddfffd: " + tos)
 
 
 					push(R_Q)
@@ -1008,14 +1021,15 @@ mini_solve = ->
 					absval()
 
 					R_Q_simplified_toCheckIfZero = pop()
-					#console.log "Q " + R_Q_simplified_toCheckIfZero.toString()
+					console.log "Q " + R_Q_simplified_toCheckIfZero.toString()
 					if iszero(R_Q_simplified_toCheckIfZero) and (!iszero(R_determinant_simplified_toCheckIfZero) and iszero(R_DELTA0_simplified_toCheckIfZero))
-						#console.log " *********************************** Q IS ZERO flipping the sign"
+						console.log " *********************************** Q IS ZERO and it matters, flipping the sign"
 						flipSignOFRadicalSoQIsNotZero = true
 					else
 						Q_CHECKED_AS_NOT_ZERO = true
 
 							
+					console.log("tos ddd: " + tos)
 
 				# S
 				push_rational(-2,3)
@@ -1052,14 +1066,19 @@ mini_solve = ->
 				absval()
 
 				R_S_simplified_toCheckIfZero = pop()
-				#console.log "S " + R_S_simplified_toCheckIfZero.toString()
+				console.log "S " + R_S_simplified_toCheckIfZero.toString()
 				if iszero(R_S_simplified_toCheckIfZero)
-					#console.log " *********************************** S IS ZERO chosing another cubic root"
+					console.log " *********************************** S IS ZERO chosing another cubic root"
 					choiceOfRadicalInQSoSIsNotZero++
 				else
 					S_CHECKED_AS_NOT_ZERO = true
 
+				console.log("tos vvv: " + tos)
+
+
 			# ----------------------------
+
+			console.log("tos aaa: " + tos)
 
 			push(R_m_b_over_3a) # first term
 			push(p3)
@@ -1083,6 +1102,8 @@ mini_solve = ->
 			divide()
 			R_q_over_S = pop()
 
+			console.log("tos before putting together the 4 solutions: " + tos)
+
 			# first solution
 			push(R_minus_b_over_4a) # first term
 			push(R_S)
@@ -1093,6 +1114,7 @@ mini_solve = ->
 			push_rational(1,2)
 			power()
 			add()
+			simplify()
 
 			# second solution
 			push(R_minus_b_over_4a) # first term
@@ -1104,6 +1126,7 @@ mini_solve = ->
 			push_rational(1,2)
 			power()
 			subtract()
+			simplify()
 
 			# third solution
 			push(R_minus_b_over_4a) # first term
@@ -1115,6 +1138,7 @@ mini_solve = ->
 			push_rational(1,2)
 			power()
 			add()
+			simplify()
 
 			# fourth solution
 			push(R_minus_b_over_4a) # first term
@@ -1126,6 +1150,7 @@ mini_solve = ->
 			push_rational(1,2)
 			power()
 			subtract()
+			simplify()
 
 			restore()
 			return
