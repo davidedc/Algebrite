@@ -30,21 +30,13 @@ simplify_main = ->
 		else
 			p1 = p3
 
-	simplifyWithRectPolar = true
 	f1()
-	simplifyWithRectPolar = false
-
-	simplifyWithRectPolar = true
 	f2()
-	simplifyWithRectPolar = false
-
 	f3()
-
-	simplifyWithRectPolar = true
 	f4()
-	simplifyWithRectPolar = false
 	f5()
 	f9()
+	simplify_polarRect()
 
 	push(p1)
 
@@ -175,6 +167,63 @@ f9 = ->
 	p2 = pop()
 	if (count(p2) < count(p1))
 		p1 = p2
+
+simplify_polarRect = ->
+	debugger
+	push(p1)
+	polarRectAMinusOneBase()
+	Eval()
+
+	p2 = pop(); # put new (hopefully simplified expr) in p2
+
+	if (count(p2) < count(p1))
+		p1 = p2
+
+polarRectAMinusOneBase = ->
+	save()
+	p1 = pop()
+	
+	if isimaginaryunit(p1)
+		push(p1)
+		restore()
+		return
+
+	push_symbol(POWER)
+	POWER_SYMBL = pop()
+
+	push(one)
+	negate()
+	MINUSONE = pop()
+
+	if (equal(car(p1), POWER_SYMBL) and equal(cadr(p1), MINUSONE ) )
+
+		# base we just said is minus 1
+		push(one)
+		negate()
+
+		# exponent
+		push(caddr(p1))
+		polarRectAMinusOneBase()
+		
+		power()
+		# try to simplify it using polar and rect
+		polar()
+		rect()
+
+	else if (iscons(p1))
+		h = tos
+		while (iscons(p1))
+			#console.log("recursing on: " + car(p1).toString())
+			push(car(p1))
+			polarRectAMinusOneBase()
+			#console.log("...transformed into: " + stack[tos-1].toString())
+			p1 = cdr(p1)
+		list(tos - h)
+	else
+		push(p1)
+
+	restore()
+	return
 
 nterms = (p) ->
 	if (car(p) != symbol(ADD))

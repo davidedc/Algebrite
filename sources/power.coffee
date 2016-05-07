@@ -8,9 +8,6 @@
 ###
 
 
-recursingOnRectPolar = false
-simplifyWithRectPolar = false
-
 Eval_power = ->
 	push(cadr(p1))
 	Eval()
@@ -28,9 +25,6 @@ yypower = ->
 
 	p2 = pop() # exponent
 	#console.log("EVALING THE BASE: " + stack[tos-1].toString())
-
-	if simplifyWithRectPolar and !recursingOnRectPolar and performing_roots
-		Eval() # eval the base
 
 	p1 = pop() # base
 
@@ -67,31 +61,6 @@ yypower = ->
 		negate()
 		return
 
-	# eliminate other expressions in form (-1)^(something)
-	# this is done only when "simplify" is run, because it's
-	# a significant operation that changes considerably the
-	# shape of the expression. It's not just an obvious
-	# calculation to be done all the times, just when it looks like
-	# things might benefit from a simplification.
-	#if (isminusone(p1) and !recursingOnRectPolar)
-	if (isminusone(p1) and simplifyWithRectPolar and !recursingOnRectPolar and performing_roots)
-		#console.log("isminusone(p1) and not recursing on polar")
-		recursingOnRectPolar = true
-		#console.log("eliminating (-1)^(something) before: p1: " + p1.toString())
-		#console.log("eliminating (-1)^(something) before: p2: " + p2.toString())
-
-		push(p1)
-		push(p2)
-		power()
-		polar()
-		rect()
-		Eval()
-
-
-		#console.log("eliminating (-1)^(something) after: " + stack[tos-1].toString())
-		#console.log("tos bbbbb: " + tos)
-		recursingOnRectPolar = false
-		return
 
 	# both base and exponent are rational numbers?
 
