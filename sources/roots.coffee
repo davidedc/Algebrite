@@ -1143,7 +1143,6 @@ mini_solve = ->
 			divide()
 			add()
 			simplify()
-			#rect()
 
 			# second solution
 			push(R_minus_b_over_4a) # first term
@@ -1158,7 +1157,6 @@ mini_solve = ->
 			divide()
 			subtract()
 			simplify()
-			#rect()
 
 			# third solution
 			push(R_minus_b_over_4a) # first term
@@ -1173,7 +1171,6 @@ mini_solve = ->
 			divide()
 			add()
 			simplify()
-			#rect()
 
 			# fourth solution
 			push(R_minus_b_over_4a) # first term
@@ -1188,7 +1185,6 @@ mini_solve = ->
 			divide()
 			subtract()
 			simplify()
-			#rect()
 
 			restore()
 			return
