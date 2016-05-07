@@ -8,6 +8,9 @@
 #define C p5
 #define Y p6
 
+show_power_debug = false
+performing_roots = false
+
 Eval_roots = ->
 	# A == B -> A - B
 
@@ -77,6 +80,9 @@ roots = ->
 	h = 0
 	i = 0
 	n = 0
+
+	performing_roots = true
+
 	h = tos - 2
 
 	roots2()
@@ -85,6 +91,7 @@ roots = ->
 	if (n == 0)
 		stop("roots: the polynomial is not factorable, try nroots")
 	if (n == 1)
+		performing_roots = false
 		return
 	sort_stack(n)
 	save()
@@ -96,6 +103,7 @@ roots = ->
 	tos = h
 	push(p1)
 	restore()
+	performing_roots = false
 
 roots2 = ->
 	save()
@@ -457,6 +465,7 @@ mini_solve = ->
 			subtract()
 			push_rational(1, 2)
 			power()
+			simplify()
 			R_Q = pop()
 
 
@@ -539,6 +548,7 @@ mini_solve = ->
 				multiply()
 				push_rational(1, 3)
 				power()
+				simplify()
 				R_C = pop()
 
 				push(R_C)
@@ -973,6 +983,7 @@ mini_solve = ->
 					# because we have to pick the one that makes S != 0
 					push_rational(1,3)
 					power()
+					simplify()
 					R_principalCubicRoot = pop()
 					console.log("principal cubic root: " + R_principalCubicRoot.toString())
 
@@ -1017,6 +1028,7 @@ mini_solve = ->
 
 
 
+					simplify()
 					R_Q = pop()
 					console.log "Q " + R_Q.toString()
 					console.log("tos dddddfffd: " + tos)
@@ -1064,6 +1076,8 @@ mini_solve = ->
 				push_integer(2)
 				divide()
 
+				show_power_debug = true
+				simplify()
 				R_S = pop()
 				console.log "S " + R_S.toString()
 
@@ -1129,6 +1143,7 @@ mini_solve = ->
 			divide()
 			add()
 			simplify()
+			#rect()
 
 			# second solution
 			push(R_minus_b_over_4a) # first term
@@ -1143,6 +1158,7 @@ mini_solve = ->
 			divide()
 			subtract()
 			simplify()
+			#rect()
 
 			# third solution
 			push(R_minus_b_over_4a) # first term
@@ -1157,6 +1173,7 @@ mini_solve = ->
 			divide()
 			add()
 			simplify()
+			#rect()
 
 			# fourth solution
 			push(R_minus_b_over_4a) # first term
@@ -1171,6 +1188,7 @@ mini_solve = ->
 			divide()
 			subtract()
 			simplify()
+			#rect()
 
 			restore()
 			return

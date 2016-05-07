@@ -208,6 +208,22 @@ equalq = (p, a, b) ->
 				return 1
 	return 0
 
+# p == 1/2 ?
+
+isoneovertwo = (p) ->
+	if equalq(p, 1, 2)
+		return 1
+	else
+		return 0
+
+# p == -1/2 ?
+isminusoneovertwo = (p) ->
+	if equalq(p, -1, 2)
+		return 1
+	else
+		return 0
+
+
 # p == 1/sqrt(2) ?
 
 isoneoversqrttwo = (p) ->

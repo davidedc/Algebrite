@@ -30,10 +30,19 @@ simplify_main = ->
 		else
 			p1 = p3
 
+	simplifyWithRectPolar = true
 	f1()
+	simplifyWithRectPolar = false
+
+	simplifyWithRectPolar = true
 	f2()
+	simplifyWithRectPolar = false
+
 	f3()
+
+	simplifyWithRectPolar = true
 	f4()
+	simplifyWithRectPolar = false
 	f5()
 	f9()
 

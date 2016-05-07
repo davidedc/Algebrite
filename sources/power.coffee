@@ -8,6 +8,8 @@
 ###
 
 
+recursingOnRectPolar = false
+simplifyWithRectPolar = false
 
 Eval_power = ->
 	push(cadr(p1))
@@ -24,12 +26,77 @@ power = ->
 yypower = ->
 	n = 0
 
-	p2 = pop()
-	p1 = pop()
+	p2 = pop() # exponent
+	#console.log("EVALING THE BASE: " + stack[tos-1].toString())
+
+	if simplifyWithRectPolar and !recursingOnRectPolar and performing_roots
+		Eval() # eval the base
+
+	p1 = pop() # base
+
+	# first, some very basic simplifications right away
+
+	#	1 ^ a		->	1
+	#	a ^ 0		->	1
+
+	if (equal(p1, one) || iszero(p2))
+		push(one)
+		return
+
+	#	a ^ 1		->	a
+
+	if (equal(p2, one))
+		push(p1)
+		return
+
+
+	if (isminusone(p1) and isminusone(p2))
+		#console.log("************** replacing -1^1/2 with i *********** ")
+		push(one)
+		negate()
+		return
+
+	if (isminusone(p1) and (isoneovertwo(p2)))
+		#console.log("************** replacing -1^1/2 with i *********** ")
+		push(imaginaryunit)
+		return
+
+	if (isminusone(p1) and isminusoneovertwo(p2))
+		#console.log("************** replacing -1^1/2 with i *********** ")
+		push(imaginaryunit)
+		negate()
+		return
+
+	# eliminate other expressions in form (-1)^(something)
+	# this is done only when "simplify" is run, because it's
+	# a significant operation that changes considerably the
+	# shape of the expression. It's not just an obvious
+	# calculation to be done all the times, just when it looks like
+	# things might benefit from a simplification.
+	#if (isminusone(p1) and !recursingOnRectPolar)
+	if (isminusone(p1) and simplifyWithRectPolar and !recursingOnRectPolar and performing_roots)
+		#console.log("isminusone(p1) and not recursing on polar")
+		recursingOnRectPolar = true
+		#console.log("eliminating (-1)^(something) before: p1: " + p1.toString())
+		#console.log("eliminating (-1)^(something) before: p2: " + p2.toString())
+
+		push(p1)
+		push(p2)
+		power()
+		polar()
+		rect()
+		Eval()
+
+
+		#console.log("eliminating (-1)^(something) after: " + stack[tos-1].toString())
+		#console.log("tos bbbbb: " + tos)
+		recursingOnRectPolar = false
+		return
 
 	# both base and exponent are rational numbers?
 
 	if (isrational(p1) && isrational(p2))
+		#console.log("isrational(p1) && isrational(p2)")
 		push(p1)
 		push(p2)
 		qpow()
@@ -38,6 +105,7 @@ yypower = ->
 	# both base and exponent are either rational or double?
 
 	if (isnum(p1) && isnum(p2))
+		#console.log("isnum(p1) && isnum(p2)")
 		push(p1)
 		push(p2)
 		dpow()
@@ -55,18 +123,6 @@ yypower = ->
 		push_double(Math.exp(p2.d))
 		return
 
-	#	1 ^ a		->	1
-	#	a ^ 0		->	1
-
-	if (equal(p1, one) || iszero(p2))
-		push(one)
-		return
-
-	#	a ^ 1		->	a
-
-	if (equal(p2, one))
-		push(p1)
-		return
 
 	#	(a * b) ^ c	->	(a ^ c) * (b ^ c)
 
