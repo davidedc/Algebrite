@@ -853,7 +853,7 @@ mini_solve = ->
 			multiply()
 			multiply()
 
-			push_integer(72)
+			push_integer(-72)
 			push(R_a_c)
 			push(p7)
 			multiply()
