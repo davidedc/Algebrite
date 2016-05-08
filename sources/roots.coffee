@@ -1081,7 +1081,7 @@ mini_solve = ->
 				R_S = pop()
 				console.log "S " + R_S.toString()
 
-				# now check is S is zero
+				# now check if S is zero
 				push(R_S)
 				simplify()
 				Eval()
