@@ -34,9 +34,6 @@ test_roots = ->
 		"roots(x^3+x^2+x+1)",
 		"(-1,-i,i)",
 
-		"roots(x^4+1)",
-		"Stop: roots: the polynomial is not factorable, try nroots",
-
 		"roots(x^2==1)",
 		"(-1,1)",
 
@@ -241,8 +238,10 @@ test_roots = ->
 		"",
 			
 		"roots(thePoly)",
-		"(2/3-1/3*(-1)^(1/3)*37^(1/3),2/3+1/6*(-1)^(1/3)*37^(1/3)-(-1)^(5/6)*37^(1/3)/(2*3^(1/2)),2/3+1/6*(-1)^(1/3)*37^(1/3)+(-1)^(5/6)*37^(1/3)/(2*3^(1/2)))",
-			
+		# also this one is half-decent answer:
+		#  "(2/3-1/3*(-1)^(1/3)*37^(1/3),2/3+1/6*(-1)^(1/3)*37^(1/3)-(-1)^(5/6)*37^(1/3)/(2*3^(1/2)),2/3+1/6*(-1)^(1/3)*37^(1/3)+(-1)^(5/6)*37^(1/3)/(2*3^(1/2)))",
+		"(2/3-1/3*(-1)^(1/3)*37^(1/3),2/3-1/6*37^(1/3)+i*37^(1/3)/(2*3^(1/2)),2/3+1/3*37^(1/3))",
+		
 		"(simplify(subst(last[1],x,thePoly)) == 0) and (simplify(subst(last[2],x,thePoly)) == 0) and (simplify(subst(last[3],x,thePoly)) == 0)",
 		"1",
 
@@ -269,7 +268,9 @@ test_roots = ->
 		"",
 			
 		"roots(thePoly)",
-		"(1/2*(-1)^(1/6)-1/2*(-1)^(2/3)*3^(1/2),-(-1)^(1/6),1/2*(-1)^(1/6)*(1+i*3^(1/2)))",
+		# also this could be OK:
+		# "(1/2*(-1)^(1/6)-1/2*(-1)^(2/3)*3^(1/2),-(-1)^(1/6),1/2*(-1)^(1/6)*(1+i*3^(1/2)))",
+		"(-1/2*i+1/2*3^(1/2),-(-1)^(1/6),i)",
 
 		"(abs(float(subst(last[1],x,thePoly))) < float(2*10^(-15))) and (abs(float(subst(last[2],x,thePoly))) < float(2*10^(-15))) and (abs(float(subst(last[3],x,thePoly))) < float(2*10^(-15)))",
 		"1",
@@ -283,6 +284,20 @@ test_roots = ->
 		"(-i,1/2*(i-3^(1/2)),1/2*(i+3^(1/2)))",
 
 		"(abs(float(subst(last[1],x,thePoly))) < float(2*10^(-15))) and (abs(float(subst(last[2],x,thePoly))) < float(2*10^(-15))) and (abs(float(subst(last[3],x,thePoly))) < float(2*10^(-15)))",
+		"1",
+
+		# some quartics
+
+		"thePoly = x^4 + 1",
+		"",
+			
+		"theRoots = roots(thePoly)",
+		"",
+
+		"theRoots",
+		"(-1/(2^(1/2))-i/(2^(1/2)),-1/(2^(1/2))+i/(2^(1/2)),2^(-1/2)-i/(2^(1/2)),2^(-1/2)+i/(2^(1/2)))",
+
+		"(abs(float(subst(theRoots[1],x,thePoly))) < float(2*10^(-15))) and (abs(float(subst(theRoots[2],x,thePoly))) < float(2*10^(-15))) and (abs(float(subst(theRoots[3],x,thePoly))) < float(2*10^(-15))) and (abs(float(subst(theRoots[4],x,thePoly))) < float(2*10^(-15)))",
 		"1",
 
 
