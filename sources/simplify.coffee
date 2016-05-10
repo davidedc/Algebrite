@@ -187,14 +187,7 @@ polarRectAMinusOneBase = ->
 		restore()
 		return
 
-	push_symbol(POWER)
-	POWER_SYMBL = pop()
-
-	push(one)
-	negate()
-	MINUSONE = pop()
-
-	if (equal(car(p1), POWER_SYMBL) and equal(cadr(p1), MINUSONE ) )
+	if (equal(car(p1), symbol(POWER)) and isminusone(cadr(p1)) )
 
 		# base we just said is minus 1
 		push(one)
