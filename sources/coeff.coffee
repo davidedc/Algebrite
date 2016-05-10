@@ -37,9 +37,9 @@ Eval_coeff = ->
 #
 #	Put polynomial coefficients on the stack
 #
-#	Input:		tos-2		p(x)
+#	Input:	tos-2		p(x) (the polynomial)
 #
-#			tos-1		x
+#			tos-1		x (the variable)
 #
 #	Output:		Returns number of coefficients on stack
 #
