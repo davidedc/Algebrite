@@ -169,7 +169,6 @@ f9 = ->
 		p1 = p2
 
 simplify_polarRect = ->
-	debugger
 	push(p1)
 	polarRectAMinusOneBase()
 	Eval()
