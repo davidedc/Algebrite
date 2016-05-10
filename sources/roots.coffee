@@ -649,6 +649,8 @@ mini_solve = ->
 			restore()
 			return
 
+		# See http://www.sscc.edu/home/jdavidso/Math/Catalog/Polynomials/Fourth/Fourth.html
+		# for a description of general shapes and properties of fourth degree polynomials
 		if (n == 5)
 			console.log ">>>>>>>>>>>>>>>> actually using quartic formula <<<<<<<<<<<<<<< "
 			p7 = pop() # E
