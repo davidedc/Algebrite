@@ -54,8 +54,10 @@ arctan = ->
 			return
 
 	# arctan(1/sqrt(3)) -> pi/6
+	# second if catches the other way of saying it, sqrt(3)/3
 
-	if (car(p1) == symbol(POWER) && equaln(cadr(p1), 3) && equalq(caddr(p1), -1, 2))
+	if (car(p1) == symbol(POWER) && equaln(cadr(p1), 3) && equalq(caddr(p1), -1, 2)) or
+	(car(p1) == symbol(MULTIPLY) && equalq(car(cdr(p1)), 1,3) and car(car(cdr(cdr(p1)))) == symbol(POWER) && equaln(car(cdr(car(cdr(cdr(p1))))),3) && equalq(car(cdr(cdr(car(cdr(cdr(p1)))))), 1, 2))
 		push_rational(1, 6)
 		push(symbol(PI))
 		multiply()

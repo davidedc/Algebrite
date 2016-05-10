@@ -536,6 +536,26 @@ __normalize_radical_factors = (h) ->
 		#console.log("__new radical p4: " + p4.toString())
 		push(one)
 		subtract()
+
+
+		if noRadicalsInDenominator
+			if (isinteger(p3) and !isinteger[stack[tos-1]] and isnegativenumber(stack[tos - 1]))
+				# what's happening here is that we are turning a perfectly good
+				# integer exponent in the denominator into a radix,
+				# we want to avoid that.
+				#console.log("limiting the damage - not gonna add a radical at denom now")
+				pop()
+				pop()
+				pop()
+
+				push(p1); # p1 is A
+				push(p3); #p3 is BASE
+				divide()
+				p1 = pop()
+
+				break
+		#console.log("__new radical exponent: " + stack[tos-1])
+
 		list(3)
 		stack[i] = pop()
 

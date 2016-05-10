@@ -8,6 +8,8 @@ NSYM = 1000
 DEBUG = false
 PRINTOUTRESULT = false
 
+noRadicalsInDenominator = true
+
 # Symbolic expressions are built by connecting U structs.
 #
 # For example, (a b + c) is built like this:

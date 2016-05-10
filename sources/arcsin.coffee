@@ -28,8 +28,10 @@ arcsin = ->
 		return
 
 	# if p1 == 1/sqrt(2) then return 1/4*pi (45 degrees)
+	# second if catches the other way of saying it, sqrt(2)/2
 
-	if (isoneoversqrttwo(p1))
+	if (isoneoversqrttwo(p1)) or
+	(car(p1) == symbol(MULTIPLY) && equalq(car(cdr(p1)), 1,2) and car(car(cdr(cdr(p1)))) == symbol(POWER) && equaln(car(cdr(car(cdr(cdr(p1))))),2) && equalq(car(cdr(cdr(car(cdr(cdr(p1)))))), 1, 2))
 		push_rational(1, 4)
 		push_symbol(PI)
 		multiply()
@@ -37,8 +39,10 @@ arcsin = ->
 		return
 
 	# if p1 == -1/sqrt(2) then return -1/4*pi (-45 degrees)
+	# second if catches the other way of saying it, -sqrt(2)/2
 
-	if (isminusoneoversqrttwo(p1))
+	if (isminusoneoversqrttwo(p1)) or
+	(car(p1) == symbol(MULTIPLY) && equalq(car(cdr(p1)), -1,2) and car(car(cdr(cdr(p1)))) == symbol(POWER) && equaln(car(cdr(car(cdr(cdr(p1))))),2) && equalq(car(cdr(cdr(car(cdr(cdr(p1)))))), 1, 2))
 		push_rational(-1, 4)
 		push_symbol(PI)
 		multiply()
