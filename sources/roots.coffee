@@ -143,11 +143,13 @@ roots3 = ->
 	if (car(p1) == symbol(POWER) && ispoly(cadr(p1), p2) && isposint(caddr(p1)))
 		push(cadr(p1))
 		push(p2)
-		mini_solve()
+		n = coeff()
+		mini_solve(n)
 	else if (ispoly(p1, p2))
 		push(p1)
 		push(p2)
-		mini_solve()
+		n = coeff()
+		mini_solve(n)
 	restore()
 
 #-----------------------------------------------------------------------------
@@ -166,19 +168,10 @@ roots3 = ->
 # actually end up using the quadratic and cubic formulas in here,
 # since there is a chance we factored the polynomial and in so
 # doing we found some solutions and lowered the degree.
-mini_solve = ->
+mini_solve = (n) ->
 	#console.log "mini_solve >>>>>>>>>>>>>>>>>>>>>>>> tos:" + tos
-	n = 0
 
 	save()
-
-	p2 = pop()
-	p1 = pop()
-
-	push(p1)
-	push(p2)
-
-	n = coeff()
 
 	# AX + B, X = -B/A
 
