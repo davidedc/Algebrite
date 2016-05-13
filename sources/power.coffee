@@ -203,6 +203,20 @@ yypower = ->
 			divide()
 			power()
 			multiply()
+
+			# if we calculate the power making use of arctan:
+			#  * it prevents nested radicals from being simplified
+			#  * results become really hard to manipulate afterwards
+			#  * we can't go back to other forms.
+			# so leave the power as it is.
+			if avoidCalculatingPowersIntoArctans
+				if Find(stack[tos-1], symbol(ARCTAN))
+					pop()
+					push_symbol(POWER)
+					push(p1)
+					push(p2)
+					list(3)
+
 			return
 
 			#

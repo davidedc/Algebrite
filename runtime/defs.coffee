@@ -9,6 +9,7 @@ DEBUG = false
 PRINTOUTRESULT = false
 
 dontCreateNewRadicalsInDenominatorWhenEvalingMultiplication = true
+avoidCalculatingPowersIntoArctans = true
 
 # Symbolic expressions are built by connecting U structs.
 #
