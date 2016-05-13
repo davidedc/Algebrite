@@ -147,4 +147,7 @@ test_simplify = ->
 
 		"x",
 		"a*b+a*c",
+
+		"x=quote(x)",
+		"",
 	]
