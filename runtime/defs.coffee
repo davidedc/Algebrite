@@ -8,7 +8,7 @@ NSYM = 1000
 DEBUG = false
 PRINTOUTRESULT = false
 
-noRadicalsInDenominator = true
+dontCreateNewRadicalsInDenominatorWhenEvalingMultiplication = true
 
 # Symbolic expressions are built by connecting U structs.
 #

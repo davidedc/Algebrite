@@ -537,13 +537,15 @@ __normalize_radical_factors = (h) ->
 		push(one)
 		subtract()
 
-		if noRadicalsInDenominator
+		if dontCreateNewRadicalsInDenominatorWhenEvalingMultiplication
 			if (isinteger(p3) and !isinteger[stack[tos-1]] and isnegativenumber(stack[tos - 1]))
 				# bail out,
 				# we want to avoid going ahead with the subtraction of
 				# the exponents, because that would turn a perfectly good
 				# integer exponent in the denominator into a fractional one
 				# i.e. a radical.
+				# Note that this only prevents new radicals ending up
+				# in the denominator, it doesn't fix existing ones.
 				pop()
 				pop()
 				pop()
