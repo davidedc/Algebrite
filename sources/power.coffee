@@ -205,21 +205,21 @@ yypower = ->
 			multiply()
 			return
 
-			###
-			push(p1)
-			mag()
-			push(p2)
-			power()
-			push(symbol(E))
-			push(p1)
-			arg()
-			push(p2)
-			multiply()
-			push(imaginaryunit)
-			multiply()
-			power()
-			multiply()
-			###
+			#
+			#push(p1)
+			#mag()
+			#push(p2)
+			#power()
+			#push(symbol(E))
+			#push(p1)
+			#arg()
+			#push(p2)
+			#multiply()
+			#push(imaginaryunit)
+			#multiply()
+			#power()
+			#multiply()
+			#
 
 	if (simplify_polar())
 		return

@@ -537,13 +537,13 @@ __normalize_radical_factors = (h) ->
 		push(one)
 		subtract()
 
-
 		if noRadicalsInDenominator
 			if (isinteger(p3) and !isinteger[stack[tos-1]] and isnegativenumber(stack[tos - 1]))
-				# what's happening here is that we are turning a perfectly good
-				# integer exponent in the denominator into a radix,
-				# we want to avoid that.
-				#console.log("limiting the damage - not gonna add a radical at denom now")
+				# bail out,
+				# we want to avoid going ahead with the subtraction of
+				# the exponents, because that would turn a perfectly good
+				# integer exponent in the denominator into a fractional one
+				# i.e. a radical.
 				pop()
 				pop()
 				pop()
