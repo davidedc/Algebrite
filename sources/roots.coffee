@@ -81,6 +81,18 @@ roots = ->
 	i = 0
 	n = 0
 
+	# the simplification of nested radicals uses
+	# "roots", which in turn uses simplification
+	# of nested radicals. Usually there is no problem,
+	# one level of recursion does the job. Beyond that,
+	# we probably got stuck in a strange case of infinite
+	# recursion, so bail out and return NIL.
+	if recursionLevelNestedRadicalsRemoval > 1
+		pop()
+		pop()
+		push(symbol(NIL))
+		return
+
 	performing_roots = true
 
 	h = tos - 2
@@ -397,13 +409,15 @@ mini_solve = (n) ->
 
 
 		if (n == 4)
-			#console.log ">>>>>>>>>>>>>>>> actually using cubic formula <<<<<<<<<<<<<<< "
+			console.log ">>>>>>>>>>>>>>>> actually using cubic formula <<<<<<<<<<<<<<< "
 
 			#console.log ">>>> A:" + p3.toString()
 			#console.log ">>>> B:" + p4.toString()
 			#console.log ">>>> C:" + p5.toString()
 			#console.log ">>>> D:" + p6.toString()
 
+
+			console.log "cubic: D0: " + R_DELTA0.toString()
 
 			push(R_DELTA0)
 			push_integer(3)
@@ -419,7 +433,7 @@ mini_solve = (n) ->
 			Eval(); # normalize
 			absval()
 			R_DELTA0_toBeCheckedIfZero = pop()
-			#console.log "D0 " + R_DELTA0_toBeCheckedIfZero.toString()
+			console.log "cubic: D0 as float: " + R_DELTA0_toBeCheckedIfZero.toString()
 			#if iszero(R_DELTA0_toBeCheckedIfZero)
 			#	console.log " *********************************** D0 IS ZERO"
 
@@ -440,7 +454,7 @@ mini_solve = (n) ->
 			Eval(); # normalize
 			absval()
 			R_determinant = pop()
-			#console.log "DETERMINANT: " + R_determinant.toString()
+			console.log "cubic: DETERMINANT: " + R_determinant.toString()
 
 			# R_DELTA1
 			push(R_2_b3)
@@ -449,6 +463,7 @@ mini_solve = (n) ->
 			add()
 			add()
 			R_DELTA1 = pop()
+			console.log "cubic: D1: " + R_DELTA1.toString()
 
 			# R_Q
 			push(R_DELTA1)
@@ -464,12 +479,12 @@ mini_solve = (n) ->
 
 			if iszero(R_determinant)
 				if iszero(R_DELTA0_toBeCheckedIfZero)
-					#console.log " *********************************** DETERMINANT IS ZERO and delta0 is zero"
+					console.log " cubic: DETERMINANT IS ZERO and delta0 is zero"
 					push(R_m_b_over_3a) # just same solution three times
 					restore()
 					return
 				else
-					#console.log " *********************************** DETERMINANT IS ZERO and delta0 is not zero"
+					console.log " cubic: DETERMINANT IS ZERO and delta0 is not zero"
 					push(p3)
 					push(p6)
 					push_integer(9)
@@ -543,6 +558,7 @@ mini_solve = (n) ->
 				power()
 				simplify()
 				R_C = pop()
+				console.log "cubic: C: " + R_C.toString()
 
 				push(R_C)
 				simplify()
@@ -551,9 +567,9 @@ mini_solve = (n) ->
 				Eval(); # normalize
 				absval()
 				R_C_simplified_toCheckIfZero = pop()
-				#console.log "C " + R_C_simplified_toCheckIfZero.toString()
+				console.log "cubic: C as float: " + R_C_simplified_toCheckIfZero.toString()
 				if iszero(R_C_simplified_toCheckIfZero)
-					#console.log " *********************************** C IS ZERO flipping the sign"
+					console.log " cubic: C IS ZERO flipping the sign"
 					flipSignOFQSoCIsNotZero = true
 				else
 					C_CHECKED_AS_NOT_ZERO = true
@@ -647,6 +663,47 @@ mini_solve = (n) ->
 		if (n == 5)
 			console.log ">>>>>>>>>>>>>>>> actually using quartic formula <<<<<<<<<<<<<<< "
 			p7 = pop() # E
+
+			if iszero(p4) and iszero(p6) and !iszero(p5) and !iszero(p7)
+				console.log("biquadratic case")
+				push(p3)
+				push(symbol(SYMBOL_X))
+				push_integer(2)
+				power()
+				multiply()
+
+				push(p5)
+				push(symbol(SYMBOL_X))
+				multiply()
+
+				push(p7)
+
+				add()
+				add()
+
+				push(symbol(SYMBOL_X))
+				roots()
+
+				biquadraticSolutions = pop()
+
+				for eachSolution in biquadraticSolutions.tensor.elem
+					push(eachSolution)
+					push_rational(1,2)
+					power()
+					simplify()
+
+					push(eachSolution)
+					push_rational(1,2)
+					power()
+					negate()
+					simplify()
+
+				restore()
+				return
+
+
+
+
 
 			# D - only related calculations
 			push(p6)
@@ -800,6 +857,7 @@ mini_solve = (n) ->
 			add()
 
 			R_determinant = pop()
+			console.log("R_determinant: " + R_determinant.toString())
 
 			# DELTA0
 			push(R_c2) # term one of DELTA0
@@ -905,6 +963,339 @@ mini_solve = (n) ->
 
 			R_q = pop()
 			console.log("q: " + R_q.toString())
+
+			console.log("tos 1 " + tos)
+			if !iszero(p4)
+				console.log("tos 2 " + tos)
+
+				push_integer(8)
+				push(p5)
+				push(p3)
+				multiply()
+				multiply()
+
+				push_integer(-3)
+				push(p4)
+				push_integer(2)
+				power()
+				multiply()
+
+				add()
+
+				push_integer(8)
+				push(p3)
+				push_integer(2)
+				power()
+				multiply()
+
+				divide()
+
+				R_p = pop()
+
+				push(p4)
+				push_integer(3)
+				power()
+
+				push_integer(-4)
+				push(p3)
+				push(p4)
+				push(p5)
+				multiply()
+				multiply()
+				multiply()
+
+				push_integer(8)
+				push(p6)
+				push(p3)
+				push_integer(2)
+				power()
+				multiply()
+				multiply()
+
+				add()
+				add()
+
+
+				push_integer(8)
+				push(p3)
+				push_integer(3)
+				power()
+				multiply()
+
+				divide()
+
+				R_q = pop()
+
+
+				# convert to depressed quartic
+				push(p4)
+				push_integer(4)
+				power()
+				push_integer(-3)
+				multiply()
+
+				push_integer(256)
+				push(R_a3)
+				push(p7)
+				multiply()
+				multiply()
+
+				push_integer(-64)
+				push(R_a2_d)
+				push(p4)
+				multiply()
+				multiply()
+
+				push_integer(16)
+				push(R_b2)
+				push(p3)
+				push(p5)
+				multiply()
+				multiply()
+				multiply()
+
+				add()
+				add()
+				add()
+
+				push_integer(256)
+				push(p3)
+				push_integer(4)
+				power()
+				multiply()
+				divide()
+
+				R_r = pop()
+
+				console.log("tos 4 " + tos)
+
+				push(symbol(SYMBOL_X))
+				push_integer(4)
+				power()
+				console.log("4 * x^4: " + stack[tos-1].toString())
+
+				push(R_p)
+				push(symbol(SYMBOL_X))
+				push_integer(2)
+				power()
+				multiply()
+				console.log("R_p * x^2: " + stack[tos-1].toString())
+
+				push(R_q)
+				push(symbol(SYMBOL_X))
+				multiply()
+				console.log("R_q * x: " + stack[tos-1].toString())
+
+				push(R_r)
+				console.log("R_r: " + stack[tos-1].toString())
+
+				add()
+				add()
+				add()
+
+				simplify()
+				console.log("solving depressed quartic: " + stack[tos-1].toString())
+
+				push(symbol(SYMBOL_X))
+
+				roots()
+
+				depressedSolutions = pop()
+				console.log("tos 5 ": + tos)
+				console.log("depressedSolutions: " +  depressedSolutions)
+
+				for eachSolution in depressedSolutions.tensor.elem
+					push(eachSolution)
+					push(p4)
+					push_integer(4)
+					push(p3)
+					multiply()
+					divide()
+					subtract()
+					simplify()
+					console.log("solution from depressed: " +  stack[tos-1].toString())
+
+				restore()
+				return
+
+			else
+				# finding the "m" in the depressed equation
+				R_p = p5
+				R_q = p6
+				R_r = p7
+
+
+				push_rational(5,2)
+				push(R_p)
+				multiply()
+				coeff2 = pop()
+
+				push_integer(2)
+				push(R_p)
+				push_integer(2)
+				power()
+				multiply()
+				push(R_r)
+				subtract()
+				coeff3 = pop()
+
+				push(R_p)
+				push_integer(3)
+				power()
+				push_integer(2)
+				divide()
+
+				push_rational(-1,2)
+				push(R_p)
+				push(R_r)
+				multiply()
+				multiply()
+
+				push_rational(-1,8)
+				push(R_q)
+				push_integer(2)
+				power()
+				multiply()
+
+				add()
+				add()
+
+				coeff4 = pop()
+
+				push(symbol(SYMBOL_X))
+				push_integer(3)
+				power()
+
+				push(coeff2)
+				push(symbol(SYMBOL_X))
+				push_integer(2)
+				power()
+				multiply()
+
+				push(coeff3)
+				push(symbol(SYMBOL_X))
+				multiply()
+
+				push(coeff4)
+
+				add()
+				add()
+				add()
+
+				console.log("resolventCubic: " +  stack[tos-1].toString())
+				push(symbol(SYMBOL_X))
+
+				roots()
+
+				resolventCubicSolutions = pop()
+				console.log("resolventCubicSolutions: " +  resolventCubicSolutions)
+
+				R_m = null
+				#R_m = resolventCubicSolutions.tensor.elem[1]
+				for eachSolution in resolventCubicSolutions.tensor.elem
+					console.log("examining solution: " +  eachSolution)
+					push(eachSolution)
+					push_integer(2)
+					multiply()
+					push(R_p)
+					add()
+
+					Eval()
+					yyfloat()
+					Eval(); # normalize
+					absval()
+					toBeCheckedIFZero = pop()
+					console.log("abs value is: " +  eachSolution)
+					if !iszero(toBeCheckedIFZero)
+						R_m = eachSolution
+						break
+
+				console.log("chosen solution: " +  R_m)
+				push(R_m)
+				push_integer(2)
+				multiply()
+				push(R_p)
+				add()
+				push_rational(1,2)
+				power()
+				simplify()
+				sqrtPPlus2M = pop()
+
+				push(R_q)
+				push_integer(2)
+				multiply()
+				push(sqrtPPlus2M)
+				divide()
+				simplify()
+				TwoQOversqrtPPlus2M = pop()
+
+				push(R_p)
+				push_integer(3)
+				multiply()
+				push(R_m)
+				push_integer(2)
+				multiply()
+				add()
+				ThreePPlus2M = pop()
+
+				# solution1
+				push(sqrtPPlus2M)
+				push(ThreePPlus2M)
+				push(TwoQOversqrtPPlus2M)
+				add()
+				negate()
+				push_rational(1,2)
+				power()
+				simplify()
+				add()
+				push_integer(2)
+				divide()
+				# solution2
+				push(sqrtPPlus2M)
+				push(ThreePPlus2M)
+				push(TwoQOversqrtPPlus2M)
+				add()
+				negate()
+				push_rational(1,2)
+				power()
+				simplify()
+				subtract()
+				push_integer(2)
+				divide()
+				# solution3
+				push(sqrtPPlus2M)
+				negate()
+				push(ThreePPlus2M)
+				push(TwoQOversqrtPPlus2M)
+				subtract()
+				negate()
+				push_rational(1,2)
+				power()
+				simplify()
+				add()
+				push_integer(2)
+				divide()
+				# solution4
+				push(sqrtPPlus2M)
+				negate()
+				push(ThreePPlus2M)
+				push(TwoQOversqrtPPlus2M)
+				subtract()
+				negate()
+				push_rational(1,2)
+				power()
+				simplify()
+				subtract()
+				push_integer(2)
+				divide()
+
+				restore()
+				return
+
+
+
+
+
 
 			# Q ---------------------------
 
@@ -1059,6 +1450,9 @@ mini_solve = (n) ->
 				divide()
 
 				add()
+				#rationalize()
+				#console.log("rationalised: " + stack[tos-1].toString())
+				#simplify()
 
 				push(R_3_a)
 				divide()
