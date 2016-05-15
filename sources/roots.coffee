@@ -120,8 +120,8 @@ roots = ->
 roots2 = ->
 	save()
 
-	p2 = pop()
-	p1 = pop()
+	p2 = pop() # the polynomial variable
+	p1 = pop() # the polynomial
 
 	push(p1)
 	push(p2)
@@ -136,6 +136,8 @@ roots2 = ->
 
 	if (car(p1) == symbol(MULTIPLY))
 		p1 = cdr(p1)
+		# scan through all the factors
+		# and find the roots of each of them
 		while (iscons(p1))
 			push(car(p1))
 			push(p2)
@@ -176,8 +178,8 @@ roots3 = ->
 #
 #-----------------------------------------------------------------------------
 
-# note that for many quadratic and cubic polynomials we don't
-# actually end up using the quadratic and cubic formulas in here,
+# note that for many quadratic, cubic and quartic polynomials we don't
+# actually end up using the quadratic/cubic/quartic formulas in here,
 # since there is a chance we factored the polynomial and in so
 # doing we found some solutions and lowered the degree.
 mini_solve = (n) ->
