@@ -88,10 +88,12 @@ yyfactorpoly = ->
 				printf("no factor found\n")
 			break
 
-		push(p4)
-		push(p2)
+		# build the 1-degree polynomial out of the
+		# real solution that was just found.
+		push(p4) # A
+		push(p2) # x
 		multiply()
-		push(p5)
+		push(p5) # B
 		add()
 		p8 = pop()
 
@@ -112,22 +114,32 @@ yyfactorpoly = ->
 			p7 = pop()
 		###
 		#endif
+		
+		# p7 is the part of the polynomial that was factored so far,
+		# add the newly found factor to it. Note that we are not actually
+		# multiplying the polynomials fully, we are just leaving them
+		# expressed as (P1)*(P2), we are not expanding the product.
 		push(p7)
 		push(p8)
 		multiply_noexpand()
 		p7 = pop()
 
+		# ok now on stack we have the coefficients of the
+		# remaining part of the polynomial still to factor.
+		# Divide it by the newly-found factor so that
+		# the stack then contains the coefficients of the
+		# polynomial part still left to factor.
 		yydivpoly()
 
 		while (factpoly_expo and iszero(stack[polycoeff+factpoly_expo]))
 			factpoly_expo--
 
-	# unfactored polynomial
+	# build the remaining unfactored part of the polynomial
 
 	push(zero)
 	for i in [0..factpoly_expo]
 		push(stack[polycoeff+i])
-		push(p2)
+		push(p2) # the free variable
 		push_integer(i)
 		power()
 		multiply()
@@ -321,15 +333,15 @@ get_factor = ->
 #
 #	Divide a polynomial by Ax+B
 #
-#	Input:		polycoeff	Dividend coefficients
+#	Input:	on stack:	polycoeff	Dividend coefficients
 #
 #			factpoly_expo		Degree of dividend
 #
-#			A		As above
+#			A (p4)		As above
 #
-#			B		As above
+#			B (p5)		As above
 #
-#	Output:		polycoeff	Contains quotient coefficients
+#	Output:	 on stack: polycoeff	Contains quotient coefficients
 #
 #-----------------------------------------------------------------------------
 
