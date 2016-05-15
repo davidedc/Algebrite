@@ -1124,7 +1124,154 @@ mini_solve = (n) ->
 				R_q = p6
 				R_r = p7
 
+				###
+				# Descartes' solution
+				# https://en.wikipedia.org/wiki/Quartic_function#Descartes.27_solution
+				# finding the "u" in the depressed equation
 
+				push_integer(2)
+				push(R_p)
+				multiply()
+				coeff2 = pop()
+
+				push_integer(-4)
+				push(R_p)
+				push_integer(2)
+				power()
+				multiply()
+				push(R_r)
+				multiply()
+				coeff3 = pop()
+
+				push(R_q)
+				push_integer(2)
+				power()
+				negate()
+				coeff4 = pop()
+
+				# now build the polynomial
+				push(symbol(SYMBOL_X))
+				push_integer(3)
+				power()
+
+				push(coeff2)
+				push(symbol(SYMBOL_X))
+				push_integer(2)
+				power()
+				multiply()
+
+				push(coeff3)
+				push(symbol(SYMBOL_X))
+				multiply()
+
+				push(coeff4)
+
+				add()
+				add()
+				add()
+
+				console.log("Descarte's resolventCubic: " +  stack[tos-1].toString())
+				push(symbol(SYMBOL_X))
+
+				roots()
+
+				resolventCubicSolutions = pop()
+				console.log("Descarte's resolventCubic solutions: " +  resolventCubicSolutions)
+				console.log("tos: " +  tos)
+
+				R_u = null
+				#R_u = resolventCubicSolutions.tensor.elem[1]
+				for eachSolution in resolventCubicSolutions.tensor.elem
+					console.log("examining solution: " +  eachSolution)
+					push(eachSolution)
+					push_integer(2)
+					multiply()
+					push(R_p)
+					add()
+
+					Eval()
+					yyfloat()
+					Eval(); # normalize
+					absval()
+					toBeCheckedIFZero = pop()
+					console.log("abs value is: " +  eachSolution)
+					if !iszero(toBeCheckedIFZero)
+						R_u = eachSolution
+						break
+
+				console.log("chosen solution: " +  R_u)
+
+				push(R_u)
+				negate()
+				R_s = pop()
+
+				push(R_p)
+				push(R_u)
+				push_integer(2)
+				power()
+				push(R_q)
+				push(R_u)
+				divide()
+				add()
+				add()
+				push_integer(2)
+				divide()
+				R_t = pop()
+
+				push(R_p)
+				push(R_u)
+				push_integer(2)
+				power()
+				push(R_q)
+				push(R_u)
+				divide()
+				subtract()
+				add()
+				push_integer(2)
+				divide()
+				R_v = pop()
+
+				# factoring the quartic into two quadratics:
+
+				# now build the polynomial
+				push(symbol(SYMBOL_X))
+				push_integer(2)
+				power()
+
+				push(R_s)
+				push(symbol(SYMBOL_X))
+				multiply()
+
+				push(R_t)
+
+				add()
+				add()
+
+				console.log("factored quartic 1: " + stack[tos-1].toString())
+
+				push(symbol(SYMBOL_X))
+				push_integer(2)
+				power()
+
+				push(R_u)
+				push(symbol(SYMBOL_X))
+				multiply()
+
+				push(R_v)
+
+				add()
+				add()
+
+				console.log("factored quartic 2: " + stack[tos-1].toString())
+				pop()
+
+				restore()
+				return
+				###
+
+				# Ferrari's solution
+				# https://en.wikipedia.org/wiki/Quartic_function#Ferrari.27s_solution
+				# finding the "m" in the depressed equation
 				push_rational(5,2)
 				push(R_p)
 				multiply()
