@@ -83,7 +83,7 @@ yyfactorpoly = ->
 			p4 = pop()
 			push_integer(0)
 			p5 = pop()
-		else if (get_factor() == 0)
+		else if (get_factor_from_real_root() == 0)
 			if (verbosing)
 				printf("no factor found\n")
 			break
@@ -206,7 +206,7 @@ rationalize_coefficients = (h) ->
 	if DEBUG then console.log("rationalize_coefficients result")
 	#print1(p7)
 
-get_factor = ->
+get_factor_from_real_root = ->
 
 	i = 0
 	j = 0
@@ -291,7 +291,7 @@ get_factor = ->
 
 			if (iszero(p6))
 				tos = h
-				if DEBUG then console.log "get_factor returning 1"
+				if DEBUG then console.log "get_factor_from_real_root returning 1"
 				return 1
 
 			push(p5)
@@ -321,12 +321,12 @@ get_factor = ->
 
 			if (iszero(p6))
 				tos = h
-				if DEBUG then console.log "get_factor returning 1"
+				if DEBUG then console.log "get_factor_from_real_root returning 1"
 				return 1
 
 	tos = h
 
-	if DEBUG then console.log "get_factor returning 0"
+	if DEBUG then console.log "get_factor_from_real_root returning 0"
 	return 0
 
 #-----------------------------------------------------------------------------
