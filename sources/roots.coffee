@@ -991,6 +991,7 @@ mini_solve = (n) ->
 				divide()
 
 				R_p = pop()
+				console.log("p for depressed quartic: " + R_p.toString())
 
 				push(p4)
 				push_integer(3)
@@ -1025,6 +1026,7 @@ mini_solve = (n) ->
 				divide()
 
 				R_q = pop()
+				console.log("q for depressed quartic: " + R_q.toString())
 
 
 				# convert to depressed quartic
@@ -1066,6 +1068,7 @@ mini_solve = (n) ->
 				divide()
 
 				R_r = pop()
+				console.log("r for depressed quartic: " + R_r.toString())
 
 				console.log("tos 4 " + tos)
 
@@ -1119,7 +1122,6 @@ mini_solve = (n) ->
 				return
 
 			else
-				# finding the "m" in the depressed equation
 				R_p = p5
 				R_q = p6
 				R_r = p7
