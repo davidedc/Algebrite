@@ -76,6 +76,7 @@ yyfactorpoly = ->
 
 	# for univariate polynomials we could do factpoly_expo > 1
 
+	whichRootsAreWeFinding = "real"
 	while (factpoly_expo > 0)
 
 		if (iszero(stack[polycoeff+0]))
@@ -83,56 +84,137 @@ yyfactorpoly = ->
 			p4 = pop()
 			push_integer(0)
 			p5 = pop()
-		else if (get_factor_from_real_root() == 0)
-			if (verbosing)
-				printf("no factor found\n")
-			break
+		else
+			console.log("trying to find a " + whichRootsAreWeFinding + " root")
+			if whichRootsAreWeFinding == "real"
+				foundRealRoot = get_factor_from_real_root()
+			else if whichRootsAreWeFinding == "complex"
+				foundComplexRoot = get_factor_from_complex_root()
 
-		# build the 1-degree polynomial out of the
-		# real solution that was just found.
-		push(p4) # A
-		push(p2) # x
-		multiply()
-		push(p5) # B
-		add()
-		p8 = pop()
+		if whichRootsAreWeFinding == "real"
+			if foundRealRoot == 0
+				whichRootsAreWeFinding = "complex"
+				continue
+			else
+				# build the 1-degree polynomial out of the
+				# real solution that was just found.
+				push(p4) # A
+				push(p2) # x
+				multiply()
+				push(p5) # B
+				add()
+				p8 = pop()
 
-		if (verbosing)
-			printf("success\nFACTOR=")
-			print(p8)
-			printf("\n")
+				if (true)
+					console.log("success\nFACTOR=" + p8)
 
-		# factor out negative sign (not req'd because p4 > 1)
-		#if 0
-		###
-		if (isnegativeterm(p4))
-			push(p8)
-			negate()
-			p8 = pop()
-			push(p7)
-			negate_noexpand()
-			p7 = pop()
-		###
-		#endif
-		
-		# p7 is the part of the polynomial that was factored so far,
-		# add the newly found factor to it. Note that we are not actually
-		# multiplying the polynomials fully, we are just leaving them
-		# expressed as (P1)*(P2), we are not expanding the product.
-		push(p7)
-		push(p8)
-		multiply_noexpand()
-		p7 = pop()
+				# factor out negative sign (not req'd because p4 > 1)
+				#if 0
+				###
+				if (isnegativeterm(p4))
+					push(p8)
+					negate()
+					p8 = pop()
+					push(p7)
+					negate_noexpand()
+					p7 = pop()
+				###
+				#endif
+				
+				# p7 is the part of the polynomial that was factored so far,
+				# add the newly found factor to it. Note that we are not actually
+				# multiplying the polynomials fully, we are just leaving them
+				# expressed as (P1)*(P2), we are not expanding the product.
+				push(p7)
+				push(p8)
+				multiply_noexpand()
+				p7 = pop()
 
-		# ok now on stack we have the coefficients of the
-		# remaining part of the polynomial still to factor.
-		# Divide it by the newly-found factor so that
-		# the stack then contains the coefficients of the
-		# polynomial part still left to factor.
-		yydivpoly()
+				# ok now on stack we have the coefficients of the
+				# remaining part of the polynomial still to factor.
+				# Divide it by the newly-found factor so that
+				# the stack then contains the coefficients of the
+				# polynomial part still left to factor.
+				yydivpoly()
 
-		while (factpoly_expo and iszero(stack[polycoeff+factpoly_expo]))
-			factpoly_expo--
+				while (factpoly_expo and iszero(stack[polycoeff+factpoly_expo]))
+					factpoly_expo--
+		else if whichRootsAreWeFinding == "complex"
+			if foundComplexRoot == 0
+				break
+			else
+				# build the 2-degree polynomial out of the
+				# real solution that was just found.
+				push(p2) # x
+				push(p4) # A
+				subtract()
+				console.log("first factor: " + stack[tos-1].toString())
+
+				push(p2) # x
+				push(p4) # A
+				conjugate()
+				subtract()
+				console.log("second factor: " + stack[tos-1].toString())
+
+				multiply()
+
+				p8 = pop()
+
+				if (true)
+					console.log("success\nFACTOR=" + p8)
+
+				# factor out negative sign (not req'd because p4 > 1)
+				#if 0
+				###
+				if (isnegativeterm(p4))
+					push(p8)
+					negate()
+					p8 = pop()
+					push(p7)
+					negate_noexpand()
+					p7 = pop()
+				###
+				#endif
+				
+				# p7 is the part of the polynomial that was factored so far,
+				# add the newly found factor to it. Note that we are not actually
+				# multiplying the polynomials fully, we are just leaving them
+				# expressed as (P1)*(P2), we are not expanding the product.
+				push(p7)
+				push(p8)
+				multiply_noexpand()
+				p7 = pop()
+
+
+				# build the polynomial of the unfactored part
+				push(zero)
+				for i in [0..factpoly_expo]
+					push(stack[polycoeff+i])
+					push(p2) # the free variable
+					push_integer(i)
+					power()
+					multiply()
+					add()
+				console.log("original polynomial (dividend): " + stack[tos-1].toString())
+
+				push(p8) # divisor
+				push(p2) # X
+				divpoly()
+				remainingPoly = pop()
+				console.log("still to be factored: " + remainingPoly)
+
+				for i in [0..factpoly_expo]
+					pop()
+
+				console.log("tos 1: " + tos)
+				push(remainingPoly)
+				push(p2)
+				coeff()
+				console.log("tos 2: " + tos)
+
+
+				factpoly_expo -= 2
+
 
 	# build the remaining unfactored part of the polynomial
 
@@ -146,10 +228,8 @@ yyfactorpoly = ->
 		add()
 	p1 = pop()
 
-	if (verbosing)
-		printf("POLY=")
-		print(p1)
-		printf("\n")
+	if (true)
+		console.log("POLY=" + p1)
 
 	# factor out negative sign
 
@@ -166,10 +246,8 @@ yyfactorpoly = ->
 	multiply_noexpand()
 	p7 = pop()
 
-	if (verbosing)
-		printf("RESULT=")
-		print(p7)
-		printf("\n")
+	if (true)
+		console.log("RESULT=" + p7)
 
 	stack[h] = p7
 
@@ -216,7 +294,7 @@ get_factor_from_real_root = ->
 	na0 = 0
 	nan = 0
 
-	if (verbosing)
+	if (true)
 		push(zero)
 		for i in [0..factpoly_expo]
 			push(stack[polycoeff+i])
@@ -226,9 +304,7 @@ get_factor_from_real_root = ->
 			multiply()
 			add()
 		p1 = pop()
-		printf("POLY=")
-		print(p1)
-		printf("\n")
+		console.log("POLY=" + p1)
 
 	h = tos
 
@@ -244,17 +320,13 @@ get_factor_from_real_root = ->
 	divisors_onstack()
 	na0 = tos - a0
 
-	if (verbosing)
-		printf("divisors of base term")
+	if (true)
+		console.log("divisors of base term")
 		for i in [0...na0]
-			printf(", ")
-			print(stack[a0 + i])
-		printf("\n")
-		printf("divisors of leading term")
+			console.log(", " + stack[a0 + i])
+		console.log("divisors of leading term")
 		for i in [0...nan]
-			printf(", ")
-			print(stack[an + i])
-		printf("\n")
+			console.log(", " + stack[an + i])
 
 	# try roots
 
@@ -274,20 +346,13 @@ get_factor_from_real_root = ->
 
 			Evalpoly()
 
-			if (verbosing)
-				printf("try A=")
-				print(p4)
-				printf(", B=")
-				print(p5)
-				printf(", root ")
-				print(p2)
-				printf("=-B/A=")
-				print(p3)
-				printf(", POLY(")
-				print(p3)
-				printf(")=")
-				print(p6)
-				printf("\n")
+			if (true)
+				console.log("try A=" + p4)
+				console.log(", B=" + p5)
+				console.log(", root " + p2)
+				console.log("=-B/A=" + p3)
+				console.log(", POLY(" + p3)
+				console.log(")=" + p6)
 
 			if (iszero(p6))
 				tos = h
@@ -304,20 +369,13 @@ get_factor_from_real_root = ->
 
 			Evalpoly()
 
-			if (verbosing)
-				printf("try A=")
-				print(p4)
-				printf(", B=")
-				print(p5)
-				printf(", root ")
-				print(p2)
-				printf("=-B/A=")
-				print(p3)
-				printf(", POLY(")
-				print(p3)
-				printf(")=")
-				print(p6)
-				printf("\n")
+			if (true)
+				console.log("try A=" + p4)
+				console.log(", B=" + p5)
+				console.log(", root " + p2)
+				console.log("=-B/A=" + p3)
+				console.log(", POLY(" + p3)
+				console.log(")=" + p6)
 
 			if (iszero(p6))
 				tos = h
@@ -327,6 +385,64 @@ get_factor_from_real_root = ->
 	tos = h
 
 	if DEBUG then console.log "get_factor_from_real_root returning 0"
+	return 0
+
+get_factor_from_complex_root = ->
+
+	i = 0
+	j = 0
+	h = 0
+	a0 = 0
+	an = 0
+	na0 = 0
+	nan = 0
+
+	if factpoly_expo <= 2
+		console.log("no more factoring via complex roots to be found in polynomial of degree <= 2")
+		return 0
+
+	if (true)
+		push(zero)
+		for i in [0..factpoly_expo]
+			push(stack[polycoeff+i])
+			push(p2)
+			push_integer(i)
+			power()
+			multiply()
+			add()
+		p1 = pop()
+		console.log("complex root finding for POLY=" + p1)
+
+	h = tos
+
+	an = tos
+
+	# try roots
+
+	push_integer(-1)
+	push_rational(2,3)
+	power()
+	rect()
+	p4 = pop()
+	console.log("complex root finding: trying with " + p4)
+
+	push(p4)
+	p3 = pop()
+
+
+	push(p3)
+
+	Evalpoly()
+
+	console.log("complex root finding result: " + p6)
+	if (iszero(p6))
+		tos = h
+		if DEBUG then console.log "get_factor_from_complex_root returning 1"
+		return 1
+
+	tos = h
+
+	if DEBUG then console.log "get_factor_from_complex_root returning 0"
 	return 0
 
 #-----------------------------------------------------------------------------
