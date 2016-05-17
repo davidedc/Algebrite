@@ -414,31 +414,72 @@ get_factor_from_complex_root = ->
 		console.log("complex root finding for POLY=" + p1)
 
 	h = tos
-
 	an = tos
 
-	# try roots
-
+	# trying -1^(2/3) which generates a polynomial in Z
+	# generates x^2 + 2x + 1
 	push_integer(-1)
 	push_rational(2,3)
 	power()
 	rect()
 	p4 = pop()
 	console.log("complex root finding: trying with " + p4)
-
 	push(p4)
 	p3 = pop()
-
-
 	push(p3)
-
 	Evalpoly()
-
 	console.log("complex root finding result: " + p6)
 	if (iszero(p6))
 		tos = h
-		if DEBUG then console.log "get_factor_from_complex_root returning 1"
+		console.log "get_factor_from_complex_root returning 1"
 		return 1
+
+	# trying 1^(2/3) which generates a polynomial in Z
+	# http://www.wolframalpha.com/input/?i=(1)%5E(2%2F3)
+	# generates x^2 - 2x + 1
+	push_integer(1)
+	push_rational(2,3)
+	power()
+	rect()
+	p4 = pop()
+	console.log("complex root finding: trying with " + p4)
+	push(p4)
+	p3 = pop()
+	push(p3)
+	Evalpoly()
+	console.log("complex root finding result: " + p6)
+	if (iszero(p6))
+		tos = h
+		console.log "get_factor_from_complex_root returning 1"
+		return 1
+
+
+	# trying some simple complex numbers. All of these
+	# generate polynomials in Z
+	for rootsTries_i in [-10..10]
+		for rootsTries_j in [1..5]
+			push_integer(rootsTries_i)
+			push_integer(rootsTries_j)
+			push(imaginaryunit)
+			multiply()
+			add()
+			rect()
+			p4 = pop()
+			console.log("complex root finding: trying simple complex combination: " + p4)
+
+			push(p4)
+			p3 = pop()
+
+
+			push(p3)
+
+			Evalpoly()
+
+			console.log("complex root finding result: " + p6)
+			if (iszero(p6))
+				tos = h
+				console.log "get_factor_from_complex_root returning 1"
+				return 1
 
 	tos = h
 
