@@ -13,6 +13,7 @@ performing_roots = false
 
 Eval_roots = ->
 	# A == B -> A - B
+	debugger
 
 	p2 = cadr(p1)
 
@@ -59,7 +60,7 @@ Eval_roots = ->
 
 hasImaginaryCoeff = ->
 
-	polycoeff = tos
+	#polycoeff = tos
 
 	push(p1)
 	push(p2)
@@ -74,6 +75,32 @@ hasImaginaryCoeff = ->
 			break
 	tos -= k
 	return imaginaryCoefficients
+
+isSimpleRoot = ->
+
+	#polycoeff = tos
+
+	push(p1)
+	push(p2)
+	k = coeff()
+
+	if k > 3
+		#tos-n		Coefficient of x^0
+		#tos-1		Coefficient of x^(n-1)
+
+		isSimpleRootPolynomial = true
+		h = tos
+
+		if iszero(stack[tos-k])
+			isSimpleRootPolynomial = false
+
+		for i in [(k-1)...1] by -1
+			#console.log "hasImaginaryCoeff - coeff.:" + stack[tos-i].toString()
+			if !iszero(stack[tos-i])
+				isSimpleRootPolynomial = false
+				break
+	tos -= k
+	return isSimpleRootPolynomial
 
 
 roots = ->
@@ -94,10 +121,14 @@ roots = ->
 		return
 
 	performing_roots = true
-
 	h = tos - 2
 
-	roots2()
+	if isSimpleRoot()
+		debugger
+		console.log("it is a case of simple roots")
+		getSimpleRoots()
+	else
+		roots2()
 
 	n = tos - h
 	if (n == 0)
@@ -116,6 +147,42 @@ roots = ->
 	push(p1)
 	restore()
 	performing_roots = false
+
+getSimpleRoots = ->
+	console.log("getSimpleRoots")
+	save()
+
+	n = coeff()
+	#tos-n		Coefficient of x^0
+	#tos-1		Coefficient of x^(n-1)
+	lastCoeff = stack[tos-n]
+	leadingCoeff = stack[tos-1]
+	tos -= n
+
+	n = n-1
+
+	push(lastCoeff)
+	negate()
+	push_rational(1,n)
+	power()
+
+	push(leadingCoeff)
+	push_rational(1,n)
+	power()
+	divide()
+
+	commonPart = pop()
+	
+	for rootsOfOne in [1..n]
+		push(commonPart)
+		push_integer(-1)
+		push_rational(rootsOfOne,n)
+		power()
+		multiply()
+		if rootsOfOne % 2 != 0
+			negate()
+
+	restore()
 
 roots2 = ->
 	save()

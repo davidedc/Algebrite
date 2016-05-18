@@ -89,7 +89,7 @@ yyfactorpoly = ->
 			if whichRootsAreWeFinding == "real"
 				foundRealRoot = get_factor_from_real_root()
 			else if whichRootsAreWeFinding == "complex"
-				foundComplexRoot = get_factor_from_complex_root()
+				foundComplexRoot = get_factor_from_complex_root(remainingPoly)
 
 		if whichRootsAreWeFinding == "real"
 			if foundRealRoot == 0
@@ -139,6 +139,18 @@ yyfactorpoly = ->
 
 				while (factpoly_expo and iszero(stack[polycoeff+factpoly_expo]))
 					factpoly_expo--
+
+				push(zero)
+				for i in [0..factpoly_expo]
+					push(stack[polycoeff+i])
+					push(p2) # the free variable
+					push_integer(i)
+					power()
+					multiply()
+					add()
+				remainingPoly = pop()
+				console.log("real branch remainingPoly: " + remainingPoly)
+
 		else if whichRootsAreWeFinding == "complex"
 			if foundComplexRoot == 0
 				break
@@ -180,28 +192,81 @@ yyfactorpoly = ->
 				# add the newly found factor to it. Note that we are not actually
 				# multiplying the polynomials fully, we are just leaving them
 				# expressed as (P1)*(P2), we are not expanding the product.
+
+				push(p7)
+				previousFactorisation = pop()
+
+				console.log("previousFactorisation: " + previousFactorisation)
+
 				push(p7)
 				push(p8)
 				multiply_noexpand()
 				p7 = pop()
 
+				console.log("new prospective factorisation: " + p7)
+
 
 				# build the polynomial of the unfactored part
-				push(zero)
-				for i in [0..factpoly_expo]
-					push(stack[polycoeff+i])
-					push(p2) # the free variable
-					push_integer(i)
-					power()
-					multiply()
-					add()
-				console.log("original polynomial (dividend): " + stack[tos-1].toString())
+				console.log("build the polynomial of the unfactored part factpoly_expo: " + factpoly_expo)
+				
+				if !remainingPoly?
+					push(zero)
+					for i in [0..factpoly_expo]
+						push(stack[polycoeff+i])
+						push(p2) # the free variable
+						push_integer(i)
+						power()
+						multiply()
+						add()
+					remainingPoly = pop()
+				console.log("original polynomial (dividend): " + remainingPoly)
 
+				dividend = remainingPoly
+				#push(dividend)
+				#degree()
+				#startingDegree = pop()
+				push(dividend)
+
+				console.log("dividing " + stack[tos-1].toString() + " by " + p8)
 				push(p8) # divisor
 				push(p2) # X
 				divpoly()
 				remainingPoly = pop()
-				console.log("still to be factored: " + remainingPoly)
+
+				push(remainingPoly)
+				push(p8) # divisor
+				multiply()
+				checkingTheDivision = pop()
+
+				if !equal(checkingTheDivision, dividend)
+					console.log("we found a polynomial based on complex root and its conj but it doesn't divide the poly, quitting")
+					console.log("so just returning previousFactorisation times dividend: " + previousFactorisation + " * " + dividend)
+					push(previousFactorisation)
+					push(dividend)
+					multiply_noexpand()
+					p7 = pop()
+					stack[h] = p7
+					tos = h + 1
+					restore()
+					return
+
+				console.log("result: (still to be factored) " + remainingPoly)
+
+				#push(remainingPoly)
+				#degree()
+				#remainingDegree = pop()
+
+				###
+				if compare_numbers(startingDegree, remainingDegree)
+					# ok even if we found a complex root that
+					# together with the conjugate generates a poly in Z,
+					# that doesn't mean that the division would end up in Z.
+					# Example: 1+x^2+x^4+x^6 has +i and -i as one of its roots
+					# so a factor is 1+x^2 ( = (x+i)*(x-i))
+					# BUT 
+				###
+
+				console.log("tos 0: " + tos)
 
 				for i in [0..factpoly_expo]
 					pop()
@@ -214,6 +279,8 @@ yyfactorpoly = ->
 
 
 				factpoly_expo -= 2
+				console.log("factpoly_expo: " + factpoly_expo)
+				debugger
 
 
 	# build the remaining unfactored part of the polynomial
@@ -387,7 +454,7 @@ get_factor_from_real_root = ->
 	if DEBUG then console.log "get_factor_from_real_root returning 0"
 	return 0
 
-get_factor_from_complex_root = ->
+get_factor_from_complex_root = (remainingPoly) ->
 
 	i = 0
 	j = 0
@@ -401,17 +468,8 @@ get_factor_from_complex_root = ->
 		console.log("no more factoring via complex roots to be found in polynomial of degree <= 2")
 		return 0
 
-	if (true)
-		push(zero)
-		for i in [0..factpoly_expo]
-			push(stack[polycoeff+i])
-			push(p2)
-			push_integer(i)
-			power()
-			multiply()
-			add()
-		p1 = pop()
-		console.log("complex root finding for POLY=" + p1)
+	p1 = remainingPoly
+	console.log("complex root finding for POLY=" + p1)
 
 	h = tos
 	an = tos
@@ -465,7 +523,7 @@ get_factor_from_complex_root = ->
 			add()
 			rect()
 			p4 = pop()
-			console.log("complex root finding: trying simple complex combination: " + p4)
+			#console.log("complex root finding: trying simple complex combination: " + p4)
 
 			push(p4)
 			p3 = pop()
@@ -475,10 +533,10 @@ get_factor_from_complex_root = ->
 
 			Evalpoly()
 
-			console.log("complex root finding result: " + p6)
+			#console.log("complex root finding result: " + p6)
 			if (iszero(p6))
 				tos = h
-				console.log "get_factor_from_complex_root returning 1"
+				console.log "found complex root: " + p6
 				return 1
 
 	tos = h
