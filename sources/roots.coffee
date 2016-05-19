@@ -84,10 +84,10 @@ isSimpleRoot = ->
 	push(p2)
 	k = coeff()
 
-	if k > 3
-		#tos-n		Coefficient of x^0
-		#tos-1		Coefficient of x^(n-1)
+	#tos-n		Coefficient of x^0
+	#tos-1		Coefficient of x^(n-1)
 
+	if k > 2
 		isSimpleRootPolynomial = true
 		h = tos
 
@@ -99,6 +99,9 @@ isSimpleRoot = ->
 			if !iszero(stack[tos-i])
 				isSimpleRootPolynomial = false
 				break
+	else
+		isSimpleRootPolynomial = false
+
 	tos -= k
 	return isSimpleRootPolynomial
 
@@ -123,9 +126,10 @@ roots = ->
 	performing_roots = true
 	h = tos - 2
 
+	console.log("checking if " + stack[tos-1].toString() + " is a case of simple roots")
 	if isSimpleRoot()
 		debugger
-		console.log("it is a case of simple roots")
+		console.log("yes, " + stack[tos-1].toString() + " is a case of simple roots")
 		getSimpleRoots()
 	else
 		roots2()
@@ -162,7 +166,6 @@ getSimpleRoots = ->
 	n = n-1
 
 	push(lastCoeff)
-	negate()
 	push_rational(1,n)
 	power()
 
@@ -172,15 +175,28 @@ getSimpleRoots = ->
 	divide()
 
 	commonPart = pop()
-	
-	for rootsOfOne in [1..n]
-		push(commonPart)
-		push_integer(-1)
-		push_rational(rootsOfOne,n)
-		power()
-		multiply()
-		if rootsOfOne % 2 != 0
+
+	if n % 2 == 0
+		for rootsOfOne in [1..n] by 2
+			push(commonPart)
+			push_integer(-1)
+			push_rational(rootsOfOne,n)
+			power()
+			multiply()
+			aSol = pop()
+			push(aSol)
+			push(aSol)
 			negate()
+	else
+		for rootsOfOne in [1..n]
+			push(commonPart)
+			push_integer(-1)
+			push_rational(rootsOfOne,n)
+			power()
+			multiply()
+			if rootsOfOne % 2 == 0
+				negate()
+
 
 	restore()
 
@@ -199,6 +215,7 @@ roots2 = ->
 	else
 		pop()
 		pop()
+	debugger
 
 
 	if (car(p1) == symbol(MULTIPLY))
