@@ -81,6 +81,21 @@ count = (p) ->
 		n = 1
 	return n
 
+# this probably works out to be
+# more general than just counting symbols, it can
+# probably count instances of anything you pass as
+# first argument but didn't try it.
+countOccurrencesOfSymbol = (needle,p) ->
+	n = 0
+	if (iscons(p))
+		while (iscons(p))
+			n += countOccurrencesOfSymbol(needle,car(p))
+			p = cdr(p)
+	else
+		if equal(needle,p)
+			n = 1
+	return n
+
 # try rationalizing
 
 f1 = ->
@@ -243,6 +258,36 @@ simplify_nested_radicals = ->
 
 	push(p1)
 	somethingSimplified = take_care_of_nested_radicals()
+
+
+	# in this paragraph we check whether we can collect
+	# common factors without complicating the expression
+	# in particular we want to avoid 
+	# collecting radicals like in this case where
+	# we collect sqrt(2):
+	#   2-2^(1/2) into 2^(1/2)*(-1+2^(1/2))
+	# but we do like to collect other non-radicals e.g.
+	#   17/2+3/2*5^(1/2) into 1/2*(17+3*5^(1/2))
+	# so what we do is we count the powers and we check
+	# which version has the least number of them.
+	simplificationWithoutCondense = stack[tos-1]
+
+	prev_expanding = expanding
+	expanding = 0
+	yycondense()
+	expanding = prev_expanding
+
+	simplificationWithCondense = pop()
+	console.log("occurrences of powers in " + simplificationWithoutCondense + " :" + countOccurrencesOfSymbol(symbol(POWER),simplificationWithoutCondense))
+	console.log("occurrences of powers in " + simplificationWithCondense + " :" + countOccurrencesOfSymbol(symbol(POWER),simplificationWithCondense))
+
+	if (countOccurrencesOfSymbol(symbol(POWER),simplificationWithoutCondense) < countOccurrencesOfSymbol(symbol(POWER),simplificationWithCondense))
+		push(simplificationWithoutCondense)
+	else
+		push(simplificationWithCondense)
+
+
+	# we got out result, wrap up
 	p1 = pop()
 	console.log "return 2"
 	return somethingSimplified
