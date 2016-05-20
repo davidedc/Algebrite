@@ -106,6 +106,9 @@ isSimpleRoot = ->
 	return isSimpleRootPolynomial
 
 
+# takes the polynomial and the
+# variable on the stack
+
 roots = ->
 	h = 0
 	i = 0
@@ -152,6 +155,12 @@ roots = ->
 	restore()
 	performing_roots = false
 
+# ok to generate these roots take a look at their form
+# in the case of even and odd exponents here:
+# http://www.wolframalpha.com/input/?i=roots+x%5E14+%2B+1
+# http://www.wolframalpha.com/input/?i=roots+ax%5E14+%2B+b
+# http://www.wolframalpha.com/input/?i=roots+x%5E15+%2B+1
+# http://www.wolframalpha.com/input/?i=roots+a*x%5E15+%2B+b
 getSimpleRoots = ->
 	console.log("getSimpleRoots")
 	save()
