@@ -37,6 +37,7 @@ yymultiply = ->
 
 	# is either operand a sum?
 
+	#console.log("yymultiply: expanding: " + expanding)
 	if (expanding && isadd(p1))
 		p1 = cdr(p1)
 		push(zero)
@@ -304,10 +305,10 @@ combine_gammas = (h) ->
 #endif
 
 multiply_noexpand = ->
-	x = expanding
+	prev_expanding = expanding
 	expanding = 0
 	multiply()
-	expanding = x
+	expanding = prev_expanding
 
 # multiply n factors on stack
 
@@ -329,10 +330,10 @@ multiply_all = (n) ->
 
 # n an integer
 multiply_all_noexpand = (n) ->
-	x = expanding
+	prev_expanding = expanding
 	expanding = 0
 	multiply_all(n)
-	expanding = x
+	expanding = prev_expanding
 
 #-----------------------------------------------------------------------------
 #
@@ -373,16 +374,16 @@ negate = ->
 		multiply()
 
 negate_expand = ->
-	x = expanding
+	prev_expanding = expanding
 	expanding = 1
 	negate()
-	expanding = x
+	expanding = prev_expanding
 
 negate_noexpand = ->
-	x = expanding
+	prev_expanding = expanding
 	expanding = 0
 	negate()
-	expanding = x
+	expanding = prev_expanding
 
 #-----------------------------------------------------------------------------
 #

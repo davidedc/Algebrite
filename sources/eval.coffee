@@ -477,10 +477,10 @@ Eval_unit = ->
 	push(p1)
 
 Eval_noexpand = ->
-	x = expanding
+	prev_expanding = expanding
 	expanding = 0
 	Eval()
-	expanding = x
+	expanding = prev_expanding
 
 # like Eval() except "=" is Evaluated as "=="
 
