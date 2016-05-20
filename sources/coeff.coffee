@@ -85,7 +85,7 @@ coeff = ->
 		prev_expanding = expanding
 		expanding = 1
 		divide()
-		prev_expanding = expanding
+		expanding = prev_expanding
 		console.log("just divided: " + stack[tos-1].toString())
 		p1 = pop()
 

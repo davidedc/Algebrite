@@ -17,6 +17,7 @@ factpoly_expo = 0
 
 factorpoly = ->
 	save()
+	console.log("expanding before yyfactorpoly(): " + expanding)
 
 	p2 = pop()
 	p1 = pop()
@@ -39,6 +40,9 @@ factorpoly = ->
 	push(p1)
 	push(p2)
 	yyfactorpoly()
+	console.log("top of stack after yyfactorpoly(): " + stack[tos-1].toString())
+	console.log("expanding after yyfactorpoly(): " + expanding)
+	debugger
 
 	restore()
 
@@ -77,6 +81,7 @@ yyfactorpoly = ->
 	# for univariate polynomials we could do factpoly_expo > 1
 
 	whichRootsAreWeFinding = "real"
+	remainingPoly = null
 	while (factpoly_expo > 0)
 
 		if (iszero(stack[polycoeff+0]))
@@ -157,19 +162,23 @@ yyfactorpoly = ->
 			else
 				# build the 2-degree polynomial out of the
 				# real solution that was just found.
-				push(p2) # x
 				push(p4) # A
+				push(p2) # x
 				subtract()
 				console.log("first factor: " + stack[tos-1].toString())
 
-				push(p2) # x
 				push(p4) # A
 				conjugate()
+				push(p2) # x
 				subtract()
 				console.log("second factor: " + stack[tos-1].toString())
 
 				multiply()
 
+				#if (factpoly_expo > 0 && isnegativeterm(stack[polycoeff+factpoly_expo]))
+				#	negate()
+				#	negate_noexpand()
+					
 				p8 = pop()
 
 				if (true)
@@ -239,10 +248,22 @@ yyfactorpoly = ->
 				checkingTheDivision = pop()
 
 				if !equal(checkingTheDivision, dividend)
+
+					#push(dividend)
+					#gcd_expr()
+					#console.log("gcd top of stack: " + stack[tos-1].toString())
+
+
 					console.log("we found a polynomial based on complex root and its conj but it doesn't divide the poly, quitting")
 					console.log("so just returning previousFactorisation times dividend: " + previousFactorisation + " * " + dividend)
 					push(previousFactorisation)
 					push(dividend)
+
+					prev_expanding = expanding
+					expanding = 0
+					yycondense()
+					expanding = prev_expanding
+
 					multiply_noexpand()
 					p7 = pop()
 					stack[h] = p7
@@ -298,11 +319,25 @@ yyfactorpoly = ->
 	if (true)
 		console.log("POLY=" + p1)
 
+	push(p1)
+
+	prev_expanding = expanding
+	expanding = 0
+	yycondense()
+	expanding = prev_expanding
+
+	p1 = pop()
+	console.log("new poly with extracted common factor: " + p1)
+	debugger
+
 	# factor out negative sign
 
 	if (factpoly_expo > 0 && isnegativeterm(stack[polycoeff+factpoly_expo]))
 		push(p1)
+		#prev_expanding = expanding
+		#expanding = 1
 		negate()
+		#expanding = prev_expanding
 		p1 = pop()
 		push(p7)
 		negate_noexpand()

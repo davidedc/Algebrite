@@ -106,10 +106,13 @@ expand = ->
 
 	# A = factor(A)
 
+	console.log("expand - to be factored: " + p2)
 	push(p2)
 	push(p9)
 	factorpoly()
 	p2 = pop()
+	console.log("expand - factored to: " + p2)
+	debugger
 
 	expand_get_C()
 	expand_get_B()
@@ -117,7 +120,10 @@ expand = ->
 
 	if (istensor(p4))
 		push(p4)
+		prev_expanding = expanding
+		expanding = 1
 		inv()
+		expanding = prev_expanding
 		push(p3)
 		inner()
 		push(p2)
@@ -125,7 +131,10 @@ expand = ->
 	else
 		push(p3)
 		push(p4)
+		prev_expanding = expanding
+		expanding = 1
 		divide()
+		expanding = prev_expanding
 		push(p2)
 		multiply()
 
@@ -284,7 +293,10 @@ expand_get_C = ->
 			push(p9)
 			push_integer(i)
 			power()
+			prev_expanding = expanding
+			expanding = 1
 			divide()
+			expanding = prev_expanding
 			push(p9)
 			filter()
 			p4.tensor.elem[n * i + j] = pop()
@@ -373,7 +385,10 @@ expand_get_CF = ->
 
 	if (!Find(p5, p9))
 		return
+	prev_expanding = expanding
+	expanding = 1
 	trivial_divide()
+	expanding = prev_expanding
 	if (car(p5) == symbol(POWER))
 		push(caddr(p5))
 		n = pop_integer()
@@ -392,11 +407,17 @@ expand_get_CF = ->
 			push(p6)
 			push_integer(i)
 			power()
+			prev_expanding = expanding
+			expanding = 1
 			multiply()
+			expanding = prev_expanding
 			push(p9)
 			push_integer(j)
 			power()
+			prev_expanding = expanding
+			expanding = 1
 			multiply()
+			expanding = prev_expanding
 
 # Returns T = A/F where F is a factor of A.
 
@@ -431,7 +452,10 @@ expand_get_B = ->
 		push(p9)
 		push_integer(i)
 		power()
+		prev_expanding = expanding
+		expanding = 1
 		divide()
+		expanding = prev_expanding
 		push(p9)
 		filter()
 		p8.tensor.elem[i] = pop()
