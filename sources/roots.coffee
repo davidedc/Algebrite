@@ -128,10 +128,14 @@ roots = ->
 	k = coeff()
 
 	if isSimpleRoot(k)
-		tos -= k
 		debugger
 		console.log("yes, " + stack[tos-1].toString() + " is a case of simple roots")
-		getSimpleRoots()
+		lastCoeff = stack[tos-k]
+		leadingCoeff = stack[tos-1]
+		tos -= k
+		pop()
+		pop()
+		getSimpleRoots(k, leadingCoeff, lastCoeff)
 	else
 		tos -= k
 		roots2()
@@ -160,16 +164,12 @@ roots = ->
 # http://www.wolframalpha.com/input/?i=roots+ax%5E14+%2B+b
 # http://www.wolframalpha.com/input/?i=roots+x%5E15+%2B+1
 # http://www.wolframalpha.com/input/?i=roots+a*x%5E15+%2B+b
-getSimpleRoots = ->
+getSimpleRoots = (n, leadingCoeff, lastCoeff) ->
 	console.log("getSimpleRoots")
 	save()
 
-	n = coeff()
 	#tos-n		Coefficient of x^0
 	#tos-1		Coefficient of x^(n-1)
-	lastCoeff = stack[tos-n]
-	leadingCoeff = stack[tos-1]
-	tos -= n
 
 	n = n-1
 
