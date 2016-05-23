@@ -76,13 +76,10 @@ hasImaginaryCoeff = ->
 	tos -= k
 	return imaginaryCoefficients
 
-isSimpleRoot = ->
+isSimpleRoot = (k) ->
 
 	#polycoeff = tos
 
-	push(p1)
-	push(p2)
-	k = coeff()
 
 	#tos-n		Coefficient of x^0
 	#tos-1		Coefficient of x^(n-1)
@@ -102,7 +99,6 @@ isSimpleRoot = ->
 	else
 		isSimpleRootPolynomial = false
 
-	tos -= k
 	return isSimpleRootPolynomial
 
 
@@ -130,11 +126,18 @@ roots = ->
 	h = tos - 2
 
 	console.log("checking if " + stack[tos-1].toString() + " is a case of simple roots")
-	if isSimpleRoot()
+
+	push(p1)
+	push(p2)
+	k = coeff()
+
+	if isSimpleRoot(k)
+		tos -= k
 		debugger
 		console.log("yes, " + stack[tos-1].toString() + " is a case of simple roots")
 		getSimpleRoots()
 	else
+		tos -= k
 		roots2()
 
 	n = tos - h
