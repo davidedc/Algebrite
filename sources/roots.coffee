@@ -58,13 +58,10 @@ Eval_roots = ->
 	roots()
 
 
-hasImaginaryCoeff = ->
+hasImaginaryCoeff = (k) ->
 
 	#polycoeff = tos
 
-	push(p1)
-	push(p2)
-	k = coeff()
 
 	imaginaryCoefficients = false
 	h = tos
@@ -73,7 +70,6 @@ hasImaginaryCoeff = ->
 		if iscomplexnumber(stack[tos-i])
 			imaginaryCoefficients = true
 			break
-	tos -= k
 	return imaginaryCoefficients
 
 isSimpleRoot = (k) ->
@@ -221,10 +217,16 @@ roots2 = ->
 	push(p1)
 	push(p2)
 
-	if !hasImaginaryCoeff()
+	push(p1)
+	push(p2)
+	k = coeff()
+
+	if !hasImaginaryCoeff(k)
+		tos -= k
 		factorpoly()
 		p1 = pop()
 	else
+		tos -= k
 		pop()
 		pop()
 	debugger
