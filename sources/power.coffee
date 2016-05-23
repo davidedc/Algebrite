@@ -199,7 +199,15 @@ yypower = ->
 			arg()
 			push(p2)
 			multiply()
-			push(symbol(PI))
+			if 	evaluatingAsFloats or (iscomplexnumberdouble(p1) and isdouble(p2))
+				# remember that the "double" type is
+				# toxic, i.e. it propagates, so we do
+				# need to evaluate PI to its actual double
+				# value
+				push_double(Math.PI)
+			else
+				#console.log("power pushing PI when p1 is: " + p1 + " and p2 is:" + p2)
+				push(symbol(PI))
 			divide()
 			power()
 			multiply()

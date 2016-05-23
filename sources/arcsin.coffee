@@ -43,9 +43,12 @@ arcsin = ->
 
 	if (isminusoneoversqrttwo(p1)) or
 	(car(p1) == symbol(MULTIPLY) && equalq(car(cdr(p1)), -1,2) and car(car(cdr(cdr(p1)))) == symbol(POWER) && equaln(car(cdr(car(cdr(cdr(p1))))),2) && equalq(car(cdr(cdr(car(cdr(cdr(p1)))))), 1, 2))
-		push_rational(-1, 4)
-		push_symbol(PI)
-		multiply()
+		if evaluatingAsFloats
+			push_double(-Math.PI / 4.0)
+		else
+			push_rational(-1, 4)
+			push_symbol(PI)
+			multiply()
 		restore()
 		return
 
@@ -64,27 +67,42 @@ arcsin = ->
 	switch (n)
 
 		when -2
-			push_rational(-1, 2)
-			push_symbol(PI)
-			multiply()
+			if evaluatingAsFloats
+				push_double(-Math.PI / 2.0)
+			else
+				push_rational(-1, 2)
+				push_symbol(PI)
+				multiply()
 
 		when -1
-			push_rational(-1, 6)
-			push_symbol(PI)
-			multiply()
+			if evaluatingAsFloats
+				push_double(-Math.PI / 6.0)
+			else
+				push_rational(-1, 6)
+				push_symbol(PI)
+				multiply()
 
 		when 0
-			push(zero)
+			if evaluatingAsFloats
+				push_double(0.0)
+			else
+				push(zero)
 
 		when 1
-			push_rational(1, 6)
-			push_symbol(PI)
-			multiply()
+			if evaluatingAsFloats
+				push_double(Math.PI / 6.0)
+			else
+				push_rational(1, 6)
+				push_symbol(PI)
+				multiply()
 
 		when 2
-			push_rational(1, 2)
-			push_symbol(PI)
-			multiply()
+			if evaluatingAsFloats
+				push_double(Math.PI / 2.0)
+			else
+				push_rational(1, 2)
+				push_symbol(PI)
+				multiply()
 
 		else
 			push_symbol(ARCSIN)

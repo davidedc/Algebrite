@@ -82,9 +82,12 @@ yybesselj = ->
 		# n = 1/2
 
 		if (MEQUAL(p2.q.a, 1))
-			push_integer(2)
-			push_symbol(PI)
-			divide()
+			if evaluatingAsFloats
+				push_double(2.0 / Math.PI)
+			else
+				push_integer(2)
+				push_symbol(PI)
+				divide()
 			push(p1)
 			divide()
 			push_rational(1, 2)
@@ -97,9 +100,12 @@ yybesselj = ->
 		# n = -1/2
 
 		if (MEQUAL(p2.q.a, -1))
-			push_integer(2)
-			push_symbol(PI)
-			divide()
+			if evaluatingAsFloats
+				push_double(2.0 / Math.PI)
+			else
+				push_integer(2)
+				push_symbol(PI)
+				divide()
 			push(p1)
 			divide()
 			push_rational(1, 2)

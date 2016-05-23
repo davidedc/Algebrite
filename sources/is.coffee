@@ -117,6 +117,16 @@ isnegativeterm = (p) ->
 	else
 		return 0
 
+isimaginarynumberdouble = (p) ->
+	if ((car(p) == symbol(MULTIPLY) \
+	&& length(p) == 3 \
+	&& isdouble(cadr(p)) \
+	&& equal(caddr(p), imaginaryunit)) \
+	|| equal(p, imaginaryunit))
+		return 1
+	else 
+		return 0
+
 isimaginarynumber = (p) ->
 	if ((car(p) == symbol(MULTIPLY) \
 	&& length(p) == 3 \
@@ -125,6 +135,16 @@ isimaginarynumber = (p) ->
 	|| equal(p, imaginaryunit))
 		return 1
 	else 
+		return 0
+
+iscomplexnumberdouble = (p) ->
+	if ((car(p) == symbol(ADD) \
+	&& length(p) == 3 \
+	&& isdouble(cadr(p)) \
+	&& isimaginarynumberdouble(caddr(p))) \
+	|| isimaginarynumberdouble(p))
+		return 1
+	else
 		return 0
 
 iscomplexnumber = (p) ->

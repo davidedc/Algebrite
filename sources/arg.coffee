@@ -73,11 +73,17 @@ yyarg = ->
 	save()
 	p1 = pop()
 	if (isnegativenumber(p1))
-		push(symbol(PI))
+		if isdouble(p1) or evaluatingAsFloats
+			push_double(Math.PI)
+		else
+			push(symbol(PI))
 		negate()
 	else if (car(p1) == symbol(POWER) && equaln(cadr(p1), -1))
 		# -1 to a power
-		push(symbol(PI))
+		if evaluatingAsFloats
+			push_double(Math.PI)
+		else
+			push(symbol(PI))
 		push(caddr(p1))
 		multiply()
 	else if (car(p1) == symbol(POWER) && cadr(p1) == symbol(E))
@@ -105,7 +111,10 @@ yyarg = ->
 		imag()
 		p3 = pop()
 		if (iszero(p2))
-			push(symbol(PI))
+			if evaluatingAsFloats
+				push_double(Math.PI)
+			else
+				push(symbol(PI))
 			if (isnegative(p3))
 				negate()
 		else
@@ -114,7 +123,10 @@ yyarg = ->
 			divide()
 			arctan()
 			if (isnegative(p2))
-				push_symbol(PI)
+				if evaluatingAsFloats
+					push_double(Math.PI)
+				else
+					push_symbol(PI)
 				if (isnegative(p3))
 					subtract();	# quadrant 1 -> 3
 				else

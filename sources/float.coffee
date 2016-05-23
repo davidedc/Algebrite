@@ -1,14 +1,17 @@
 
 
 Eval_float = ->
+	evaluatingAsFloats++
 	push(cadr(p1))
 	Eval()
 	yyfloat()
 	Eval(); # normalize
+	evaluatingAsFloats--
 
 yyfloat = ->
 	i = 0
 	h = 0
+	evaluatingAsFloats++
 	save()
 	p1 = pop()
 	if (iscons(p1))
@@ -37,4 +40,5 @@ yyfloat = ->
 	else
 		push(p1)
 	restore()
+	evaluatingAsFloats--
 

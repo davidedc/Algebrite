@@ -282,6 +282,7 @@ class text_metric
 
 tos = 0 # top of stack
 expanding = 0
+evaluatingAsFloats = 0
 fmt_x = 0
 fmt_index = 0
 fmt_level = 0

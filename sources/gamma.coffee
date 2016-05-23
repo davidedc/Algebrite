@@ -25,13 +25,19 @@ gammaf = ->
 	p1 = pop()
 
 	if (isrational(p1) && MEQUAL(p1.q.a, 1) && MEQUAL(p1.q.b, 2))
-		push_symbol(PI);;
+		if evaluatingAsFloats
+			push_double(Math.PI)
+		else
+			push_symbol(PI)
 		push_rational(1,2)
 		power()
 		return
 
 	if (isrational(p1) && MEQUAL(p1.q.a, 3) && MEQUAL(p1.q.b, 2))
-		push_symbol(PI);;
+		if evaluatingAsFloats
+			push_double(Math.PI)
+		else
+			push_symbol(PI)
 		push_rational(1,2)
 		power()
 		push_rational(1,2)
@@ -45,10 +51,16 @@ gammaf = ->
 	#	}
 
 	if (isnegativeterm(p1))
-		push_symbol(PI)
+		if evaluatingAsFloats
+			push_double(Math.PI)
+		else
+			push_symbol(PI)
 		push_integer(-1)
 		multiply()
-		push_symbol(PI)
+		if evaluatingAsFloats
+			push_double(Math.PI)
+		else
+			push_symbol(PI)
 		push(p1)
 		multiply()
 		sine()
