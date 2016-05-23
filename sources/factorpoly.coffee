@@ -110,7 +110,7 @@ yyfactorpoly = ->
 				add()
 				p8 = pop()
 
-				if (true)
+				if (DEBUG)
 					console.log("success\nFACTOR=" + p8)
 
 				# factor out negative sign (not req'd because p4 > 1)
@@ -181,7 +181,7 @@ yyfactorpoly = ->
 					
 				p8 = pop()
 
-				if (true)
+				if (DEBUG)
 					console.log("success\nFACTOR=" + p8)
 
 				# factor out negative sign (not req'd because p4 > 1)
@@ -316,7 +316,7 @@ yyfactorpoly = ->
 		add()
 	p1 = pop()
 
-	if (true)
+	if (DEBUG)
 		console.log("POLY=" + p1)
 
 	push(p1)
@@ -348,7 +348,7 @@ yyfactorpoly = ->
 	multiply_noexpand()
 	p7 = pop()
 
-	if (true)
+	if (DEBUG)
 		console.log("RESULT=" + p7)
 
 	stack[h] = p7
@@ -396,7 +396,7 @@ get_factor_from_real_root = ->
 	na0 = 0
 	nan = 0
 
-	if (true)
+	if (DEBUG)
 		push(zero)
 		for i in [0..factpoly_expo]
 			push(stack[polycoeff+i])
@@ -422,7 +422,7 @@ get_factor_from_real_root = ->
 	divisors_onstack()
 	na0 = tos - a0
 
-	if (true)
+	if (DEBUG)
 		console.log("divisors of base term")
 		for i in [0...na0]
 			console.log(", " + stack[a0 + i])
@@ -448,7 +448,7 @@ get_factor_from_real_root = ->
 
 			Evalpoly()
 
-			if (true)
+			if (DEBUG)
 				console.log("try A=" + p4)
 				console.log(", B=" + p5)
 				console.log(", root " + p2)
@@ -471,7 +471,7 @@ get_factor_from_real_root = ->
 
 			Evalpoly()
 
-			if (true)
+			if (DEBUG)
 				console.log("try A=" + p4)
 				console.log(", B=" + p5)
 				console.log(", root " + p2)

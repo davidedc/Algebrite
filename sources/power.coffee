@@ -72,7 +72,6 @@ yypower = ->
 		return
 
 	# both base and exponent are either rational or double?
-
 	if (isnum(p1) && isnum(p2))
 		#console.log("isnum(p1) && isnum(p2)")
 		push(p1)
