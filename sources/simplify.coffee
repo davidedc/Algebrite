@@ -444,7 +444,7 @@ take_care_of_nested_radicals = ->
 					return false
 				push(checkSize)
 
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				multiply()
 
 
@@ -467,14 +467,14 @@ take_care_of_nested_radicals = ->
 				push(checkSize)
 
 				console.log("next coeff " + stack[tos-1].toString())
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				push_integer(2)
 				power()
 				multiply()
 
 				push_integer(1) # 1st coeff
 				console.log("next coeff " + stack[tos-1].toString())
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				push_integer(3)
 				power()
 				multiply()
@@ -515,13 +515,13 @@ take_care_of_nested_radicals = ->
 				push(checkSize)
 
 				console.log("next coeff " + stack[tos-1].toString())
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				multiply()
 
 
 				push_integer(1) # 1st coeff
 				console.log("next coeff " + stack[tos-1].toString())
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				push_integer(2)
 				power()
 				multiply()
@@ -531,7 +531,7 @@ take_care_of_nested_radicals = ->
 
 			console.log("whole polynomial: " + stack[tos-1].toString())
 
-			push(symbol(SYMBOL_X))
+			push(symbol(SECRETX))
 
 
 			recursionLevelNestedRadicalsRemoval++

@@ -767,13 +767,13 @@ mini_solve = (n) ->
 			if iszero(p4) and iszero(p6) and !iszero(p5) and !iszero(p7)
 				console.log("biquadratic case")
 				push(p3)
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				push_integer(2)
 				power()
 				multiply()
 
 				push(p5)
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				multiply()
 
 				push(p7)
@@ -781,7 +781,7 @@ mini_solve = (n) ->
 				add()
 				add()
 
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				roots()
 
 				biquadraticSolutions = pop()
@@ -1172,20 +1172,20 @@ mini_solve = (n) ->
 
 				console.log("tos 4 " + tos)
 
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				push_integer(4)
 				power()
 				console.log("4 * x^4: " + stack[tos-1].toString())
 
 				push(R_p)
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				push_integer(2)
 				power()
 				multiply()
 				console.log("R_p * x^2: " + stack[tos-1].toString())
 
 				push(R_q)
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				multiply()
 				console.log("R_q * x: " + stack[tos-1].toString())
 
@@ -1199,7 +1199,7 @@ mini_solve = (n) ->
 				simplify()
 				console.log("solving depressed quartic: " + stack[tos-1].toString())
 
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 
 				roots()
 
@@ -1252,18 +1252,18 @@ mini_solve = (n) ->
 				coeff4 = pop()
 
 				# now build the polynomial
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				push_integer(3)
 				power()
 
 				push(coeff2)
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				push_integer(2)
 				power()
 				multiply()
 
 				push(coeff3)
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				multiply()
 
 				push(coeff4)
@@ -1273,7 +1273,7 @@ mini_solve = (n) ->
 				add()
 
 				console.log("Descarte's resolventCubic: " +  stack[tos-1].toString())
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 
 				roots()
 
@@ -1336,12 +1336,12 @@ mini_solve = (n) ->
 				# factoring the quartic into two quadratics:
 
 				# now build the polynomial
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				push_integer(2)
 				power()
 
 				push(R_s)
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				multiply()
 
 				push(R_t)
@@ -1351,12 +1351,12 @@ mini_solve = (n) ->
 
 				console.log("factored quartic 1: " + stack[tos-1].toString())
 
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				push_integer(2)
 				power()
 
 				push(R_u)
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				multiply()
 
 				push(R_v)
@@ -1411,18 +1411,18 @@ mini_solve = (n) ->
 
 				coeff4 = pop()
 
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				push_integer(3)
 				power()
 
 				push(coeff2)
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				push_integer(2)
 				power()
 				multiply()
 
 				push(coeff3)
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 				multiply()
 
 				push(coeff4)
@@ -1432,7 +1432,7 @@ mini_solve = (n) ->
 				add()
 
 				console.log("resolventCubic: " +  stack[tos-1].toString())
-				push(symbol(SYMBOL_X))
+				push(symbol(SECRETX))
 
 				roots()
 
