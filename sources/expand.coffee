@@ -85,6 +85,20 @@ expand = ->
 	push(p3)
 	push(p2)
 	push(p9)
+
+	# if the denominator is one then always bail out
+	# also bail out if the denominator is not one but
+	# it's not anything recognizable as a polynomial.
+	if isone(p3) || isone(p2)
+		if !ispoly(p2,p9) || isone(p2)
+			pop()
+			pop()
+			pop()
+			push(p5)
+			# p5 is the original input, leave unchanged
+			restore()
+			return
+
 	divpoly()
 	p7 = pop()
 

@@ -68,4 +68,18 @@ test_expand = ->
 
 		"expand(1/(x^2-4x+4))",
 		"1/(x^2-4*x+4)",
+
+		# cases where nothing can be done
+
+		"expand(sin(x))",
+		"sin(x)",
+
+		"expand(x)",
+		"x",
+
+		"expand(1/sin(x))",
+		# unclear why the extra parens are added but no biggie
+		"1/(sin(x))",
+
+
 	]
