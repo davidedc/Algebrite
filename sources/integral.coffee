@@ -274,7 +274,7 @@ itab = [
 	# 441
 	"f(arcsin(a*x),x*arcsin(a*x)+sqrt(1-a^2*x^2)/a)",
 	# 442
-	"f(arccos(a*x),x*arccos(a*x)+sqrt(1-a^2*x^2)/a)",
+	"f(arccos(a*x),x*arccos(a*x)-sqrt(1-a^2*x^2)/a)",
 	# 443
 	"f(arctan(a*x),x*arctan(a*x)-1/2*log(1+a^2*x^2)/a)",
 	# 485 (with addition of a)
