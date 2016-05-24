@@ -591,7 +591,7 @@ test_integral = ->
 		"0",
 
 		#442
-		"integral(arccos(A*X),X)-X*arccos(A*X)-sqrt(1-A^2*X^2)/A",
+		"integral(arccos(A*X),X)-X*arccos(A*X)+sqrt(1-A^2*X^2)/A",
 		"0",
 
 		#443
