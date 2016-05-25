@@ -98,6 +98,24 @@ isSimpleRoot = (k) ->
 	return isSimpleRootPolynomial
 
 
+normalisedCoeff = ->
+	k = coeff()
+	#console.log("->" + tos)
+	divideBy = stack[tos-1]
+	miniStack = []
+	for i in [1..k]
+		miniStack.push(pop())
+		#console.log(tos)
+
+	for i in [(k-1)..0]
+		push(miniStack[i])
+		push(divideBy)
+		divide()
+		#console.log(tos)
+	return k
+
+
+
 # takes the polynomial and the
 # variable on the stack
 
@@ -105,6 +123,8 @@ roots = ->
 	h = 0
 	i = 0
 	n = 0
+
+	save()
 
 	# the simplification of nested radicals uses
 	# "roots", which in turn uses simplification
@@ -116,6 +136,7 @@ roots = ->
 		pop()
 		pop()
 		push(symbol(NIL))
+		restore()
 		return
 
 	performing_roots = true
@@ -123,9 +144,15 @@ roots = ->
 
 	console.log("checking if " + stack[tos-1].toString() + " is a case of simple roots")
 
+	p2 = pop()
+	p1 = pop()
+
 	push(p1)
 	push(p2)
-	k = coeff()
+
+	push(p1)
+	push(p2)
+	k = normalisedCoeff()
 
 	if isSimpleRoot(k)
 		debugger
@@ -145,9 +172,9 @@ roots = ->
 		stop("roots: the polynomial is not factorable, try nroots")
 	if (n == 1)
 		performing_roots = false
+		restore()
 		return
 	sort_stack(n)
-	save()
 	p1 = alloc_tensor(n)
 	p1.tensor.ndim = 1
 	p1.tensor.dim[0] = n
@@ -219,7 +246,7 @@ roots2 = ->
 
 	push(p1)
 	push(p2)
-	k = coeff()
+	k = normalisedCoeff()
 
 	if !hasImaginaryCoeff(k)
 		tos -= k
@@ -255,12 +282,12 @@ roots3 = ->
 	if (car(p1) == symbol(POWER) && ispoly(cadr(p1), p2) && isposint(caddr(p1)))
 		push(cadr(p1))
 		push(p2)
-		n = coeff()
+		n = normalisedCoeff()
 		mini_solve(n)
 	else if (ispoly(p1, p2))
 		push(p1)
 		push(p2)
-		n = coeff()
+		n = normalisedCoeff()
 		mini_solve(n)
 	restore()
 
@@ -281,6 +308,7 @@ roots3 = ->
 # since there is a chance we factored the polynomial and in so
 # doing we found some solutions and lowered the degree.
 mini_solve = (n) ->
+	debugger
 	#console.log "mini_solve >>>>>>>>>>>>>>>>>>>>>>>> tos:" + tos
 
 	save()
@@ -663,11 +691,12 @@ mini_solve = (n) ->
 				push(R_C)
 				simplify()
 				Eval()
-				yyfloat()
-				Eval(); # normalize
 				absval()
+				console.log "cubic: C as absval: " + stack[tos-1].toString()
+				Eval(); # normalize
+				yyfloat()
 				R_C_simplified_toCheckIfZero = pop()
-				console.log "cubic: C as float: " + R_C_simplified_toCheckIfZero.toString()
+				console.log "cubic: C as absval and float: " + R_C_simplified_toCheckIfZero.toString()
 				if iszero(R_C_simplified_toCheckIfZero)
 					console.log " cubic: C IS ZERO flipping the sign"
 					flipSignOFQSoCIsNotZero = true
