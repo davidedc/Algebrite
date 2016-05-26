@@ -690,13 +690,10 @@ mini_solve = (n) ->
 
 				push(R_C)
 				simplify()
-				Eval()
-				absval()
-				console.log "cubic: C as absval: " + stack[tos-1].toString()
-				Eval(); # normalize
-				yyfloat()
+				absValFloat()
 				R_C_simplified_toCheckIfZero = pop()
 				console.log "cubic: C as absval and float: " + R_C_simplified_toCheckIfZero.toString()
+
 				if iszero(R_C_simplified_toCheckIfZero)
 					console.log " cubic: C IS ZERO flipping the sign"
 					flipSignOFQSoCIsNotZero = true

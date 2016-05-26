@@ -6,7 +6,17 @@ Eval_abs = ->
 	Eval()
 	absval()
 
+
+absValFloat = ->
+	Eval()
+	absval()
+	Eval(); # normalize
+	zzfloat()
+	#if !isdouble(stack[tos-1])
+	#	stop("absValFloat should return a double and instead got: " + stack[tos-1])
+
 absval = ->
+	debugger
 	h = 0
 	save()
 	p1 = pop()
@@ -30,6 +40,7 @@ absval = ->
 		multiply()
 		push_rational(1, 2)
 		power()
+		console.log("top of stack in abs: " + stack[tos-1].toString())
 		restore()
 		return
 

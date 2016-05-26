@@ -8,6 +8,33 @@ Eval_float = ->
 	Eval(); # normalize
 	evaluatingAsFloats--
 
+checkFloatHasWorkedOutCompletely = (nodeToCheck) ->
+	numberOfPowers = countOccurrencesOfSymbol(symbol(POWER),nodeToCheck)
+	numberOfPIs = countOccurrencesOfSymbol(symbol(PI),nodeToCheck)
+	numberOfEs = countOccurrencesOfSymbol(symbol(E),nodeToCheck)
+	numberOfMults = countOccurrencesOfSymbol(symbol(MULTIPLY),nodeToCheck)
+	numberOfSums = countOccurrencesOfSymbol(symbol(ADD),nodeToCheck)
+	console.log "     ... numberOfPowers: " + numberOfPowers
+	console.log "     ... numberOfPIs: " + numberOfPIs
+	console.log "     ... numberOfEs: " + numberOfEs
+	console.log "     ... numberOfMults: " + numberOfMults
+	console.log "     ... numberOfSums: " + numberOfSums
+	if numberOfPowers > 1 or numberOfPIs > 0 or numberOfEs > 0 or numberOfMults > 1 or numberOfSums > 1
+		stop("float: some unevalued parts in " + nodeToCheck)
+
+zzfloat = ->
+	save()
+	evaluatingAsFloats++
+	#p1 = pop()
+	#push(cadr(p1))
+	#push(p1)
+	Eval()
+	yyfloat()
+	Eval(); # normalize
+	evaluatingAsFloats--
+	restore()
+	#checkFloatHasWorkedOutCompletely(stack[tos-1])
+
 yyfloat = ->
 	i = 0
 	h = 0
