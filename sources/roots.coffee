@@ -556,10 +556,7 @@ mini_solve = (n) ->
 
 			push(R_DELTA0)
 			simplify()
-			Eval()
-			yyfloat()
-			Eval(); # normalize
-			absval()
+			absValFloat()
 			R_DELTA0_toBeCheckedIfZero = pop()
 			console.log "cubic: D0 as float: " + R_DELTA0_toBeCheckedIfZero.toString()
 			#if iszero(R_DELTA0_toBeCheckedIfZero)
@@ -577,10 +574,7 @@ mini_solve = (n) ->
 			add()
 			add()
 			simplify()
-			Eval()
-			yyfloat()
-			Eval(); # normalize
-			absval()
+			absValFloat()
 			R_determinant = pop()
 			console.log "cubic: DETERMINANT: " + R_determinant.toString()
 
@@ -1317,10 +1311,7 @@ mini_solve = (n) ->
 					push(R_p)
 					add()
 
-					Eval()
-					yyfloat()
-					Eval(); # normalize
-					absval()
+					absValFloat()
 					toBeCheckedIFZero = pop()
 					console.log("abs value is: " +  eachSolution)
 					if !iszero(toBeCheckedIFZero)
@@ -1475,10 +1466,7 @@ mini_solve = (n) ->
 					push(R_p)
 					add()
 
-					Eval()
-					yyfloat()
-					Eval(); # normalize
-					absval()
+					absValFloat()
 					toBeCheckedIFZero = pop()
 					console.log("abs value is: " +  eachSolution)
 					if !iszero(toBeCheckedIFZero)
@@ -1576,18 +1564,12 @@ mini_solve = (n) ->
 
 			push(R_determinant)
 			simplify()
-			Eval()
-			yyfloat()
-			Eval(); # normalize
-			absval()
+			absValFloat()
 			R_determinant_simplified_toCheckIfZero = pop()
 
 			push(R_DELTA0)
 			simplify()
-			Eval()
-			yyfloat()
-			Eval(); # normalize
-			absval()
+			absValFloat()
 			R_DELTA0_simplified_toCheckIfZero = pop()
 
 			console.log("tos dddddfffffffffd: " + tos)
@@ -1697,10 +1679,7 @@ mini_solve = (n) ->
 
 					push(R_Q)
 					simplify()
-					Eval()
-					yyfloat()
-					Eval(); # normalize
-					absval()
+					absValFloat()
 
 					R_Q_simplified_toCheckIfZero = pop()
 					console.log "Q simplified and abs" + R_Q_simplified_toCheckIfZero.toString()
@@ -1748,10 +1727,7 @@ mini_solve = (n) ->
 				# now check if S is zero
 				push(R_S)
 				simplify()
-				Eval()
-				yyfloat()
-				Eval(); # normalize
-				absval()
+				absValFloat()
 
 				R_S_simplified_toCheckIfZero = pop()
 				console.log "S " + R_S_simplified_toCheckIfZero.toString()
