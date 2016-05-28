@@ -12,4 +12,8 @@ test_rationalize = ->
 
 		"rationalize(x^(1/3)+x^(2/3))",
 		"x^(1/3)*(1+x^(1/3))",
+
+		"rationalize(rect(-(-1)^(3/4)))",
+		"(1-i)/(2^(1/2))",
+
 	]
