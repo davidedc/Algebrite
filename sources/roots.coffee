@@ -13,7 +13,6 @@ performing_roots = false
 
 Eval_roots = ->
 	# A == B -> A - B
-	debugger
 
 	p2 = cadr(p1)
 
@@ -142,7 +141,7 @@ roots = ->
 	performing_roots = true
 	h = tos - 2
 
-	console.log("checking if " + stack[tos-1].toString() + " is a case of simple roots")
+	if DEBUG then console.log("checking if " + stack[tos-1].toString() + " is a case of simple roots")
 
 	p2 = pop()
 	p1 = pop()
@@ -155,8 +154,7 @@ roots = ->
 	k = normalisedCoeff()
 
 	if isSimpleRoot(k)
-		debugger
-		console.log("yes, " + stack[tos-1].toString() + " is a case of simple roots")
+		if DEBUG then console.log("yes, " + stack[tos-1].toString() + " is a case of simple roots")
 		lastCoeff = stack[tos-k]
 		leadingCoeff = stack[tos-1]
 		tos -= k
@@ -192,7 +190,7 @@ roots = ->
 # http://www.wolframalpha.com/input/?i=roots+x%5E15+%2B+1
 # http://www.wolframalpha.com/input/?i=roots+a*x%5E15+%2B+b
 getSimpleRoots = (n, leadingCoeff, lastCoeff) ->
-	console.log("getSimpleRoots")
+	if DEBUG then console.log("getSimpleRoots")
 	save()
 
 	#tos-n		Coefficient of x^0
@@ -256,7 +254,6 @@ roots2 = ->
 		tos -= k
 		pop()
 		pop()
-	debugger
 
 
 	if (car(p1) == symbol(MULTIPLY))
@@ -308,7 +305,6 @@ roots3 = ->
 # since there is a chance we factored the polynomial and in so
 # doing we found some solutions and lowered the degree.
 mini_solve = (n) ->
-	debugger
 	#console.log "mini_solve >>>>>>>>>>>>>>>>>>>>>>>> tos:" + tos
 
 	save()
@@ -336,8 +332,8 @@ mini_solve = (n) ->
 
 		# B^2
 		push(p4)
-		push(p4)
-		multiply()
+		push_integer(2)
+		power()
 
 		# 4AC
 		push_integer(4)
@@ -363,9 +359,11 @@ mini_solve = (n) ->
 
 		# 1/2A
 		push(p3)
-		divide()
-		push_rational(1, 2)
+		push_integer(2)
 		multiply()
+		divide()
+		#simplify()
+		#rationalize()
 		# tos - 1 now is 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
 
 		push(p6);
@@ -387,6 +385,8 @@ mini_solve = (n) ->
 		divide()
 		push_rational(1, 2)
 		multiply()
+		#simplify()
+		#rationalize()
 		# tos - 1: 2nd root: (-B - (B^2 - 4AC)^(1/2)) / (2A)
 		# tos - 2: 1st root: (-B + (B^2 - 4AC)^(1/2)) / (2A)
 
@@ -537,7 +537,7 @@ mini_solve = (n) ->
 
 
 		if (n == 4)
-			console.log ">>>>>>>>>>>>>>>> actually using cubic formula <<<<<<<<<<<<<<< "
+			if DEBUG then console.log ">>>>>>>>>>>>>>>> actually using cubic formula <<<<<<<<<<<<<<< "
 
 			#console.log ">>>> A:" + p3.toString()
 			#console.log ">>>> B:" + p4.toString()
@@ -545,7 +545,7 @@ mini_solve = (n) ->
 			#console.log ">>>> D:" + p6.toString()
 
 
-			console.log "cubic: D0: " + R_DELTA0.toString()
+			if DEBUG then console.log "cubic: D0: " + R_DELTA0.toString()
 
 			push(R_DELTA0)
 			push_integer(3)
@@ -558,7 +558,7 @@ mini_solve = (n) ->
 			simplify()
 			absValFloat()
 			R_DELTA0_toBeCheckedIfZero = pop()
-			console.log "cubic: D0 as float: " + R_DELTA0_toBeCheckedIfZero.toString()
+			if DEBUG then console.log "cubic: D0 as float: " + R_DELTA0_toBeCheckedIfZero.toString()
 			#if iszero(R_DELTA0_toBeCheckedIfZero)
 			#	console.log " *********************************** D0 IS ZERO"
 
@@ -576,7 +576,7 @@ mini_solve = (n) ->
 			simplify()
 			absValFloat()
 			R_determinant = pop()
-			console.log "cubic: DETERMINANT: " + R_determinant.toString()
+			if DEBUG then console.log "cubic: DETERMINANT: " + R_determinant.toString()
 
 			# R_DELTA1
 			push(R_2_b3)
@@ -585,7 +585,7 @@ mini_solve = (n) ->
 			add()
 			add()
 			R_DELTA1 = pop()
-			console.log "cubic: D1: " + R_DELTA1.toString()
+			if DEBUG then console.log "cubic: D1: " + R_DELTA1.toString()
 
 			# R_Q
 			push(R_DELTA1)
@@ -601,12 +601,12 @@ mini_solve = (n) ->
 
 			if iszero(R_determinant)
 				if iszero(R_DELTA0_toBeCheckedIfZero)
-					console.log " cubic: DETERMINANT IS ZERO and delta0 is zero"
+					if DEBUG then console.log " cubic: DETERMINANT IS ZERO and delta0 is zero"
 					push(R_m_b_over_3a) # just same solution three times
 					restore()
 					return
 				else
-					console.log " cubic: DETERMINANT IS ZERO and delta0 is not zero"
+					if DEBUG then console.log " cubic: DETERMINANT IS ZERO and delta0 is not zero"
 					push(p3)
 					push(p6)
 					push_integer(9)
@@ -680,16 +680,16 @@ mini_solve = (n) ->
 				power()
 				simplify()
 				R_C = pop()
-				console.log "cubic: C: " + R_C.toString()
+				if DEBUG then console.log "cubic: C: " + R_C.toString()
 
 				push(R_C)
 				simplify()
 				absValFloat()
 				R_C_simplified_toCheckIfZero = pop()
-				console.log "cubic: C as absval and float: " + R_C_simplified_toCheckIfZero.toString()
+				if DEBUG then console.log "cubic: C as absval and float: " + R_C_simplified_toCheckIfZero.toString()
 
 				if iszero(R_C_simplified_toCheckIfZero)
-					console.log " cubic: C IS ZERO flipping the sign"
+					if DEBUG then console.log " cubic: C IS ZERO flipping the sign"
 					flipSignOFQSoCIsNotZero = true
 				else
 					C_CHECKED_AS_NOT_ZERO = true
@@ -781,11 +781,11 @@ mini_solve = (n) ->
 		# See http://www.sscc.edu/home/jdavidso/Math/Catalog/Polynomials/Fourth/Fourth.html
 		# for a description of general shapes and properties of fourth degree polynomials
 		if (n == 5)
-			console.log ">>>>>>>>>>>>>>>> actually using quartic formula <<<<<<<<<<<<<<< "
+			if DEBUG then console.log ">>>>>>>>>>>>>>>> actually using quartic formula <<<<<<<<<<<<<<< "
 			p7 = pop() # E
 
 			if iszero(p4) and iszero(p6) and !iszero(p5) and !iszero(p7)
-				console.log("biquadratic case")
+				if DEBUG then console.log("biquadratic case")
 				push(p3)
 				push(symbol(SECRETX))
 				push_integer(2)
@@ -977,7 +977,7 @@ mini_solve = (n) ->
 			add()
 
 			R_determinant = pop()
-			console.log("R_determinant: " + R_determinant.toString())
+			if DEBUG then console.log("R_determinant: " + R_determinant.toString())
 
 			# DELTA0
 			push(R_c2) # term one of DELTA0
@@ -999,7 +999,7 @@ mini_solve = (n) ->
 			add()
 
 			R_DELTA0 = pop()
-			console.log("R_DELTA0: " + R_DELTA0.toString())
+			if DEBUG then console.log("R_DELTA0: " + R_DELTA0.toString())
 
 			# DELTA1
 			push_integer(2)
@@ -1039,7 +1039,7 @@ mini_solve = (n) ->
 			add()
 
 			R_DELTA1 = pop()
-			console.log("R_DELTA1: " + R_DELTA1.toString())
+			if DEBUG then console.log("R_DELTA1: " + R_DELTA1.toString())
 
 			# p
 			push_integer(8)
@@ -1059,7 +1059,7 @@ mini_solve = (n) ->
 			divide()
 
 			R_p = pop()
-			console.log("p: " + R_p.toString())
+			if DEBUG then console.log("p: " + R_p.toString())
 
 			# q
 			push(R_b3)
@@ -1082,11 +1082,11 @@ mini_solve = (n) ->
 			divide()
 
 			R_q = pop()
-			console.log("q: " + R_q.toString())
+			if DEBUG then console.log("q: " + R_q.toString())
 
-			console.log("tos 1 " + tos)
+			if DEBUG then console.log("tos 1 " + tos)
 			if !iszero(p4)
-				console.log("tos 2 " + tos)
+				if DEBUG then console.log("tos 2 " + tos)
 
 				push_integer(8)
 				push(p5)
@@ -1111,7 +1111,7 @@ mini_solve = (n) ->
 				divide()
 
 				R_p = pop()
-				console.log("p for depressed quartic: " + R_p.toString())
+				if DEBUG then console.log("p for depressed quartic: " + R_p.toString())
 
 				push(p4)
 				push_integer(3)
@@ -1146,7 +1146,7 @@ mini_solve = (n) ->
 				divide()
 
 				R_q = pop()
-				console.log("q for depressed quartic: " + R_q.toString())
+				if DEBUG then console.log("q for depressed quartic: " + R_q.toString())
 
 
 				# convert to depressed quartic
@@ -1188,44 +1188,43 @@ mini_solve = (n) ->
 				divide()
 
 				R_r = pop()
-				console.log("r for depressed quartic: " + R_r.toString())
+				if DEBUG then console.log("r for depressed quartic: " + R_r.toString())
 
-				console.log("tos 4 " + tos)
+				if DEBUG then console.log("tos 4 " + tos)
 
 				push(symbol(SECRETX))
 				push_integer(4)
 				power()
-				console.log("4 * x^4: " + stack[tos-1].toString())
+				if DEBUG then console.log("4 * x^4: " + stack[tos-1].toString())
 
 				push(R_p)
 				push(symbol(SECRETX))
 				push_integer(2)
 				power()
 				multiply()
-				console.log("R_p * x^2: " + stack[tos-1].toString())
+				if DEBUG then console.log("R_p * x^2: " + stack[tos-1].toString())
 
 				push(R_q)
 				push(symbol(SECRETX))
 				multiply()
-				console.log("R_q * x: " + stack[tos-1].toString())
+				if DEBUG then console.log("R_q * x: " + stack[tos-1].toString())
 
 				push(R_r)
-				console.log("R_r: " + stack[tos-1].toString())
+				if DEBUG then console.log("R_r: " + stack[tos-1].toString())
 
 				add()
 				add()
 				add()
 
 				simplify()
-				console.log("solving depressed quartic: " + stack[tos-1].toString())
+				if DEBUG then console.log("solving depressed quartic: " + stack[tos-1].toString())
 
 				push(symbol(SECRETX))
 
 				roots()
 
 				depressedSolutions = pop()
-				console.log("tos 5 ": + tos)
-				console.log("depressedSolutions: " +  depressedSolutions)
+				if DEBUG then console.log("depressedSolutions: " +  depressedSolutions)
 
 				for eachSolution in depressedSolutions.tensor.elem
 					push(eachSolution)
@@ -1236,7 +1235,7 @@ mini_solve = (n) ->
 					divide()
 					subtract()
 					simplify()
-					console.log("solution from depressed: " +  stack[tos-1].toString())
+					if DEBUG then console.log("solution from depressed: " +  stack[tos-1].toString())
 
 				restore()
 				return
@@ -1448,18 +1447,18 @@ mini_solve = (n) ->
 				add()
 				add()
 
-				console.log("resolventCubic: " +  stack[tos-1].toString())
+				if DEBUG then console.log("resolventCubic: " +  stack[tos-1].toString())
 				push(symbol(SECRETX))
 
 				roots()
 
 				resolventCubicSolutions = pop()
-				console.log("resolventCubicSolutions: " +  resolventCubicSolutions)
+				if DEBUG then console.log("resolventCubicSolutions: " +  resolventCubicSolutions)
 
 				R_m = null
 				#R_m = resolventCubicSolutions.tensor.elem[1]
 				for eachSolution in resolventCubicSolutions.tensor.elem
-					console.log("examining solution: " +  eachSolution)
+					if DEBUG then console.log("examining solution: " +  eachSolution)
 					push(eachSolution)
 					push_integer(2)
 					multiply()
@@ -1468,12 +1467,12 @@ mini_solve = (n) ->
 
 					absValFloat()
 					toBeCheckedIFZero = pop()
-					console.log("abs value is: " +  eachSolution)
+					if DEBUG then console.log("abs value is: " +  eachSolution)
 					if !iszero(toBeCheckedIFZero)
 						R_m = eachSolution
 						break
 
-				console.log("chosen solution: " +  R_m)
+				if DEBUG then console.log("chosen solution: " +  R_m)
 				push(R_m)
 				push_integer(2)
 				multiply()
@@ -1572,8 +1571,6 @@ mini_solve = (n) ->
 			absValFloat()
 			R_DELTA0_simplified_toCheckIfZero = pop()
 
-			console.log("tos dddddfffffffffd: " + tos)
-
 			S_CHECKED_AS_NOT_ZERO = false
 			choiceOfRadicalInQSoSIsNotZero = 0
 
@@ -1619,7 +1616,7 @@ mini_solve = (n) ->
 					push_integer(2)
 					divide()
 
-					console.log("content of cubic root: " + stack[tos-1].toString())
+					if DEBUG then console.log("content of cubic root: " + stack[tos-1].toString())
 
 					# outer radical calculation: cubic root
 					# now we actually have to find all the roots
@@ -1628,15 +1625,15 @@ mini_solve = (n) ->
 					power()
 					simplify()
 					R_principalCubicRoot = pop()
-					console.log("principal cubic root: " + R_principalCubicRoot.toString())
+					if DEBUG then console.log("principal cubic root: " + R_principalCubicRoot.toString())
 
-					console.log("tos aaaadddddfffffffffd: " + tos)
+					if DEBUG then console.log("tos : " + tos)
 
 					if choiceOfRadicalInQSoSIsNotZero == 0
-						console.log("chosing principal cubic root")
+						if DEBUG then console.log("chosing principal cubic root")
 						push(R_principalCubicRoot)
 					else if choiceOfRadicalInQSoSIsNotZero == 1
-						console.log("chosing cubic root beyond principal")
+						if DEBUG then console.log("chosing cubic root beyond principal")
 						push(R_principalCubicRoot)
 						push_rational(-1,2)
 						multiply()
@@ -1652,7 +1649,7 @@ mini_solve = (n) ->
 						multiply()
 						add()
 					else if choiceOfRadicalInQSoSIsNotZero == 1
-						console.log("chosing cubic root beyond beyond principal")
+						if DEBUG then console.log("chosing cubic root beyond beyond principal")
 						push(R_principalCubicRoot)
 						push_rational(-1,2)
 						multiply()
@@ -1673,8 +1670,8 @@ mini_solve = (n) ->
 
 					simplify()
 					R_Q = pop()
-					console.log "Q " + R_Q.toString()
-					console.log("tos dddddfffd: " + tos)
+					if DEBUG then console.log "Q " + R_Q.toString()
+					if DEBUG then console.log("tos: " + tos)
 
 
 					push(R_Q)
@@ -1682,15 +1679,15 @@ mini_solve = (n) ->
 					absValFloat()
 
 					R_Q_simplified_toCheckIfZero = pop()
-					console.log "Q simplified and abs" + R_Q_simplified_toCheckIfZero.toString()
+					if DEBUG then console.log "Q simplified and abs" + R_Q_simplified_toCheckIfZero.toString()
 					if iszero(R_Q_simplified_toCheckIfZero) and (!iszero(R_determinant_simplified_toCheckIfZero) and iszero(R_DELTA0_simplified_toCheckIfZero))
-						console.log " *********************************** Q IS ZERO and it matters, flipping the sign"
+						if DEBUG then console.log " *********************************** Q IS ZERO and it matters, flipping the sign"
 						flipSignOFRadicalSoQIsNotZero = true
 					else
 						Q_CHECKED_AS_NOT_ZERO = true
 
 							
-					console.log("tos ddd: " + tos)
+					if DEBUG then console.log("tos: " + tos)
 
 				# S
 				push_rational(-2,3)
@@ -1722,7 +1719,7 @@ mini_solve = (n) ->
 				show_power_debug = true
 				simplify()
 				R_S = pop()
-				console.log "S " + R_S.toString()
+				if DEBUG then console.log "S " + R_S.toString()
 
 				# now check if S is zero
 				push(R_S)
@@ -1730,19 +1727,19 @@ mini_solve = (n) ->
 				absValFloat()
 
 				R_S_simplified_toCheckIfZero = pop()
-				console.log "S " + R_S_simplified_toCheckIfZero.toString()
+				if DEBUG then console.log "S " + R_S_simplified_toCheckIfZero.toString()
 				if iszero(R_S_simplified_toCheckIfZero)
-					console.log " *********************************** S IS ZERO chosing another cubic root"
+					if DEBUG then console.log " *********************************** S IS ZERO chosing another cubic root"
 					choiceOfRadicalInQSoSIsNotZero++
 				else
 					S_CHECKED_AS_NOT_ZERO = true
 
-				console.log("tos vvv: " + tos)
+				if DEBUG then console.log("tos: " + tos)
 
 
 			# ----------------------------
 
-			console.log("tos aaa: " + tos)
+			if DEBUG then console.log("tos: " + tos)
 
 			push(p4)
 			negate()
@@ -1768,7 +1765,7 @@ mini_solve = (n) ->
 			divide()
 			R_q_over_S = pop()
 
-			console.log("tos before putting together the 4 solutions: " + tos)
+			if DEBUG then console.log("tos before putting together the 4 solutions: " + tos)
 
 			# first solution
 			push(R_minus_b_over_4a) # first term

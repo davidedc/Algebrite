@@ -17,7 +17,6 @@ factpoly_expo = 0
 
 factorpoly = ->
 	save()
-	console.log("expanding before yyfactorpoly(): " + expanding)
 
 	p2 = pop()
 	p1 = pop()
@@ -40,9 +39,6 @@ factorpoly = ->
 	push(p1)
 	push(p2)
 	yyfactorpoly()
-	console.log("top of stack after yyfactorpoly(): " + stack[tos-1].toString())
-	console.log("expanding after yyfactorpoly(): " + expanding)
-	debugger
 
 	restore()
 
@@ -90,7 +86,7 @@ yyfactorpoly = ->
 			push_integer(0)
 			p5 = pop()
 		else
-			console.log("trying to find a " + whichRootsAreWeFinding + " root")
+			#console.log("trying to find a " + whichRootsAreWeFinding + " root")
 			if whichRootsAreWeFinding == "real"
 				foundRealRoot = get_factor_from_real_root()
 			else if whichRootsAreWeFinding == "complex"
@@ -154,7 +150,7 @@ yyfactorpoly = ->
 					multiply()
 					add()
 				remainingPoly = pop()
-				console.log("real branch remainingPoly: " + remainingPoly)
+				#console.log("real branch remainingPoly: " + remainingPoly)
 
 		else if whichRootsAreWeFinding == "complex"
 			if foundComplexRoot == 0
@@ -165,13 +161,13 @@ yyfactorpoly = ->
 				push(p4) # A
 				push(p2) # x
 				subtract()
-				console.log("first factor: " + stack[tos-1].toString())
+				#console.log("first factor: " + stack[tos-1].toString())
 
 				push(p4) # A
 				conjugate()
 				push(p2) # x
 				subtract()
-				console.log("second factor: " + stack[tos-1].toString())
+				#console.log("second factor: " + stack[tos-1].toString())
 
 				multiply()
 
@@ -205,18 +201,18 @@ yyfactorpoly = ->
 				push(p7)
 				previousFactorisation = pop()
 
-				console.log("previousFactorisation: " + previousFactorisation)
+				#console.log("previousFactorisation: " + previousFactorisation)
 
 				push(p7)
 				push(p8)
 				multiply_noexpand()
 				p7 = pop()
 
-				console.log("new prospective factorisation: " + p7)
+				#console.log("new prospective factorisation: " + p7)
 
 
 				# build the polynomial of the unfactored part
-				console.log("build the polynomial of the unfactored part factpoly_expo: " + factpoly_expo)
+				#console.log("build the polynomial of the unfactored part factpoly_expo: " + factpoly_expo)
 				
 				if !remainingPoly?
 					push(zero)
@@ -228,7 +224,7 @@ yyfactorpoly = ->
 						multiply()
 						add()
 					remainingPoly = pop()
-				console.log("original polynomial (dividend): " + remainingPoly)
+				#console.log("original polynomial (dividend): " + remainingPoly)
 
 				dividend = remainingPoly
 				#push(dividend)
@@ -236,7 +232,7 @@ yyfactorpoly = ->
 				#startingDegree = pop()
 				push(dividend)
 
-				console.log("dividing " + stack[tos-1].toString() + " by " + p8)
+				#console.log("dividing " + stack[tos-1].toString() + " by " + p8)
 				push(p8) # divisor
 				push(p2) # X
 				divpoly()
@@ -254,8 +250,8 @@ yyfactorpoly = ->
 					#console.log("gcd top of stack: " + stack[tos-1].toString())
 
 
-					console.log("we found a polynomial based on complex root and its conj but it doesn't divide the poly, quitting")
-					console.log("so just returning previousFactorisation times dividend: " + previousFactorisation + " * " + dividend)
+					if DEBUG then console.log("we found a polynomial based on complex root and its conj but it doesn't divide the poly, quitting")
+					if DEBUG then console.log("so just returning previousFactorisation times dividend: " + previousFactorisation + " * " + dividend)
 					push(previousFactorisation)
 					push(dividend)
 
@@ -271,7 +267,7 @@ yyfactorpoly = ->
 					restore()
 					return
 
-				console.log("result: (still to be factored) " + remainingPoly)
+				#console.log("result: (still to be factored) " + remainingPoly)
 
 				#push(remainingPoly)
 				#degree()
@@ -287,21 +283,17 @@ yyfactorpoly = ->
 					# BUT 
 				###
 
-				console.log("tos 0: " + tos)
 
 				for i in [0..factpoly_expo]
 					pop()
 
-				console.log("tos 1: " + tos)
 				push(remainingPoly)
 				push(p2)
 				coeff()
-				console.log("tos 2: " + tos)
 
 
 				factpoly_expo -= 2
-				console.log("factpoly_expo: " + factpoly_expo)
-				debugger
+				#console.log("factpoly_expo: " + factpoly_expo)
 
 
 	# build the remaining unfactored part of the polynomial
@@ -327,8 +319,8 @@ yyfactorpoly = ->
 	expanding = prev_expanding
 
 	p1 = pop()
-	console.log("new poly with extracted common factor: " + p1)
-	debugger
+	#console.log("new poly with extracted common factor: " + p1)
+	#debugger
 
 	# factor out negative sign
 
@@ -500,11 +492,11 @@ get_factor_from_complex_root = (remainingPoly) ->
 	nan = 0
 
 	if factpoly_expo <= 2
-		console.log("no more factoring via complex roots to be found in polynomial of degree <= 2")
+		if DEBUG then console.log("no more factoring via complex roots to be found in polynomial of degree <= 2")
 		return 0
 
 	p1 = remainingPoly
-	console.log("complex root finding for POLY=" + p1)
+	if DEBUG then console.log("complex root finding for POLY=" + p1)
 
 	h = tos
 	an = tos
@@ -516,15 +508,15 @@ get_factor_from_complex_root = (remainingPoly) ->
 	power()
 	rect()
 	p4 = pop()
-	console.log("complex root finding: trying with " + p4)
+	if DEBUG then console.log("complex root finding: trying with " + p4)
 	push(p4)
 	p3 = pop()
 	push(p3)
 	Evalpoly()
-	console.log("complex root finding result: " + p6)
+	if DEBUG then console.log("complex root finding result: " + p6)
 	if (iszero(p6))
 		tos = h
-		console.log "get_factor_from_complex_root returning 1"
+		if DEBUG then console.log "get_factor_from_complex_root returning 1"
 		return 1
 
 	# trying 1^(2/3) which generates a polynomial in Z
@@ -535,15 +527,15 @@ get_factor_from_complex_root = (remainingPoly) ->
 	power()
 	rect()
 	p4 = pop()
-	console.log("complex root finding: trying with " + p4)
+	if DEBUG then console.log("complex root finding: trying with " + p4)
 	push(p4)
 	p3 = pop()
 	push(p3)
 	Evalpoly()
-	console.log("complex root finding result: " + p6)
+	if DEBUG then console.log("complex root finding result: " + p6)
 	if (iszero(p6))
 		tos = h
-		console.log "get_factor_from_complex_root returning 1"
+		if DEBUG then console.log "get_factor_from_complex_root returning 1"
 		return 1
 
 
@@ -571,7 +563,7 @@ get_factor_from_complex_root = (remainingPoly) ->
 			#console.log("complex root finding result: " + p6)
 			if (iszero(p6))
 				tos = h
-				console.log "found complex root: " + p6
+				if DEBUG then console.log "found complex root: " + p6
 				return 1
 
 	tos = h

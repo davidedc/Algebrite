@@ -120,13 +120,12 @@ expand = ->
 
 	# A = factor(A)
 
-	console.log("expand - to be factored: " + p2)
+	#console.log("expand - to be factored: " + p2)
 	push(p2)
 	push(p9)
 	factorpoly()
 	p2 = pop()
-	console.log("expand - factored to: " + p2)
-	debugger
+	#console.log("expand - factored to: " + p2)
 
 	expand_get_C()
 	expand_get_B()

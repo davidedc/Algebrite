@@ -45,7 +45,7 @@ simplify_main = ->
 		# e.g. simplify(14^(1/2) - (16 - 4*7^(1/2))^(1/2))
 		# needs some more semplification after the de-nesting.
 		if simplify_nested_radicals()
-			console.log("de-nesting denestingSuccessful into: " + p1.toString())
+			if DEBUG then console.log("de-nesting successful into: " + p1.toString())
 			push(p1)
 			simplify()
 			return
@@ -252,8 +252,7 @@ nterms = (p) ->
 
 simplify_nested_radicals = ->
 	if recursionLevelNestedRadicalsRemoval > 0
-		console.log("bailing out because of too much recursion")
-		console.log "return 1"
+		if DEBUG then console.log("denesting bailing out because of too much recursion")
 		return false
 
 	push(p1)
@@ -278,8 +277,8 @@ simplify_nested_radicals = ->
 	expanding = prev_expanding
 
 	simplificationWithCondense = pop()
-	console.log("occurrences of powers in " + simplificationWithoutCondense + " :" + countOccurrencesOfSymbol(symbol(POWER),simplificationWithoutCondense))
-	console.log("occurrences of powers in " + simplificationWithCondense + " :" + countOccurrencesOfSymbol(symbol(POWER),simplificationWithCondense))
+	#console.log("occurrences of powers in " + simplificationWithoutCondense + " :" + countOccurrencesOfSymbol(symbol(POWER),simplificationWithoutCondense))
+	#console.log("occurrences of powers in " + simplificationWithCondense + " :" + countOccurrencesOfSymbol(symbol(POWER),simplificationWithCondense))
 
 	if (countOccurrencesOfSymbol(symbol(POWER),simplificationWithoutCondense) < countOccurrencesOfSymbol(symbol(POWER),simplificationWithCondense))
 		push(simplificationWithoutCondense)
@@ -289,20 +288,17 @@ simplify_nested_radicals = ->
 
 	# we got out result, wrap up
 	p1 = pop()
-	console.log "return 2"
 	return somethingSimplified
 
 take_care_of_nested_radicals = ->
 	if recursionLevelNestedRadicalsRemoval > 0
-		console.log("bailing out because of too much recursion")
-		console.log "return 3"
+		if DEBUG then console.log("denesting bailing out because of too much recursion")
 		return false
-	console.log("take_care_of_nested_radicals: ")
 
 
 	save()
 	p1 = pop()
-	console.log("take_care_of_nested_radicals p1: " + p1.toString())
+	#console.log("take_care_of_nested_radicals p1: " + p1.toString())
 	
 	if equal(car(p1), symbol(POWER))
 
@@ -314,7 +310,7 @@ take_care_of_nested_radicals = ->
 
 		if !isminusone(exponent) and equal(car(base), symbol(ADD)) and isfraction(exponent) and (equalq(exponent,1,3) or equalq(exponent,1,2))
 
-			console.log("ok there is a radix with a term inside")
+			#console.log("ok there is a radix with a term inside")
 			firstTerm = cadr(base)
 			push(firstTerm)
 			take_care_of_nested_radicals()
@@ -324,8 +320,8 @@ take_care_of_nested_radicals = ->
 			take_care_of_nested_radicals()
 			pop()
 
-			console.log("possible double radical term1: " + firstTerm)
-			console.log("possible double radical term2: " + secondTerm)
+			#console.log("possible double radical term1: " + firstTerm)
+			#console.log("possible double radical term2: " + secondTerm)
 
 			numberOfTerms = 0
 			countingTerms = base
@@ -334,10 +330,9 @@ take_care_of_nested_radicals = ->
 				countingTerms = cdr(countingTerms)
 			#console.log("number of terms: " + numberOfTerms)
 			if numberOfTerms > 2
-				console.log("too many terms under outer radix ")
+				#console.log("too many terms under outer radix ")
 				push(p1)
 				restore()
-				console.log "return 4"
 				return false
 
 
@@ -347,36 +342,34 @@ take_care_of_nested_radicals = ->
 			termsThatAreNotPowers = []
 			if (car(secondTerm) == symbol(MULTIPLY))
 				# product of factors
-				debugger
 				secondTermFactor = cdr(secondTerm)
 				if iscons(secondTermFactor)
 					while (iscons(secondTermFactor))
-						console.log("second term factor BIS: " + car(secondTermFactor).toString())
+						#console.log("second term factor BIS: " + car(secondTermFactor).toString())
 						potentialPower = car(secondTermFactor)
 						if (car(potentialPower) == symbol(POWER)) 
 							innerbase = cadr(potentialPower)
 							innerexponent = caddr(potentialPower)
 							if equalq(innerexponent,1,2)
-								console.log("tackling double radical 1: " + p1.toString())
+								#console.log("tackling double radical 1: " + p1.toString())
 								if !commonInnerExponent?
 									commonInnerExponent = innerexponent
 									commonBases.push(innerbase)
 								else
 									if equal(innerexponent, commonInnerExponent)
-										console.log("common base: " + innerbase.toString())
+										#console.log("common base: " + innerbase.toString())
 										commonBases.push(innerbase)
 									else
-										console.log("no common bases here ")
-								console.log("this one is a power base: " + innerbase + " , exponent: " + innerexponent)
+										#console.log("no common bases here ")
+								#console.log("this one is a power base: " + innerbase + " , exponent: " + innerexponent)
 						else
 							termsThatAreNotPowers.push(potentialPower)
 						secondTermFactor = cdr(secondTermFactor)
 			else if (car(secondTerm) == symbol(POWER)) 
-				debugger
 				innerbase = cadr(secondTerm)
 				innerexponent = caddr(secondTerm)
 				if !commonInnerExponent? and equalq(innerexponent,1,2)
-					console.log("tackling double radical 2: " + p1.toString())
+					#console.log("tackling double radical 2: " + p1.toString())
 					commonInnerExponent = innerexponent
 					commonBases.push(innerbase)
 
@@ -384,31 +377,28 @@ take_care_of_nested_radicals = ->
 			if commonBases.length == 0
 				push(p1)
 				restore()
-				console.log "return 5"
 				return false
 
 			A = firstTerm
-			console.log("A: " + A.toString())
+			#console.log("A: " + A.toString())
 
 			push_integer(1)
 			for i in commonBases
 				push(i)
 				multiply()
-				console.log("basis with common exponent: " + i.toString())
+				#console.log("basis with common exponent: " + i.toString())
 			C = pop()
-			console.log("C: " + C.toString())
+			#console.log("C: " + C.toString())
 			
 			push_integer(1)
 			for i in termsThatAreNotPowers
 				push(i)
 				multiply()
-				console.log("terms that are not powers: " + i.toString())
+				#console.log("terms that are not powers: " + i.toString())
 			B = pop()
-			console.log("B: " + B.toString())
+			#console.log("B: " + B.toString())
 
-			debugger
 
-			console.log("tos 0" + tos)
 			if equalq(exponent,1,3)
 				push(A)
 				negate()
@@ -416,7 +406,7 @@ take_care_of_nested_radicals = ->
 				multiply()
 				push(B)
 				divide()    # 4th coeff
-				console.log("constant coeff " + stack[tos-1].toString())
+				#console.log("constant coeff " + stack[tos-1].toString())
 				checkSize = pop()
 				push(checkSize)
 				real()
@@ -424,14 +414,13 @@ take_care_of_nested_radicals = ->
 				if Math.abs(pop().d) > Math.pow(2, 32)
 					push(p1)
 					restore()
-					console.log "return 6"
 					return false
 				push(checkSize)
 
 				push_integer(3)
 				push(C)
 				multiply()   # 3rd coeff
-				console.log("next coeff " + stack[tos-1].toString())
+				#console.log("next coeff " + stack[tos-1].toString())
 				checkSize = pop()
 				push(checkSize)
 				real()
@@ -440,7 +429,6 @@ take_care_of_nested_radicals = ->
 					pop()
 					push(p1)
 					restore()
-					console.log "return 7"
 					return false
 				push(checkSize)
 
@@ -462,18 +450,17 @@ take_care_of_nested_radicals = ->
 					pop()
 					push(p1)
 					restore()
-					console.log "return 8"
 					return false
 				push(checkSize)
 
-				console.log("next coeff " + stack[tos-1].toString())
+				#console.log("next coeff " + stack[tos-1].toString())
 				push(symbol(SECRETX))
 				push_integer(2)
 				power()
 				multiply()
 
 				push_integer(1) # 1st coeff
-				console.log("next coeff " + stack[tos-1].toString())
+				#console.log("next coeff " + stack[tos-1].toString())
 				push(symbol(SECRETX))
 				push_integer(3)
 				power()
@@ -492,10 +479,9 @@ take_care_of_nested_radicals = ->
 				if Math.abs(pop().d) > Math.pow(2, 32)
 					push(p1)
 					restore()
-					console.log "return 9"
 					return false
 				push(checkSize)
-				console.log("constant coeff " + stack[tos-1].toString())
+				#console.log("constant coeff " + stack[tos-1].toString())
 
 				push_integer(-2)
 				push(A)
@@ -510,17 +496,16 @@ take_care_of_nested_radicals = ->
 					pop()
 					push(p1)
 					restore()
-					console.log "return 10"
 					return false
 				push(checkSize)
 
-				console.log("next coeff " + stack[tos-1].toString())
+				#console.log("next coeff " + stack[tos-1].toString())
 				push(symbol(SECRETX))
 				multiply()
 
 
 				push_integer(1) # 1st coeff
-				console.log("next coeff " + stack[tos-1].toString())
+				#console.log("next coeff " + stack[tos-1].toString())
 				push(symbol(SECRETX))
 				push_integer(2)
 				power()
@@ -529,25 +514,23 @@ take_care_of_nested_radicals = ->
 				add()
 				add()
 
-			console.log("whole polynomial: " + stack[tos-1].toString())
+			#console.log("whole polynomial: " + stack[tos-1].toString())
 
 			push(symbol(SECRETX))
 
 
 			recursionLevelNestedRadicalsRemoval++
-			console.log("invoking roots at recursion level: " + recursionLevelNestedRadicalsRemoval)
+			#console.log("invoking roots at recursion level: " + recursionLevelNestedRadicalsRemoval)
 			roots()
 			recursionLevelNestedRadicalsRemoval--
 			if equal(stack[tos-1], symbol(NIL))
-				console.log("roots bailed out because of too much recursion")
+				if DEBUG then console.log("roots bailed out because of too much recursion")
 				pop()
 				push(p1)
 				restore()
-				console.log "return 11"
 				return false
-			debugger
 
-			console.log("all solutions: " + stack[tos-1].toString())
+			#console.log("all solutions: " + stack[tos-1].toString())
 
 			# exclude the solutions with radicals
 			possibleSolutions = []
@@ -557,16 +540,15 @@ take_care_of_nested_radicals = ->
 
 			pop() # popping the tensor with the solutions
 
-			console.log("possible solutions: " + possibleSolutions.toString())
+			#console.log("possible solutions: " + possibleSolutions.toString())
 			if possibleSolutions.length == 0
 				push(p1)
 				restore()
-				console.log "return 12"
 				return false
 
 			possibleRationalSolutions = []
 			realOfpossibleRationalSolutions = []
-			console.log("checking the one with maximum real part ")
+			#console.log("checking the one with maximum real part ")
 			for i in possibleSolutions
 				push(i)
 				real()
@@ -576,7 +558,7 @@ take_care_of_nested_radicals = ->
 
 			whichRationalSolution = realOfpossibleRationalSolutions.indexOf(Math.max.apply(Math, realOfpossibleRationalSolutions))
 			SOLUTION = possibleRationalSolutions[whichRationalSolution]
-			console.log("picked solution: " + SOLUTION)
+			#console.log("picked solution: " + SOLUTION)
 
 			
 			###
@@ -634,7 +616,7 @@ take_care_of_nested_radicals = ->
 				multiply()
 				add()
 				divide()
-				console.log("argument of cubic root: " + stack[tos-1].toString())
+				#console.log("argument of cubic root: " + stack[tos-1].toString())
 				push_rational(1,3)
 				power()
 			else if equalq(exponent,1,2)
@@ -645,10 +627,10 @@ take_care_of_nested_radicals = ->
 				push(C)
 				add()
 				divide()
-				console.log("argument of cubic root: " + stack[tos-1].toString())
+				#console.log("argument of cubic root: " + stack[tos-1].toString())
 				push_rational(1,2)
 				power()
-			console.log("b is: " + stack[tos-1].toString())
+			#console.log("b is: " + stack[tos-1].toString())
 
 			lowercase_b = pop()
 
@@ -656,7 +638,6 @@ take_care_of_nested_radicals = ->
 			if !lowercase_b?
 				push(p1)
 				restore()
-				console.log "return 13"
 				return false
 
 			push(lowercase_b)
@@ -665,7 +646,7 @@ take_care_of_nested_radicals = ->
 			
 
 			if equalq(exponent,1,3)
-				console.log("a is: " + stack[tos-1].toString())
+				#console.log("a is: " + stack[tos-1].toString())
 
 				lowercase_a = pop()
 
@@ -679,7 +660,7 @@ take_care_of_nested_radicals = ->
 				add()
 				simplify()
 			else if equalq(exponent,1,2)
-				console.log("a could be: " + stack[tos-1].toString())
+				#console.log("a could be: " + stack[tos-1].toString())
 
 				lowercase_a = pop()
 
@@ -693,16 +674,16 @@ take_care_of_nested_radicals = ->
 				add()
 				simplify()
 				possibleNewExpression = pop()
-				console.log("verifying if  " + possibleNewExpression + " is positive")
+				#console.log("verifying if  " + possibleNewExpression + " is positive")
 				push(possibleNewExpression)
 				real()
 				yyfloat()
 				possibleNewExpressionValue = pop()
 				if !isnegativenumber(possibleNewExpressionValue)
-					console.log("... it is positive")
+					#console.log("... it is positive")
 					push(possibleNewExpression)
 				else
-					console.log("... it is NOT positive")
+					#console.log("... it is NOT positive")
 					push(lowercase_b)
 					negate()
 					lowercase_b = pop()
@@ -736,11 +717,10 @@ take_care_of_nested_radicals = ->
 
 			#whichExpression = realOfPossibleNewExpressions.indexOf(Math.max.apply(Math, realOfPossibleNewExpressions))
 			#p1 = possibleNewExpressions[whichExpression]
-			console.log("final new expression: " + p1.toString())
+			#console.log("final new expression: " + p1.toString())
 
 			push(p1)
 			restore()
-			console.log "return 14"
 			return true
 
 
@@ -748,7 +728,6 @@ take_care_of_nested_radicals = ->
 		else
 			push(p1)
 			restore()
-			console.log "return 15"
 			return false
 
 	else if (iscons(p1))
@@ -762,12 +741,10 @@ take_care_of_nested_radicals = ->
 			p1 = cdr(p1)
 		list(tos - h)
 		restore()
-		console.log "return 16"
 		return anyRadicalSimplificationWorked
 	else
 		push(p1)
 		restore()
-		console.log "return 17"
 		return false
 
 	throw new Error("control flow should never reach here")
