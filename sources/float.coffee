@@ -33,6 +33,11 @@ zzfloat = ->
 	Eval(); # normalize
 	evaluatingAsFloats--
 	restore()
+	# zzfloat doesn't necessarily result in a double
+	# , for example if there are variables. But
+	# in many of the tests there should be indeed
+	# a float, this line comes handy to highlight
+	# when that doesn't happen for those tests.
 	#checkFloatHasWorkedOutCompletely(stack[tos-1])
 
 yyfloat = ->
