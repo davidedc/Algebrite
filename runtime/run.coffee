@@ -211,5 +211,10 @@ check_esc_flag = ->
 	if (esc_flag)
 		stop("esc key")
 
-
+computeResultsAndJavaScriptFromAlgebra = ->
+	code: "// no code generated yet\n//try again later"
+	result: "42\n42"
+	
 (exports ? this).run = run
+(exports ? this).computeResultsAndJavaScriptFromAlgebra = computeResultsAndJavaScriptFromAlgebra
+
