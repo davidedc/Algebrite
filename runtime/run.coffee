@@ -20,8 +20,8 @@ stop = (s) ->
 		#longjmp(stop_return, 1)
 
 # Figuring out dependencies is key to automatically
-# generating a method signature when generating code
-# form algebrite scripts.
+# generating a method signature when generating JS code
+# from algebrite scripts.
 # This is important because the user can keep using normal Algebrite
 # scripting without special notations.
 # Basically the process consists of figuring out
@@ -262,8 +262,8 @@ run = (stringToBeRun) ->
 			# print string w/o quotes
 
 			if (isstr(p2))
-				console.log(p2.str)
-				console.log("\n")
+				if DEBUG then console.log(p2.str)
+				if DEBUG then console.log("\n")
 				continue
 
 			# in tty mode
@@ -272,11 +272,11 @@ run = (stringToBeRun) ->
 			collectedResult = collectResultLine(p2)
 			allReturnedStrings += collectedResult
 			if PRINTOUTRESULT
-				console.log "printline"
-				console.log collectedResult
+				if DEBUG then console.log "printline"
+				if DEBUG then console.log collectedResult
 			#alert collectedResult
 			if PRINTOUTRESULT
-				console.log "display:"
+				if DEBUG then console.log "display:"
 				display(p2)
 			allReturnedStrings += "\n"
 		catch error

@@ -12220,7 +12220,9 @@
     scan_relation();
     if (token === '=') {
       symbolLeftOfAssignment = lastFoundSymbol;
-      console.log("assignment!");
+      if (DEBUG) {
+        console.log("assignment!");
+      }
       isSymbolLeftOfAssignment = false;
       get_next_token();
       push_symbol(SETQ);
@@ -12232,10 +12234,14 @@
       if (indexOfSymbolLeftOfAssignment !== -1) {
         symbolsRightOfAssignment.splice(indexOfSymbolLeftOfAssignment, 1);
       }
-      console.log("locally, " + symbolLeftOfAssignment + " depends on: ");
+      if (DEBUG) {
+        console.log("locally, " + symbolLeftOfAssignment + " depends on: ");
+      }
       for (ac = 0, len = symbolsRightOfAssignment.length; ac < len; ac++) {
         i = symbolsRightOfAssignment[ac];
-        console.log("	" + i);
+        if (DEBUG) {
+          console.log("	" + i);
+        }
       }
       if (symbolsDependencies[symbolLeftOfAssignment] == null) {
         symbolsDependencies[symbolLeftOfAssignment] = [];
@@ -12435,7 +12441,9 @@
 
   addSymbolRightOfAssignment = function(theSymbol) {
     if (symbolsRightOfAssignment.indexOf(theSymbol) === -1) {
-      console.log("... adding symbol: " + theSymbol + " to the set of the symbols right of assignment");
+      if (DEBUG) {
+        console.log("... adding symbol: " + theSymbol + " to the set of the symbols right of assignment");
+      }
       return symbolsRightOfAssignment.push(theSymbol);
     }
   };
@@ -12462,15 +12470,21 @@
       push(usr_symbol(token_buf));
     }
     if (scanningParameters.length === 0) {
-      console.log("out of scanning parameters, processing " + token_buf);
+      if (DEBUG) {
+        console.log("out of scanning parameters, processing " + token_buf);
+      }
       lastFoundSymbol = token_buf;
     } else {
-      console.log("still scanning parameters, skipping " + token_buf);
+      if (DEBUG) {
+        console.log("still scanning parameters, skipping " + token_buf);
+      }
       if (isSymbolLeftOfAssignment) {
         addSymbolRightOfAssignment("'" + token_buf);
       }
     }
-    console.log("found symbol: " + token_buf + " left of assignment: " + isSymbolLeftOfAssignment);
+    if (DEBUG) {
+      console.log("found symbol: " + token_buf + " left of assignment: " + isSymbolLeftOfAssignment);
+    }
     if (!isSymbolLeftOfAssignment) {
       addSymbolRightOfAssignment(token_buf);
     }
@@ -12484,7 +12498,9 @@
 
   scan_function_call = function() {
     var n, p;
-    console.log("-- scan_function_call start");
+    if (DEBUG) {
+      console.log("-- scan_function_call start");
+    }
     n = 1;
     p = new U();
     p = usr_symbol(token_buf);
@@ -12511,7 +12527,9 @@
     }
     get_next_token();
     list(n);
-    return console.log("-- scan_function_call end");
+    if (DEBUG) {
+      return console.log("-- scan_function_call end");
+    }
   };
 
   scan_subexpr = function() {
@@ -12564,7 +12582,9 @@
       p2.tensor.elem[i] = stack[tos - n + i];
     }
     if (p2.tensor.nelem !== p2.tensor.elem.length) {
-      console.log("something wrong in tensor dimensions");
+      if (DEBUG) {
+        console.log("something wrong in tensor dimensions");
+      }
       debugger;
     }
     tos -= n;
@@ -16380,18 +16400,28 @@
           continue;
         }
         if (isstr(p2)) {
-          console.log(p2.str);
-          console.log("\n");
+          if (DEBUG) {
+            console.log(p2.str);
+          }
+          if (DEBUG) {
+            console.log("\n");
+          }
           continue;
         }
         collectedResult = collectResultLine(p2);
         allReturnedStrings += collectedResult;
         if (PRINTOUTRESULT) {
-          console.log("printline");
-          console.log(collectedResult);
+          if (DEBUG) {
+            console.log("printline");
+          }
+          if (DEBUG) {
+            console.log(collectedResult);
+          }
         }
         if (PRINTOUTRESULT) {
-          console.log("display:");
+          if (DEBUG) {
+            console.log("display:");
+          }
           display(p2);
         }
         allReturnedStrings += "\n";

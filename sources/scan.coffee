@@ -88,7 +88,7 @@ scan_stmt = ->
 	scan_relation()
 	if (token == '=')
 		symbolLeftOfAssignment = lastFoundSymbol
-		console.log("assignment!")
+		if DEBUG then console.log("assignment!")
 		isSymbolLeftOfAssignment = false
 		get_next_token()
 		push_symbol(SETQ)
@@ -106,9 +106,9 @@ scan_stmt = ->
 			symbolsRightOfAssignment.splice(indexOfSymbolLeftOfAssignment, 1) 
 		
 		# print out the immediate dependencies
-		console.log "locally, " + symbolLeftOfAssignment + " depends on: "
+		if DEBUG then console.log "locally, " + symbolLeftOfAssignment + " depends on: "
 		for i in symbolsRightOfAssignment
-			console.log "	" + i
+			if DEBUG then console.log "	" + i
 
 		# ok add the local dependencies to the existing
 		# dependencies of this left-value symbol
@@ -293,7 +293,7 @@ scan_factor = ->
 
 addSymbolRightOfAssignment = (theSymbol) ->
 	if symbolsRightOfAssignment.indexOf(theSymbol) == -1
-		console.log("... adding symbol: " + theSymbol + " to the set of the symbols right of assignment")
+		if DEBUG then console.log("... adding symbol: " + theSymbol + " to the set of the symbols right of assignment")
 		symbolsRightOfAssignment.push theSymbol
 
 scan_symbol = ->
@@ -313,14 +313,14 @@ scan_symbol = ->
 		push(usr_symbol(token_buf))
 
 	if scanningParameters.length == 0
-		console.log "out of scanning parameters, processing " + token_buf
+		if DEBUG then console.log "out of scanning parameters, processing " + token_buf
 		lastFoundSymbol = token_buf
 	else
-		console.log "still scanning parameters, skipping " + token_buf
+		if DEBUG then console.log "still scanning parameters, skipping " + token_buf
 		if isSymbolLeftOfAssignment
 			addSymbolRightOfAssignment "'" + token_buf
 
-	console.log("found symbol: " + token_buf + " left of assignment: " + isSymbolLeftOfAssignment)
+	if DEBUG then console.log("found symbol: " + token_buf + " left of assignment: " + isSymbolLeftOfAssignment)
 	
 	# if we were looking at the right part of an assignment while we
 	# found the symbol, then add it to the "symbolsRightOfAssignment"
@@ -334,7 +334,7 @@ scan_string = ->
 	get_next_token()
 
 scan_function_call = ->
-	console.log "-- scan_function_call start"
+	if DEBUG then console.log "-- scan_function_call start"
 	n = 1
 	p = new U()
 	p = usr_symbol(token_buf)
@@ -361,7 +361,7 @@ scan_function_call = ->
 
 	get_next_token()
 	list(n)
-	console.log "-- scan_function_call end"
+	if DEBUG then console.log "-- scan_function_call end"
 
 # scan subexpression
 
@@ -423,7 +423,7 @@ build_tensor = (n) ->
 		p2.tensor.elem[i] = stack[tos-n+i]
 
 	if p2.tensor.nelem != p2.tensor.elem.length
-		console.log "something wrong in tensor dimensions"
+		if DEBUG then console.log "something wrong in tensor dimensions"
 		debugger
 
 	tos -= n
