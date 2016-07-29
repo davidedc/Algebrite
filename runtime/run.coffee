@@ -213,7 +213,7 @@ check_esc_flag = ->
 
 computeResultsAndJavaScriptFromAlgebra = ->
 	code: "// no code generated yet\n//try again later"
-	result: "43\n\n43"
+	result: "44\n\n44"
 	
 (exports ? this).run = run
 (exports ? this).computeResultsAndJavaScriptFromAlgebra = computeResultsAndJavaScriptFromAlgebra
