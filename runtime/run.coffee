@@ -386,9 +386,9 @@ check_esc_flag = ->
 	if (esc_flag)
 		stop("esc key")
 
-computeResultsAndJavaScriptFromAlgebra = ->
+computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	code: "// no code generated yet\n//try again later"
-	result: "46\n\n46"
+	result: run(codeFromAlgebraBlock).toString().replace(/\n/g, '\n\n');
 	
 (exports ? this).run = run
 (exports ? this).findDependenciesInScript = findDependenciesInScript
