@@ -9,4 +9,6 @@ run_test [
 		
 ]
 
+test_dependencies()
+
 # alert "passed tests: " + ok_tests + " / failed tests: " + ko_tests

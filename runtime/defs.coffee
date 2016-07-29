@@ -251,6 +251,12 @@ MAXPRIMETAB = 10000
 
 MAXDIM = 24
 
+# needed for the mechanism to
+# find all dependencies between variables
+# in a script
+symbolsDependencies = {}
+
+
 class tensor
 	ndim: 0
 	dim: null

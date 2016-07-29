@@ -34,6 +34,11 @@ scan_str = 0
 token_str = 0
 token_buf = 0
 
+lastFoundSymbol = null
+symbolsRightOfAssignment = []
+isSymbolLeftOfAssignment = true
+scanningParameters = []
+
 # Returns number of chars scanned and expr on stack.
 
 # Returns zero when nothing left to scan.
@@ -82,11 +87,43 @@ scan_meta = (s) ->
 scan_stmt = ->
 	scan_relation()
 	if (token == '=')
+		symbolLeftOfAssignment = lastFoundSymbol
+		console.log("assignment!")
+		isSymbolLeftOfAssignment = false
 		get_next_token()
 		push_symbol(SETQ)
 		swap()
 		scan_relation()
 		list(3)
+		isSymbolLeftOfAssignment = true
+
+		# in case of re-assignment, the symbol on the
+		# left will also be in the set of the symbols
+		# on the right. In that case just remove it from
+		# the symbols on the right.
+		indexOfSymbolLeftOfAssignment = symbolsRightOfAssignment.indexOf(symbolLeftOfAssignment)
+		if indexOfSymbolLeftOfAssignment != -1
+			symbolsRightOfAssignment.splice(indexOfSymbolLeftOfAssignment, 1) 
+		
+		# print out the immediate dependencies
+		console.log "locally, " + symbolLeftOfAssignment + " depends on: "
+		for i in symbolsRightOfAssignment
+			console.log "	" + i
+
+		# ok add the local dependencies to the existing
+		# dependencies of this left-value symbol
+		
+		# create the exiting dependencies list if it doesn't exist
+		symbolsDependencies[symbolLeftOfAssignment] ?= []
+		existingDependencies = symbolsDependencies[symbolLeftOfAssignment]
+
+		# copy over the new dependencies to the existing
+		# dependencies avoiding repetitions
+		for i in symbolsRightOfAssignment
+			if existingDependencies.indexOf(i) == -1
+				existingDependencies.push i
+
+		symbolsRightOfAssignment = []
 
 scan_relation = ->
 	scan_expression()
@@ -253,6 +290,12 @@ scan_factor = ->
 		swap()
 		list(2)
 
+
+addSymbolRightOfAssignment = (theSymbol) ->
+	if symbolsRightOfAssignment.indexOf(theSymbol) == -1
+		console.log("... adding symbol: " + theSymbol + " to the set of the symbols right of assignment")
+		symbolsRightOfAssignment.push theSymbol
+
 scan_symbol = ->
 	if (token != T_SYMBOL)
 		scan_error("symbol expected")
@@ -268,6 +311,22 @@ scan_symbol = ->
 				push(usr_symbol(token_buf))
 	else
 		push(usr_symbol(token_buf))
+
+	if scanningParameters.length == 0
+		console.log "out of scanning parameters, processing " + token_buf
+		lastFoundSymbol = token_buf
+	else
+		console.log "still scanning parameters, skipping " + token_buf
+		if isSymbolLeftOfAssignment
+			addSymbolRightOfAssignment "'" + token_buf
+
+	console.log("found symbol: " + token_buf + " left of assignment: " + isSymbolLeftOfAssignment)
+	
+	# if we were looking at the right part of an assignment while we
+	# found the symbol, then add it to the "symbolsRightOfAssignment"
+	# set (we check for duplications)
+	if !isSymbolLeftOfAssignment
+		addSymbolRightOfAssignment token_buf
 	get_next_token()
 
 scan_string = ->
@@ -275,13 +334,19 @@ scan_string = ->
 	get_next_token()
 
 scan_function_call = ->
+	console.log "-- scan_function_call start"
 	n = 1
 	p = new U()
 	p = usr_symbol(token_buf)
 
 	push(p)
 	get_next_token()	# function name
+	lastFoundSymbol = token_buf
+	if !isSymbolLeftOfAssignment
+		addSymbolRightOfAssignment token_buf
+
 	get_next_token()	# left paren
+	scanningParameters.push true
 	if (token != ')')
 		scan_stmt()
 		n++
@@ -289,12 +354,14 @@ scan_function_call = ->
 			get_next_token()
 			scan_stmt()
 			n++
+	scanningParameters.pop()
 
 	if (token != ')')
 		scan_error(") expected")
 
 	get_next_token()
 	list(n)
+	console.log "-- scan_function_call end"
 
 # scan subexpression
 

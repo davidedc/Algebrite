@@ -19,7 +19,182 @@ stop = (s) ->
 		
 		#longjmp(stop_return, 1)
 
-# s a string here
+# Figuring out dependencies is key to automatically
+# generating a method signature when generating code
+# form algebrite scripts.
+# This is important because the user can keep using normal Algebrite
+# scripting without special notations.
+# Basically the process consists of figuring out
+# the "ground variables" that are needed to compute each variable.
+# Now there are two ways of doing this:
+#   * at parse time
+#   * after running the scripts
+# Doing it at parse time means that we can't track simplifications
+# canceling-out some variables for example. But on the other side
+# it's very quick and the user can somehow see what the signature is
+# going to look like (assuming tha code is rather simple), or anyways
+# is going to easily make sense of the generated signature.
+# Doing it after execution on the other hand would allow us to see
+# if some variable cancel-out. But if variables cancel out then
+# they might do so according to some run-time behaviour that the user
+# might struggle to keep track of.
+# So the effort for the user to make sense of the signature in the first case
+# is similar to the effort of leeping tab of types in a typed language.
+# While in the second case the effort is similar to running the
+# code and simplifications in her head.
+test_dependencies = ->
+	if findDependenciesInScript('f = x+1\n g = f\n h = g\n f = g') == "All local dependencies:  variable f depends on: x, g, ;  variable g depends on: f, ;  variable h depends on: g, ; . All dependencies recursively:  variable f depends on: x, ;  f --> g -->  --> ... then f again,  variable g depends on: x, ;  g --> f -->  --> ... then g again,  variable h depends on: x, ;  h --> g --> f -->  --> ... then g again, "
+		console.log "ok dependency test"
+	else
+		console.log "fail dependency test"
+
+	if findDependenciesInScript('f = x+1\n g = f + y\n h = g') == "All local dependencies:  variable f depends on: x, ;  variable g depends on: f, y, ;  variable h depends on: g, ; . All dependencies recursively:  variable f depends on: x, ;  variable g depends on: x, y, ;  variable h depends on: x, y, ; "
+		console.log "ok dependency test"
+	else
+		console.log "fail dependency test"
+
+	if findDependenciesInScript('g = h(x,y)') == "All local dependencies:  variable g depends on: h, x, y, ; . All dependencies recursively:  variable g depends on: h, x, y, ; "
+		console.log "ok dependency test"
+	else
+		console.log "fail dependency test"
+
+	if findDependenciesInScript('f(x,y) = k') == "All local dependencies:  variable f depends on: 'x, 'y, k, ; . All dependencies recursively:  variable f depends on: 'x, 'y, k, ; "
+		console.log "ok dependency test"
+	else
+		console.log "fail dependency test"
+
+	if findDependenciesInScript('x = z\n f(x,y) = k') == "All local dependencies:  variable x depends on: z, ;  variable f depends on: 'x, 'y, k, ; . All dependencies recursively:  variable x depends on: z, ;  variable f depends on: 'x, 'y, k, ; "
+		console.log "ok dependency test"
+	else
+		console.log "fail dependency test"
+
+	if findDependenciesInScript('x = z\n g = f(x,y)') == "All local dependencies:  variable x depends on: z, ;  variable g depends on: f, x, y, ; . All dependencies recursively:  variable x depends on: z, ;  variable g depends on: f, z, y, ; "
+		console.log "ok dependency test"
+	else
+		console.log "fail dependency test"
+
+	if findDependenciesInScript('x = 1\n x = y\n x = z') == "All local dependencies:  variable x depends on: y, z, ; . All dependencies recursively:  variable x depends on: y, z, ; "
+		console.log "ok dependency test"
+	else
+		console.log "fail dependency test"
+
+findDependenciesInScript = (stringToBeParsed) ->
+
+	inited = true
+	symbolsDependencies = {}
+	indexOfPartRemainingToBeParsed = 0
+
+	allReturnedStrings = ""
+	n = 0
+	while (1)
+
+		try
+			errorMessage = ""
+			check_stack()
+			n = scan(stringToBeParsed.substring(indexOfPartRemainingToBeParsed))
+			pop()
+			check_stack()
+		catch error
+			if PRINTOUTRESULT then console.log error
+			#debugger
+			allReturnedStrings += error.message
+			init()
+			break
+
+
+		if (n == 0)
+			break
+
+		indexOfPartRemainingToBeParsed += n
+
+	testableString = ""
+
+	# print out all local dependencies as collected by this
+	# parsing pass
+	console.log "all local dependencies ----------------"
+	testableString += "All local dependencies: "
+	for key, value of symbolsDependencies
+		console.log "variable " + key + " depends on: "
+		testableString +=  " variable " + key + " depends on: "
+		for i in value
+			console.log "		" + i
+			testableString +=  i + ", "
+		testableString += "; "
+	testableString += ". "
+
+	# print out all global dependencies as collected by this
+	# parsing pass
+	console.log "All dependencies recursively ----------------"
+	testableString += "All dependencies recursively: "
+	for key of symbolsDependencies
+
+		console.log "	variable " + key + " depends on: "
+		testableString +=  " variable " + key + " depends on: "
+
+		recursedDependencies = []
+		variablesWithCycles = []
+		cyclesDescriptions = []
+		recursiveDependencies key, recursedDependencies, [], variablesWithCycles, [], cyclesDescriptions
+
+		for i in variablesWithCycles
+			console.log "		--> cycle through " + i
+
+		for i in recursedDependencies
+			console.log "		" + i
+			testableString +=  i + ", "
+		testableString += "; "
+
+		for i in cyclesDescriptions
+			testableString += " " + i + ", "
+
+	symbolsDependencies = {}
+	console.log "testable string: " + testableString
+
+	return testableString
+
+recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded, variablesAlreadyFleshedOut, variablesWithCycles, chainBeingChecked, cyclesDescriptions) ->
+	variablesAlreadyFleshedOut.push variableToBeChecked
+	chainBeingChecked.push variableToBeChecked
+	if !symbolsDependencies[variableToBeChecked]?
+		# end case: there are no more dependencies
+		if arrayWhereDependenciesWillBeAdded.indexOf(variableToBeChecked) == -1
+			arrayWhereDependenciesWillBeAdded.push variableToBeChecked
+		return arrayWhereDependenciesWillBeAdded
+	else
+		# recursion case: we have to dig deeper
+		for i in symbolsDependencies[variableToBeChecked]
+
+			# check that there is no recursion in dependencies
+			# we do that by keeping a list of variables that
+			# have already been "fleshed-out". If we encounter
+			# any of those "fleshed-out" variables while
+			# fleshing out, then there is a cycle 
+
+			if variablesAlreadyFleshedOut.indexOf(i) != -1
+				console.log "	found cycle:"
+				cyclesDescription = ""
+				for k in chainBeingChecked
+					console.log k + " --> "
+					cyclesDescription += k + " --> "
+				console.log " --> ... then " + i + " again"
+				cyclesDescription += " --> ... then " + i + " again"
+				cyclesDescriptions.push cyclesDescription
+				#console.log "		--> cycle through " + i
+				# we want to flesh-out i but it's already been
+				# fleshed-out, just add it to the variables
+				# with cycles and move on
+				variablesWithCycles.push i
+			else
+				# flesh-out i recursively
+				recursiveDependencies i, arrayWhereDependenciesWillBeAdded, variablesAlreadyFleshedOut, variablesWithCycles, chainBeingChecked, cyclesDescriptions
+				chainBeingChecked.pop()
+				#variablesAlreadyFleshedOut.pop()
+
+		return arrayWhereDependenciesWillBeAdded
+
+
+
+# parses and runs one statement/expression at a time
 inited = false
 run = (stringToBeRun) ->
 
@@ -216,5 +391,5 @@ computeResultsAndJavaScriptFromAlgebra = ->
 	result: "46\n\n46"
 	
 (exports ? this).run = run
+(exports ? this).findDependenciesInScript = findDependenciesInScript
 (exports ? this).computeResultsAndJavaScriptFromAlgebra = computeResultsAndJavaScriptFromAlgebra
-
