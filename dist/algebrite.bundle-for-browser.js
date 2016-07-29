@@ -16277,7 +16277,7 @@
   computeResultsAndJavaScriptFromAlgebra = function() {
     return {
       code: "// no code generated yet\n//try again later",
-      result: "42\n42"
+      result: "43\n\n43"
     };
   };
 
