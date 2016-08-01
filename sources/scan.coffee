@@ -35,9 +35,9 @@ token_str = 0
 token_buf = 0
 
 lastFoundSymbol = null
-symbolsRightOfAssignment = []
-isSymbolLeftOfAssignment = true
-scanningParameters = []
+symbolsRightOfAssignment = null
+isSymbolLeftOfAssignment = null
+scanningParameters = null
 
 # Returns number of chars scanned and expr on stack.
 
@@ -54,6 +54,13 @@ scan = (s) ->
 	#	debugger
 	#if s=="i=sqrt(-1)"
 	#	debugger
+
+	lastFoundSymbol = null
+	symbolsRightOfAssignment = []
+	isSymbolLeftOfAssignment = true
+	scanningParameters = []
+
+
 	scanned = s
 	meta_mode = 0
 	expanding++

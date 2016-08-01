@@ -1,5 +1,6 @@
 power_str = "^"
 stringToBePrinted = ""
+codeGen = false
 
 print_str = (s) ->
 	stringToBePrinted += s
@@ -421,7 +422,7 @@ print1 = (p, accumulator) ->
 		return accumulator
 
 print_multiply_sign = ->
-	if (test_flag == 0)
+	if test_flag == 0 and !codeGen
 		print_str(" ")
 	else
 		print_str("*")
