@@ -61,15 +61,26 @@ print_denom = (p, d) ->
 	if (d == 1) # p2 is EXPO
 		print_char('(')
 
-	print_base_of_denom p1
-
-	print_str(power_str)
-
+	# prepare the exponent
+	# (needs to be negated)
+	# before printing it out
 	push(p2); # p2 is EXPO
 	negate()
 	p2 = pop(); # p2 is EXPO
 
-	print_expo_of_denom p2
+	# ok now print
+
+	if codeGen
+		print_str("Math.pow(")
+		print_base_of_denom p1
+		print_str(", ")
+		print_expo_of_denom p2
+		print_str(")")
+	else
+		console.log "heeeeeere"
+		print_base_of_denom p1
+		print_str(power_str)
+		print_expo_of_denom p2
 
 	if (d == 1)
 		print_char(')')
