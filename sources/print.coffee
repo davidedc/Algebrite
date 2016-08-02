@@ -276,6 +276,26 @@ print_tensor_inner = (p, j, k) ->
 	print_str(")")
 	return k
 
+print_base = (p) ->
+	if (isadd(cadr(p)) || caadr(p) == symbol(MULTIPLY) || caadr(p) == symbol(POWER) || isnegativenumber(cadr(p)))
+		print_str("(")
+		print_expr(cadr(p))
+		print_str(")")
+	else if (isnum(cadr(p)) && (lessp(cadr(p), zero) || isfraction(cadr(p))))
+		print_str("(")
+		print_factor(cadr(p))
+		print_str(")")
+	else
+		print_factor(cadr(p))
+
+print_exponent = (p) ->
+	if (iscons(caddr(p)) || isfraction(caddr(p)) || (isnum(caddr(p)) && lessp(caddr(p), zero)))
+		print_str("(")
+		print_expr(caddr(p))
+		print_str(")")
+	else
+		print_factor(caddr(p))
+
 print_factor = (p) ->
 	if (isnum(p))
 		print_number(p)
@@ -319,25 +339,17 @@ print_factor = (p) ->
 				print_expr(cadr(p))
 			return
 
-		if (isadd(cadr(p)) || caadr(p) == symbol(MULTIPLY) || caadr(p) == symbol(POWER) || isnegativenumber(cadr(p)))
-			print_str("(")
-			print_expr(cadr(p))
-			print_str(")")
-		else if (isnum(cadr(p)) && (lessp(cadr(p), zero) || isfraction(cadr(p))))
-			print_str("(")
-			print_factor(cadr(p))
+		if codeGen
+			print_str("Math.pow(")
+			print_base p
+			print_str(", ")
+			print_exponent p
 			print_str(")")
 		else
-			print_factor(cadr(p))
+			print_base p
+			print_str(power_str)
+			print_exponent p
 
-		print_str(power_str)
-
-		if (iscons(caddr(p)) || isfraction(caddr(p)) || (isnum(caddr(p)) && lessp(caddr(p), zero)))
-			print_str("(")
-			print_expr(caddr(p))
-			print_str(")")
-		else
-			print_factor(caddr(p))
 		return
 
 	#	if (car(p) == _list) {
