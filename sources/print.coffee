@@ -49,10 +49,7 @@ print_denom = (p, d) ->
 		restore()
 		return
 
-	if (test_flag == 0)
-		print_str(power_str)
-	else
-		print_char('^')
+	print_str(power_str)
 
 	push(p2); # p2 is EXPO
 	negate()
@@ -313,11 +310,7 @@ print_factor = (p) ->
 		else
 			print_factor(cadr(p))
 
-		if (test_flag == 0)
-			#print_str(" ^ ")
-			print_str(power_str)
-		else
-			print_str("^")
+		print_str(power_str)
 
 		if (iscons(caddr(p)) || isfraction(caddr(p)) || (isnum(caddr(p)) && lessp(caddr(p), zero)))
 			print_str("(")
