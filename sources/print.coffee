@@ -20,6 +20,22 @@ printline = (p) ->
 	console.log stringToBePrinted
 
 
+print_base_of_denom = (p1) ->
+	if (isfraction(p1) || car(p1) == symbol(ADD) || car(p1) == symbol(MULTIPLY) || car(p1) == symbol(POWER) || lessp(p1, zero)) # p1 is BASE
+			print_char('(')
+			print_expr(p1); # p1 is BASE
+			print_char(')')
+	else
+		print_expr(p1); # p1 is BASE
+
+print_expo_of_denom = (p2) ->
+	if (isfraction(p2) || car(p2) == symbol(ADD) || car(p2) == symbol(MULTIPLY) || car(p2) == symbol(POWER)) # p2 is EXPO
+		print_char('(')
+		print_expr(p2); # p2 is EXPO
+		print_char(')')
+	else
+		print_expr(p2); # p2 is EXPO
+
 # prints stuff after the divide symbol "/"
 
 # d is the number of denominators
@@ -35,19 +51,17 @@ print_denom = (p, d) ->
 
 	# i.e. 1 / (2^(1/3))
 
-	if (d == 1 && !isminusone(p2)) # p2 is EXPO
-		print_char('(')
-
-	if (isfraction(p1) || car(p1) == symbol(ADD) || car(p1) == symbol(MULTIPLY) || car(p1) == symbol(POWER) || lessp(p1, zero)) # p1 is BASE
-			print_char('(')
-			print_expr(p1); # p1 is BASE
-			print_char(')')
-	else
-		print_expr(p1); # p1 is BASE
-
+	# get the cases like BASE^(-1) out of
+	# the way, they just become 1/BASE
 	if (isminusone(p2)) # p2 is EXPO
+		print_base_of_denom p1
 		restore()
 		return
+
+	if (d == 1) # p2 is EXPO
+		print_char('(')
+
+	print_base_of_denom p1
 
 	print_str(power_str)
 
@@ -55,12 +69,7 @@ print_denom = (p, d) ->
 	negate()
 	p2 = pop(); # p2 is EXPO
 
-	if (isfraction(p2) || car(p2) == symbol(ADD) || car(p2) == symbol(MULTIPLY) || car(p2) == symbol(POWER)) # p2 is EXPO
-		print_char('(')
-		print_expr(p2); # p2 is EXPO
-		print_char(')')
-	else
-		print_expr(p2); # p2 is EXPO
+	print_expo_of_denom p2
 
 	if (d == 1)
 		print_char(')')
