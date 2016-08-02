@@ -407,6 +407,7 @@ check_esc_flag = ->
 
 computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	[nothing,result,code] = findDependenciesInScript(codeFromAlgebraBlock)
+	code = code.replace /Math\./g,""
 	#code: "// no code generated yet\n//try again later"
 	#code: "console.log('some passed code is run'); window.something = 1;"
 	code: code
