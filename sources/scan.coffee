@@ -38,6 +38,7 @@ lastFoundSymbol = null
 symbolsRightOfAssignment = null
 isSymbolLeftOfAssignment = null
 scanningParameters = null
+symbolsDisappearingInCodeGenerationStep = ["rationalize", "mag", "i"]
 
 # Returns number of chars scanned and expr on stack.
 
@@ -299,9 +300,10 @@ scan_factor = ->
 
 
 addSymbolRightOfAssignment = (theSymbol) ->
-	if symbolsRightOfAssignment.indexOf(theSymbol) == -1
-		if DEBUG then console.log("... adding symbol: " + theSymbol + " to the set of the symbols right of assignment")
-		symbolsRightOfAssignment.push theSymbol
+	if symbolsDisappearingInCodeGenerationStep.indexOf(theSymbol) == -1 and
+		symbolsRightOfAssignment.indexOf(theSymbol) == -1
+			if DEBUG then console.log("... adding symbol: " + theSymbol + " to the set of the symbols right of assignment")
+			symbolsRightOfAssignment.push theSymbol
 
 scan_symbol = ->
 	if (token != T_SYMBOL)
