@@ -78,6 +78,46 @@ test_dependencies = ->
 	else
 		console.log "fail dependency test"
 
+	testResult = findDependenciesInScript('x = y*y')
+	if testResult[0] == "All local dependencies:  variable x depends on: y, ; . All dependencies recursively:  variable x depends on: y, ; " and
+		testResult[1] == "" and
+		testResult[2] == "x = function (y) { return ( Math.pow(y, 2) ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	testResult = findDependenciesInScript('x = -sqrt(2)/2')
+	if testResult[0] == "All local dependencies:  variable x depends on: sqrt, ; . All dependencies recursively:  variable x depends on: sqrt, ; " and
+		testResult[1] == "" and
+		testResult[2] == "x = function (sqrt) { return ( -1 / (Math.pow(2, (1/2))) ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	testResult = findDependenciesInScript('x = 2^(1/2-a)*2^a/10')
+	if testResult[0] == "All local dependencies:  variable x depends on: a, ; . All dependencies recursively:  variable x depends on: a, ; " and
+		testResult[1] == "" and
+		testResult[2] == "x = function (a) { return ( 1 / (5*Math.pow(2, (1/2))) ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	testResult = findDependenciesInScript('x = rationalize(t*y/(t+y)+2*t^2*y*(2*t+y)^(-2))')
+	if testResult[0] == "All local dependencies:  variable x depends on: t, y, ; . All dependencies recursively:  variable x depends on: t, y, ; " and
+		testResult[1] == "" and
+		testResult[2] == "x = function (t, y) { return ( t*y*(6*Math.pow(t, 2) + Math.pow(y, 2) + 6*t*y) / ((t + y)*Math.pow((2*t + y), 2)) ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	testResult = findDependenciesInScript('x = mag((a+i*b)/(c+i*d))')
+	if testResult[0] == "All local dependencies:  variable x depends on: a, b, c, d, ; . All dependencies recursively:  variable x depends on: a, b, c, d, ; " and
+		testResult[1] == "" and
+		testResult[2] == "x = function (a, b, c, d) { return ( Math.pow((Math.pow(a, 2) + Math.pow(b, 2)), (1/2)) / (Math.pow((Math.pow(c, 2) + Math.pow(d, 2)), (1/2))) ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
 findDependenciesInScript = (stringToBeParsed) ->
 
 	inited = true
