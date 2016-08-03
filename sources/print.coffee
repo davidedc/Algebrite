@@ -77,7 +77,6 @@ print_denom = (p, d) ->
 		print_expo_of_denom p2
 		print_str(")")
 	else
-		console.log "heeeeeere"
 		print_base_of_denom p1
 		print_str(power_str)
 		print_expo_of_denom p2
