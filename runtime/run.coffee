@@ -456,6 +456,12 @@ check_esc_flag = ->
 		stop("esc key")
 
 computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
+	# we start "clean" each time:
+	# clear all the symbols and then re-define
+	# the "starting" symbols.
+	clear_symbols()
+	defn()
+
 	[testableStringIsIgnoredHere,result,code] =
 		findDependenciesInScript(codeFromAlgebraBlock)
 	code = code.replace /Math\./g,""
