@@ -43,6 +43,14 @@ stop = (s) ->
 # While in the second case the effort is similar to running the
 # code and simplifications in her head.
 test_dependencies = ->
+	testResult = findDependenciesInScript('1')
+	if testResult[0] == "All local dependencies: . All dependencies recursively: " and
+		testResult[1] == "1" and
+		testResult[2] == ""
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
 	if findDependenciesInScript('f = x+1\n g = f\n h = g\n f = g')[0] == "All local dependencies:  variable f depends on: x, g, ;  variable g depends on: f, ;  variable h depends on: g, ; . All dependencies recursively:  variable f depends on: x, ;  f --> g -->  --> ... then f again,  variable g depends on: x, ;  g --> f -->  --> ... then g again,  variable h depends on: x, ;  h --> g --> f -->  --> ... then g again, "
 		console.log "ok dependency test"
 	else
