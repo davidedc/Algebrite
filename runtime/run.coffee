@@ -211,8 +211,19 @@ findDependenciesInScript = (stringToBeParsed) ->
 			parameters = parameters.slice(0, -2);
 		parameters += ")"
 
+		# we really want to make an extra effort
+		# to generate simplified code, so
+		# run a "simplify" on the content of each
+		# variable that we are generating code for.
+		# Note that the variable
+		# will still point to un-simplified structures,
+		# we only simplify the generated code.
+		push get_binding(usr_symbol(key))
+		simplify()
+		toBePrinted = pop()
+
 		codeGen = true
-		generatedCode = key + " = function " + parameters + " { return ( " + get_binding(usr_symbol(key)).toString() + " ); }"
+		generatedCode = key + " = function " + parameters + " { return ( " + toBePrinted.toString() + " ); }"
 		codeGen = false
 		if DEBUG then console.log "		" + generatedCode
 
