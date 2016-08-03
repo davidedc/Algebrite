@@ -14125,16 +14125,30 @@
   };
 
   Eval_testeq = function() {
+    var subtractionResult;
     push(cadr(p1));
     Eval();
     push(caddr(p1));
     Eval();
     subtract();
-    p1 = pop();
-    if (iszero(p1)) {
+    subtractionResult = pop();
+    if (iszero(subtractionResult)) {
+      p1 = subtractionResult;
       return push_integer(1);
     } else {
-      return push_integer(0);
+      push(cadr(p1));
+      Eval();
+      simplify();
+      push(caddr(p1));
+      Eval();
+      simplify();
+      subtract();
+      p1 = pop();
+      if (iszero(p1)) {
+        return push_integer(1);
+      } else {
+        return push_integer(0);
+      }
     }
   };
 
@@ -14216,8 +14230,10 @@
     t = 0;
     push(cadr(p1));
     Eval();
+    simplify();
     push(caddr(p1));
     Eval();
+    simplify();
     subtract();
     p1 = pop();
     if (p1.k !== NUM && p1.k !== DOUBLE) {
@@ -16316,8 +16332,14 @@
     } else {
       console.log("fail dependency test. expected: " + testResult);
     }
+    testResult = findDependenciesInScript('x = sin(1/10)^2 + cos(1/10)^2 + y');
+    if (testResult[0] === "All local dependencies:  variable x depends on: y, ; . All dependencies recursively:  variable x depends on: y, ; " && testResult[1] === "" && testResult[2] === "x = function (y) { return ( 1 + y ); }") {
+      console.log("ok dependency test");
+    } else {
+      console.log("fail dependency test. expected: " + testResult);
+    }
     testResult = findDependenciesInScript('x = sin(1/10)^2 + cos(1/10)^2');
-    if (testResult[0] === "All local dependencies:  variable x depends on: ; . All dependencies recursively:  variable x depends on: ; " && testResult[1] === "" && testResult[2] === "x = function () { return ( 1 ); }") {
+    if (testResult[0] === "All local dependencies:  variable x depends on: ; . All dependencies recursively:  variable x depends on: ; " && testResult[1] === "" && testResult[2] === "x = 1;") {
       return console.log("ok dependency test");
     } else {
       return console.log("fail dependency test. expected: " + testResult);
@@ -16325,7 +16347,7 @@
   };
 
   findDependenciesInScript = function(stringToBeParsed) {
-    var ae, af, ag, ah, aj, allReturnedStrings, cyclesDescriptions, error, error1, generatedCode, i, indexOfPartRemainingToBeParsed, inited, key, len, len1, len2, len3, len4, n, parameters, recursedDependencies, scriptEvaluation, testableString, toBePrinted, value, variablesWithCycles;
+    var ae, af, ag, ah, aj, allReturnedStrings, cyclesDescriptions, error, error1, generatedBody, generatedCode, i, indexOfPartRemainingToBeParsed, inited, key, len, len1, len2, len3, len4, n, parameters, recursedDependencies, scriptEvaluation, testableString, toBePrinted, value, variablesWithCycles;
     inited = true;
     symbolsDependencies = {};
     indexOfPartRemainingToBeParsed = 0;
@@ -16414,21 +16436,24 @@
       if (DEBUG) {
         console.log("	code generation:" + key + " is: " + get_binding(usr_symbol(key)).toString());
       }
-      parameters = "(";
+      push(get_binding(usr_symbol(key)));
+      simplify();
+      toBePrinted = pop();
+      codeGen = true;
+      generatedBody = toBePrinted.toString();
+      codeGen = false;
       if (recursedDependencies.length !== 0) {
+        parameters = "(";
         for (aj = 0, len4 = recursedDependencies.length; aj < len4; aj++) {
           i = recursedDependencies[aj];
           parameters += i + ", ";
         }
         parameters = parameters.slice(0, -2);
+        parameters += ")";
+        generatedCode = key + " = function " + parameters + " { return ( " + generatedBody + " ); }";
+      } else {
+        generatedCode = key + " = " + generatedBody + ";";
       }
-      parameters += ")";
-      push(get_binding(usr_symbol(key)));
-      simplify();
-      toBePrinted = pop();
-      codeGen = true;
-      generatedCode = key + " = function " + parameters + " { return ( " + toBePrinted.toString() + " ); }";
-      codeGen = false;
       if (DEBUG) {
         console.log("		" + generatedCode);
       }
@@ -17021,7 +17046,7 @@
 
   (function() {
     var ae, builtin_fns, fn, len, results;
-    builtin_fns = ["abs", "add", "adj", "and", "arccos", "arccosh", "arcsin", "arcsinh", "arctan", "arctanh", "arg", "atomize", "besselj", "bessely", "binding", "binomial", "ceiling", "check", "choose", "circexp", "clear", "clock", "coeff", "cofactor", "condense", "conj", "contract", "cos", "cosh", "decomp", "defint", "deg", "denominator", "det", "derivative", "dim", "dirac", "display", "divisors", "do", "dot", "draw", "dsolve", "erf", "erfc", "eigen", "eigenval", "eigenvec", "eval", "exp", "expand", "expcos", "expsin", "factor", "factorial", "factorpoly", "filter", "float", "floor", "for", "Gamma", "gcd", "hermite", "hilbert", "imag", "component", "inner", "integral", "inv", "invg", "isinteger", "isprime", "laguerre", "lcm", "leading", "legendre", "log", "mag", "mod", "multiply", "not", "nroots", "number", "numerator", "operator", "or", "outer", "polar", "power", "prime", "print", "product", "quote", "quotient", "rank", "rationalize", "real", "rect", "roots", "equals", "sgn", "simplify", "sin", "sinh", "sqrt", "stop", "subst", "sum", "tan", "tanh", "taylor", "test", "testeq", "testge", "testgt", "testle", "testlt", "transpose", "unit", "zero"];
+    builtin_fns = ["abs", "add", "adj", "and", "arccos", "arccosh", "arcsin", "arcsinh", "arctan", "arctanh", "arg", "atomize", "besselj", "bessely", "binding", "binomial", "ceiling", "check", "choose", "circexp", "clear", "clock", "coeff", "cofactor", "condense", "conj", "contract", "cos", "cosh", "decomp", "defint", "deg", "denominator", "det", "derivative", "dim", "dirac", "display", "divisors", "do", "dot", "draw", "dsolve", "eigen", "eigenval", "eigenvec", "erf", "erfc", "eval", "exp", "expand", "expcos", "expsin", "factor", "factorial", "factorpoly", "filter", "float", "floor", "for", "Gamma", "gcd", "hermite", "hilbert", "imag", "component", "inner", "integral", "inv", "invg", "isinteger", "isprime", "laguerre", "lcm", "leading", "legendre", "log", "mag", "mod", "multiply", "not", "nroots", "number", "numerator", "operator", "or", "outer", "polar", "power", "prime", "print", "product", "quote", "quotient", "rank", "rationalize", "real", "rect", "roots", "equals", "shape", "sgn", "simplify", "sin", "sinh", "sqrt", "stop", "subst", "sum", "tan", "tanh", "taylor", "test", "testeq", "testge", "testgt", "testle", "testlt", "transpose", "unit", "zero"];
     results = [];
     for (ae = 0, len = builtin_fns.length; ae < len; ae++) {
       fn = builtin_fns[ae];
