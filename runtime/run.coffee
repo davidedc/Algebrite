@@ -168,6 +168,8 @@ findDependenciesInScript = (stringToBeParsed) ->
 	testableString += "All dependencies recursively: "
 
 	scriptEvaluation = run(stringToBeParsed)
+
+	generatedCode = ""
 	for key of symbolsDependencies
 
 		codeGen = true
