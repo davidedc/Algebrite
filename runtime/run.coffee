@@ -126,6 +126,14 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
+	testResult = findDependenciesInScript('x = sin(1/10)^2 + cos(1/10)^2')
+	if testResult[0] == "All local dependencies:  variable x depends on: ; . All dependencies recursively:  variable x depends on: ; " and
+		testResult[1] == "" and
+		testResult[2] == "x = function () { return ( 1 ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
 findDependenciesInScript = (stringToBeParsed) ->
 
 	inited = true
