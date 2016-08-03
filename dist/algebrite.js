@@ -10659,7 +10659,6 @@
       print_expo_of_denom(p2);
       print_str(")");
     } else {
-      console.log("heeeeeere");
       print_base_of_denom(p1);
       print_str(power_str);
       print_expo_of_denom(p2);
@@ -16245,6 +16244,12 @@
 
   test_dependencies = function() {
     var testResult;
+    testResult = findDependenciesInScript('1');
+    if (testResult[0] === "All local dependencies: . All dependencies recursively: " && testResult[1] === "1" && testResult[2] === "") {
+      console.log("ok dependency test");
+    } else {
+      console.log("fail dependency test. expected: " + testResult);
+    }
     if (findDependenciesInScript('f = x+1\n g = f\n h = g\n f = g')[0] === "All local dependencies:  variable f depends on: x, g, ;  variable g depends on: f, ;  variable h depends on: g, ; . All dependencies recursively:  variable f depends on: x, ;  f --> g -->  --> ... then f again,  variable g depends on: x, ;  g --> f -->  --> ... then g again,  variable h depends on: x, ;  h --> g --> f -->  --> ... then g again, ") {
       console.log("ok dependency test");
     } else {
@@ -16366,6 +16371,7 @@
     }
     testableString += "All dependencies recursively: ";
     scriptEvaluation = run(stringToBeParsed);
+    generatedCode = "";
     for (key in symbolsDependencies) {
       codeGen = true;
       if (DEBUG) {
@@ -16622,8 +16628,8 @@
   };
 
   computeResultsAndJavaScriptFromAlgebra = function(codeFromAlgebraBlock) {
-    var code, nothing, ref2, result;
-    ref2 = findDependenciesInScript(codeFromAlgebraBlock), nothing = ref2[0], result = ref2[1], code = ref2[2];
+    var code, ref2, result, testableStringIsIgnoredHere;
+    ref2 = findDependenciesInScript(codeFromAlgebraBlock), testableStringIsIgnoredHere = ref2[0], result = ref2[1], code = ref2[2];
     code = code.replace(/Math\./g, "");
     return {
       code: code,
