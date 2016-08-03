@@ -16629,6 +16629,8 @@
 
   computeResultsAndJavaScriptFromAlgebra = function(codeFromAlgebraBlock) {
     var code, ref2, result, testableStringIsIgnoredHere;
+    clear_symbols();
+    defn();
     ref2 = findDependenciesInScript(codeFromAlgebraBlock), testableStringIsIgnoredHere = ref2[0], result = ref2[1], code = ref2[2];
     code = code.replace(/Math\./g, "");
     return {
