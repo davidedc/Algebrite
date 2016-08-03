@@ -38,7 +38,7 @@ lastFoundSymbol = null
 symbolsRightOfAssignment = null
 isSymbolLeftOfAssignment = null
 scanningParameters = null
-symbolsDisappearingInCodeGenerationStep = ["rationalize", "mag", "i"]
+symbolsDisappearingInCodeGenerationStep = ["rationalize", "mag", "i", "pi", "sin", "cos"]
 
 # Returns number of chars scanned and expr on stack.
 
