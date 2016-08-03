@@ -46,6 +46,10 @@ peek2 = ->
 	print_lisp(stack[tos - 2])
 	print_lisp(stack[tos - 1])
 
+# see cmp_expr definition, this
+# function alone just compares structures
+# can't be used alone to test
+# mathematical equalities...
 equal = (p1,p2) ->
 	if (cmp_expr(p1, p2) == 0)
 		return 1
@@ -66,6 +70,19 @@ sign = (n) ->
 	else
 		return 0
 
+# compares whether two expressions
+# have the same structure.
+# For example this method alone
+# would compare "1+1" and "2"
+# as different.
+# It just so happens though that one oftens
+# evaluates the two sides before passing them
+# to this function, so chances are that the two
+# sides have the same normal form.
+# Even a simple evaluation might not cut it
+# though... a simplification of both sides
+# would then help. And even that might not
+# cut it in some cases...
 cmp_expr = (p1, p2) ->
 	n = 0
 
@@ -114,6 +131,7 @@ cmp_expr = (p1, p2) ->
 	if (istensor(p2))
 		return 1
 
+	# recursion here
 	while (iscons(p1) && iscons(p2))
 		n = cmp_expr(car(p1), car(p2))
 		if (n != 0)
