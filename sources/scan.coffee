@@ -38,7 +38,8 @@ lastFoundSymbol = null
 symbolsRightOfAssignment = null
 isSymbolLeftOfAssignment = null
 scanningParameters = null
-symbolsDisappearingInCodeGenerationStep = ["rationalize", "mag", "i", "pi", "sin", "cos"]
+predefinedSymbolsInGlobalScope_doNotTrackInDependencies =
+	["rationalize", "mag", "i", "pi", "sin", "cos"]
 
 # Returns number of chars scanned and expr on stack.
 
@@ -300,7 +301,7 @@ scan_factor = ->
 
 
 addSymbolRightOfAssignment = (theSymbol) ->
-	if symbolsDisappearingInCodeGenerationStep.indexOf(theSymbol) == -1 and
+	if predefinedSymbolsInGlobalScope_doNotTrackInDependencies.indexOf(theSymbol) == -1 and
 		symbolsRightOfAssignment.indexOf(theSymbol) == -1
 			if DEBUG then console.log("... adding symbol: " + theSymbol + " to the set of the symbols right of assignment")
 			symbolsRightOfAssignment.push theSymbol
