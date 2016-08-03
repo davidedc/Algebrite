@@ -475,7 +475,10 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 
 	[testableStringIsIgnoredHere,result,code] =
 		findDependenciesInScript(codeFromAlgebraBlock)
+	result = result.replace /\n/g,"\n\n"
 	code = code.replace /Math\./g,""
+	code = code.replace /\n/g,"\n\n"
+
 	#code: "// no code generated yet\n//try again later"
 	#code: "console.log('some passed code is run'); window.something = 1;"
 	code: code
