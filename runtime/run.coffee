@@ -126,10 +126,18 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
+	testResult = findDependenciesInScript('x = sin(1/10)^2 + cos(1/10)^2 + y')
+	if testResult[0] == "All local dependencies:  variable x depends on: y, ; . All dependencies recursively:  variable x depends on: y, ; " and
+		testResult[1] == "" and
+		testResult[2] == "x = function (y) { return ( 1 + y ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
 	testResult = findDependenciesInScript('x = sin(1/10)^2 + cos(1/10)^2')
 	if testResult[0] == "All local dependencies:  variable x depends on: ; . All dependencies recursively:  variable x depends on: ; " and
 		testResult[1] == "" and
-		testResult[2] == "x = function () { return ( 1 ); }"
+		testResult[2] == "x = 1;"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
@@ -212,13 +220,6 @@ findDependenciesInScript = (stringToBeParsed) ->
 
 		if DEBUG then console.log "	code generation:" + key + " is: " + get_binding(usr_symbol(key)).toString()
 
-		parameters = "("
-		if recursedDependencies.length != 0
-			for i in recursedDependencies
-				parameters += i + ", "
-			parameters = parameters.slice(0, -2);
-		parameters += ")"
-
 		# we really want to make an extra effort
 		# to generate simplified code, so
 		# run a "simplify" on the content of each
@@ -231,8 +232,19 @@ findDependenciesInScript = (stringToBeParsed) ->
 		toBePrinted = pop()
 
 		codeGen = true
-		generatedCode = key + " = function " + parameters + " { return ( " + toBePrinted.toString() + " ); }"
+		generatedBody = toBePrinted.toString()
 		codeGen = false
+
+		if recursedDependencies.length != 0
+			parameters = "("
+			for i in recursedDependencies
+				parameters += i + ", "
+			parameters = parameters.slice(0, -2);
+			parameters += ")"
+			generatedCode = key + " = function " + parameters + " { return ( " + generatedBody + " ); }"
+		else
+			generatedCode = key + " = " + generatedBody + ";"
+
 		if DEBUG then console.log "		" + generatedCode
 
 	symbolsDependencies = {}
