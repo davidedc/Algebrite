@@ -86,5 +86,23 @@ test_test = ->
 
 		"1<sqrt(3)",
 		"1",
+
+		"cos(x)^2 + sin(x)^2 == 1",
+		"1",
+
+		"cos(x)^2 + sin(x)^2 >= 1",
+		"1",
+
+		"cos(x)^2 + sin(x)^2 <= 1",
+		"1",
+
+		"cos(x)^2 + sin(x)^2 < 1",
+		"0",
+
+		"cos(x)^2 + sin(x)^2 + 1 > 1",
+		"1",
+
+		"x + x > x",
+		"Stop: relational operator: cannot determine due to non-numerical comparison",
 	]
 
