@@ -357,7 +357,9 @@ scan_function_call = ->
 
 	push(p)
 	get_next_token()	# function name
-	functionInvokationsScanningStack.push token_buf
+	functionName = token_buf
+	if functionName == "roots"
+		functionInvokationsScanningStack.push token_buf
 	lastFoundSymbol = token_buf
 	if !isSymbolLeftOfAssignment
 		addSymbolRightOfAssignment token_buf
@@ -392,7 +394,8 @@ scan_function_call = ->
 
 	get_next_token()
 	list(n)
-	functionInvokationsScanningStack.pop()
+	if functionName == "roots"
+		functionInvokationsScanningStack.pop()
 	if DEBUG then console.log "-- scan_function_call end"
 
 # scan subexpression
