@@ -300,6 +300,7 @@ findDependenciesInScript = (stringToBeParsed) ->
 			for i in recursedDependencies
 				if i.indexOf("'") == -1
 					parameters += i + ", "
+			# eliminate the last ", " for printout clarity
 			parameters = parameters.replace /, $/gm , ""
 			parameters += ")"
 			generatedCode = key + " = function " + parameters + " { return ( " + generatedBody + " ); }"
