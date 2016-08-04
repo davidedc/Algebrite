@@ -197,8 +197,35 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('y = 2\nf(x) = x * x + g(y)')
 	if testResult[0] == "All local dependencies:  variable y depends on: ;  variable f depends on: 'x, x, g, y, ; . All dependencies recursively:  variable y depends on: ;  variable f depends on: 'x, x, g, ; " and
 		testResult[1] == "" and
-		testResult[2] == "f = function (x, g) { return ( g(2) + Math.pow(x, 2) ); }"
+		testResult[2] == "y = 2;\nf = function (x, g) { return ( g(2) + Math.pow(x, 2) ); }"
 			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	clear_symbols(); defn()
+
+	testResult = findDependenciesInScript('g(x) = x + 2\ny = 2\nf(x) = x * x + g(y)')
+	if testResult[0] == "All local dependencies:  variable g depends on: 'x, x, ;  variable y depends on: ;  variable f depends on: 'x, x, g, y, ; . All dependencies recursively:  variable g depends on: 'x, x, ;  variable y depends on: ;  variable f depends on: 'x, x, ; " and
+		testResult[1] == "" and
+		testResult[2] == "g = function (x) { return ( 2 + x ); }\ny = 2;\nf = function (x) { return ( 4 + Math.pow(x, 2) ); }"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	clear_symbols(); defn()
+
+	testResult = findDependenciesInScript('g(x) = x + 2\nf(x) = x * x + g(y)')
+	if testResult[0] == "All local dependencies:  variable g depends on: 'x, x, ;  variable f depends on: 'x, x, g, y, ; . All dependencies recursively:  variable g depends on: 'x, x, ;  variable f depends on: 'x, x, y, ; " and
+		testResult[1] == "" and
+		testResult[2] == "g = function (x) { return ( 2 + x ); }\nf = function (x, y) { return ( 2 + y + Math.pow(x, 2) ); }"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	clear_symbols(); defn()
+
+	testResult = findDependenciesInScript('g(x) = f(x)\nf(x)=g(x)')
+	if testResult[0] == "All local dependencies:  variable g depends on: 'x, f, x, ;  variable f depends on: 'x, g, x, ; . All dependencies recursively:  variable g depends on: 'x, x, ;  g --> f -->  ... then g again,  variable f depends on: 'x, x, ;  f --> g -->  ... then f again, " and
+		testResult[1] == "" and
+		testResult[2] == "g = function (x) { return ( f(x) ); }\nf = function (x) { return ( g(x) ); }"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
