@@ -231,6 +231,33 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
+	clear_symbols(); defn()
+
+	testResult = findDependenciesInScript('f = roots(a*x^2 + b*x + c, x)')
+	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . All dependencies recursively:  variable f depends on: a, b, c, ; " and
+		testResult[1] == "" and
+		testResult[2] == "f = function (a, b, c) { return ( [-(b + Math.pow((-4*a*c + Math.pow(b, 2)), (1/2))) / (2*a),(-b + Math.pow((-4*a*c + Math.pow(b, 2)), (1/2))) / (2*a)] ); }"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	clear_symbols(); defn()
+
+	testResult = findDependenciesInScript('f = roots(a*x^2 + b*x + c)')
+	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . All dependencies recursively:  variable f depends on: a, b, c, ; " and
+		testResult[1] == "" and
+		testResult[2] == "f = function (a, b, c) { return ( [-(b + Math.pow((-4*a*c + Math.pow(b, 2)), (1/2))) / (2*a),(-b + Math.pow((-4*a*c + Math.pow(b, 2)), (1/2))) / (2*a)] ); }"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	clear_symbols(); defn()
+
+	testResult = findDependenciesInScript('f = roots(integral(a*x + b))')
+	if testResult[0] == "All local dependencies:  variable f depends on: a, b, ; . All dependencies recursively:  variable f depends on: a, b, ; " and
+		testResult[1] == "" and
+		testResult[2] == "f = function (a, b) { return ( [0,-2*b / a] ); }"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
 findDependenciesInScript = (stringToBeParsed) ->
 
 	inited = true
