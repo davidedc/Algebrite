@@ -281,6 +281,7 @@ findDependenciesInScript = (stringToBeParsed) ->
 	scriptEvaluation = run(stringToBeParsed)
 
 	generatedCode = ""
+	readableSummaryOfGeneratedCode = ""
 	for key of symbolsDependencies
 
 		codeGen = true
@@ -321,9 +322,11 @@ findDependenciesInScript = (stringToBeParsed) ->
 		codeGen = true
 		generatedBody = toBePrinted.toString()
 		codeGen = false
+		bodyForReadableSummaryOfGeneratedCode = toBePrinted.toString()
 
 		if variablesWithCycles.indexOf(key) != -1
 			generatedCode += "// " + key + " is part of a cyclic dependency, no code generated."
+			readableSummaryOfGeneratedCode += "#" + key + " is part of a cyclic dependency, no code generated."
 		else
 			if recursedDependencies.length != 0
 				parameters = "("
@@ -334,20 +337,24 @@ findDependenciesInScript = (stringToBeParsed) ->
 				parameters = parameters.replace /, $/gm , ""
 				parameters += ")"
 				generatedCode += key + " = function " + parameters + " { return ( " + generatedBody + " ); }"
+				readableSummaryOfGeneratedCode += key + parameters + " = " + bodyForReadableSummaryOfGeneratedCode
 			else
 				generatedCode += key + " = " + generatedBody + ";"
+				readableSummaryOfGeneratedCode += key + " = " + bodyForReadableSummaryOfGeneratedCode
 
 		generatedCode += "\n"
+		readableSummaryOfGeneratedCode += "\n"
 
 		if DEBUG then console.log "		" + generatedCode
 
 	# eliminate the last new line
 	generatedCode = generatedCode.replace /\n$/gm , ""
+	readableSummaryOfGeneratedCode = readableSummaryOfGeneratedCode.replace /\n$/gm , ""
 
 	symbolsDependencies = {}
 	if DEBUG then console.log "testable string: " + testableString
 
-	return [testableString, scriptEvaluation, generatedCode]
+	return [testableString, scriptEvaluation, generatedCode, readableSummaryOfGeneratedCode]
 
 recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded, variablesAlreadyFleshedOut, variablesWithCycles, chainBeingChecked, cyclesDescriptions) ->
 	variablesAlreadyFleshedOut.push variableToBeChecked
@@ -590,9 +597,12 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	clear_symbols()
 	defn()
 
-	[testableStringIsIgnoredHere,result,code] =
+	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode] =
 		findDependenciesInScript(codeFromAlgebraBlock)
+
+	result += "\n" + readableSummaryOfCode
 	result = result.replace /\n/g,"\n\n"
+
 	code = code.replace /Math\./g,""
 	code = code.replace /\n/g,"\n\n"
 
