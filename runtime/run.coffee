@@ -303,11 +303,16 @@ findDependenciesInScript = (stringToBeParsed) ->
 			# eliminate the last ", " for printout clarity
 			parameters = parameters.replace /, $/gm , ""
 			parameters += ")"
-			generatedCode = key + " = function " + parameters + " { return ( " + generatedBody + " ); }"
+			generatedCode += key + " = function " + parameters + " { return ( " + generatedBody + " ); }"
 		else
-			generatedCode = key + " = " + generatedBody + ";"
+			generatedCode += key + " = " + generatedBody + ";"
+
+		generatedCode += "\n"
 
 		if DEBUG then console.log "		" + generatedCode
+
+	# eliminate the last new line
+	generatedCode = generatedCode.replace /\n$/gm , ""
 
 	symbolsDependencies = {}
 	if DEBUG then console.log "testable string: " + testableString
