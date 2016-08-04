@@ -40,6 +40,8 @@ isSymbolLeftOfAssignment = null
 scanningParameters = null
 predefinedSymbolsInGlobalScope_doNotTrackInDependencies =
 	["rationalize", "mag", "i", "pi", "sin", "cos"]
+functionInvokationsScanningStack = null
+skipRootVariableToBeSolved = false
 
 # Returns number of chars scanned and expr on stack.
 
@@ -61,6 +63,7 @@ scan = (s) ->
 	symbolsRightOfAssignment = []
 	isSymbolLeftOfAssignment = true
 	scanningParameters = []
+	functionInvokationsScanningStack = [""]
 
 
 	scanned = s
@@ -302,8 +305,11 @@ scan_factor = ->
 
 addSymbolRightOfAssignment = (theSymbol) ->
 	if predefinedSymbolsInGlobalScope_doNotTrackInDependencies.indexOf(theSymbol) == -1 and
-		symbolsRightOfAssignment.indexOf(theSymbol) == -1
+		symbolsRightOfAssignment.indexOf(theSymbol) == -1 and
+		!skipRootVariableToBeSolved
 			if DEBUG then console.log("... adding symbol: " + theSymbol + " to the set of the symbols right of assignment")
+			if functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("roots") != -1
+				theSymbol = "roots_" + (functionInvokationsScanningStack.length - 1) + "_" + theSymbol
 			symbolsRightOfAssignment.push theSymbol
 
 scan_symbol = ->
@@ -351,6 +357,7 @@ scan_function_call = ->
 
 	push(p)
 	get_next_token()	# function name
+	functionInvokationsScanningStack.push token_buf
 	lastFoundSymbol = token_buf
 	if !isSymbolLeftOfAssignment
 		addSymbolRightOfAssignment token_buf
@@ -362,15 +369,30 @@ scan_function_call = ->
 		n++
 		while (token == ',')
 			get_next_token()
+			if n == 2 and functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("roots") != -1
+				symbolsRightOfAssignment = symbolsRightOfAssignment.filter (x) -> !(new RegExp("roots_" + (functionInvokationsScanningStack.length - 1) + "_" + token_buf)).test(x)
+				skipRootVariableToBeSolved = true
+
 			scan_stmt()
+			skipRootVariableToBeSolved = false
 			n++
+
+		# todo refactor this, there are two copies
+		if n == 2 and functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("roots") != -1
+			symbolsRightOfAssignment = symbolsRightOfAssignment.filter (x) -> !(new RegExp("roots_" + (functionInvokationsScanningStack.length - 1) + "_" + "x")).test(x)
+
 	scanningParameters.pop()
+
+	for i in [0..symbolsRightOfAssignment.length]
+		if symbolsRightOfAssignment[i]?
+			symbolsRightOfAssignment[i] = symbolsRightOfAssignment[i].replace(new RegExp("roots_" + (functionInvokationsScanningStack.length - 1) + "_"),"")
 
 	if (token != ')')
 		scan_error(") expected")
 
 	get_next_token()
 	list(n)
+	functionInvokationsScanningStack.pop()
 	if DEBUG then console.log "-- scan_function_call end"
 
 # scan subexpression
