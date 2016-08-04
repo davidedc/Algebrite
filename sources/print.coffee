@@ -260,7 +260,7 @@ print_tensor = (p) ->
 
 print_tensor_inner = (p, j, k) ->
 	i = 0
-	print_str("(")
+	if codeGen then print_str("[") else print_str("(")
 	for i in [0...p.tensor.dim[j]]
 		if (j + 1 == p.tensor.ndim)
 			print_expr(p.tensor.elem[k])
@@ -272,7 +272,7 @@ print_tensor_inner = (p, j, k) ->
 				print_str(",")
 			else
 				print_str(",")
-	print_str(")")
+	if codeGen then print_str("]") else print_str(")")
 	return k
 
 print_base = (p) ->
