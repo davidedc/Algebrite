@@ -337,8 +337,8 @@ recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded,
 				for k in chainBeingChecked
 					if DEBUG then console.log k + " --> "
 					cyclesDescription += k + " --> "
-				if DEBUG then console.log " --> ... then " + i + " again"
-				cyclesDescription += " --> ... then " + i + " again"
+				if DEBUG then console.log " ... then " + i + " again"
+				cyclesDescription += " ... then " + i + " again"
 				cyclesDescriptions.push cyclesDescription
 				#if DEBUG then console.log "		--> cycle through " + i
 				# we want to flesh-out i but it's already been
