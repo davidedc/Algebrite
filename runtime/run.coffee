@@ -225,7 +225,7 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('g(x) = f(x)\nf(x)=g(x)')
 	if testResult[0] == "All local dependencies:  variable g depends on: 'x, f, x, ;  variable f depends on: 'x, g, x, ; . All dependencies recursively:  variable g depends on: 'x, x, ;  g --> f -->  ... then g again,  variable f depends on: 'x, x, ;  f --> g -->  ... then f again, " and
 		testResult[1] == "" and
-		testResult[2] == "g = function (x) { return ( f(x) ); }\nf = function (x) { return ( g(x) ); }"
+		testResult[2] == "// g is part of a cyclic dependency, no code generated.\n// f is part of a cyclic dependency, no code generated."
 	else
 			console.log "fail dependency test. expected: " + testResult
 
@@ -322,17 +322,20 @@ findDependenciesInScript = (stringToBeParsed) ->
 		generatedBody = toBePrinted.toString()
 		codeGen = false
 
-		if recursedDependencies.length != 0
-			parameters = "("
-			for i in recursedDependencies
-				if i.indexOf("'") == -1
-					parameters += i + ", "
-			# eliminate the last ", " for printout clarity
-			parameters = parameters.replace /, $/gm , ""
-			parameters += ")"
-			generatedCode += key + " = function " + parameters + " { return ( " + generatedBody + " ); }"
+		if variablesWithCycles.indexOf(key) != -1
+			generatedCode += "// " + key + " is part of a cyclic dependency, no code generated."
 		else
-			generatedCode += key + " = " + generatedBody + ";"
+			if recursedDependencies.length != 0
+				parameters = "("
+				for i in recursedDependencies
+					if i.indexOf("'") == -1
+						parameters += i + ", "
+				# eliminate the last ", " for printout clarity
+				parameters = parameters.replace /, $/gm , ""
+				parameters += ")"
+				generatedCode += key + " = function " + parameters + " { return ( " + generatedBody + " ); }"
+			else
+				generatedCode += key + " = " + generatedBody + ";"
 
 		generatedCode += "\n"
 
