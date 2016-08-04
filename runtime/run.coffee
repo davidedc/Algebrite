@@ -142,6 +142,36 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
+	clear_symbols(); defn()
+
+	testResult = findDependenciesInScript('f(x) = x * x')
+	if testResult[0] == "All local dependencies:  variable f depends on: 'x, x, ; . All dependencies recursively:  variable f depends on: 'x, x, ; " and
+		testResult[1] == "" and
+		testResult[2] == "f = function (x) { return ( x*x ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	clear_symbols(); defn()
+
+	testResult = findDependenciesInScript('f(x) = x * x + g(y)')
+	if testResult[0] == "All local dependencies:  variable f depends on: 'x, x, g, y, ; . All dependencies recursively:  variable f depends on: 'x, x, g, y, ; " and
+		testResult[1] == "" and
+		testResult[2] == "f = function (x, g, y) { return ( g(y) + Math.pow(x, 2) ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	clear_symbols(); defn()
+
+	testResult = findDependenciesInScript('y = 2\nf(x) = x * x + g(y)')
+	if testResult[0] == "All local dependencies:  variable y depends on: ;  variable f depends on: 'x, x, g, y, ; . All dependencies recursively:  variable y depends on: ;  variable f depends on: 'x, x, g, ; " and
+		testResult[1] == "" and
+		testResult[2] == "f = function (x, g) { return ( g(2) + Math.pow(x, 2) ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
 findDependenciesInScript = (stringToBeParsed) ->
 
 	inited = true
@@ -238,8 +268,9 @@ findDependenciesInScript = (stringToBeParsed) ->
 		if recursedDependencies.length != 0
 			parameters = "("
 			for i in recursedDependencies
-				parameters += i + ", "
-			parameters = parameters.slice(0, -2);
+				if i.indexOf("'") == -1
+					parameters += i + ", "
+			parameters = parameters.replace /, $/gm , ""
 			parameters += ")"
 			generatedCode = key + " = function " + parameters + " { return ( " + generatedBody + " ); }"
 		else
