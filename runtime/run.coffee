@@ -331,7 +331,7 @@ recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded,
 			# any of those "fleshed-out" variables while
 			# fleshing out, then there is a cycle 
 
-			if variablesAlreadyFleshedOut.indexOf(i) != -1
+			if chainBeingChecked.indexOf(i) != -1
 				if DEBUG then console.log "	found cycle:"
 				cyclesDescription = ""
 				for k in chainBeingChecked
