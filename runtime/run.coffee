@@ -55,10 +55,12 @@ test_dependencies = ->
 
 	clear_symbols(); defn()
 
-	if findDependenciesInScript('f = x+1\n g = f\n h = g\n f = g')[0] == "All local dependencies:  variable f depends on: x, g, ;  variable g depends on: f, ;  variable h depends on: g, ; . All dependencies recursively:  variable f depends on: x, ;  f --> g -->  --> ... then f again,  variable g depends on: x, ;  g --> f -->  --> ... then g again,  variable h depends on: x, ;  h --> g --> f -->  --> ... then g again, "
-		console.log "ok dependency test"
+	testResult = findDependenciesInScript('f = x+1\n g = f\n h = g\n f = g')
+	if testResult[0] == "All local dependencies:  variable f depends on: x, g, ;  variable g depends on: f, ;  variable h depends on: g, ; . All dependencies recursively:  variable f depends on: x, ;  f --> g -->  ... then f again,  variable g depends on: x, ;  g --> f -->  ... then g again,  variable h depends on: x, ;  h --> g --> f -->  ... then g again, " and
+		testResult[1] == "" and
+		testResult[2] == "// f is part of a cyclic dependency, no code generated.\n// g is part of a cyclic dependency, no code generated.\n// h is part of a cyclic dependency, no code generated."
 	else
-		console.log "fail dependency test"
+			console.log "fail dependency test. expected: " + testResult
 
 	clear_symbols(); defn()
 
@@ -378,6 +380,8 @@ recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded,
 				if DEBUG then console.log "	found cycle:"
 				cyclesDescription = ""
 				for k in chainBeingChecked
+					if variablesWithCycles.indexOf(k) == -1
+						variablesWithCycles.push k
 					if DEBUG then console.log k + " --> "
 					cyclesDescription += k + " --> "
 				if DEBUG then console.log " ... then " + i + " again"
@@ -387,7 +391,9 @@ recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded,
 				# we want to flesh-out i but it's already been
 				# fleshed-out, just add it to the variables
 				# with cycles and move on
-				variablesWithCycles.push i
+				# todo refactor this, there are two copies of these two lines
+				if variablesWithCycles.indexOf(i) == -1
+					variablesWithCycles.push i
 			else
 				# flesh-out i recursively
 				recursiveDependencies i, arrayWhereDependenciesWillBeAdded, variablesAlreadyFleshedOut, variablesWithCycles, chainBeingChecked, cyclesDescriptions
