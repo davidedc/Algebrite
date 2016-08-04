@@ -43,6 +43,8 @@ stop = (s) ->
 # While in the second case the effort is similar to running the
 # code and simplifications in her head.
 test_dependencies = ->
+	clear_symbols(); defn()
+
 	testResult = findDependenciesInScript('1')
 	if testResult[0] == "All local dependencies: . All dependencies recursively: " and
 		testResult[1] == "1" and
@@ -51,40 +53,56 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
+	clear_symbols(); defn()
+
 	if findDependenciesInScript('f = x+1\n g = f\n h = g\n f = g')[0] == "All local dependencies:  variable f depends on: x, g, ;  variable g depends on: f, ;  variable h depends on: g, ; . All dependencies recursively:  variable f depends on: x, ;  f --> g -->  --> ... then f again,  variable g depends on: x, ;  g --> f -->  --> ... then g again,  variable h depends on: x, ;  h --> g --> f -->  --> ... then g again, "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
+
+	clear_symbols(); defn()
 
 	if findDependenciesInScript('f = x+1\n g = f + y\n h = g')[0] == "All local dependencies:  variable f depends on: x, ;  variable g depends on: f, y, ;  variable h depends on: g, ; . All dependencies recursively:  variable f depends on: x, ;  variable g depends on: x, y, ;  variable h depends on: x, y, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
+	clear_symbols(); defn()
+
 	if findDependenciesInScript('g = h(x,y)')[0] == "All local dependencies:  variable g depends on: h, x, y, ; . All dependencies recursively:  variable g depends on: h, x, y, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
+
+	clear_symbols(); defn()
 
 	if findDependenciesInScript('f(x,y) = k')[0] == "All local dependencies:  variable f depends on: 'x, 'y, k, ; . All dependencies recursively:  variable f depends on: 'x, 'y, k, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
+	clear_symbols(); defn()
+
 	if findDependenciesInScript('x = z\n f(x,y) = k')[0] == "All local dependencies:  variable x depends on: z, ;  variable f depends on: 'x, 'y, k, ; . All dependencies recursively:  variable x depends on: z, ;  variable f depends on: 'x, 'y, k, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
+
+	clear_symbols(); defn()
 
 	if findDependenciesInScript('x = z\n g = f(x,y)')[0] == "All local dependencies:  variable x depends on: z, ;  variable g depends on: f, x, y, ; . All dependencies recursively:  variable x depends on: z, ;  variable g depends on: f, z, y, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
+	clear_symbols(); defn()
+
 	if findDependenciesInScript('x = 1\n x = y\n x = z')[0] == "All local dependencies:  variable x depends on: y, z, ; . All dependencies recursively:  variable x depends on: y, z, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
+
+	clear_symbols(); defn()
 
 	testResult = findDependenciesInScript('x = y*y')
 	if testResult[0] == "All local dependencies:  variable x depends on: y, ; . All dependencies recursively:  variable x depends on: y, ; " and
@@ -94,6 +112,8 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
+	clear_symbols(); defn()
+
 	testResult = findDependenciesInScript('x = -sqrt(2)/2')
 	if testResult[0] == "All local dependencies:  variable x depends on: sqrt, ; . All dependencies recursively:  variable x depends on: sqrt, ; " and
 		testResult[1] == "" and
@@ -101,6 +121,8 @@ test_dependencies = ->
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
+
+	clear_symbols(); defn()
 
 	testResult = findDependenciesInScript('x = 2^(1/2-a)*2^a/10')
 	if testResult[0] == "All local dependencies:  variable x depends on: a, ; . All dependencies recursively:  variable x depends on: a, ; " and
@@ -110,6 +132,8 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
+	clear_symbols(); defn()
+
 	testResult = findDependenciesInScript('x = rationalize(t*y/(t+y)+2*t^2*y*(2*t+y)^(-2))')
 	if testResult[0] == "All local dependencies:  variable x depends on: t, y, ; . All dependencies recursively:  variable x depends on: t, y, ; " and
 		testResult[1] == "" and
@@ -117,6 +141,8 @@ test_dependencies = ->
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
+
+	clear_symbols(); defn()
 
 	testResult = findDependenciesInScript('x = mag((a+i*b)/(c+i*d))')
 	if testResult[0] == "All local dependencies:  variable x depends on: a, b, c, d, ; . All dependencies recursively:  variable x depends on: a, b, c, d, ; " and
@@ -126,6 +152,8 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
+	clear_symbols(); defn()
+
 	testResult = findDependenciesInScript('x = sin(1/10)^2 + cos(1/10)^2 + y')
 	if testResult[0] == "All local dependencies:  variable x depends on: y, ; . All dependencies recursively:  variable x depends on: y, ; " and
 		testResult[1] == "" and
@@ -133,6 +161,8 @@ test_dependencies = ->
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
+
+	clear_symbols(); defn()
 
 	testResult = findDependenciesInScript('x = sin(1/10)^2 + cos(1/10)^2')
 	if testResult[0] == "All local dependencies:  variable x depends on: ; . All dependencies recursively:  variable x depends on: ; " and
