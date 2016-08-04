@@ -345,7 +345,7 @@ scan_string = ->
 
 scan_function_call = ->
 	if DEBUG then console.log "-- scan_function_call start"
-	n = 1
+	n = 1 # the parameter number as we scan parameters
 	p = new U()
 	p = usr_symbol(token_buf)
 
