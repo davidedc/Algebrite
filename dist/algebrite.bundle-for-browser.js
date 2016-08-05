@@ -12211,7 +12211,7 @@
 
   scanningParameters = null;
 
-  predefinedSymbolsInGlobalScope_doNotTrackInDependencies = ["rationalize", "mag", "i", "pi", "sin", "cos", "roots", "integral", "derivative"];
+  predefinedSymbolsInGlobalScope_doNotTrackInDependencies = ["rationalize", "mag", "i", "pi", "sin", "cos", "roots", "integral", "derivative", "defint"];
 
   functionInvokationsScanningStack = null;
 
@@ -12486,13 +12486,18 @@
   };
 
   addSymbolRightOfAssignment = function(theSymbol) {
+    var ac, i, prefixVar, ref1;
     if (predefinedSymbolsInGlobalScope_doNotTrackInDependencies.indexOf(theSymbol) === -1 && symbolsRightOfAssignment.indexOf(theSymbol) === -1 && !skipRootVariableToBeSolved) {
       if (DEBUG) {
         console.log("... adding symbol: " + theSymbol + " to the set of the symbols right of assignment");
       }
-      if (functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("roots") !== -1) {
-        theSymbol = "roots_" + (functionInvokationsScanningStack.length - 1) + "_" + theSymbol;
+      prefixVar = "";
+      for (i = ac = 1, ref1 = functionInvokationsScanningStack.length; 1 <= ref1 ? ac < ref1 : ac > ref1; i = 1 <= ref1 ? ++ac : --ac) {
+        if (functionInvokationsScanningStack[i] !== "") {
+          prefixVar += functionInvokationsScanningStack[i] + "_" + i + "_";
+        }
       }
+      theSymbol = prefixVar + theSymbol;
       return symbolsRightOfAssignment.push(theSymbol);
     }
   };
@@ -12556,7 +12561,7 @@
     push(p);
     get_next_token();
     functionName = token_buf;
-    if (functionName === "roots") {
+    if (functionName === "roots" || functionName === "defint") {
       functionInvokationsScanningStack.push(token_buf);
     }
     lastFoundSymbol = token_buf;
@@ -12576,6 +12581,12 @@
           });
           skipRootVariableToBeSolved = true;
         }
+        if (functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("defint") !== -1 && (n === 2 || (n > 2 && ((n - 2) % 3 === 0)))) {
+          symbolsRightOfAssignment = symbolsRightOfAssignment.filter(function(x) {
+            return !(new RegExp("defint_" + (functionInvokationsScanningStack.length - 1) + "_" + token_buf)).test(x);
+          });
+          skipRootVariableToBeSolved = true;
+        }
         scan_stmt();
         skipRootVariableToBeSolved = false;
         n++;
@@ -12589,7 +12600,12 @@
     scanningParameters.pop();
     for (i = ac = 0, ref1 = symbolsRightOfAssignment.length; 0 <= ref1 ? ac <= ref1 : ac >= ref1; i = 0 <= ref1 ? ++ac : --ac) {
       if (symbolsRightOfAssignment[i] != null) {
-        symbolsRightOfAssignment[i] = symbolsRightOfAssignment[i].replace(new RegExp("roots_" + (functionInvokationsScanningStack.length - 1) + "_"), "");
+        if (functionName === "roots") {
+          symbolsRightOfAssignment[i] = symbolsRightOfAssignment[i].replace(new RegExp("roots_" + (functionInvokationsScanningStack.length - 1) + "_"), "");
+        }
+        if (functionName === "defint") {
+          symbolsRightOfAssignment[i] = symbolsRightOfAssignment[i].replace(new RegExp("defint_" + (functionInvokationsScanningStack.length - 1) + "_"), "");
+        }
       }
     }
     if (token !== ')') {
@@ -12597,7 +12613,7 @@
     }
     get_next_token();
     list(n);
-    if (functionName === "roots") {
+    if (functionName === "roots" || functionName === "defint") {
       functionInvokationsScanningStack.pop();
     }
     if (DEBUG) {
@@ -16483,6 +16499,38 @@
     defn();
     testResult = findDependenciesInScript('f = roots(integral(a*x + b))');
     if (testResult[0] === "All local dependencies:  variable f depends on: a, b, ; . All dependencies recursively:  variable f depends on: a, b, ; " && testResult[1] === "" && testResult[2] === "f = function (a, b) { return ( [0,-2*b / a] ); }") {
+
+    } else {
+      console.log("fail dependency test. expected: " + testResult);
+    }
+    clear_symbols();
+    defn();
+    testResult = findDependenciesInScript('f = roots(defint(a*x + y,y,0,1))');
+    if (testResult[0] === "All local dependencies:  variable f depends on: a, ; . All dependencies recursively:  variable f depends on: a, ; " && testResult[1] === "" && testResult[2] === "f = function (a) { return ( -1 / (2*a) ); }") {
+
+    } else {
+      console.log("fail dependency test. expected: " + testResult);
+    }
+    clear_symbols();
+    defn();
+    testResult = findDependenciesInScript('f = roots(defint(a*x + y + z,y,0,1, z, 0, 1))');
+    if (testResult[0] === "All local dependencies:  variable f depends on: a, ; . All dependencies recursively:  variable f depends on: a, ; " && testResult[1] === "" && testResult[2] === "f = function (a) { return ( -1 / a ); }") {
+
+    } else {
+      console.log("fail dependency test. expected: " + testResult);
+    }
+    clear_symbols();
+    defn();
+    testResult = findDependenciesInScript('f = defint(2*x - 3*y,x,0,2*y)');
+    if (testResult[0] === "All local dependencies:  variable f depends on: y, ; . All dependencies recursively:  variable f depends on: y, ; " && testResult[1] === "" && testResult[2] === "f = function (y) { return ( -2*Math.pow(y, 2) ); }") {
+
+    } else {
+      console.log("fail dependency test. expected: " + testResult);
+    }
+    clear_symbols();
+    defn();
+    testResult = findDependenciesInScript('f = defint(12 - x^2 - (y^2)/2,x,0,2,y,0,3)');
+    if (testResult[0] === "All local dependencies:  variable f depends on: ; . All dependencies recursively:  variable f depends on: ; " && testResult[1] === "" && testResult[2] === "f = 55;") {
 
     } else {
       return console.log("fail dependency test. expected: " + testResult);
