@@ -258,6 +258,15 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
+	clear_symbols(); defn()
+
+	testResult = findDependenciesInScript('f = roots(defint(a*x + y,y,0,1))')
+	if testResult[0] == "All local dependencies:  variable f depends on: a, ; . All dependencies recursively:  variable f depends on: a, ; " and
+		testResult[1] == "" and
+		testResult[2] == "f = function (a) { return ( -1 / (2*a) ); }"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
 findDependenciesInScript = (stringToBeParsed) ->
 
 	inited = true

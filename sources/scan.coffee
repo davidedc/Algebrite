@@ -39,7 +39,7 @@ symbolsRightOfAssignment = null
 isSymbolLeftOfAssignment = null
 scanningParameters = null
 predefinedSymbolsInGlobalScope_doNotTrackInDependencies =
-	["rationalize", "mag", "i", "pi", "sin", "cos", "roots", "integral", "derivative"]
+	["rationalize", "mag", "i", "pi", "sin", "cos", "roots", "integral", "derivative", "defint"]
 functionInvokationsScanningStack = null
 skipRootVariableToBeSolved = false
 
@@ -308,8 +308,12 @@ addSymbolRightOfAssignment = (theSymbol) ->
 		symbolsRightOfAssignment.indexOf(theSymbol) == -1 and
 		!skipRootVariableToBeSolved
 			if DEBUG then console.log("... adding symbol: " + theSymbol + " to the set of the symbols right of assignment")
-			if functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("roots") != -1
-				theSymbol = "roots_" + (functionInvokationsScanningStack.length - 1) + "_" + theSymbol
+			prefixVar = ""
+			for i in [1...functionInvokationsScanningStack.length]
+				if functionInvokationsScanningStack[i] != ""
+					prefixVar += functionInvokationsScanningStack[i] + "_" + i + "_"
+
+			theSymbol = prefixVar + theSymbol
 			symbolsRightOfAssignment.push theSymbol
 
 scan_symbol = ->
@@ -358,7 +362,7 @@ scan_function_call = ->
 	push(p)
 	get_next_token()	# function name
 	functionName = token_buf
-	if functionName == "roots"
+	if functionName == "roots" or functionName == "defint"
 		functionInvokationsScanningStack.push token_buf
 	lastFoundSymbol = token_buf
 	if !isSymbolLeftOfAssignment
@@ -374,6 +378,9 @@ scan_function_call = ->
 			if n == 2 and functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("roots") != -1
 				symbolsRightOfAssignment = symbolsRightOfAssignment.filter (x) -> !(new RegExp("roots_" + (functionInvokationsScanningStack.length - 1) + "_" + token_buf)).test(x)
 				skipRootVariableToBeSolved = true
+			if n == 2 and functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("defint") != -1
+				symbolsRightOfAssignment = symbolsRightOfAssignment.filter (x) -> !(new RegExp("defint_" + (functionInvokationsScanningStack.length - 1) + "_" + token_buf)).test(x)
+				skipRootVariableToBeSolved = true
 
 			scan_stmt()
 			skipRootVariableToBeSolved = false
@@ -387,14 +394,17 @@ scan_function_call = ->
 
 	for i in [0..symbolsRightOfAssignment.length]
 		if symbolsRightOfAssignment[i]?
-			symbolsRightOfAssignment[i] = symbolsRightOfAssignment[i].replace(new RegExp("roots_" + (functionInvokationsScanningStack.length - 1) + "_"),"")
+			if functionName == "roots"
+				symbolsRightOfAssignment[i] = symbolsRightOfAssignment[i].replace(new RegExp("roots_" + (functionInvokationsScanningStack.length - 1) + "_"),"")
+			if functionName == "defint"
+				symbolsRightOfAssignment[i] = symbolsRightOfAssignment[i].replace(new RegExp("defint_" + (functionInvokationsScanningStack.length - 1) + "_"),"")
 
 	if (token != ')')
 		scan_error(") expected")
 
 	get_next_token()
 	list(n)
-	if functionName == "roots"
+	if functionName == "roots" or functionName == "defint"
 		functionInvokationsScanningStack.pop()
 	if DEBUG then console.log "-- scan_function_call end"
 
