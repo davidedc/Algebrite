@@ -378,15 +378,18 @@ scan_function_call = ->
 			if n == 2 and functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("roots") != -1
 				symbolsRightOfAssignment = symbolsRightOfAssignment.filter (x) -> !(new RegExp("roots_" + (functionInvokationsScanningStack.length - 1) + "_" + token_buf)).test(x)
 				skipRootVariableToBeSolved = true
-			if n == 2 and functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("defint") != -1
-				symbolsRightOfAssignment = symbolsRightOfAssignment.filter (x) -> !(new RegExp("defint_" + (functionInvokationsScanningStack.length - 1) + "_" + token_buf)).test(x)
-				skipRootVariableToBeSolved = true
+			# defint's disappearing variables can be in positions 2,5,8...
+			if functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("defint") != -1 and
+				(n == 2 or (n>2 and ((n-2) % 3 == 0))) 
+					symbolsRightOfAssignment = symbolsRightOfAssignment.filter (x) -> !(new RegExp("defint_" + (functionInvokationsScanningStack.length - 1) + "_" + token_buf)).test(x)
+					skipRootVariableToBeSolved = true
 
 			scan_stmt()
 			skipRootVariableToBeSolved = false
 			n++
 
 		# todo refactor this, there are two copies
+		# this catches the case where the "roots" variable is not specified
 		if n == 2 and functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("roots") != -1
 			symbolsRightOfAssignment = symbolsRightOfAssignment.filter (x) -> !(new RegExp("roots_" + (functionInvokationsScanningStack.length - 1) + "_" + "x")).test(x)
 

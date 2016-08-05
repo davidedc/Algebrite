@@ -267,6 +267,33 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
+	clear_symbols(); defn()
+
+	testResult = findDependenciesInScript('f = roots(defint(a*x + y + z,y,0,1, z, 0, 1))')
+	if testResult[0] == "All local dependencies:  variable f depends on: a, ; . All dependencies recursively:  variable f depends on: a, ; " and
+		testResult[1] == "" and
+		testResult[2] == "f = function (a) { return ( -1 / a ); }"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	clear_symbols(); defn()
+
+	testResult = findDependenciesInScript('f = defint(2*x - 3*y,x,0,2*y)')
+	if testResult[0] == "All local dependencies:  variable f depends on: y, ; . All dependencies recursively:  variable f depends on: y, ; " and
+		testResult[1] == "" and
+		testResult[2] == "f = function (y) { return ( -2*Math.pow(y, 2) ); }"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	clear_symbols(); defn()
+
+	testResult = findDependenciesInScript('f = defint(12 - x^2 - (y^2)/2,x,0,2,y,0,3)')
+	if testResult[0] == "All local dependencies:  variable f depends on: ; . All dependencies recursively:  variable f depends on: ; " and
+		testResult[1] == "" and
+		testResult[2] == "f = 55;"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
 findDependenciesInScript = (stringToBeParsed) ->
 
 	inited = true
