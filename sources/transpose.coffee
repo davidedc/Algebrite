@@ -34,9 +34,10 @@ transpose = ->
 
 	save()
 
-	p3 = pop()
-	p2 = pop()
-	p1 = pop()
+	p3 = pop() # index to be transposed
+	p2 = pop() # other index to be transposed
+	p1 = pop() # what needs to be transposed
+	debugger
 
 	if (!istensor(p1))
 		if (!iszero(p1))

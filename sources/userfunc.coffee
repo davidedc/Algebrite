@@ -19,6 +19,13 @@ Eval_user_function = ->
 	p4 = get_arglist(car(p1)); # p4 is A
 	p5 = cdr(p1); # p5 is B
 
+	# example:
+	#  f(x) = x+2
+	# then:
+	#  p3.toString() = "x + 2"
+	#  p4 = x
+	#  p5 = 2
+
 	# Undefined function?
 
 	if (p3 == car(p1)) # p3 is F

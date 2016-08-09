@@ -5,7 +5,7 @@ The expression and free variable are on the stack.
 
 The argument s is a null terminated list of transform rules.
 
-For example, see itab.cpp
+For example, see the itab (integrals table)
 
 Internally, the following symbols are used:
 
@@ -35,8 +35,8 @@ transform = (s) ->
 
 	save()
 
-	p4 = pop()
-	p3 = pop()
+	p4 = pop() # X i.e. free variable
+	p3 = pop() # F i.e. input expression
 
 	# save symbol context in case Eval(B) below calls transform
 
