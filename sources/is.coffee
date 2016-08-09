@@ -49,6 +49,9 @@ isminusone = (p) ->
 				return 1
 	return 0
 
+isone = (p) ->
+	return isplusone(p) or isminusone(p)
+
 isinteger = (p) ->
 	if (p.k == NUM && MEQUAL(p.q.b, 1))
 		return 1
