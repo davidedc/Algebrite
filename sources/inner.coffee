@@ -135,8 +135,10 @@ inner = ->
 		push(p2)
 
 
-		# there are 9 cases here, since each of the
-		# two arguments can be a scalar/tensor/unknown
+		# there are 8 remaining cases here, since each of the
+		# two arguments can only be a scalar/tensor/unknown
+		# and the tensor - tensor case was caught
+		# upper in the code
 		if (istensor(p1) and isnum(p2))
 			# one case covered by this branch:
 			#   tensor - scalar
@@ -155,11 +157,10 @@ inner = ->
 				# will be OK
 				multiply()
 			else
-				# four cases covered by this branch:
+				# three cases covered by this branch:
 				#   unknown - unknown
 				#   unknown - tensor
 				#   tensor  - unknown
-				#   tensor  - tensor
 				# in this case we can't use normal
 				# multiplication.
 				pop()
