@@ -1,8 +1,67 @@
-# Do the inner product of tensors.
+# the inner (or dot) operator gives products of vectors,
+# matrices, and tensors.
+# There is an aweful lot of confusion between sw packages on
+# what dot and inner do.
+#
+# First off, the "dot" operator is different from the
+# mathematical notion of dot product, which can be
+# slightly confusing.
+#
+# The mathematical notion of dot product is here:
+#   http://mathworld.wolfram.com/DotProduct.html
+#
+# However, "dot" does that and a bunch of other things,
+# i.e. in Algebrite
+# dot/inner does what the dot of Mathematica does, i.e.:
+#
+# scalar product of vectors:
+#
+#   inner((a, b, c), (x, y, z))
+#   > a x + b y + c z
+#
+# products of matrices and vectors:
+#
+#   inner(((a, b), (c,d)), (x, y))
+#   > (a x + b y,c x + d y)
+#
+#   inner((x, y), ((a, b), (c,d)))
+#   > (a x + c y,b x + d y)
+#
+#   inner((x, y), ((a, b), (c,d)), (r, s))
+#   > a r x + b s x + c r y + d s y
+#
+# matrix product:
+#
+#   inner(((a,b),(c,d)),((r,s),(t,u)))
+#   > ((a r + b t,a s + b u),(c r + d t,c s + d u))
+#
+# the "dot/inner" operator is associative and
+# distributive but not commutative.
+#
+# In Mathematica, Inner if a generalisation of Dot where
+# the user can specify the multiplication and the addition
+# operators.
+# But here in Algebrite they do the same thing.
+#
+# https://reference.wolfram.com/language/ref/Dot.html
+# https://reference.wolfram.com/language/ref/Inner.html
+#
+# http://uk.mathworks.com/help/matlab/ref/dot.html
+# http://uk.mathworks.com/help/matlab/ref/mtimes.html
+
 
 
 
 Eval_inner = ->
+
+	# note that
+	#   inner(a,b,c)
+	# is
+	#   inner(inner(a,b),c)
+	# but we're gonna normalise that
+	# to
+	#   inner(a,inner(b,c)) 
+
 	p1 = cdr(p1)
 	push(car(p1))
 	Eval()
@@ -18,17 +77,95 @@ inner = ->
 	save()
 	p2 = pop()
 	p1 = pop()
+
+	# since inner is associative,
+	# put it in a canonical form i.e.
+	# inner(inner(a,b),c) ->
+	# inner(a,inner(b,c))
+	# so that we can recognise when they
+	# are equal.
+	if isinnerordot(p1)
+		arg1 = car(cdr(p1)) #a
+		arg2 = car(cdr(cdr(p1))) #b
+		arg3 = p2
+		p1 = arg1
+		push arg2
+		push arg3
+		inner()
+		p2 = pop()
+
+
 	if (istensor(p1) && istensor(p2))
 		inner_f()
 	else
+
+		# if either operand is a sum then distribute
+		# (if we are in expanding mode)
+		if (expanding && isadd(p1))
+			p1 = cdr(p1)
+			push(zero)
+			while (iscons(p1))
+				push(car(p1))
+				push(p2)
+				inner()
+				add()
+				p1 = cdr(p1)
+			restore()
+			return
+
+		if (expanding && isadd(p2))
+			p2 = cdr(p2)
+			push(zero)
+			while (iscons(p2))
+				push(p1)
+				push(car(p2))
+				inner()
+				add()
+				p2 = cdr(p2)
+			restore()
+			return
+
 		push(p1)
 		push(p2)
-		if (istensor(p1))
+
+
+		# there are 9 cases here, since each of the
+		# two arguments can be a scalar/tensor/unknown
+		if (istensor(p1) and isnum(p2))
+			# one case covered by this branch:
+			#   tensor - scalar
 			tensor_times_scalar()
-		else if (istensor(p2))
+		else if (isnum(p1) and istensor(p2))
+			# one case covered by this branch:
+			#   scalar - tensor
 			scalar_times_tensor()
 		else
-			multiply()
+			if (isnum(p1) or isnum(p2))
+				# three cases covered by this branch:
+				#   unknown - scalar
+				#   scalar - unknown
+				#   scalar  - scalar
+				# in these cases a normal multiplication
+				# will be OK
+				multiply()
+			else
+				# four cases covered by this branch:
+				#   unknown - unknown
+				#   unknown - tensor
+				#   tensor  - unknown
+				#   tensor  - tensor
+				# in this case we can't use normal
+				# multiplication.
+				pop()
+				pop()
+				push_symbol(INNER)
+				push(p1)
+				push(p2)
+				list(3)
+				restore()
+				return
+
+
 	restore()
 
 # inner product of tensors p1 and p2

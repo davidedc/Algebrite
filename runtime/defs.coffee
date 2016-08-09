@@ -380,6 +380,7 @@ isadd = (p) -> (car(p) == symbol(ADD))
 ismultiply = (p) -> (car(p) == symbol(MULTIPLY))
 ispower = (p) -> (car(p) == symbol(POWER))
 isfactorial = (p) -> (car(p) == symbol(FACTORIAL))
+isinnerordot = (p) -> ((car(p) == symbol(INNER)) or (car(p) == symbol(DOT)))
 
 MSIGN = (p) ->
 	if p.isPositive()
