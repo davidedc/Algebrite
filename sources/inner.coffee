@@ -1,5 +1,11 @@
 # the inner (or dot) operator gives products of vectors,
 # matrices, and tensors.
+#
+# Note that for Algebrite, the elements of a vector/matrix
+# can only be scalars. This allows for example to flesh out
+# matrix multiplication using the usual multiplication.
+# So for example block-representations are not allowed.
+#
 # There is an aweful lot of confusion between sw packages on
 # what dot and inner do.
 #
