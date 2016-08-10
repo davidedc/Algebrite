@@ -2,6 +2,32 @@
 
 Eval_simplify = ->
 	push(cadr(p1))
+
+	# -----------------------
+	# unfortunately for the time being user
+	# specified simplifications are only
+	# run in things which don't contain
+	# integrals.
+	# Doesn't work yet, could be because of
+	# some clobbering as "transform" is called
+	# recursively?
+	if userSimplifications.length != 0 and !Find(cadr(p1), symbol(INTEGRAL))
+		originalexpanding = expanding
+		expanding = false
+		Eval()
+		expanding = originalexpanding
+
+		p1 = pop()
+		push(p1)
+		push_symbol(NIL)
+
+		additionalSimplifications = userSimplifications.slice(0)
+		additionalSimplifications.push 0
+		transform(additionalSimplifications, true)
+		p1 = pop()
+		push p1
+	# ------------------------
+
 	Eval()
 	simplify()
 

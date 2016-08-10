@@ -30,8 +30,8 @@ Internally, the following symbols are used:
 #define B p6
 #define C p7
 
-transform = (s) ->
-	h = 0
+transform = (s, generalTransform) ->
+	transform_h = 0
 
 	save()
 
@@ -48,36 +48,43 @@ transform = (s) ->
 
 	# put constants in F(X) on the stack
 
-	h = tos
+	transform_h = tos
 	push_integer(1)
 	push(p3)
 	push(p4)
 	polyform(); # collect coefficients of x, x^2, etc.
 	push(p4)
-	decomp()
+	decomp(generalTransform)
 
-	for eachEntry in s
-		if DEBUG then console.log "scanning table entry " + eachEntry
-		if eachEntry
-			scan_meta(eachEntry)
+	if DEBUG
+		for i in [1...tos]
+			console.log "stack content at " + i + " " + stack[tos-i]
+
+	for eachTransformEntry in s
+		if DEBUG then console.log "scanning table entry " + eachTransformEntry
+		debugger
+		if eachTransformEntry
+			scan_meta(eachTransformEntry)
 			p1 = pop()
+			debugger
 
 			p5 = cadr(p1)
 			p6 = caddr(p1)
 			p7 = cdddr(p1)
 
-			if (f_equals_a(h))
+			if (f_equals_a(transform_h, generalTransform))
 				break
 
 
-	tos = h
+	tos = transform_h
 
-	if eachEntry
+	if eachTransformEntry
 		push(p6)
 		Eval()
 		p1 = pop()
 	else
-		p1 = symbol(NIL)
+		if !generalTransform
+			p1 = symbol(NIL)
 
 	set_binding(symbol(METAX), pop())
 	set_binding(symbol(METAB), pop())
@@ -89,28 +96,42 @@ transform = (s) ->
 
 # search for a METAA and METAB such that F = A
 
-f_equals_a = (h) ->
-	i = 0
-	j = 0
-	for i in [h...tos]
-		set_binding(symbol(METAA), stack[i])
-		for j in [h...tos]
-			set_binding(symbol(METAB), stack[j])
+f_equals_a = (h, generalTransform) ->
+	fea_i = 0
+	fea_j = 0
+	for fea_i in [h...tos]
+		set_binding(symbol(METAA), stack[fea_i])
+		if DEBUG
+			console.log "binding METAA to " + get_binding(symbol(METAA))
+		for fea_j in [h...tos]
+			set_binding(symbol(METAB), stack[fea_j])
+			if DEBUG
+				console.log "binding METAB to " + get_binding(symbol(METAB))
 			p1 = p7;				# are conditions ok?
 			while (iscons(p1))
 				push(car(p1))
+				#if generalTransform then expanding = false
 				Eval()
+				#if generalTransform then expanding = true
 				p2 = pop()
 				if (iszero(p2))
 					break
 				p1 = cdr(p1)
-			if (iscons(p1))			# no, try next j
+			if (iscons(p1))			# no, try next fea_j
 				continue
 			push(p3);			# F = A?
 			push(p5)
+			if generalTransform
+				originalexpanding = expanding
+				expanding = false
 			Eval()
+			if generalTransform
+				expanding = originalexpanding
+			if DEBUG
+				console.log "comparing " + stack[tos-1] + " to: " + stack[tos-2]
 			subtract()
 			p1 = pop()
 			if (iszero(p1))
+				debugger
 				return 1;		# yes
 	return 0;					# no
