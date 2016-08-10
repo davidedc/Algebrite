@@ -37,7 +37,7 @@ run_test [
 	"cov(A+B)",
 		
 	"simplify(eig(x*transpose(transpose(A)), transpose(x*A)))",
-	"eig(A*x,transpose(A)*transpose(x))-eig(transpose(A)*transpose(x),A*x)",
+	"eig(A*x,transpose(A)*transpose(x))",
 		
 ]
 

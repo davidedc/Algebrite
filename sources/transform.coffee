@@ -84,7 +84,11 @@ transform = (s, generalTransform) ->
 		Eval()
 		p1 = pop()
 	else
-		if !generalTransform
+		# transformations failed
+		if generalTransform
+			# result = original expression
+			p1 = p3
+		else
 			p1 = symbol(NIL)
 
 	set_binding(symbol(METAX), pop())
