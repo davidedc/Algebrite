@@ -381,7 +381,7 @@ findDependenciesInScript = (stringToBeParsed) ->
 		# will still point to un-simplified structures,
 		# we only simplify the generated code.
 		push get_binding(usr_symbol(key))
-		simplify()
+		simplifyForCodeGeneration()
 		toBePrinted = pop()
 
 		codeGen = true
@@ -663,6 +663,8 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	# we start "clean" each time:
 	# clear all the symbols and then re-define
 	# the "starting" symbols.
+	
+	userSimplificationsInListForm = []
 	clear_symbols()
 	defn()
 

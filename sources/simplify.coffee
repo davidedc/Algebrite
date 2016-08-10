@@ -2,7 +2,11 @@
 
 Eval_simplify = ->
 	push(cadr(p1))
+	runUserDefinedSimplifications()
+	Eval()
+	simplify()
 
+runUserDefinedSimplifications = ->
 	# -----------------------
 	# unfortunately for the time being user
 	# specified simplifications are only
@@ -11,7 +15,7 @@ Eval_simplify = ->
 	# Doesn't work yet, could be because of
 	# some clobbering as "transform" is called
 	# recursively?
-	if userSimplifications.length != 0 and !Find(cadr(p1), symbol(INTEGRAL))
+	if userSimplificationsInListForm.length != 0 and !Find(cadr(p1), symbol(INTEGRAL))
 		originalexpanding = expanding
 		expanding = false
 		Eval()
@@ -21,15 +25,18 @@ Eval_simplify = ->
 		push(p1)
 		push_symbol(NIL)
 
-		additionalSimplifications = userSimplifications.slice(0)
+		additionalSimplifications = userSimplificationsInListForm.slice(0)
 		additionalSimplifications.push 0
 		transform(additionalSimplifications, true)
 		p1 = pop()
 		push p1
 	# ------------------------
 
-	Eval()
-	simplify()
+simplifyForCodeGeneration = ->
+	save()
+	runUserDefinedSimplifications()
+	simplify_main()
+	restore()
 
 simplify = ->
 	save()
