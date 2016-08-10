@@ -34,18 +34,18 @@ decomp = (generalTransform) ->
 
 	# is the entire expression constant?
 
-	if !generalTransform
+	if generalTransform
+		if !iscons(p1)
+			if DEBUG then console.log "ground thing: " + p1
+			push p1
+			restore()
+			return
+	else
 		if (Find(p1, p2) == 0)
 			if DEBUG then console.log "entire expression is constant"
 			push(p1)
 			#push(p1);	# may need later for pushing both +a, -a
 			#negate()
-			restore()
-			return
-	else
-		if !iscons(p1)
-			if DEBUG then console.log "ground thing: " + p1
-			push p1
 			restore()
 			return
 
