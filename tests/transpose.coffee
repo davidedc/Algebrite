@@ -1,5 +1,6 @@
 test_transpose = ->
 	run_test [
+
 		"transpose(0)",
 		"0",
 
@@ -61,6 +62,15 @@ test_transpose = ->
 		"transpose(inner(a,b),3,4)",
 		"inner(transpose(b,3,4),transpose(a,3,4))",
 
+		"transpose(transpose(a))",
+		"a",
+					
+		"transpose(transpose(transpose(a)))",
+		"transpose(a)",
+
+		"transpose(transpose(transpose(transpose(a))))",
+		"a",
+
 		"transpose(transpose(a),3,4)",
 		"transpose(transpose(a),3,4)",
 
@@ -69,9 +79,6 @@ test_transpose = ->
 			
 		"transpose(transpose(transpose(a),3,4))",
 		"transpose(transpose(transpose(a),3,4))",
-			
-		"transpose(transpose(transpose(a)))",
-		"transpose(a)",
 
 		"transpose(transpose(transpose(a),1,2))",
 		"transpose(a)",
@@ -80,7 +87,7 @@ test_transpose = ->
 		"transpose(a)",
 			
 		"transpose(transpose(a,3,4),4,3)",
-		"transpose(a,3,4)",
+		"a",
 			
 		"transpose(transpose(a,3,4),5,6)",
 		"transpose(transpose(a,3,4),5,6)",
@@ -93,7 +100,6 @@ test_transpose = ->
 			
 		"transpose(a,3,4) - transpose(a,3,4)",
 		"0",
-		
 
 
 	]

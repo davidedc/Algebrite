@@ -55,7 +55,7 @@ transpose = ->
 		if ( equal(innerTranspSwitch1,p3) and equal(innerTranspSwitch2,p2) ) or
 			( equal(innerTranspSwitch2,p3) and equal(innerTranspSwitch1,p2) ) or
 			(( equal(innerTranspSwitch1,symbol(NIL)) and equal(innerTranspSwitch2,symbol(NIL)) ) and ((isplusone(p3) and isplustwo(p2)) or ((isplusone(p2) and isplustwo(p3)))))
-				push p1
+				push car(cdr(p1))
 				restore()
 				return
 
