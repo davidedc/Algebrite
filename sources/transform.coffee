@@ -140,6 +140,5 @@ f_equals_a = (h, generalTransform) ->
 			subtract()
 			p1 = pop()
 			if (iszero(p1))
-				debugger
 				return 1;		# yes
 	return 0;					# no
