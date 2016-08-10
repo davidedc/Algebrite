@@ -531,7 +531,7 @@ get_token = ->
 	# symbol?
 
 	if (isalpha(scanned[scan_str]))
-		while (isalnum(scanned[scan_str]))
+		while (isalnumorunderscore(scanned[scan_str]))
 			scan_str++
 		if (scanned[scan_str] == '(')
 			token = T_FUNCTION
