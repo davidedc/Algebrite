@@ -79,6 +79,7 @@ transform = (s, generalTransform) ->
 	tos = transform_h
 
 	if eachTransformEntry
+		# a transformation was successful
 		push(p6)
 		Eval()
 		p1 = pop()
@@ -107,17 +108,20 @@ f_equals_a = (h, generalTransform) ->
 			set_binding(symbol(METAB), stack[fea_j])
 			if DEBUG
 				console.log "binding METAB to " + get_binding(symbol(METAB))
-			p1 = p7;				# are conditions ok?
+
+			# now test all the conditions (it's an and between them)
+			p1 = p7
 			while (iscons(p1))
 				push(car(p1))
-				#if generalTransform then expanding = false
 				Eval()
-				#if generalTransform then expanding = true
 				p2 = pop()
 				if (iszero(p2))
 					break
 				p1 = cdr(p1)
-			if (iscons(p1))			# no, try next fea_j
+
+			if (iscons(p1))
+				# conditions are not met,
+				# skip to the next binding of metas
 				continue
 			push(p3);			# F = A?
 			push(p5)
