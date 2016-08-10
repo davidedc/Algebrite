@@ -72,6 +72,7 @@ SYM = 5
 counter = 0
 ABS = counter++
 ADD = counter++
+ADDSUBSTRULE = counter++
 ADJ = counter++
 AND = counter++
 ARCCOS = counter++
@@ -91,6 +92,7 @@ CHECK = counter++
 CHOOSE = counter++
 CIRCEXP = counter++
 CLEAR = counter++
+CLEARSUBSTRULES = counter++
 CLOCK = counter++
 COEFF = counter++
 COFACTOR = counter++
@@ -224,6 +226,10 @@ SYMBOL_X = counter++
 SYMBOL_Y = counter++
 SYMBOL_Z = counter++
 
+SYMBOL_A_UNDERSCORE = counter++
+SYMBOL_B_UNDERSCORE = counter++
+SYMBOL_X_UNDERSCORE = counter++
+
 C1 = counter++
 C2 = counter++
 C3 = counter++
@@ -340,7 +346,7 @@ out_buf = ""
 out_count = 0
 test_flag = 0
 draw_stop_return = null # extern jmp_buf ?????
-userSimplifications = []
+userSimplificationsInListForm = []
 
 symbol = (x) -> (symtab[x])
 iscons = (p) -> (p.k == CONS)

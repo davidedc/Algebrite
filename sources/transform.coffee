@@ -60,20 +60,68 @@ transform = (s, generalTransform) ->
 		for i in [1...tos]
 			console.log "stack content at " + i + " " + stack[tos-i]
 
-	for eachTransformEntry in s
-		if DEBUG then console.log "scanning table entry " + eachTransformEntry
-		debugger
-		if eachTransformEntry
-			scan_meta(eachTransformEntry)
-			p1 = pop()
-			debugger
+	if generalTransform
+		for eachTransformEntry in s
+			if DEBUG then console.log "scanning table entry " + eachTransformEntry
+			if eachTransformEntry
 
-			p5 = cadr(p1)
-			p6 = caddr(p1)
-			p7 = cdddr(p1)
+				push eachTransformEntry
 
-			if (f_equals_a(transform_h, generalTransform))
-				break
+				push symbol(SYMBOL_A_UNDERSCORE)
+				push symbol(METAA)
+				subst()
+
+				push symbol(SYMBOL_B_UNDERSCORE)
+				push symbol(METAB)
+				subst()
+
+				push symbol(SYMBOL_X_UNDERSCORE)
+				push symbol(METAX)
+				subst()
+
+				p1 = pop()
+
+				p5 = car(p1)
+				p6 = cadr(p1)
+				p7 = cddr(p1)
+
+				###
+				p5 = p1.tensor.elem[0]
+				p6 = p1.tensor.elem[1]
+				for i in [2..(p1.tensor.elem.length-1)]
+					push p1.tensor.elem[i]
+				list(p1.tensor.elem.length - 2)
+				p7 = pop()
+				###
+
+
+				if (f_equals_a(transform_h, generalTransform))
+					break
+	else
+		for eachTransformEntry in s
+			if DEBUG then console.log "scanning table entry " + eachTransformEntry
+			if eachTransformEntry
+				scan_meta(eachTransformEntry)
+				p1 = pop()
+
+				p5 = cadr(p1)
+				p6 = caddr(p1)
+				p7 = cdddr(p1)
+
+				###
+				p5 = p1.tensor.elem[0]
+				p6 = p1.tensor.elem[1]
+				for i in [2..(p1.tensor.elem.length-1)]
+					push p1.tensor.elem[i]
+				list(p1.tensor.elem.length - 2)
+				p7 = pop()
+				###
+
+
+				if (f_equals_a(transform_h, generalTransform))
+					break
+
+
 
 
 	tos = transform_h

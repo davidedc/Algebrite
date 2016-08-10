@@ -35,6 +35,7 @@ init = ->
 
 	std_symbol("abs", ABS)
 	std_symbol("add", ADD)
+	std_symbol("addsubstrule", ADDSUBSTRULE)
 	std_symbol("adj", ADJ)
 	std_symbol("and", AND)
 	std_symbol("arccos", ARCCOS)
@@ -54,6 +55,7 @@ init = ->
 	std_symbol("choose", CHOOSE)
 	std_symbol("circexp", CIRCEXP)
 	std_symbol("clear", CLEAR)
+	std_symbol("clearsubstrules", CLEARSUBSTRULES)
 	std_symbol("clock", CLOCK)
 	std_symbol("coeff", COEFF)
 	std_symbol("cofactor", COFACTOR)
@@ -188,6 +190,10 @@ init = ->
 	std_symbol("x", SYMBOL_X)
 	std_symbol("y", SYMBOL_Y)
 	std_symbol("z", SYMBOL_Z)
+
+	std_symbol("a_", SYMBOL_A_UNDERSCORE)
+	std_symbol("b_", SYMBOL_B_UNDERSCORE)
+	std_symbol("x_", SYMBOL_X_UNDERSCORE)
 
 	std_symbol("$C1", C1)
 	std_symbol("$C2", C2)
