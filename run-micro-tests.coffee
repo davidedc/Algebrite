@@ -36,6 +36,9 @@ run_test [
 	"simplify(eig(transpose(A+B),B+transpose(transpose(A))))",
 	"cov(A+B)",
 		
+	"simplify(eig(x*transpose(transpose(A)), transpose(A*x)))",
+	"eig(A*x,transpose(A)*transpose(x))",
+		
 	"simplify(eig(x*transpose(transpose(A)), transpose(x*A)))",
 	"eig(A*x,transpose(A)*transpose(x))",
 		
@@ -51,6 +54,9 @@ run_test [
 	"simplify(eig(x*transpose(transpose(A)), transpose(x*A)))",
 	"cov(A*x)",
 		
+	"simplify(eig(x*transpose(transpose(A)), transpose(A*x)))",
+	"cov(A*x)",
+		
 ]
 
 userSimplifications = []
@@ -60,6 +66,23 @@ run_test [
 	"simplify(eig(transpose(A+B),B+transpose(transpose(A))))",
 	"eig(transpose(A)+transpose(B),A+B)",
 		
+]
+
+userSimplifications = [
+	"f(eig(transpose(a),a), cov(a), not(number(a)))",
+	"f(eig(transpose(a),a), cov(a), number(a),a>0 )",
+]
+
+run_test [
+
+	"simplify(eig(transpose(3),transpose(transpose(3))))",
+	"cov(3)",
+
+	"simplify(eig(transpose(-3),transpose(transpose(-3))))",
+	"eig(-3,-3)",
+
+	"simplify(eig(transpose(-x),transpose(transpose(-x))))",
+	"cov(-x)",
 ]
 
 
