@@ -69,6 +69,7 @@ simplify_main = ->
 	f4()
 	f5()
 	f9()
+	#f11()
 
 	push(p1)
 
@@ -199,6 +200,20 @@ f9 = ->
 	p2 = pop()
 	if (count(p2) < count(p1))
 		p1 = p2
+
+###
+f11 = ->
+	if (car(p1) == symbol(ADD))
+		return
+	push(car(p1))
+	simplify()
+	push(cdr(p1))
+	simplify()
+	cons()
+	p2 = pop()
+	if (count(p2) < count(p1))
+		p1 = p2
+###
 
 nterms = (p) ->
 	if (car(p) != symbol(ADD))
