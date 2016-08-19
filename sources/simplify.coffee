@@ -63,6 +63,7 @@ simplify_main = ->
 		else
 			p1 = p3
 
+	f10()
 	f1()
 	f2()
 	f3()
@@ -136,6 +137,38 @@ f3 = ->
 	p2 = pop()
 	if (count(p2) < count(p1))
 		p1 = p2
+
+
+f10 = ->
+
+	carp1 = car(p1)
+	miao = cdr(p1)
+	if ( carp1 == symbol(MULTIPLY) || carp1 == symbol(INNER))
+		# both operands a transpose?
+
+		if (car(car(cdr(p1))) == symbol(TRANSPOSE)) and (car(car(cdr(cdr(p1)))) == symbol(TRANSPOSE))
+			console.log "maybe collecting a transpose " + p1
+			a = cadr(car(cdr(p1)))
+			b = cadr(car(cdr(cdr(p1))))
+			if carp1 == symbol(MULTIPLY)
+				push(a)
+				push(b)
+				multiply()
+			else if carp1 == symbol(INNER)
+				push(b)
+				push(a)
+				inner()
+			push_integer(1)
+			push_integer(2)
+			originalexpanding = expanding
+			expanding = false
+			transpose()
+			expanding = originalexpanding
+
+			p2 = pop()
+			if (count(p2) < count(p1))
+				p1 = p2
+			console.log "collecting a transpose " + p2
 
 # try expanding denominators
 

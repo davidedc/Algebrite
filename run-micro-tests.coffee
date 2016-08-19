@@ -13,6 +13,16 @@ test_dependencies()
 
 run_test [
 
+	"simplify(transpose(A)*transpose(x))",
+	"transpose(A*x)",
+
+	"simplify(inner(transpose(A),transpose(x)))",
+	"transpose(inner(x,A))",
+		
+]
+
+run_test [
+
 	"simplify(integral(1/(X-A)/sqrt(X^2-A^2),X)+sqrt(X^2-A^2)/A/(X-A))",
 	"0",
 		
