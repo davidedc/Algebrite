@@ -664,7 +664,7 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	# clear all the symbols and then re-define
 	# the "starting" symbols.
 	
-	userSimplificationsInListForm = []
+	##userSimplificationsInListForm = []
 	clear_symbols()
 	defn()
 
