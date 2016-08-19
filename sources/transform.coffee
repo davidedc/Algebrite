@@ -18,6 +18,12 @@ Internally, the following symbols are used:
 	B	result expression
 
 	C	list of conditional expressions
+
+Puts the final expression on top of stack
+(whether it's transformed or not) and returns
+true is successful, false if not.
+
+
 ###
 
 
@@ -35,8 +41,14 @@ transform = (s, generalTransform) ->
 
 	save()
 
+	p1 = null
+
 	p4 = pop() # X i.e. free variable
 	p3 = pop() # F i.e. input expression
+
+	if DEBUG
+		console.log "         !!!!!!!!!   transform on: " + p3
+
 
 	# save symbol context in case Eval(B) below calls transform
 
@@ -96,7 +108,43 @@ transform = (s, generalTransform) ->
 
 
 				if (f_equals_a(transform_h, generalTransform))
+					# there is a successful transformation,
+					# transformed result is in p6
 					break
+				else
+					# the match failed but perhaps we can match
+					# something lower in the tree
+
+					if iscons(p3)
+						push(car(p3))
+						push_symbol(NIL)
+						firstTermSuccess = transform(s, generalTransform)
+						firstTermTransform = stack[tos-1]
+						if DEBUG then console.log "trying to simplify first term: " + car(p3) + " ..." + firstTermSuccess
+
+						push(cdr(p3))
+						push_symbol(NIL)
+						if DEBUG then console.log "testing: " + cdr(p3)
+						#if (cdr(p3)+"") == "eig(A x,transpose(A x))()"
+						#	debugger
+						secondTermSuccess = transform(s, generalTransform)
+						secondTermTransform = stack[tos-1]
+						if DEBUG then console.log "trying to simplify other term: " + cdr(p3) + " ..." + secondTermSuccess
+
+						tos = transform_h
+						restoreMetaBindings()
+
+						push firstTermTransform
+						push secondTermTransform
+						cons()
+						restore()
+						if firstTermSuccess or secondTermSuccess
+							return true
+
+						else
+							return false
+
+
 	else
 		for eachTransformEntry in s
 			if DEBUG then console.log "scanning table entry " + eachTransformEntry
@@ -119,6 +167,8 @@ transform = (s, generalTransform) ->
 
 
 				if (f_equals_a(transform_h, generalTransform))
+					# there is a successful transformation,
+					# transformed result is in p6
 					break
 
 
@@ -126,11 +176,14 @@ transform = (s, generalTransform) ->
 
 	tos = transform_h
 
+	transformationSuccessful = false
+
 	if eachTransformEntry
 		# a transformation was successful
 		push(p6)
 		Eval()
 		p1 = pop()
+		transformationSuccessful = true
 	else
 		# transformations failed
 		if generalTransform
@@ -139,13 +192,18 @@ transform = (s, generalTransform) ->
 		else
 			p1 = symbol(NIL)
 
-	set_binding(symbol(METAX), pop())
-	set_binding(symbol(METAB), pop())
-	set_binding(symbol(METAA), pop())
+	restoreMetaBindings()
 
 	push(p1)
 
 	restore()
+	return transformationSuccessful
+
+
+restoreMetaBindings = ->
+	set_binding(symbol(METAX), pop())
+	set_binding(symbol(METAB), pop())
+	set_binding(symbol(METAA), pop())
 
 # search for a METAA and METAB such that F = A
 

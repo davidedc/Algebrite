@@ -71,6 +71,14 @@ decomp = (generalTransform) ->
 	while (iscons(p3))
 		if DEBUG then console.log "recursive decomposition"
 		push(car(p3))
+
+		# for a general transformations,
+		# we want to match any part of the tree so
+		# we need to push the subtree as well
+		# as recurse to its parts
+		if generalTransform
+			push(car(p3))
+		
 		if DEBUG then console.log "car(p3): " + car(p3)
 		push(p2)
 		if DEBUG then console.log "p2: " + p2

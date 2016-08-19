@@ -23,6 +23,53 @@ run_test [
 
 run_test [
 
+	# one of the two arguments should
+	# be a scalar, but we don't know
+	# which one, so we have to transpose
+	# both of them. Note that we
+	# don't invert the order because
+	# we know it's not an inner (dot)
+	# product
+	"transpose(A)*transpose(x)",
+	"transpose(A)*transpose(x)",
+		
+]
+
+run_test [
+
+	"addsubstrule(eig(transpose(a_),a_), eig(cov(a_)))",
+	"",
+
+	"addsubstrule(eig(a_,transpose(a_)), eig(cov(a_)))",
+	"",
+
+	#"addsubstrule(cov(transpose(a_)), cov(a_))",
+	#"",
+
+	"simplify(1 + eig(transpose(A+B),B+transpose(transpose(A))))",
+	"1+eig(cov(A+B))",
+		
+	"simplify(1 + eig(x*transpose(transpose(A)), transpose(x*A)))",
+	"1+eig(cov(transpose(A)*transpose(x)))",
+
+	# ideally this but we need to make simplifications work better
+	# "1+eig(cov(A*x))",
+		
+	"simplify(1 + eig(x*transpose(transpose(A)), transpose(A*x)))",
+	"1+eig(cov(transpose(A)*transpose(x)))",
+
+	# ideally this but we need to make simplifications work better
+	# "1+eig(cov(A*x))",
+
+	"clearsubstrules()",
+	"",
+		
+]
+
+## ---------------------------------------------------------
+
+run_test [
+
 	"simplify(integral(1/(X-A)/sqrt(X^2-A^2),X)+sqrt(X^2-A^2)/A/(X-A))",
 	"0",
 		
@@ -33,7 +80,7 @@ run_test [
 
 run_test [
 
-	"addsubstrule(eig(transpose(a_),a_), cov(a_))",
+	"addsubstrule(eig(transpose(a_),a_), eig(cov(a_)))",
 	"",
 
 	"simplify(integral(1/(X-A)/sqrt(X^2-A^2),X)+sqrt(X^2-A^2)/A/(X-A))",
@@ -44,29 +91,29 @@ run_test [
 run_test [
 
 	"simplify(eig(transpose(A+B),B+transpose(transpose(A))))",
-	"cov(A+B)",
+	"eig(cov(A+B))",
 		
 	"simplify(eig(x*transpose(transpose(A)), transpose(A*x)))",
-	"eig(A*x,transpose(A)*transpose(x))",
+	"eig(cov(transpose(A)*transpose(x)))",
 		
 	"simplify(eig(x*transpose(transpose(A)), transpose(x*A)))",
-	"eig(A*x,transpose(A)*transpose(x))",
+	"eig(cov(transpose(A)*transpose(x)))",
 		
 ]
 
 run_test [
 
-	"addsubstrule(eig(a_,transpose(a_)), cov(a_))",
+	"addsubstrule(eig(a_,transpose(a_)), eig(cov(a_)))",
 	"",
 
 	"simplify(eig(transpose(A+B),B+transpose(transpose(A))))",
-	"cov(A+B)",
+	"eig(cov(A+B))",
 		
 	"simplify(eig(x*transpose(transpose(A)), transpose(x*A)))",
-	"cov(A*x)",
+	"eig(cov(transpose(A)*transpose(x)))",
 		
 	"simplify(eig(x*transpose(transpose(A)), transpose(A*x)))",
-	"cov(A*x)",
+	"eig(cov(transpose(A)*transpose(x)))",
 
 	"clearsubstrules()",
 	"",
@@ -84,20 +131,26 @@ run_test [
 
 run_test [
 
-	"addsubstrule(eig(transpose(a_),a_), cov(a_), not(number(a_)))",
+	"addsubstrule(eig(transpose(a_),a_), eig(cov(a_)), not(number(a_)))",
 	"",
 
-	"addsubstrule(eig(transpose(a_),a_), cov(a_), number(a_),a_>0 )",
+	"addsubstrule(eig(transpose(a_),a_), eig(cov(a_)), number(a_),a_>0 )",
 	"",
 
+	# in theory this could be simplified to eig(cov(3)) but
+	# in practice we evaluate away all the transposes before
+	# doing the matching, so the matching
+	# doesn't work in this case.
+	# if we ran the matching before the eval (no expand) as
+	# well, then we would catch it.
 	"simplify(eig(transpose(3),transpose(transpose(3))))",
-	"cov(3)",
+	"eig(3,3)",
 
 	"simplify(eig(transpose(-3),transpose(transpose(-3))))",
 	"eig(-3,-3)",
 
 	"simplify(eig(transpose(-x),transpose(transpose(-x))))",
-	"cov(-x)",
+	"eig(cov(-x))",
 
 	"clearsubstrules()",
 	"",
