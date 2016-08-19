@@ -211,10 +211,24 @@ f_equals_a = (h, generalTransform) ->
 	fea_i = 0
 	fea_j = 0
 	for fea_i in [h...tos]
+
+		# constants might end up matching to become
+		# a more complex expression that gives out their
+		# value, we want to avoid that
+		if generalTransform and isnum(stack[fea_i])
+			continue
+
 		set_binding(symbol(METAA), stack[fea_i])
 		if DEBUG
 			console.log "binding METAA to " + get_binding(symbol(METAA))
 		for fea_j in [h...tos]
+
+			# constants might end up matching to become
+			# a more complex expression that gives out their
+			# value, we want to avoid that
+			if generalTransform and isnum(stack[fea_j])
+				continue
+
 			set_binding(symbol(METAB), stack[fea_j])
 			if DEBUG
 				console.log "binding METAB to " + get_binding(symbol(METAB))
@@ -246,5 +260,9 @@ f_equals_a = (h, generalTransform) ->
 			subtract()
 			p1 = pop()
 			if (iszero(p1))
+				if DEBUG
+					console.log "binding METAA to " + get_binding(symbol(METAA))
+					console.log "binding METAB to " + get_binding(symbol(METAB))
+					console.log "comparing " + p3 + " to: " + p5
 				return 1;		# yes
 	return 0;					# no

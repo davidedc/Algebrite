@@ -21,13 +21,16 @@ runUserDefinedSimplifications = ->
 		Eval()
 		expanding = originalexpanding
 
+		additionalSimplifications = userSimplificationsInListForm.slice(0)
+		additionalSimplifications.push 0
+
+		success = true
+		#while success
 		p1 = pop()
 		push(p1)
 		push_symbol(NIL)
+		success = transform(additionalSimplifications, true)
 
-		additionalSimplifications = userSimplificationsInListForm.slice(0)
-		additionalSimplifications.push 0
-		transform(additionalSimplifications, true)
 		p1 = pop()
 		push p1
 	# ------------------------
