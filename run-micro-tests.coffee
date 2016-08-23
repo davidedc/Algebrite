@@ -29,7 +29,8 @@ run_test [
 	# both of them. Note that we
 	# don't invert the order because
 	# we know it's not an inner (dot)
-	# product
+	# product. It rather is a normal
+	# multiplication, which is commutative.
 	"transpose(A)*transpose(x)",
 	"transpose(A)*transpose(x)",
 		
