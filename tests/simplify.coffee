@@ -253,7 +253,7 @@ test_simplify = ->
 		"simplify((27/2+27/2*(-1)^(1/2)*3^(1/2))^(1/3))",
 		"(27/2+27/2*i*3^(1/2))^(1/3)",
 
-		# this is also equal to
+		# this nested radical is also equal to
 		# (-1)^(1/9)
 		# but there is no "sum of radicals" form
 		# for this.
@@ -278,7 +278,7 @@ test_simplify = ->
 		# note that sympy doesn't give a straight symbolic answer to
 		# this one, the result to this is numeric instead, and with
 		# a near-zero imaginary part.
-		# One can get to the answer obliquely with minpoly instead,
+		# In Sympy one can get to the answer obliquely with minpoly instead,
 		# as minpoly((-1)^(1/6) - (-1)^(5/6)) -> x^2−3
 		"simplify((-1)^(1/6) - (-1)^(5/6))",
 		"3^(1/2)",
