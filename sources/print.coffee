@@ -1,5 +1,6 @@
 power_str = "^"
 stringToBePrinted = ""
+codeGen = false
 
 print_str = (s) ->
 	stringToBePrinted += s
@@ -19,6 +20,22 @@ printline = (p) ->
 	console.log stringToBePrinted
 
 
+print_base_of_denom = (p1) ->
+	if (isfraction(p1) || car(p1) == symbol(ADD) || car(p1) == symbol(MULTIPLY) || car(p1) == symbol(POWER) || lessp(p1, zero)) # p1 is BASE
+			print_char('(')
+			print_expr(p1); # p1 is BASE
+			print_char(')')
+	else
+		print_expr(p1); # p1 is BASE
+
+print_expo_of_denom = (p2) ->
+	if (isfraction(p2) || car(p2) == symbol(ADD) || car(p2) == symbol(MULTIPLY) || car(p2) == symbol(POWER)) # p2 is EXPO
+		print_char('(')
+		print_expr(p2); # p2 is EXPO
+		print_char(')')
+	else
+		print_expr(p2); # p2 is EXPO
+
 # prints stuff after the divide symbol "/"
 
 # d is the number of denominators
@@ -34,35 +51,35 @@ print_denom = (p, d) ->
 
 	# i.e. 1 / (2^(1/3))
 
-	if (d == 1 && !isminusone(p2)) # p2 is EXPO
-		print_char('(')
-
-	if (isfraction(p1) || car(p1) == symbol(ADD) || car(p1) == symbol(MULTIPLY) || car(p1) == symbol(POWER) || lessp(p1, zero)) # p1 is BASE
-			print_char('(')
-			print_expr(p1); # p1 is BASE
-			print_char(')')
-	else
-		print_expr(p1); # p1 is BASE
-
+	# get the cases like BASE^(-1) out of
+	# the way, they just become 1/BASE
 	if (isminusone(p2)) # p2 is EXPO
+		print_base_of_denom p1
 		restore()
 		return
 
-	if (test_flag == 0)
-		print_str(power_str)
-	else
-		print_char('^')
+	if (d == 1) # p2 is EXPO
+		print_char('(')
 
+	# prepare the exponent
+	# (needs to be negated)
+	# before printing it out
 	push(p2); # p2 is EXPO
 	negate()
 	p2 = pop(); # p2 is EXPO
 
-	if (isfraction(p2) || car(p2) == symbol(ADD) || car(p2) == symbol(MULTIPLY) || car(p2) == symbol(POWER)) # p2 is EXPO
-		print_char('(')
-		print_expr(p2); # p2 is EXPO
-		print_char(')')
+	# ok now print
+
+	if codeGen
+		print_str("Math.pow(")
+		print_base_of_denom p1
+		print_str(", ")
+		print_expo_of_denom p2
+		print_str(")")
 	else
-		print_expr(p2); # p2 is EXPO
+		print_base_of_denom p1
+		print_str(power_str)
+		print_expo_of_denom p2
 
 	if (d == 1)
 		print_char(')')
@@ -243,7 +260,7 @@ print_tensor = (p) ->
 
 print_tensor_inner = (p, j, k) ->
 	i = 0
-	print_str("(")
+	if codeGen then print_str("[") else print_str("(")
 	for i in [0...p.tensor.dim[j]]
 		if (j + 1 == p.tensor.ndim)
 			print_expr(p.tensor.elem[k])
@@ -255,8 +272,28 @@ print_tensor_inner = (p, j, k) ->
 				print_str(",")
 			else
 				print_str(",")
-	print_str(")")
+	if codeGen then print_str("]") else print_str(")")
 	return k
+
+print_base = (p) ->
+	if (isadd(cadr(p)) || caadr(p) == symbol(MULTIPLY) || caadr(p) == symbol(POWER) || isnegativenumber(cadr(p)))
+		print_str("(")
+		print_expr(cadr(p))
+		print_str(")")
+	else if (isnum(cadr(p)) && (lessp(cadr(p), zero) || isfraction(cadr(p))))
+		print_str("(")
+		print_factor(cadr(p))
+		print_str(")")
+	else
+		print_factor(cadr(p))
+
+print_exponent = (p) ->
+	if (iscons(caddr(p)) || isfraction(caddr(p)) || (isnum(caddr(p)) && lessp(caddr(p), zero)))
+		print_str("(")
+		print_expr(caddr(p))
+		print_str(")")
+	else
+		print_factor(caddr(p))
 
 print_factor = (p) ->
 	if (isnum(p))
@@ -301,29 +338,17 @@ print_factor = (p) ->
 				print_expr(cadr(p))
 			return
 
-		if (isadd(cadr(p)) || caadr(p) == symbol(MULTIPLY) || caadr(p) == symbol(POWER) || isnegativenumber(cadr(p)))
-			print_str("(")
-			print_expr(cadr(p))
-			print_str(")")
-		else if (isnum(cadr(p)) && (lessp(cadr(p), zero) || isfraction(cadr(p))))
-			print_str("(")
-			print_factor(cadr(p))
+		if codeGen
+			print_str("Math.pow(")
+			print_base p
+			print_str(", ")
+			print_exponent p
 			print_str(")")
 		else
-			print_factor(cadr(p))
-
-		if (test_flag == 0)
-			#print_str(" ^ ")
+			print_base p
 			print_str(power_str)
-		else
-			print_str("^")
+			print_exponent p
 
-		if (iscons(caddr(p)) || isfraction(caddr(p)) || (isnum(caddr(p)) && lessp(caddr(p), zero)))
-			print_str("(")
-			print_expr(caddr(p))
-			print_str(")")
-		else
-			print_factor(caddr(p))
 		return
 
 	#	if (car(p) == _list) {
@@ -421,7 +446,7 @@ print1 = (p, accumulator) ->
 		return accumulator
 
 print_multiply_sign = ->
-	if (test_flag == 0)
+	if test_flag == 0 and !codeGen
 		print_str(" ")
 	else
 		print_str("*")

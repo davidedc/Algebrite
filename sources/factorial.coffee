@@ -33,6 +33,9 @@ factorial = ->
 #	----------------	->	--------------------------------
 #	factorial(e + n)		(e + m + 1)(e + m + 2)...(e + n)
 
+# this function is not actually used, but
+# all these simplifications
+# do happen automatically via simplify
 simplifyfactorials = ->
 	x = 0
 

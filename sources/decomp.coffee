@@ -1,6 +1,12 @@
 
 
+# unclear to me at the moment
+# why this is exposed as something that can
+# be evalled
+
 Eval_decomp = ->
+	save()
+	console.log "Eval_decomp is being called!!!!!!!!!!!!!!!!!!!!"
 	h = tos
 	push(symbol(NIL))
 	push(cadr(p1))
@@ -12,52 +18,76 @@ Eval_decomp = ->
 		guess()
 	else
 		push(p1)
-	decomp()
+	decomp(false)
 	list(tos - h)
+	restore()
 
 # returns constant expressions on the stack
 
-decomp = ->
+decomp = (generalTransform) ->
 	save()
 
 	p2 = pop()
 	p1 = pop()
 
+	if DEBUG then console.log "DECOMPOSING " + p1
+
 	# is the entire expression constant?
 
-	if (Find(p1, p2) == 0)
-		push(p1)
-		#push(p1);	# may need later for pushing both +a, -a
-		#negate()
-		restore()
-		return
+	if generalTransform
+		if !iscons(p1)
+			if DEBUG then console.log "ground thing: " + p1
+			push p1
+			restore()
+			return
+	else
+		if (Find(p1, p2) == 0)
+			if DEBUG then console.log "entire expression is constant"
+			push(p1)
+			#push(p1);	# may need later for pushing both +a, -a
+			#negate()
+			restore()
+			return
 
 	# sum?
 
 	if (isadd(p1))
-		decomp_sum()
+		decomp_sum(generalTransform)
 		restore()
 		return
 
 	# product?
 
 	if (car(p1) == symbol(MULTIPLY))
-		decomp_product()
+		decomp_product(generalTransform)
 		restore()
 		return
 
 	# naive decomp if not sum or product
 
+	if DEBUG then console.log "naive decomp"
 	p3 = cdr(p1)
+	if DEBUG then console.log "startig p3: " + p3
 	while (iscons(p3))
+		if DEBUG then console.log "recursive decomposition"
 		push(car(p3))
+
+		# for a general transformations,
+		# we want to match any part of the tree so
+		# we need to push the subtree as well
+		# as recurse to its parts
+		if generalTransform
+			push(car(p3))
+		
+		if DEBUG then console.log "car(p3): " + car(p3)
 		push(p2)
-		decomp()
+		if DEBUG then console.log "p2: " + p2
+		decomp(generalTransform)
 		p3 = cdr(p3)
 
 	restore()
 
-decomp_sum = ->
+decomp_sum = (generalTransform) ->
 	h = 0
 
 	# decomp terms involving x
@@ -68,7 +98,7 @@ decomp_sum = ->
 		if (Find(car(p3), p2))
 			push(car(p3))
 			push(p2)
-			decomp()
+			decomp(generalTransform)
 		p3 = cdr(p3)
 
 	# add together all constant terms
@@ -89,7 +119,7 @@ decomp_sum = ->
 		push(p3)
 		negate();	# need both +a, -a for some integrals
 
-decomp_product = ->
+decomp_product = (generalTransform) ->
 	h = 0
 
 	# decomp factors involving x
@@ -100,7 +130,7 @@ decomp_product = ->
 		if (Find(car(p3), p2))
 			push(car(p3))
 			push(p2)
-			decomp()
+			decomp(generalTransform)
 		p3 = cdr(p3)
 
 	# multiply together all constant factors

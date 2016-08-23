@@ -1,6 +1,10 @@
 # Symbolic multiplication
 
-
+# multiplication is commutative, so it can't be used
+# e.g. on two matrices.
+# But it can be used, say, on a scalar and a matrix.,
+# so the output of a multiplication is not
+# always a scalar.
 
 #extern void append(void)
 #static void parse_p1(void)

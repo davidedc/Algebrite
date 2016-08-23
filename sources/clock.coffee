@@ -10,6 +10,9 @@
 	For example, clock(exp(i pi/3)) gives the result (-1)^(1/3)
 ###
 
+# P.S. I couldn't find independent definition/aknowledgment
+# of a "clock form" anywhere on the web, seems like a
+# definition specific to eigenmath.
 
 
 Eval_clock = ->

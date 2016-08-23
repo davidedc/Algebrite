@@ -2,8 +2,44 @@
 
 Eval_simplify = ->
 	push(cadr(p1))
+	runUserDefinedSimplifications()
 	Eval()
 	simplify()
+
+runUserDefinedSimplifications = ->
+	# -----------------------
+	# unfortunately for the time being user
+	# specified simplifications are only
+	# run in things which don't contain
+	# integrals.
+	# Doesn't work yet, could be because of
+	# some clobbering as "transform" is called
+	# recursively?
+	if userSimplificationsInListForm.length != 0 and !Find(cadr(p1), symbol(INTEGRAL))
+		originalexpanding = expanding
+		expanding = false
+		Eval()
+		expanding = originalexpanding
+
+		additionalSimplifications = userSimplificationsInListForm.slice(0)
+		additionalSimplifications.push 0
+
+		success = true
+		#while success
+		p1 = pop()
+		push(p1)
+		push_symbol(NIL)
+		success = transform(additionalSimplifications, true)
+
+		p1 = pop()
+		push p1
+	# ------------------------
+
+simplifyForCodeGeneration = ->
+	save()
+	runUserDefinedSimplifications()
+	simplify_main()
+	restore()
 
 simplify = ->
 	save()
@@ -30,6 +66,7 @@ simplify_main = ->
 		else
 			p1 = p3
 
+	f10()
 	f1()
 	f2()
 	f3()
@@ -130,6 +167,38 @@ f3 = ->
 	p2 = pop()
 	if (count(p2) < count(p1))
 		p1 = p2
+
+
+f10 = ->
+
+	carp1 = car(p1)
+	miao = cdr(p1)
+	if ( carp1 == symbol(MULTIPLY) || carp1 == symbol(INNER))
+		# both operands a transpose?
+
+		if (car(car(cdr(p1))) == symbol(TRANSPOSE)) and (car(car(cdr(cdr(p1)))) == symbol(TRANSPOSE))
+			console.log "maybe collecting a transpose " + p1
+			a = cadr(car(cdr(p1)))
+			b = cadr(car(cdr(cdr(p1))))
+			if carp1 == symbol(MULTIPLY)
+				push(a)
+				push(b)
+				multiply()
+			else if carp1 == symbol(INNER)
+				push(b)
+				push(a)
+				inner()
+			push_integer(1)
+			push_integer(2)
+			originalexpanding = expanding
+			expanding = false
+			transpose()
+			expanding = originalexpanding
+
+			p2 = pop()
+			if (count(p2) < count(p1))
+				p1 = p2
+			console.log "collecting a transpose " + p2
 
 # try expanding denominators
 

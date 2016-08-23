@@ -44,6 +44,14 @@ Eval_sym = ->
 
 	p2 = get_binding(p1)
 	push(p2)
+
+	# differently from standard Lisp,
+	# here the evaluation is not
+	# one-step only, rather it keeps evaluating
+	# "all the way" until a symbol is
+	# defined as itself.
+	# Uncomment these two lines to get Lisp
+	# behaviour (and break most tests)
 	if (p1 != p2)
 		Eval()
 
@@ -54,6 +62,7 @@ Eval_cons = ->
 	switch (symnum(car(p1)))
 		when ABS then Eval_abs()
 		when ADD then Eval_add()
+		when ADDSUBSTRULE then Eval_addsubstrule()
 		when ADJ then Eval_adj()
 		when AND then Eval_and()
 		when ARCCOS then Eval_arccos()
@@ -73,6 +82,7 @@ Eval_cons = ->
 		when CHOOSE then Eval_choose()
 		when CIRCEXP then Eval_circexp()
 		when CLEAR then Eval_clear()
+		when CLEARSUBSTRULES then Eval_clearsubstrules()
 		when CLOCK then Eval_clock()
 		when COEFF then Eval_coeff()
 		when COFACTOR then Eval_cofactor()
@@ -387,6 +397,49 @@ Eval_rank = ->
 	else
 		push(zero)
 
+# Evaluates the right side and assigns the
+# result of the evaluation to the left side.
+# It's called setq because it stands for "set quoted" from Lisp,
+# see:
+#   http://stackoverflow.com/questions/869529/difference-between-set-setq-and-setf-in-common-lisp
+
+# Example:
+#   f = x
+#   // f evaluates to x, so x is assigned to g really
+#   // rather than actually f being assigned to g
+#   g = f
+#   f = y
+#   g
+#   > x
+
+Eval_setq = ->
+	if (caadr(p1) == symbol(INDEX))
+		setq_indexed()
+		return
+
+	if (iscons(cadr(p1)))
+		define_user_function()
+		return
+
+	if (!issymbol(cadr(p1)))
+		stop("symbol assignment: error in symbol")
+
+	push(caddr(p1))
+	Eval()
+	p2 = pop()
+	set_binding(cadr(p1), p2)
+
+	push(symbol(NIL))
+
+# Here "setq" is a misnomer because
+# setq wouldn't work in Lisp to set array elements
+# since setq stands for "set quoted" and you wouldn't
+# quote an array element access.
+# You'd rather use setf, which is a macro that can
+# assign a value to anything.
+#   (setf (aref YourArray 2) "blue")
+# see
+#   http://stackoverflow.com/questions/18062016/common-lisp-how-to-set-an-element-in-a-2d-array
 #-----------------------------------------------------------------------------
 #
 #	Example: a[1] = b
@@ -418,24 +471,6 @@ setq_indexed = ->
 	set_binding(p4, p3)
 	push(symbol(NIL))
 
-Eval_setq = ->
-	if (caadr(p1) == symbol(INDEX))
-		setq_indexed()
-		return
-
-	if (iscons(cadr(p1)))
-		define_user_function()
-		return
-
-	if (!issymbol(cadr(p1)))
-		stop("symbol assignment: error in symbol")
-
-	push(caddr(p1))
-	Eval()
-	p2 = pop()
-	set_binding(cadr(p1), p2)
-
-	push(symbol(NIL))
 
 Eval_sqrt = ->
 	push(cadr(p1))

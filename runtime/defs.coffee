@@ -77,6 +77,7 @@ SYM = 5
 counter = 0
 ABS = counter++
 ADD = counter++
+ADDSUBSTRULE = counter++
 ADJ = counter++
 AND = counter++
 ARCCOS = counter++
@@ -96,6 +97,7 @@ CHECK = counter++
 CHOOSE = counter++
 CIRCEXP = counter++
 CLEAR = counter++
+CLEARSUBSTRULES = counter++
 CLOCK = counter++
 COEFF = counter++
 COFACTOR = counter++
@@ -229,6 +231,10 @@ SYMBOL_X = counter++
 SYMBOL_Y = counter++
 SYMBOL_Z = counter++
 
+SYMBOL_A_UNDERSCORE = counter++
+SYMBOL_B_UNDERSCORE = counter++
+SYMBOL_X_UNDERSCORE = counter++
+
 C1 = counter++
 C2 = counter++
 C3 = counter++
@@ -255,6 +261,12 @@ MAXPRIMETAB = 10000
 #define _USE_MATH_DEFINES // for MS C++
 
 MAXDIM = 24
+
+# needed for the mechanism to
+# find all dependencies between variables
+# in a script
+symbolsDependencies = {}
+
 
 class tensor
 	ndim: 0
@@ -340,6 +352,7 @@ out_buf = ""
 out_count = 0
 test_flag = 0
 draw_stop_return = null # extern jmp_buf ?????
+userSimplificationsInListForm = []
 
 symbol = (x) -> (symtab[x])
 iscons = (p) -> (p.k == CONS)
@@ -380,6 +393,8 @@ isadd = (p) -> (car(p) == symbol(ADD))
 ismultiply = (p) -> (car(p) == symbol(MULTIPLY))
 ispower = (p) -> (car(p) == symbol(POWER))
 isfactorial = (p) -> (car(p) == symbol(FACTORIAL))
+isinnerordot = (p) -> ((car(p) == symbol(INNER)) or (car(p) == symbol(DOT)))
+istranspose = (p) -> (car(p) == symbol(TRANSPOSE))
 
 MSIGN = (p) ->
 	if p.isPositive()

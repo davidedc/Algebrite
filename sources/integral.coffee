@@ -498,9 +498,9 @@ integral_of_product = ->
 	multiply();			# multiply constant part
 
 integral_of_form = ->
-	push(p1)
-	push(p2)
-	transform(itab)
+	push(p1) # free variable
+	push(p2) # input expression
+	transform(itab, false)
 	p3 = pop()
 	if (p3 == symbol(NIL))
 		push_symbol(INTEGRAL)

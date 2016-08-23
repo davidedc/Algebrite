@@ -34,6 +34,15 @@ scan_str = 0
 token_str = 0
 token_buf = 0
 
+lastFoundSymbol = null
+symbolsRightOfAssignment = null
+isSymbolLeftOfAssignment = null
+scanningParameters = null
+predefinedSymbolsInGlobalScope_doNotTrackInDependencies =
+	["rationalize", "mag", "i", "pi", "sin", "cos", "roots", "integral", "derivative", "defint"]
+functionInvokationsScanningStack = null
+skipRootVariableToBeSolved = false
+
 # Returns number of chars scanned and expr on stack.
 
 # Returns zero when nothing left to scan.
@@ -49,6 +58,14 @@ scan = (s) ->
 	#	debugger
 	#if s=="i=sqrt(-1)"
 	#	debugger
+
+	lastFoundSymbol = null
+	symbolsRightOfAssignment = []
+	isSymbolLeftOfAssignment = true
+	scanningParameters = []
+	functionInvokationsScanningStack = [""]
+
+
 	scanned = s
 	meta_mode = 0
 	expanding++
@@ -82,11 +99,43 @@ scan_meta = (s) ->
 scan_stmt = ->
 	scan_relation()
 	if (token == '=')
+		symbolLeftOfAssignment = lastFoundSymbol
+		if DEBUG then console.log("assignment!")
+		isSymbolLeftOfAssignment = false
 		get_next_token()
 		push_symbol(SETQ)
 		swap()
 		scan_relation()
 		list(3)
+		isSymbolLeftOfAssignment = true
+
+		# in case of re-assignment, the symbol on the
+		# left will also be in the set of the symbols
+		# on the right. In that case just remove it from
+		# the symbols on the right.
+		indexOfSymbolLeftOfAssignment = symbolsRightOfAssignment.indexOf(symbolLeftOfAssignment)
+		if indexOfSymbolLeftOfAssignment != -1
+			symbolsRightOfAssignment.splice(indexOfSymbolLeftOfAssignment, 1) 
+		
+		# print out the immediate dependencies
+		if DEBUG then console.log "locally, " + symbolLeftOfAssignment + " depends on: "
+		for i in symbolsRightOfAssignment
+			if DEBUG then console.log "	" + i
+
+		# ok add the local dependencies to the existing
+		# dependencies of this left-value symbol
+		
+		# create the exiting dependencies list if it doesn't exist
+		symbolsDependencies[symbolLeftOfAssignment] ?= []
+		existingDependencies = symbolsDependencies[symbolLeftOfAssignment]
+
+		# copy over the new dependencies to the existing
+		# dependencies avoiding repetitions
+		for i in symbolsRightOfAssignment
+			if existingDependencies.indexOf(i) == -1
+				existingDependencies.push i
+
+		symbolsRightOfAssignment = []
 
 scan_relation = ->
 	scan_expression()
@@ -253,6 +302,20 @@ scan_factor = ->
 		swap()
 		list(2)
 
+
+addSymbolRightOfAssignment = (theSymbol) ->
+	if predefinedSymbolsInGlobalScope_doNotTrackInDependencies.indexOf(theSymbol) == -1 and
+		symbolsRightOfAssignment.indexOf(theSymbol) == -1 and
+		!skipRootVariableToBeSolved
+			if DEBUG then console.log("... adding symbol: " + theSymbol + " to the set of the symbols right of assignment")
+			prefixVar = ""
+			for i in [1...functionInvokationsScanningStack.length]
+				if functionInvokationsScanningStack[i] != ""
+					prefixVar += functionInvokationsScanningStack[i] + "_" + i + "_"
+
+			theSymbol = prefixVar + theSymbol
+			symbolsRightOfAssignment.push theSymbol
+
 scan_symbol = ->
 	if (token != T_SYMBOL)
 		scan_error("symbol expected")
@@ -268,6 +331,22 @@ scan_symbol = ->
 				push(usr_symbol(token_buf))
 	else
 		push(usr_symbol(token_buf))
+
+	if scanningParameters.length == 0
+		if DEBUG then console.log "out of scanning parameters, processing " + token_buf
+		lastFoundSymbol = token_buf
+	else
+		if DEBUG then console.log "still scanning parameters, skipping " + token_buf
+		if isSymbolLeftOfAssignment
+			addSymbolRightOfAssignment "'" + token_buf
+
+	if DEBUG then console.log("found symbol: " + token_buf + " left of assignment: " + isSymbolLeftOfAssignment)
+	
+	# if we were looking at the right part of an assignment while we
+	# found the symbol, then add it to the "symbolsRightOfAssignment"
+	# set (we check for duplications)
+	if !isSymbolLeftOfAssignment
+		addSymbolRightOfAssignment token_buf
 	get_next_token()
 
 scan_string = ->
@@ -275,26 +354,62 @@ scan_string = ->
 	get_next_token()
 
 scan_function_call = ->
-	n = 1
+	if DEBUG then console.log "-- scan_function_call start"
+	n = 1 # the parameter number as we scan parameters
 	p = new U()
 	p = usr_symbol(token_buf)
 
 	push(p)
 	get_next_token()	# function name
+	functionName = token_buf
+	if functionName == "roots" or functionName == "defint"
+		functionInvokationsScanningStack.push token_buf
+	lastFoundSymbol = token_buf
+	if !isSymbolLeftOfAssignment
+		addSymbolRightOfAssignment token_buf
+
 	get_next_token()	# left paren
+	scanningParameters.push true
 	if (token != ')')
 		scan_stmt()
 		n++
 		while (token == ',')
 			get_next_token()
+			if n == 2 and functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("roots") != -1
+				symbolsRightOfAssignment = symbolsRightOfAssignment.filter (x) -> !(new RegExp("roots_" + (functionInvokationsScanningStack.length - 1) + "_" + token_buf)).test(x)
+				skipRootVariableToBeSolved = true
+			# defint's disappearing variables can be in positions 2,5,8...
+			if functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("defint") != -1 and
+				(n == 2 or (n>2 and ((n-2) % 3 == 0))) 
+					symbolsRightOfAssignment = symbolsRightOfAssignment.filter (x) -> !(new RegExp("defint_" + (functionInvokationsScanningStack.length - 1) + "_" + token_buf)).test(x)
+					skipRootVariableToBeSolved = true
+
 			scan_stmt()
+			skipRootVariableToBeSolved = false
 			n++
+
+		# todo refactor this, there are two copies
+		# this catches the case where the "roots" variable is not specified
+		if n == 2 and functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("roots") != -1
+			symbolsRightOfAssignment = symbolsRightOfAssignment.filter (x) -> !(new RegExp("roots_" + (functionInvokationsScanningStack.length - 1) + "_" + "x")).test(x)
+
+	scanningParameters.pop()
+
+	for i in [0..symbolsRightOfAssignment.length]
+		if symbolsRightOfAssignment[i]?
+			if functionName == "roots"
+				symbolsRightOfAssignment[i] = symbolsRightOfAssignment[i].replace(new RegExp("roots_" + (functionInvokationsScanningStack.length - 1) + "_"),"")
+			if functionName == "defint"
+				symbolsRightOfAssignment[i] = symbolsRightOfAssignment[i].replace(new RegExp("defint_" + (functionInvokationsScanningStack.length - 1) + "_"),"")
 
 	if (token != ')')
 		scan_error(") expected")
 
 	get_next_token()
 	list(n)
+	if functionName == "roots" or functionName == "defint"
+		functionInvokationsScanningStack.pop()
+	if DEBUG then console.log "-- scan_function_call end"
 
 # scan subexpression
 
@@ -356,7 +471,7 @@ build_tensor = (n) ->
 		p2.tensor.elem[i] = stack[tos-n+i]
 
 	if p2.tensor.nelem != p2.tensor.elem.length
-		console.log "something wrong in tensor dimensions"
+		if DEBUG then console.log "something wrong in tensor dimensions"
 		debugger
 
 	tos -= n
@@ -416,7 +531,7 @@ get_token = ->
 	# symbol?
 
 	if (isalpha(scanned[scan_str]))
-		while (isalnum(scanned[scan_str]))
+		while (isalnumorunderscore(scanned[scan_str]))
 			scan_str++
 		if (scanned[scan_str] == '(')
 			token = T_FUNCTION
