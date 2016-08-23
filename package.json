@@ -1,6 +1,6 @@
 {
   "name": "algebrite",
-  "version": "0.2.20",
+  "version": "0.2.23",
   "description": "Computer Algebra System in Coffeescript",
   "main": "dist/algebrite.js",
   "directories": {
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/antimatter15/Algebrite.git"
+    "url": "git+https://github.com/davidedc/Algebrite.git"
   },
   "keywords": [
     "cas",
@@ -29,9 +29,9 @@
   "author": "Davide Della Casa",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/antimatter15/Algebrite/issues"
+    "url": "https://github.com/davidedc/Algebrite/issues"
   },
-  "homepage": "https://github.com/antimatter15/Algebrite#readme",
+  "homepage": "https://github.com/davidedc/Algebrite#readme",
   "dependencies": {
     "big-integer": "^1.6.15"
   }
