@@ -357,5 +357,11 @@ test_simplify = ->
 		"simplify((1)^(6/a))",
 		"1",
 
+		"simplify(transpose(A)*transpose(x))",
+		"transpose(A*x)",
+
+		"simplify(inner(transpose(A),transpose(x)))",
+		"transpose(inner(x,A))",
+
 
 	]

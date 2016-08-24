@@ -11,15 +11,6 @@ run_test [
 
 test_dependencies()
 
-run_test [
-
-	"simplify(transpose(A)*transpose(x))",
-	"transpose(A*x)",
-
-	"simplify(inner(transpose(A),transpose(x)))",
-	"transpose(inner(x,A))",
-		
-]
 
 run_test [
 
