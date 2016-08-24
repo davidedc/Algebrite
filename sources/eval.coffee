@@ -154,6 +154,7 @@ Eval_cons = ->
 		when POWER then Eval_power()
 		when PRIME then Eval_prime()
 		when PRINT then Eval_display()
+		when PRINTLATEX then Eval_printlatex()
 		when PRODUCT then Eval_product()
 		when QUOTE then Eval_quote()
 		when QUOTIENT then Eval_quotient()

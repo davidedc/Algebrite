@@ -549,7 +549,7 @@ run = (stringToBeRun) ->
 			# in tty mode
 			# also you could just have written 
 			# printline(p2)
-			collectedResult = collectResultLine(p2)
+			collectedResult = collectPlainResultLine(p2)
 			allReturnedStrings += collectedResult
 			if PRINTOUTRESULT
 				if DEBUG then console.log "printline"

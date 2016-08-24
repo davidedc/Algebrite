@@ -298,14 +298,10 @@ test_simplify = ->
 		#    -(-1)^(3/4)
 		"-(-1)^(3/4)",
 
-		"(-1)^(-5/a)"
 		"(-1)^(-5/a)",
+		#"(-1)^(-5/a)",
+		"1/(-1)^(5/a)",
 
-		"simplify((-1)^(-5/a))"
-		"(-1)^(-5/a)",
-
-		"(-1)^(-5/a)",
-		"(-1)^(-5/a)",
 
 		# -----------------------
 		"simplify((-1)^(-5))",
@@ -320,8 +316,14 @@ test_simplify = ->
 		"simplify((1)^(5))",
 		"1",
 
+		# seems here that the simplification
+		# has more nodes than the result but
+		# it's not the case: the 1/... inversion
+		# is just done at the print level for
+		# legibility
 		"simplify((-1)^(-5/a))",
-		"(-1)^(-5/a)",
+		#"(-1)^(-5/a)",
+		"1/(-1)^(5/a)",
 
 		"simplify((-1)^(5/a))",
 		"(-1)^(5/a)",
@@ -345,8 +347,13 @@ test_simplify = ->
 		"simplify((1)^(6))",
 		"1",
 
+		# seems here that the simplification
+		# has more nodes than the result but
+		# it's not the case: the 1/... inversion
+		# is just done at the print level for
 		"simplify((-1)^(-6/a))",
-		"(-1)^(-6/a)",
+		#"(-1)^(-6/a)",
+		"1/(-1)^(6/a)",
 
 		"simplify((-1)^(6/a))",
 		"(-1)^(6/a)",

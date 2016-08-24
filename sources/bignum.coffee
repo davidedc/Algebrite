@@ -552,12 +552,17 @@ print_number = (p, accumulator) ->
 			aAsString = p.q.a.toString()
 			if aAsString[0] == "-"
 				aAsString = aAsString.substring(1)
+
+			if (latexMode and isfraction(p))
+				aAsString = "\\frac{"+aAsString+"}{"
+
 			accumulator += aAsString
 			stringToBePrinted += aAsString
 			if (isfraction(p))
-				accumulator += ("/")
-				stringToBePrinted += ("/")
+				if !latexMode then accumulator += ("/")
+				if !latexMode then stringToBePrinted += ("/")
 				denominatorString = p.q.b.toString()
+				if latexMode then denominatorString += "}"
 				accumulator += denominatorString
 				stringToBePrinted += denominatorString
 		when DOUBLE

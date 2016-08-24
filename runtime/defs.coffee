@@ -49,7 +49,8 @@ class U
 	k: 0
 	tag: 0
 
-	toString: -> collectResultLine(this)
+	toString: -> collectPlainResultLine(this)
+	toLatexString: -> collectLatexResultLine(this)
 
 	constructor: ->
 		@cons = {}
@@ -169,6 +170,9 @@ POLAR = counter++
 POWER = counter++
 PRIME = counter++
 PRINT = counter++
+PRINTLATEX = counter++
+PRINT_LEAVE_E_ALONE = counter++
+PRINT_LEAVE_X_ALONE = counter++
 PRODUCT = counter++
 QUOTE = counter++
 QUOTIENT = counter++
@@ -205,6 +209,7 @@ NIL = counter++	# nil goes here, after standard functions
 AUTOEXPAND = counter++
 BAKE = counter++
 LAST = counter++
+LAST_LATEX_PRINT = counter++
 TRACE = counter++
 TTY = counter++
 
