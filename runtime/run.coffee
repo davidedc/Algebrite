@@ -721,7 +721,7 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	#code: "// no code generated yet\n//try again later"
 	#code: "console.log('some passed code is run'); window.something = 1;"
 	code: code
-	result: latexResult
+	result: result
 	latexResult: latexResult
 	
 (exports ? this).run = run
