@@ -8,6 +8,11 @@ NSYM = 1000
 DEBUG = false
 PRINTOUTRESULT = false
 
+dontCreateNewRadicalsInDenominatorWhenEvalingMultiplication = true
+recursionLevelNestedRadicalsRemoval = 0
+do_simplify_nested_radicals = true
+avoidCalculatingPowersIntoArctans = true
+
 # Symbolic expressions are built by connecting U structs.
 #
 # For example, (a b + c) is built like this:
@@ -44,7 +49,8 @@ class U
 	k: 0
 	tag: 0
 
-	toString: -> collectResultLine(this)
+	toString: -> collectPlainResultLine(this)
+	toLatexString: -> collectLatexResultLine(this)
 
 	constructor: ->
 		@cons = {}
@@ -164,6 +170,9 @@ POLAR = counter++
 POWER = counter++
 PRIME = counter++
 PRINT = counter++
+PRINTLATEX = counter++
+PRINT_LEAVE_E_ALONE = counter++
+PRINT_LEAVE_X_ALONE = counter++
 PRODUCT = counter++
 QUOTE = counter++
 QUOTIENT = counter++
@@ -200,6 +209,7 @@ NIL = counter++	# nil goes here, after standard functions
 AUTOEXPAND = counter++
 BAKE = counter++
 LAST = counter++
+LAST_LATEX_PRINT = counter++
 TRACE = counter++
 TTY = counter++
 
@@ -289,6 +299,7 @@ class text_metric
 
 tos = 0 # top of stack
 expanding = 0
+evaluatingAsFloats = 0
 fmt_x = 0
 fmt_index = 0
 fmt_level = 0

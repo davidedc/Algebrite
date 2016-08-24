@@ -14,12 +14,11 @@ Eval_lcm = ->
 		p1 = cdr(p1)
 
 lcm = ->
-	x = 0
-	x = expanding
+	prev_expanding = expanding
 	save()
 	yylcm()
 	restore()
-	expanding = x
+	expanding = prev_expanding
 
 yylcm = ->
 	expanding = 1

@@ -29,7 +29,10 @@ clockform = ->
 	push_integer(-1)
 	push(p1)
 	arg()
-	push(symbol(PI))
+	if evaluatingAsFloats
+		push_double(Math.PI)
+	else
+		push(symbol(PI))
 	divide()
 	power()
 	multiply()

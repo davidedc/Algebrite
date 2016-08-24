@@ -27,6 +27,7 @@ qpowf = ->
 
 	if (iszero(p1))  # p1 is BASE
 		if (isnegativenumber(p2))  # p2 is EXPO
+			debugger
 			stop("divide by zero")
 		push(zero)
 		return

@@ -579,7 +579,10 @@ derf = ->
 	push_integer(-1)
 	multiply()
 	exponential()
-	push_symbol(PI)
+	if evaluatingAsFloats
+		push_double(Math.PI)
+	else
+		push_symbol(PI)
 	push_rational(-1,2)
 	power()
 	multiply()
@@ -597,7 +600,10 @@ derfc = ->
 	push_integer(-1)
 	multiply()
 	exponential()
-	push_symbol(PI)
+	if evaluatingAsFloats
+		push_double(Math.PI)
+	else
+		push_symbol(PI)
 	push_rational(-1,2)
 	power()
 	multiply()

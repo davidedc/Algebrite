@@ -147,4 +147,228 @@ test_simplify = ->
 
 		"x",
 		"a*b+a*c",
+
+		"x=quote(x)",
+		"",
+
+		"simplify((6 - 4*2^(1/2))^(1/2))",
+		"2-2^(1/2)",
+
+		"4-4*(-1)^(1/3)+4*(-1)^(2/3)",
+		"4-4*(-1)^(1/3)+4*(-1)^(2/3)",
+
+		"simplify(4-4*(-1)^(1/3)+4*(-1)^(2/3))",
+		"0",
+
+		# this requires some simplification to be
+		# further done after the de-nesting
+		"simplify(14^(1/2) - (16 - 4*7^(1/2))^(1/2))",
+		"2^(1/2)",
+
+
+		"simplify(-(2^(1/2)*(-1+7^(1/2)))+2^(1/2)*7^(1/2))",
+		"2^(1/2)",
+
+
+		"simplify((9 + 6*2^(1/2))^(1/2))",
+		"3^(1/2)*(1+2^(1/2))",
+
+
+		"simplify((7 + 13^(1/2))^(1/2))",
+		"(1+13^(1/2))/(2^(1/2))",
+
+		# two nested radicals at the same time
+		"simplify((17 + 12*2^(1/2))^(1/2) + (17 - 12*2^(1/2))^(1/2))",
+		"6",
+
+		"simplify((2 + 3^(1/2))^(1/2))",
+		"(1+3^(1/2))/(2^(1/2))",
+
+		"simplify((1/2 + (39^(1/2)/16))^(1/2))",
+		"(3^(1/2)+13^(1/2))/(4*2^(1/2))",
+
+		# there would be a slightly better presentation for this,
+		# where 108 is factored and some parts get out of the
+		# radical but there is no way to de-nest this.
+		"simplify((-108+108*(-1)^(1/2)*3^(1/2))^(1/3))",
+		"(-108+108*i*3^(1/2))^(1/3)",
+
+		# you can take that 4 out of the radical
+		# but other than that there is no
+		# "sum or radicals" form of this
+		"simplify((-4+4*(-1)^(1/2)*3^(1/2))^(1/3))",
+		"(-4+4*i*3^(1/2))^(1/3)",
+
+
+		# scrambling the order of things a little
+		# and checking whether the nested radical
+		# still gets simplified.
+		"simplify((((-3)^(1/2) + 1)/2)^(1/2))",
+		"1/2*(i+3^(1/2))",
+
+		"simplify((1/2 + (-3)^(1/2)/2)^(1/2))",
+		"1/2*(i+3^(1/2))",
+
+		# no possible de-nesting, should
+		# leave unchanged.
+		"simplify((2 +2^(1/2))^(1/2))",
+		"(2+2^(1/2))^(1/2)",
+
+		"simplify((1 +3^(1/2)/2)^(1/2) + (1 -3^(1/2)/2)^(1/2))",
+		"3^(1/2)",
+
+		"simplify((1 +3^(1/2)/2)^(1/2))",
+		"1/2*(1+3^(1/2))",
+
+		# not quite perfect as there is a radical at the
+		# denominator, but the de-nesting happens.
+		"simplify(((1 +39^(1/2)/8)/2)^(1/2))",
+		"(3^(1/2)+13^(1/2))/(4*2^(1/2))",
+
+		"simplify((5 +24^(1/2))^(1/2))",
+		"2^(1/2)+3^(1/2)",
+
+		"simplify((3 +4*i)^(1/2))",
+		"2+i",
+
+		"simplify((3 -4*i)^(1/2))",
+		"2-i",
+
+		"simplify((-2 +2*3^(1/2)*i)^(1/2))",
+		"1+i*3^(1/2)",
+
+		"simplify((9 - 4*5^(1/2))^(1/2))",
+		"-2+5^(1/2)",
+
+		"simplify((61 - 24*5^(1/2))^(1/2))",
+		"-4+3*5^(1/2)",
+
+		"simplify((-352+936*(-1)^(1/2))^(1/3))",
+		"2*(4+3*i)",
+
+
+		"simplify((3 - 2*2^(1/2))^(1/2))",
+		"-1+2^(1/2)",
+
+		"simplify((27/2+27/2*(-1)^(1/2)*3^(1/2))^(1/3))",
+		"(27/2+27/2*i*3^(1/2))^(1/3)",
+
+		# this nested radical is also equal to
+		# (-1)^(1/9)
+		# but there is no "sum of radicals" form
+		# for this.
+		"simplify((1/2+1/2*(-1)^(1/2)*3^(1/2))^(1/3))",
+		"(1/2+1/2*i*3^(1/2))^(1/3)",
+
+		"simplify((2 + 5^(1/2))^(1/3))",
+		"1/2*(1+5^(1/2))",
+
+		"simplify((-3 + 10*3^(1/2)*i/9)^(1/3))",
+		"1+2/3*i*3^(1/2)",
+
+		"simplify((1-3*x^2+3*x^4-x^6)^(1/2))",
+		"(-x^6+3*x^4-3*x^2+1)^(1/2)",
+
+		"simplify(subst((-1)^(1/2),i,(-3 + 10*3^(1/2)*i/9)^(1/3)))",
+		"1+2/3*i*3^(1/2)",
+
+		"simplify(rationalize(-3 + 10*3^(1/2)*i/9)^(1/3))",
+		"1+2/3*i*3^(1/2)",
+
+		# note that sympy doesn't give a straight symbolic answer to
+		# this one, the result to this is numeric instead, and with
+		# a near-zero imaginary part.
+		# In Sympy one can get to the answer obliquely with minpoly instead,
+		# as minpoly((-1)^(1/6) - (-1)^(5/6)) -> x^2−3
+		"simplify((-1)^(1/6) - (-1)^(5/6))",
+		"3^(1/2)",
+
+		"simplify((7208+2736*5^(1/2))^(1/3))",
+		"17+3*5^(1/2)",
+
+		"simplify((901+342*5^(1/2))^(1/3))",
+		"1/2*(17+3*5^(1/2))",
+
+		"-i*(-2*(-1)^(1/6)/(3^(1/2))+2*(-1)^(5/6)/(3^(1/2)))^(1/4)*(2*(-1)^(1/6)/(3^(1/2))-2*(-1)^(5/6)/(3^(1/2)))^(1/4)/(2^(1/2))",
+		"-i*(-2*(-1)^(1/6)/(3^(1/2))+2*(-1)^(5/6)/(3^(1/2)))^(1/4)*(2*(-1)^(1/6)/(3^(1/2))-2*(-1)^(5/6)/(3^(1/2)))^(1/4)/(2^(1/2))",
+
+		"simplify(-i*(-2*(-1)^(1/6)/(3^(1/2))+2*(-1)^(5/6)/(3^(1/2)))^(1/4)*(2*(-1)^(1/6)/(3^(1/2))-2*(-1)^(5/6)/(3^(1/2)))^(1/4)/(2^(1/2)))",
+		# this one simplifies to any of these two, these are all the same:
+		#    (1-i)/(2^(1/2))
+		#    -(-1)^(3/4)
+		"-(-1)^(3/4)",
+
+		"(-1)^(-5/a)",
+		#"(-1)^(-5/a)",
+		"1/(-1)^(5/a)",
+
+
+		# -----------------------
+		"simplify((-1)^(-5))",
+		"-1",
+
+		"simplify((-1)^(5))",
+		"-1",
+
+		"simplify((1)^(-5))",
+		"1",
+
+		"simplify((1)^(5))",
+		"1",
+
+		# seems here that the simplification
+		# has more nodes than the result but
+		# it's not the case: the 1/... inversion
+		# is just done at the print level for
+		# legibility
+		"simplify((-1)^(-5/a))",
+		#"(-1)^(-5/a)",
+		"1/(-1)^(5/a)",
+
+		"simplify((-1)^(5/a))",
+		"(-1)^(5/a)",
+
+		"simplify((1)^(-5/a))",
+		"1",
+
+		"simplify((1)^(5/a))",
+		"1",
+
+		# -----------------------
+		"simplify((-1)^(-6))",
+		"1",
+
+		"simplify((-1)^(6))",
+		"1",
+
+		"simplify((1)^(-6))",
+		"1",
+
+		"simplify((1)^(6))",
+		"1",
+
+		# seems here that the simplification
+		# has more nodes than the result but
+		# it's not the case: the 1/... inversion
+		# is just done at the print level for
+		"simplify((-1)^(-6/a))",
+		#"(-1)^(-6/a)",
+		"1/(-1)^(6/a)",
+
+		"simplify((-1)^(6/a))",
+		"(-1)^(6/a)",
+
+		"simplify((1)^(-6/a))",
+		"1",
+
+		"simplify((1)^(6/a))",
+		"1",
+
+		"simplify(transpose(A)*transpose(x))",
+		"transpose(A*x)",
+
+		"simplify(inner(transpose(A),transpose(x)))",
+		"transpose(inner(x,A))",
+
+
 	]

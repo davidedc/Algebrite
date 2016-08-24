@@ -184,10 +184,10 @@ ssqrt = ->
 	power()
 
 yyexpand = ->
-	x = expanding
+	prev_expanding = expanding
 	expanding = 1
 	Eval()
-	expanding = x
+	expanding = prev_expanding
 
 exponential = ->
 	push_symbol(E)

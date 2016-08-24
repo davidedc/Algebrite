@@ -14,11 +14,11 @@ Eval_gcd = ->
 		p1 = cdr(p1)
 
 gcd = ->
-	x = expanding
+	prev_expanding = expanding
 	save()
 	gcd_main()
 	restore()
-	expanding = x
+	expanding = prev_expanding
 
 gcd_main = ->
 	expanding = 1

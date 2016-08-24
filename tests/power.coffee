@@ -49,8 +49,50 @@ test_power = ->
 		"9999^(1/2)",
 		"3*11^(1/2)*101^(1/2)",
 
+		"8^(1/2)",
+		"2*2^(1/2)",
+
 		"10000^(1/3)",
 		"10*2^(1/3)*5^(1/3)",
+
+		# we could take out a "18" from the radix but
+		# we only handle this for small numbers in
+		# "quickfactor" routine. TODO
+		"8204861575751304355842204^(1/2)",
+		"8204861575751304355842204^(1/2)",
+
+		# see above
+		"simplify(8204861575751304355842204^(1/2))",
+		"8204861575751304355842204^(1/2)",
+
+		"3^(1/2)*i/9",
+		"1/9*i*3^(1/2)",
+
+		"(-4.0)^(1.5)",
+		"-8*i",
+
+		"(-4.0)^(3/2)",
+		"-8*i",
+
+		# if you want some other form e.g. rectangular or polar
+		# you have to ask for it.
+		"(-1)^(1/3)",
+		"(-1)^(1/3)",
+
+		# note how the "double" type
+		# is toxic i.e. it propagates through
+		# everything it touches.
+		"(-1.0)^(2/3)",
+		"-0.5+0.866025*i",
+
+		# this also has a nested radical
+		# form but we are not calculating
+		# that.
+		"(-1)^(1/3)*2^(1/4)",
+		"(-1)^(1/3)*2^(1/4)",
+
+		"(-1)^(1/2)"
+		"i",
 
 		"sqrt(1000000)",
 		"1000",

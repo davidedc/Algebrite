@@ -11,26 +11,19 @@ run_test [
 
 test_dependencies()
 
-run_test [
-
-	"simplify(transpose(A)*transpose(x))",
-	"transpose(A*x)",
-
-	"simplify(inner(transpose(A),transpose(x)))",
-	"transpose(inner(x,A))",
-		
-]
 
 run_test [
 
-	# one of the two arguments should
+	# Note that we are using the
+	# standard commutative multiplication here,
+	# not the dot product.
+	# So, one of the two arguments should
 	# be a scalar, but we don't know
 	# which one, so we have to transpose
-	# both of them. Note that we
+	# both. Note that we
 	# don't invert the order because
-	# we know it's not an inner (dot)
-	# product. It rather is a normal
-	# multiplication, which is commutative.
+	# we know it's a normal
+	# multiplication.
 	"transpose(A)*transpose(x)",
 	"transpose(A)*transpose(x)",
 		

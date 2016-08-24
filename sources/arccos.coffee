@@ -28,20 +28,30 @@ arccos = ->
 		return
 
 	# if p1 == 1/sqrt(2) then return 1/4*pi (45 degrees)
+	# second if catches the other way of saying it, sqrt(2)/2
 
-	if (isoneoversqrttwo(p1))
-		push_rational(1, 4)
-		push_symbol(PI)
-		multiply()
+	if (isoneoversqrttwo(p1)) or
+	(car(p1) == symbol(MULTIPLY) && equalq(car(cdr(p1)), 1,2) and car(car(cdr(cdr(p1)))) == symbol(POWER) && equaln(car(cdr(car(cdr(cdr(p1))))),2) && equalq(car(cdr(cdr(car(cdr(cdr(p1)))))), 1, 2))
+		if evaluatingAsFloats
+			push_double(Math.PI / 4.0)
+		else
+			push_rational(1, 4)
+			push_symbol(PI)
+			multiply()
 		restore()
 		return
 
 	# if p1 == -1/sqrt(2) then return 3/4*pi (135 degrees)
+	# second if catches the other way of saying it, -sqrt(2)/2
 
-	if (isminusoneoversqrttwo(p1))
-		push_rational(3, 4)
-		push_symbol(PI)
-		multiply()
+	if (isminusoneoversqrttwo(p1)) or
+	(car(p1) == symbol(MULTIPLY) && equalq(car(cdr(p1)), -1,2) and car(car(cdr(cdr(p1)))) == symbol(POWER) && equaln(car(cdr(car(cdr(cdr(p1))))),2) && equalq(car(cdr(cdr(car(cdr(cdr(p1)))))), 1, 2))
+		if evaluatingAsFloats
+			push_double(Math.PI * 3.0 / 4.0)
+		else
+			push_rational(3, 4)
+			push_symbol(PI)
+			multiply()
 		restore()
 		return
 
@@ -60,25 +70,40 @@ arccos = ->
 	switch (n)
 
 		when -2
-			push_symbol(PI)
+			if evaluatingAsFloats
+				push_double(Math.PI)
+			else
+				push_symbol(PI)
 
 		when -1
-			push_rational(2, 3)
-			push_symbol(PI)
-			multiply()
+			if evaluatingAsFloats
+				push_double(Math.PI * 2.0 / 3.0)
+			else
+				push_rational(2, 3)
+				push_symbol(PI)
+				multiply()
 
 		when 0
-			push_rational(1, 2)
-			push_symbol(PI)
-			multiply()
+			if evaluatingAsFloats
+				push_double(Math.PI / 2.0)
+			else
+				push_rational(1, 2)
+				push_symbol(PI)
+				multiply()
 
 		when 1
-			push_rational(1, 3)
-			push_symbol(PI)
-			multiply()
+			if evaluatingAsFloats
+				push_double(Math.PI / 3.0)
+			else
+				push_rational(1, 3)
+				push_symbol(PI)
+				multiply()
 
 		when 2
-			push(zero)
+			if evaluatingAsFloats
+				push_double(0.0)
+			else
+				push(zero)
 
 		else
 			push_symbol(ARCCOS)

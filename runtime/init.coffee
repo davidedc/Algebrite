@@ -127,6 +127,9 @@ init = ->
 	std_symbol("power", POWER)
 	std_symbol("prime", PRIME)
 	std_symbol("print", PRINT)
+	std_symbol("printlatex", PRINTLATEX)
+	std_symbol("printLeaveEAlone", PRINT_LEAVE_E_ALONE)
+	std_symbol("printLeaveXAlone", PRINT_LEAVE_X_ALONE)
 	std_symbol("product", PRODUCT)
 	std_symbol("quote", QUOTE)
 	std_symbol("quotient", QUOTIENT)
@@ -165,6 +168,7 @@ init = ->
 	std_symbol("autoexpand", AUTOEXPAND)
 	std_symbol("bake", BAKE)
 	std_symbol("last", LAST)
+	std_symbol("lastlatexprint", LAST_LATEX_PRINT)
 	std_symbol("trace", TRACE)
 	std_symbol("tty", TTY)
 
@@ -229,6 +233,8 @@ defn_str = ["e=exp(1)",
 	"yrange=(-10,10)",
 	"last=0",
 	"trace=0",
+	"printLeaveEAlone=1",
+	"printLeaveXAlone=0",
 	"tty=0",
 	# cross definition
 	"cross(u,v)=(u[2]*v[3]-u[3]*v[2],u[3]*v[1]-u[1]*v[3],u[1]*v[2]-u[2]*v[1])",

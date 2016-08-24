@@ -8,7 +8,6 @@
 ###
 
 
-
 Eval_power = ->
 	push(cadr(p1))
 	Eval()
@@ -24,20 +23,57 @@ power = ->
 yypower = ->
 	n = 0
 
-	p2 = pop()
-	p1 = pop()
+	p2 = pop() # exponent
+	#console.log("EVALING THE BASE: " + stack[tos-1].toString())
+
+	p1 = pop() # base
+
+	# first, some very basic simplifications right away
+
+	#	1 ^ a		->	1
+	#	a ^ 0		->	1
+
+	if (equal(p1, one) || iszero(p2))
+		push(one)
+		return
+
+	#	a ^ 1		->	a
+
+	if (equal(p2, one))
+		push(p1)
+		return
+
+
+	if (isminusone(p1) and isminusone(p2))
+		#console.log("************** replacing -1^1/2 with i *********** ")
+		push(one)
+		negate()
+		return
+
+	if (isminusone(p1) and (isoneovertwo(p2)))
+		#console.log("************** replacing -1^1/2 with i *********** ")
+		push(imaginaryunit)
+		return
+
+	if (isminusone(p1) and isminusoneovertwo(p2))
+		#console.log("************** replacing -1^1/2 with i *********** ")
+		push(imaginaryunit)
+		negate()
+		return
+
 
 	# both base and exponent are rational numbers?
 
 	if (isrational(p1) && isrational(p2))
+		#console.log("isrational(p1) && isrational(p2)")
 		push(p1)
 		push(p2)
 		qpow()
 		return
 
 	# both base and exponent are either rational or double?
-
 	if (isnum(p1) && isnum(p2))
+		#console.log("isnum(p1) && isnum(p2)")
 		push(p1)
 		push(p2)
 		dpow()
@@ -55,18 +91,6 @@ yypower = ->
 		push_double(Math.exp(p2.d))
 		return
 
-	#	1 ^ a		->	1
-	#	a ^ 0		->	1
-
-	if (equal(p1, one) || iszero(p2))
-		push(one)
-		return
-
-	#	a ^ 1		->	a
-
-	if (equal(p2, one))
-		push(p1)
-		return
 
 	#	(a * b) ^ c	->	(a ^ c) * (b ^ c)
 
@@ -174,27 +198,49 @@ yypower = ->
 			arg()
 			push(p2)
 			multiply()
-			push(symbol(PI))
+			if 	evaluatingAsFloats or (iscomplexnumberdouble(p1) and isdouble(p2))
+				# remember that the "double" type is
+				# toxic, i.e. it propagates, so we do
+				# need to evaluate PI to its actual double
+				# value
+				push_double(Math.PI)
+			else
+				#console.log("power pushing PI when p1 is: " + p1 + " and p2 is:" + p2)
+				push(symbol(PI))
 			divide()
 			power()
 			multiply()
+
+			# if we calculate the power making use of arctan:
+			#  * it prevents nested radicals from being simplified
+			#  * results become really hard to manipulate afterwards
+			#  * we can't go back to other forms.
+			# so leave the power as it is.
+			if avoidCalculatingPowersIntoArctans
+				if Find(stack[tos-1], symbol(ARCTAN))
+					pop()
+					push_symbol(POWER)
+					push(p1)
+					push(p2)
+					list(3)
+
 			return
 
-			###
-			push(p1)
-			mag()
-			push(p2)
-			power()
-			push(symbol(E))
-			push(p1)
-			arg()
-			push(p2)
-			multiply()
-			push(imaginaryunit)
-			multiply()
-			power()
-			multiply()
-			###
+			#
+			#push(p1)
+			#mag()
+			#push(p2)
+			#power()
+			#push(symbol(E))
+			#push(p1)
+			#arg()
+			#push(p2)
+			#multiply()
+			#push(imaginaryunit)
+			#multiply()
+			#power()
+			#multiply()
+			#
 
 	if (simplify_polar())
 		return

@@ -30,16 +30,24 @@ test_multiply = ->
 			"8",
 
 			"sqrt(2)/2",
-			"2^(-1/2)",
+			# leave the roots nice and
+			# clean in numerator, avoid these
+			# forms
+			#"2^(-1/2)",
+			"1/2*2^(1/2)"
 
 			"2/sqrt(2)",
 			"2^(1/2)",
 
 			"-sqrt(2)/2",
-			"-1/(2^(1/2))",
+			# avoid having roots in denominator
+			#"-1/(2^(1/2))",
+			"-1/2*2^(1/2)",
 
 			"2^(1/2-a)*2^a/10",
-			"1/(5*2^(1/2))",
+			# avoid roots in denominator
+			#"1/(5*2^(1/2))",
+			"1/10*2^(1/2)",
 
 			"i/4",
 			"1/4*i",

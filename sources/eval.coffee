@@ -154,6 +154,7 @@ Eval_cons = ->
 		when POWER then Eval_power()
 		when PRIME then Eval_prime()
 		when PRINT then Eval_display()
+		when PRINTLATEX then Eval_printlatex()
 		when PRODUCT then Eval_product()
 		when QUOTE then Eval_quote()
 		when QUOTIENT then Eval_quotient()
@@ -512,10 +513,10 @@ Eval_unit = ->
 	push(p1)
 
 Eval_noexpand = ->
-	x = expanding
+	prev_expanding = expanding
 	expanding = 0
 	Eval()
-	expanding = x
+	expanding = prev_expanding
 
 # like Eval() except "=" is Evaluated as "=="
 

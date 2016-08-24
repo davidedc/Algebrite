@@ -5,11 +5,15 @@
 # put symbol at index n
 
 # s is a string, n is an int
-std_symbol = (s, n) ->
+std_symbol = (s, n, latexPrint) ->
 	p = symtab[n]
 	if !p?
 		debugger
 	p.printname = s
+	if latexPrint?
+		p.latexPrint = latexPrint
+	else
+		p.latexPrint = s
 
 # symbol lookup, create symbol if need be
 

@@ -119,7 +119,7 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('x = -sqrt(2)/2')
 	if testResult[0] == "All local dependencies:  variable x depends on: sqrt, ; . All dependencies recursively:  variable x depends on: sqrt, ; " and
 		testResult[1] == "" and
-		testResult[2] == "x = function (sqrt) { return ( -1 / (Math.pow(2, (1/2))) ); }"
+		testResult[2] == "x = function (sqrt) { return ( -1/2*Math.pow(2, (1/2)) ); }"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
@@ -129,7 +129,7 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('x = 2^(1/2-a)*2^a/10')
 	if testResult[0] == "All local dependencies:  variable x depends on: a, ; . All dependencies recursively:  variable x depends on: a, ; " and
 		testResult[1] == "" and
-		testResult[2] == "x = function (a) { return ( 1 / (5*Math.pow(2, (1/2))) ); }"
+		testResult[2] == "x = function (a) { return ( 1/10*Math.pow(2, (1/2)) ); }"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
@@ -224,6 +224,7 @@ test_dependencies = ->
 
 	clear_symbols(); defn()
 
+	###
 	testResult = findDependenciesInScript('g(x) = f(x)\nf(x)=g(x)')
 	if testResult[0] == "All local dependencies:  variable g depends on: 'x, f, x, ;  variable f depends on: 'x, g, x, ; . All dependencies recursively:  variable g depends on: 'x, x, ;  g --> f -->  ... then g again,  variable f depends on: 'x, x, ;  f --> g -->  ... then f again, " and
 		testResult[1] == "" and
@@ -232,11 +233,12 @@ test_dependencies = ->
 			console.log "fail dependency test. expected: " + testResult
 
 	clear_symbols(); defn()
+	###
 
 	testResult = findDependenciesInScript('f = roots(a*x^2 + b*x + c, x)')
 	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . All dependencies recursively:  variable f depends on: a, b, c, ; " and
 		testResult[1] == "" and
-		testResult[2] == "f = function (a, b, c) { return ( [-(b + Math.pow((-4*a*c + Math.pow(b, 2)), (1/2))) / (2*a),(-b + Math.pow((-4*a*c + Math.pow(b, 2)), (1/2))) / (2*a)] ); }"
+		testResult[2] == "f = function (a, b, c) { return ( [-1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) + b / a),1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) - b / a)] ); }"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
@@ -245,7 +247,7 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('f = roots(a*x^2 + b*x + c)')
 	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . All dependencies recursively:  variable f depends on: a, b, c, ; " and
 		testResult[1] == "" and
-		testResult[2] == "f = function (a, b, c) { return ( [-(b + Math.pow((-4*a*c + Math.pow(b, 2)), (1/2))) / (2*a),(-b + Math.pow((-4*a*c + Math.pow(b, 2)), (1/2))) / (2*a)] ); }"
+		testResult[2] == "f = function (a, b, c) { return ( [-1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) + b / a),1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) - b / a)] ); }"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
@@ -294,26 +296,31 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
+	console.log "-- done dependency tests"
+
 findDependenciesInScript = (stringToBeParsed) ->
 
+	if DEBUG then console.log "stringToBeParsed: " + stringToBeParsed
 	inited = true
 	symbolsDependencies = {}
 	indexOfPartRemainingToBeParsed = 0
 
-	allReturnedStrings = ""
+	allReturnedPlainStrings = ""
 	n = 0
 	while (1)
 
 		try
 			errorMessage = ""
 			check_stack()
+			if DEBUG then console.log "findDependenciesInScript: scanning"
 			n = scan(stringToBeParsed.substring(indexOfPartRemainingToBeParsed))
+			if DEBUG then console.log "scanned"
 			pop()
 			check_stack()
 		catch error
 			if PRINTOUTRESULT then console.log error
 			#debugger
-			allReturnedStrings += error.message
+			allReturnedPlainStrings += error.message
 			init()
 			break
 
@@ -343,7 +350,7 @@ findDependenciesInScript = (stringToBeParsed) ->
 	if DEBUG then console.log "All dependencies recursively ----------------"
 	testableString += "All dependencies recursively: "
 
-	scriptEvaluation = run(stringToBeParsed)
+	scriptEvaluation = run(stringToBeParsed, true)
 
 	generatedCode = ""
 	readableSummaryOfGeneratedCode = ""
@@ -419,7 +426,7 @@ findDependenciesInScript = (stringToBeParsed) ->
 	symbolsDependencies = {}
 	if DEBUG then console.log "testable string: " + testableString
 
-	return [testableString, scriptEvaluation, generatedCode, readableSummaryOfGeneratedCode]
+	return [testableString, scriptEvaluation[0], generatedCode, readableSummaryOfGeneratedCode, scriptEvaluation[1]]
 
 recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded, variablesAlreadyFleshedOut, variablesWithCycles, chainBeingChecked, cyclesDescriptions) ->
 	variablesAlreadyFleshedOut.push variableToBeChecked
@@ -469,7 +476,7 @@ recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded,
 
 # parses and runs one statement/expression at a time
 inited = false
-run = (stringToBeRun) ->
+run = (stringToBeRun, generateLatex = false) ->
 
 	stringToBeRun = stringToBeRun # + "\n"
 
@@ -488,7 +495,10 @@ run = (stringToBeRun) ->
 	n = 0
 	indexOfPartRemainingToBeParsed = 0
 
-	allReturnedStrings = ""
+	allReturnedPlainStrings = ""
+	if generateLatex
+		allReturnedLatexStrings = ""
+
 	while (1)
 
 		try
@@ -500,7 +510,9 @@ run = (stringToBeRun) ->
 		catch error
 			if PRINTOUTRESULT then console.log error
 			#debugger
-			allReturnedStrings += error.message
+			allReturnedPlainStrings += error.message
+			if generateLatex
+				allReturnedLatexStrings += "$$\\text{" + error.message + "}$$"
 			init()
 			break
 
@@ -542,26 +554,51 @@ run = (stringToBeRun) ->
 			# in tty mode
 			# also you could just have written 
 			# printline(p2)
-			collectedResult = collectResultLine(p2)
-			allReturnedStrings += collectedResult
+			collectedPlainResult = collectPlainResultLine(p2)
+			if generateLatex
+				collectedLatexResult = "$$" + collectLatexResultLine(p2) + "$$"
+				if DEBUG then console.log "collectedLatexResult: " + collectedLatexResult
+			
+			allReturnedPlainStrings += collectedPlainResult
+			if generateLatex then allReturnedLatexStrings += collectedLatexResult
 			if PRINTOUTRESULT
 				if DEBUG then console.log "printline"
-				if DEBUG then console.log collectedResult
-			#alert collectedResult
+				if DEBUG then console.log collectedPlainResult
+			#alert collectedPlainResult
 			if PRINTOUTRESULT
 				if DEBUG then console.log "display:"
 				display(p2)
-			allReturnedStrings += "\n"
+
+			allReturnedPlainStrings += "\n"
+			if generateLatex then allReturnedLatexStrings += "\n"
+
 		catch error
-			collectedResult = error.message
-			if PRINTOUTRESULT then console.log collectedResult
-			allReturnedStrings += collectedResult
-			allReturnedStrings += "\n"
+			collectedPlainResult = error.message
+			if generateLatex then collectedLatexResult = "$$\\text{" + error.message + "}$$"
+
+			if PRINTOUTRESULT then console.log collectedPlainResult
+
+			allReturnedPlainStrings += collectedPlainResult
+			allReturnedPlainStrings += "\n"
+
+			if generateLatex
+				allReturnedLatexStrings += collectedLatexResult
+				allReturnedLatexStrings += "\n"
+
 			init()
 
-	if allReturnedStrings[allReturnedStrings.length-1] == "\n"
-		allReturnedStrings = allReturnedStrings.substring(0,allReturnedStrings.length-1)
-	return allReturnedStrings
+	if allReturnedPlainStrings[allReturnedPlainStrings.length-1] == "\n"
+		allReturnedPlainStrings = allReturnedPlainStrings.substring(0,allReturnedPlainStrings.length-1)
+
+	if generateLatex
+		if allReturnedLatexStrings[allReturnedLatexStrings.length-1] == "\n"
+			allReturnedLatexStrings = allReturnedLatexStrings.substring(0,allReturnedLatexStrings.length-1)
+
+	if generateLatex
+		if DEBUG then console.log "allReturnedLatexStrings: " + allReturnedLatexStrings
+		return [allReturnedPlainStrings, allReturnedLatexStrings]
+	else
+		return allReturnedPlainStrings
 
 check_stack = ->
 	if (tos != 0)
@@ -668,11 +705,15 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	clear_symbols()
 	defn()
 
-	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode] =
+	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode, latexResult] =
 		findDependenciesInScript(codeFromAlgebraBlock)
 
-	result += "\n" + readableSummaryOfCode
-	result = result.replace /\n/g,"\n\n"
+	if readableSummaryOfCode != ""
+		result += "\n" + readableSummaryOfCode
+		result = result.replace /\n/g,"\n\n"
+
+		latexResult += "\n" + "$$" + readableSummaryOfCode + "$$"
+		latexResult = latexResult.replace /\n/g,"\n\n"
 
 	code = code.replace /Math\./g,""
 	code = code.replace /\n/g,"\n\n"
@@ -681,6 +722,7 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	#code: "console.log('some passed code is run'); window.something = 1;"
 	code: code
 	result: result
+	latexResult: latexResult
 	
 (exports ? this).run = run
 (exports ? this).findDependenciesInScript = findDependenciesInScript
