@@ -177,7 +177,7 @@ f10 = ->
 		# both operands a transpose?
 
 		if (car(car(cdr(p1))) == symbol(TRANSPOSE)) and (car(car(cdr(cdr(p1)))) == symbol(TRANSPOSE))
-			console.log "maybe collecting a transpose " + p1
+			if DEBUG then console.log "maybe collecting a transpose " + p1
 			a = cadr(car(cdr(p1)))
 			b = cadr(car(cdr(cdr(p1))))
 			if carp1 == symbol(MULTIPLY)
@@ -198,7 +198,7 @@ f10 = ->
 			p2 = pop()
 			if (count(p2) < count(p1))
 				p1 = p2
-			console.log "collecting a transpose " + p2
+			if DEBUG then console.log "collecting a transpose " + p2
 
 # try expanding denominators
 
