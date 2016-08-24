@@ -19640,7 +19640,7 @@
     code = code.replace(/\n/g, "\n\n");
     return {
       code: code,
-      result: result,
+      result: latexResult,
       latexResult: latexResult
     };
   };
