@@ -6,7 +6,22 @@ Eval_abs = ->
 	Eval()
 	absval()
 
+
+absValFloat = ->
+	Eval()
+	absval()
+	Eval(); # normalize
+	zzfloat()
+	# zzfloat of an abs doesn't necessarily result in a double
+	# , for example if there are variables. But
+	# in many of the tests there should be indeed
+	# a float, these two lines come handy to highlight
+	# when that doesn't happen for those tests.
+	#if !isdouble(stack[tos-1])
+	#	stop("absValFloat should return a double and instead got: " + stack[tos-1])
+
 absval = ->
+	#debugger
 	h = 0
 	save()
 	p1 = pop()

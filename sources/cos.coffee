@@ -84,7 +84,12 @@ cosine_of_angle = ->
 	push(p1)
 	push_integer(180)
 	multiply()
-	push_symbol(PI)
+
+	if evaluatingAsFloats
+		push_double(Math.PI)
+	else
+		push_symbol(PI)
+
 	divide()
 
 	n = pop_integer()

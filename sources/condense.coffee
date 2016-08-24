@@ -8,15 +8,15 @@ Eval_condense = ->
 	Condense()
 
 Condense = ->
-	tmp = 0
-	tmp = expanding
+	prev_expanding = expanding
+	expanding = 0
 	save()
 	yycondense()
 	restore()
-	expanding = tmp
+	expanding = prev_expanding
 
 yycondense = ->
-	expanding = 0
+	#expanding = 0
 
 	p1 = pop()
 

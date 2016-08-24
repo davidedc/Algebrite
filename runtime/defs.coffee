@@ -8,6 +8,11 @@ NSYM = 1000
 DEBUG = false
 PRINTOUTRESULT = false
 
+dontCreateNewRadicalsInDenominatorWhenEvalingMultiplication = true
+recursionLevelNestedRadicalsRemoval = 0
+do_simplify_nested_radicals = true
+avoidCalculatingPowersIntoArctans = true
+
 # Symbolic expressions are built by connecting U structs.
 #
 # For example, (a b + c) is built like this:
@@ -44,7 +49,8 @@ class U
 	k: 0
 	tag: 0
 
-	toString: -> collectResultLine(this)
+	toString: -> collectPlainResultLine(this)
+	toLatexString: -> collectLatexResultLine(this)
 
 	constructor: ->
 		@cons = {}
@@ -72,6 +78,7 @@ SYM = 5
 counter = 0
 ABS = counter++
 ADD = counter++
+ADDSUBSTRULE = counter++
 ADJ = counter++
 AND = counter++
 ARCCOS = counter++
@@ -91,6 +98,7 @@ CHECK = counter++
 CHOOSE = counter++
 CIRCEXP = counter++
 CLEAR = counter++
+CLEARSUBSTRULES = counter++
 CLOCK = counter++
 COEFF = counter++
 COFACTOR = counter++
@@ -162,6 +170,9 @@ POLAR = counter++
 POWER = counter++
 PRIME = counter++
 PRINT = counter++
+PRINTLATEX = counter++
+PRINT_LEAVE_E_ALONE = counter++
+PRINT_LEAVE_X_ALONE = counter++
 PRODUCT = counter++
 QUOTE = counter++
 QUOTIENT = counter++
@@ -198,6 +209,7 @@ NIL = counter++	# nil goes here, after standard functions
 AUTOEXPAND = counter++
 BAKE = counter++
 LAST = counter++
+LAST_LATEX_PRINT = counter++
 TRACE = counter++
 TTY = counter++
 
@@ -223,6 +235,10 @@ SYMBOL_T = counter++
 SYMBOL_X = counter++
 SYMBOL_Y = counter++
 SYMBOL_Z = counter++
+
+SYMBOL_A_UNDERSCORE = counter++
+SYMBOL_B_UNDERSCORE = counter++
+SYMBOL_X_UNDERSCORE = counter++
 
 C1 = counter++
 C2 = counter++
@@ -251,6 +267,12 @@ MAXPRIMETAB = 10000
 
 MAXDIM = 24
 
+# needed for the mechanism to
+# find all dependencies between variables
+# in a script
+symbolsDependencies = {}
+
+
 class tensor
 	ndim: 0
 	dim: null
@@ -277,6 +299,7 @@ class text_metric
 
 tos = 0 # top of stack
 expanding = 0
+evaluatingAsFloats = 0
 fmt_x = 0
 fmt_index = 0
 fmt_level = 0
@@ -334,6 +357,7 @@ out_buf = ""
 out_count = 0
 test_flag = 0
 draw_stop_return = null # extern jmp_buf ?????
+userSimplificationsInListForm = []
 
 symbol = (x) -> (symtab[x])
 iscons = (p) -> (p.k == CONS)
@@ -374,6 +398,8 @@ isadd = (p) -> (car(p) == symbol(ADD))
 ismultiply = (p) -> (car(p) == symbol(MULTIPLY))
 ispower = (p) -> (car(p) == symbol(POWER))
 isfactorial = (p) -> (car(p) == symbol(FACTORIAL))
+isinnerordot = (p) -> ((car(p) == symbol(INNER)) or (car(p) == symbol(DOT)))
+istranspose = (p) -> (car(p) == symbol(TRANSPOSE))
 
 MSIGN = (p) ->
 	if p.isPositive()

@@ -20,6 +20,12 @@ test_low_level = ->
 
 selftest  = ->
 	test_low_level()
+	test_exp()
+	test_expand()
+	test_factorpoly()
+	test_subst()
+	test_simplify()
+	test_roots()
 
 	test_multiply()
 	test_scan()
@@ -46,10 +52,8 @@ selftest  = ->
 	test_dirac()
 	test_erf()
 	test_erfc()
-	test_expand()
 	test_expcos()
 	test_expsin()
-	test_factorpoly()
 	test_float()
 	test_floor()
 	test_gamma()
@@ -93,8 +97,6 @@ selftest  = ->
 	test_index()
 	test_isprime()
 	test_integral()
-	test_simplify()
-	test_roots()
 	test_eigen()
 	test_shape()
 	mini_test()

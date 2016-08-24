@@ -1,6 +1,10 @@
 # Symbolic multiplication
 
-
+# multiplication is commutative, so it can't be used
+# e.g. on two matrices.
+# But it can be used, say, on a scalar and a matrix.,
+# so the output of a multiplication is not
+# always a scalar.
 
 #extern void append(void)
 #static void parse_p1(void)
@@ -37,6 +41,7 @@ yymultiply = ->
 
 	# is either operand a sum?
 
+	#console.log("yymultiply: expanding: " + expanding)
 	if (expanding && isadd(p1))
 		p1 = cdr(p1)
 		push(zero)
@@ -304,10 +309,10 @@ combine_gammas = (h) ->
 #endif
 
 multiply_noexpand = ->
-	x = expanding
+	prev_expanding = expanding
 	expanding = 0
 	multiply()
-	expanding = x
+	expanding = prev_expanding
 
 # multiply n factors on stack
 
@@ -329,10 +334,10 @@ multiply_all = (n) ->
 
 # n an integer
 multiply_all_noexpand = (n) ->
-	x = expanding
+	prev_expanding = expanding
 	expanding = 0
 	multiply_all(n)
-	expanding = x
+	expanding = prev_expanding
 
 #-----------------------------------------------------------------------------
 #
@@ -373,16 +378,16 @@ negate = ->
 		multiply()
 
 negate_expand = ->
-	x = expanding
+	prev_expanding = expanding
 	expanding = 1
 	negate()
-	expanding = x
+	expanding = prev_expanding
 
 negate_noexpand = ->
-	x = expanding
+	prev_expanding = expanding
 	expanding = 0
 	negate()
-	expanding = x
+	expanding = prev_expanding
 
 #-----------------------------------------------------------------------------
 #
@@ -443,6 +448,7 @@ __normalize_radical_factors = (h) ->
 
 	push(stack[h])
 	mp_numerator()
+	#console.log("__normalize_radical_factors numerator: " + stack[tos-1])
 	p1 = pop(); # p1 is A
 
 	for i in [(h + 1)...tos]
@@ -490,6 +496,7 @@ __normalize_radical_factors = (h) ->
 
 	push(stack[h])
 	mp_denominator()
+	#console.log("__normalize_radical_factors denominator: " + stack[tos-1])
 	p2 = pop(); # p2 is B
 
 	for i in [(h + 1)...tos]
@@ -518,6 +525,8 @@ __normalize_radical_factors = (h) ->
 
 		if (!isinteger(p5)) #p5 is TMP
 			continue
+		#console.log("__new radical p5: " + p5.toString())
+		#console.log("__new radical top stack: " + stack[tos-1])
 
 		# reduce denominator
 
@@ -528,8 +537,32 @@ __normalize_radical_factors = (h) ->
 		push_symbol(POWER)
 		push(p3); #p3 is BASE
 		push(p4);  #p4 is EXPO
+		#console.log("__new radical p3: " + p3.toString())
+		#console.log("__new radical p4: " + p4.toString())
 		push(one)
 		subtract()
+
+		if dontCreateNewRadicalsInDenominatorWhenEvalingMultiplication
+			if (isinteger(p3) and !isinteger[stack[tos-1]] and isnegativenumber(stack[tos - 1]))
+				# bail out,
+				# we want to avoid going ahead with the subtraction of
+				# the exponents, because that would turn a perfectly good
+				# integer exponent in the denominator into a fractional one
+				# i.e. a radical.
+				# Note that this only prevents new radicals ending up
+				# in the denominator, it doesn't fix existing ones.
+				pop()
+				pop()
+				pop()
+
+				push(p1); # p1 is A
+				push(p3); #p3 is BASE
+				divide()
+				p1 = pop()
+
+				break
+		#console.log("__new radical exponent: " + stack[tos-1])
+
 		list(3)
 		stack[i] = pop()
 

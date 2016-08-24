@@ -29,16 +29,32 @@ Eval_test = ->
 # For A==B, any nonzero result for A minus B indicates inequality.
 
 Eval_testeq = ->
+	# first try without simplifyng both sides
 	push(cadr(p1))
 	Eval()
 	push(caddr(p1))
 	Eval()
 	subtract()
-	p1 = pop()
-	if (iszero(p1))
+	subtractionResult = pop()
+	if (iszero(subtractionResult))
+		p1 = subtractionResult
 		push_integer(1)
 	else
-		push_integer(0)
+		# they don't seem equal but
+		# let's try again after doing
+		# a simplification on both sides
+		push(cadr(p1))
+		Eval()
+		simplify()
+		push(caddr(p1))
+		Eval()
+		simplify()
+		subtract()
+		p1 = pop()
+		if (iszero(p1))
+			push_integer(1)
+		else
+			push_integer(0)
 
 # Relational operators expect a numeric result for operand difference.
 
@@ -104,13 +120,19 @@ Eval_or = ->
 
 # use subtract for cases like A < A + 1
 
+# TODO you could be smarter here and
+# simplify both sides only in the case
+# of "relational operator: cannot determine..."
+# a bit like we do in Eval_testeq
 cmp_args = ->
 	t = 0
 
 	push(cadr(p1))
 	Eval()
+	simplify()
 	push(caddr(p1))
 	Eval()
+	simplify()
 	subtract()
 	p1 = pop()
 

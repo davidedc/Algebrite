@@ -29,6 +29,17 @@ isnegativenumber = (p) ->
 	return 0
 
 # p is a U
+isplustwo = (p) ->
+	switch (p.k)
+		when NUM
+			if (MEQUAL(p.q.a, 2) && MEQUAL(p.q.b, 1))
+				return 1
+		when DOUBLE
+			if (p.d == 2.0)
+				return 1
+	return 0
+
+# p is a U
 isplusone = (p) ->
 	switch (p.k)
 		when NUM
@@ -48,6 +59,9 @@ isminusone = (p) ->
 			if (p.d == -1.0)
 				return 1
 	return 0
+
+isone = (p) ->
+	return isplusone(p) or isminusone(p)
 
 isinteger = (p) ->
 	if (p.k == NUM && MEQUAL(p.q.b, 1))
@@ -117,6 +131,16 @@ isnegativeterm = (p) ->
 	else
 		return 0
 
+isimaginarynumberdouble = (p) ->
+	if ((car(p) == symbol(MULTIPLY) \
+	&& length(p) == 3 \
+	&& isdouble(cadr(p)) \
+	&& equal(caddr(p), imaginaryunit)) \
+	|| equal(p, imaginaryunit))
+		return 1
+	else 
+		return 0
+
 isimaginarynumber = (p) ->
 	if ((car(p) == symbol(MULTIPLY) \
 	&& length(p) == 3 \
@@ -125,6 +149,16 @@ isimaginarynumber = (p) ->
 	|| equal(p, imaginaryunit))
 		return 1
 	else 
+		return 0
+
+iscomplexnumberdouble = (p) ->
+	if ((car(p) == symbol(ADD) \
+	&& length(p) == 3 \
+	&& isdouble(cadr(p)) \
+	&& isimaginarynumberdouble(caddr(p))) \
+	|| isimaginarynumberdouble(p))
+		return 1
+	else
 		return 0
 
 iscomplexnumber = (p) ->
@@ -207,6 +241,22 @@ equalq = (p, a, b) ->
 			if (p.d == a / b)
 				return 1
 	return 0
+
+# p == 1/2 ?
+
+isoneovertwo = (p) ->
+	if equalq(p, 1, 2)
+		return 1
+	else
+		return 0
+
+# p == -1/2 ?
+isminusoneovertwo = (p) ->
+	if equalq(p, -1, 2)
+		return 1
+	else
+		return 0
+
 
 # p == 1/sqrt(2) ?
 

@@ -34,13 +34,105 @@ transpose = ->
 
 	save()
 
-	p3 = pop()
-	p2 = pop()
-	p1 = pop()
+	p3 = pop() # index to be transposed
+	p2 = pop() # other index to be transposed
+	p1 = pop() # what needs to be transposed
+
+	# a transposition just goes away when
+	# applied to a scalar
+	if (isnum(p1))
+		push p1
+		restore()
+		return
+
+	# a transposition just goes away when
+	# applied to another transposition with
+	# the same columns to be switched
+	if (istranspose(p1))
+		innerTranspSwitch1 = car(cdr(cdr(p1)))
+		innerTranspSwitch2 = car(cdr(cdr(cdr(p1))))
+
+		if ( equal(innerTranspSwitch1,p3) and equal(innerTranspSwitch2,p2) ) or
+			( equal(innerTranspSwitch2,p3) and equal(innerTranspSwitch1,p2) ) or
+			(( equal(innerTranspSwitch1,symbol(NIL)) and equal(innerTranspSwitch2,symbol(NIL)) ) and ((isplusone(p3) and isplustwo(p2)) or ((isplusone(p2) and isplustwo(p3)))))
+				push car(cdr(p1))
+				restore()
+				return
+
+	# if operand is a sum then distribute
+	# (if we are in expanding mode)
+	if (expanding && isadd(p1))
+		p1 = cdr(p1)
+		push(zero)
+		while (iscons(p1))
+			push(car(p1))
+			# add the dimensions to switch but only if
+			# they are not the default ones.
+			push(p2)
+			push(p3)
+			transpose()
+			add()
+			p1 = cdr(p1)
+		restore()
+		return
+
+	# if operand is a multiplication then distribute
+	# (if we are in expanding mode)
+	if (expanding && ismultiply(p1))
+		p1 = cdr(p1)
+		push(one)
+		while (iscons(p1))
+			push(car(p1))
+			# add the dimensions to switch but only if
+			# they are not the default ones.
+			push(p2)
+			push(p3)
+			transpose()
+			multiply()
+			p1 = cdr(p1)
+		restore()
+		return
+
+	# distribute the transpose of a dot
+	# if in expanding mode
+	# note that the distribution happens
+	# in reverse as per tranpose rules.
+	# The dot operator is not
+	# commutative, so, it matters.
+	if (expanding && isinnerordot(p1))
+		p1 = cdr(p1)
+		accumulator = []
+		while (iscons(p1))
+			accumulator.push [car(p1),p2,p3]
+			p1 = cdr(p1)
+
+		for eachEntry in [accumulator.length-1..0]
+			push(accumulator[eachEntry][0])
+			push(accumulator[eachEntry][1])
+			push(accumulator[eachEntry][2])
+			transpose()
+			if eachEntry != accumulator.length-1
+				inner()
+
+		restore()
+		return
+
 
 	if (!istensor(p1))
 		if (!iszero(p1))
-			stop("transpose: tensor expected, 1st arg is not a tensor")
+			#stop("transpose: tensor expected, 1st arg is not a tensor")
+			push_symbol(TRANSPOSE)
+			push(p1)
+			# remove the default "dimensions to be switched"
+			# parameters
+			if (!isplusone(p2) or !isplustwo(p3)) and (!isplusone(p3) or !isplustwo(p2))
+				push(p2)
+				push(p3)
+				list(4)
+			else
+				list(2)
+			restore()
+			return
 		push(zero)
 		restore()
 		return

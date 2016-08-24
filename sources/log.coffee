@@ -30,7 +30,10 @@ yylog = ->
 		negate()
 		logarithm()
 		push(imaginaryunit)
-		push_symbol(PI)
+		if evaluatingAsFloats
+			push_double(Math.PI)
+		else
+			push_symbol(PI)
 		multiply()
 		add()
 		return

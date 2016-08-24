@@ -37,9 +37,17 @@ isdigit = (str) ->
 isalpha = (str) ->
 	if !str? then return false
 	#Check for non-alphabetic characters and space
-	if !str? then debugger
 	return (str.search(/[^A-Za-z]/) == -1)
 
-isalnum = (str) ->
+isalphaOrUnderscore = (str) ->
 	if !str? then return false
-	return (isalpha(str) or isdigit(str))
+	#Check for non-alphabetic characters and space
+	return (str.search(/[^A-Za-z_]/) == -1)
+
+isunderscore = (str) ->
+	if !str? then return false
+	return (str.search(/_/) == -1)
+
+isalnumorunderscore = (str) ->
+	if !str? then return false
+	return (isalphaOrUnderscore(str) or isdigit(str))

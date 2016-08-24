@@ -37,9 +37,9 @@ Eval_coeff = ->
 #
 #	Put polynomial coefficients on the stack
 #
-#	Input:		tos-2		p(x)
+#	Input:	tos-2		p(x) (the polynomial)
 #
-#			tos-1		x
+#			tos-1		x (the variable)
 #
 #	Output:		Returns number of coefficients on stack
 #
@@ -82,7 +82,11 @@ coeff = ->
 
 		push(p1)
 		push(p2)
+		prev_expanding = expanding
+		expanding = 1
 		divide()
+		expanding = prev_expanding
+		#console.log("just divided: " + stack[tos-1].toString())
 		p1 = pop()
 
 

@@ -11,6 +11,7 @@ Eval_user_function = ->
 
 	# Use "derivative" instead of "d" if there is no user function "d"
 
+	if DEBUG then console.log "Eval_user_function evaluating: " + car(p1)
 	if (car(p1) == symbol(SYMBOL_D) && get_arglist(symbol(SYMBOL_D)) == symbol(NIL))
 		Eval_derivative()
 		return
@@ -18,6 +19,13 @@ Eval_user_function = ->
 	p3 = get_binding(car(p1)); # p3 is F
 	p4 = get_arglist(car(p1)); # p4 is A
 	p5 = cdr(p1); # p5 is B
+
+	# example:
+	#  f(x) = x+2
+	# then:
+	#  p3.toString() = "x + 2"
+	#  p4 = x
+	#  p5 = 2
 
 	# Undefined function?
 

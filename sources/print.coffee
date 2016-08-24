@@ -1,5 +1,54 @@
 power_str = "^"
 stringToBePrinted = ""
+latexMode = false
+codeGen = false
+
+Eval_printlatex = ->
+	latexMode = true
+	Eval_display()
+	latexMode = false
+
+Eval_display = ->
+	p1 = cdr(p1);
+
+	while (iscons(p1))
+
+		push(car(p1));
+		Eval();
+		p2 = pop();
+
+		# display single symbol as "symbol = result"
+
+		# but don't display "symbol = symbol"
+
+		###
+		if (issymbol(car(p1)) && car(p1) != p2)
+			push_symbol(SETQ);
+			push(car(p1));
+			push(p2);
+			list(3);
+			p2 = pop();
+		###
+
+		if (equaln(get_binding(symbol(TTY)), 1))
+			beenPrinted = printline(p2);
+		else
+			beenPrinted = printline(p2);
+			#push(p2);
+			#cmdisplay();
+
+		# we put the printed string into
+		# a special variable that we are
+		# then going to check for the tests
+		if latexMode
+			scan('"' + beenPrinted + '"')
+			parsedString = pop()
+			set_binding(symbol(LAST_LATEX_PRINT), parsedString)
+
+
+		p1 = cdr(p1);
+
+	push(symbol(NIL));
 
 print_str = (s) ->
 	stringToBePrinted += s
@@ -7,9 +56,16 @@ print_str = (s) ->
 print_char = (c) ->
 	stringToBePrinted += c
 
-collectResultLine = (p) ->
+collectPlainResultLine = (p) ->
 	stringToBePrinted = ""
 	print_expr(p)
+	return stringToBePrinted
+
+collectLatexResultLine = (p) ->
+	stringToBePrinted = ""
+	latexMode = true
+	print_expr(p)
+	latexMode = false
 	return stringToBePrinted
 
 printline = (p) ->
@@ -17,7 +73,24 @@ printline = (p) ->
 	stringToBePrinted = ""
 	print_expr(p)
 	console.log stringToBePrinted
+	return stringToBePrinted
 
+
+print_base_of_denom = (p1) ->
+	if (isfraction(p1) || car(p1) == symbol(ADD) || car(p1) == symbol(MULTIPLY) || car(p1) == symbol(POWER) || lessp(p1, zero)) # p1 is BASE
+			print_char('(')
+			print_expr(p1); # p1 is BASE
+			print_char(')')
+	else
+		print_expr(p1); # p1 is BASE
+
+print_expo_of_denom = (p2) ->
+	if (isfraction(p2) || car(p2) == symbol(ADD) || car(p2) == symbol(MULTIPLY) || car(p2) == symbol(POWER)) # p2 is EXPO
+		print_char('(')
+		print_expr(p2); # p2 is EXPO
+		print_char(')')
+	else
+		print_expr(p2); # p2 is EXPO
 
 # prints stuff after the divide symbol "/"
 
@@ -34,39 +107,25 @@ print_denom = (p, d) ->
 
 	# i.e. 1 / (2^(1/3))
 
-	if (d == 1 && !isminusone(p2)) # p2 is EXPO
-		print_char('(')
-
-	if (isfraction(p1) || car(p1) == symbol(ADD) || car(p1) == symbol(MULTIPLY) || car(p1) == symbol(POWER) || lessp(p1, zero)) # p1 is BASE
-			print_char('(')
-			print_expr(p1); # p1 is BASE
-			print_char(')')
-	else
-		print_expr(p1); # p1 is BASE
-
+	# get the cases like BASE^(-1) out of
+	# the way, they just become 1/BASE
 	if (isminusone(p2)) # p2 is EXPO
+		print_base_of_denom p1
 		restore()
 		return
 
-	if (test_flag == 0)
-		print_str(power_str)
-	else
-		print_char('^')
+	if (d == 1) # p2 is EXPO
+		print_char('(')
 
+	# prepare the exponent
+	# (needs to be negated)
+	# before printing it out
 	push(p2); # p2 is EXPO
 	negate()
 	p2 = pop(); # p2 is EXPO
-
-	if (isfraction(p2) || car(p2) == symbol(ADD) || car(p2) == symbol(MULTIPLY) || car(p2) == symbol(POWER)) # p2 is EXPO
-		print_char('(')
-		print_expr(p2); # p2 is EXPO
-		print_char(')')
-	else
-		print_expr(p2); # p2 is EXPO
-
+	print_power(p1,p2)
 	if (d == 1)
 		print_char(')')
-
 	restore()
 
 
@@ -113,6 +172,10 @@ print_a_over_b = (p) ->
 			n++
 		p1 = cdr(p1)
 
+	#debugger
+	if latexMode
+		print_str('\\frac{')
+
 	if (n == 0)
 		print_char('1')
 	else
@@ -134,12 +197,14 @@ print_a_over_b = (p) ->
 				flag = 1
 			p1 = cdr(p1)
 
-	if (test_flag == 0)
+	if latexMode
+		print_str('}{')
+	else if (test_flag == 0)
 		print_str(" / ")
 	else
 		print_str("/")
 
-	if (d > 1)
+	if (d > 1 and !latexMode)
 		print_char('(')
 
 
@@ -162,8 +227,11 @@ print_a_over_b = (p) ->
 			flag = 1
 		p1 = cdr(p1)
 
-	if (d > 1)
+	if (d > 1 and !latexMode)
 		print_char(')')
+
+	if latexMode
+		print_str('}')
 
 	restore()
 
@@ -237,13 +305,62 @@ print_factorial_function = (p) ->
 		print_expr(p)
 	print_char('!')
 
+print_ABS_latex = (p) ->
+	print_str("\\left |")
+	print_expr(cadr(p))
+	print_str(" \\right |")
+
+print_BINOMIAL_latex = (p) ->
+	print_str("\\binom{")
+	print_expr(cadr(p))
+	print_str("}{")
+	print_expr(caddr(p))
+	print_str("} ")
+
+print_SQRT_latex = (p) ->
+	print_str("\\sqrt{")
+	print_expr(cadr(p))
+	print_str("} ")
+
+print_DEFINT_latex = (p) ->
+	functionBody = car(cdr(p))
+
+	p = cdr(p)
+	originalIntegral = p
+	numberOfIntegrals = 0
+
+	while iscons(cdr(cdr(p)))
+		numberOfIntegrals++
+		theIntegral = cdr(cdr(p))
+
+		print_str("\\int^{")
+		print_expr(car(cdr(theIntegral)))
+		print_str("}_{")
+		print_expr(car(theIntegral))
+		print_str("} \\! ")
+		p = cdr(theIntegral)
+
+	print_expr(functionBody)
+	print_str(" \\,")
+
+	p = originalIntegral
+
+	for i in [1..numberOfIntegrals]
+		theVariable = cdr(p)
+		print_str(" \\mathrm{d} ")
+		print_expr(car(theVariable))
+		if i < numberOfIntegrals
+			print_str(" \\, ")
+		p = cdr(cdr(theVariable))
+
+
 
 print_tensor = (p) ->
 	print_tensor_inner(p, 0, 0)
 
 print_tensor_inner = (p, j, k) ->
 	i = 0
-	print_str("(")
+	if codeGen then print_str("[") else print_str("(")
 	for i in [0...p.tensor.dim[j]]
 		if (j + 1 == p.tensor.ndim)
 			print_expr(p.tensor.elem[k])
@@ -255,8 +372,177 @@ print_tensor_inner = (p, j, k) ->
 				print_str(",")
 			else
 				print_str(",")
-	print_str(")")
+	if codeGen then print_str("]") else print_str(")")
 	return k
+
+print_base = (p) ->
+	if (isadd(cadr(p)) || caadr(p) == symbol(MULTIPLY) || caadr(p) == symbol(POWER) || isnegativenumber(cadr(p)))
+		print_str("(")
+		print_expr(cadr(p))
+		print_str(")")
+	else if (isnum(cadr(p)) && (lessp(cadr(p), zero) || isfraction(cadr(p))))
+		print_str("(")
+		print_factor(cadr(p))
+		print_str(")")
+	else
+		print_factor(cadr(p))
+
+print_exponent = (p) ->
+	if (iscons(caddr(p)) || isfraction(caddr(p)) || (isnum(caddr(p)) && lessp(caddr(p), zero)))
+		print_str("(")
+		print_expr(caddr(p))
+		print_str(")")
+	else
+		print_factor(caddr(p))
+
+print_power = (base, exponent) ->
+
+	#debugger
+
+	if codeGen
+		print_str("Math.pow(")
+		print_base_of_denom base
+		print_str(", ")
+		print_expo_of_denom exponent
+		print_str(")")
+		return
+
+	if ((equaln(get_binding(symbol(PRINT_LEAVE_E_ALONE)), 1)) and base == symbol(E))
+		if latexMode
+			print_str("e^{")
+			print_expr(exponent)
+			print_str("}")
+		else
+			print_str("exp(")
+			print_expr(exponent)
+			print_str(")")
+		return
+
+	
+	if ((equaln(get_binding(symbol(PRINT_LEAVE_X_ALONE)), 0)) or base.printname != "x")
+		# if the exponent is negative then
+		# we invert the base BUT we don't do
+		# that if the base is "e", because for
+		# example when trigonometric functions are
+		# expressed in terms of exponential functions
+		# that would be really confusing, one wants to
+		# keep "e" as the base and the negative exponent
+		if (base != symbol(E))
+			if (isminusone(exponent))
+				if latexMode
+					print_str("\\frac{1}{")
+				else if (test_flag == 0)
+					print_str("1 / ")
+				else
+					print_str("1/")
+
+				if (iscons(base))
+					print_str("(")
+					print_expr(base)
+					print_str(")")
+				else
+					print_expr(base)
+
+				if latexMode
+					print_str("}")
+
+				return
+
+			if (isnegativeterm(exponent))
+				if latexMode
+					print_str("\\frac{1}{")
+				else if (test_flag == 0)
+					print_str("1 / ")
+				else
+					print_str("1/")
+
+				push(exponent)
+				push_integer(-1)
+				multiply()
+				newExponent = pop()
+
+				if (iscons(base))
+					print_str("(")
+					print_power(base, newExponent)
+					print_str(")")
+				else
+					print_power(base, newExponent)
+
+
+				if latexMode
+					print_str("}")
+
+				return
+
+
+		if (isfraction(exponent) and latexMode)
+				print_str("\\sqrt")
+				push(exponent)
+				denominator()
+				denomExponent = pop()
+				# we omit the "2" on the radical
+				if !isplustwo(denomExponent)
+					print_str("[")
+					print_expr(denomExponent)
+					print_str("]")
+				print_str("{")
+				push(exponent)
+				numerator()
+				numExponent = pop()
+				exponent = numExponent
+				print_power(base, exponent)
+				print_str("}")
+				return
+
+	if latexMode and isplusone(exponent)
+		# if we are in latex mode we turn many
+		# radicals into a radix sign with a power
+		# underneath, and the power is often one
+		# (e.g. square root turns into a radical
+		# with a power one underneath) so handle
+		# this case simply here, just print the base
+		print_expr(base)
+	else
+		# print the base,
+		# determining if it needs to be
+		# wrapped in parentheses or not
+		if (isadd(base) || isnegativenumber(base))
+			print_str("(")
+			print_expr(base)
+			print_str(")")
+		else if ( car(base) == symbol(MULTIPLY) || car(base) == symbol(POWER))
+			if !latexMode then print_str("(")
+			print_factor(base)
+			if !latexMode then print_str(")")
+		else if (isnum(base) && (lessp(base, zero) || isfraction(base)))
+			print_str("(")
+			print_factor(base)
+			print_str(")")
+		else
+			print_factor(base)
+
+		# print the power symbol
+		#debugger
+		if (test_flag == 0)
+			#print_str(" ^ ")
+			print_str(power_str)
+		else
+			print_str("^")
+
+		# print the exponent
+		if (iscons(exponent) || isfraction(exponent) || (isnum(exponent) && lessp(exponent, zero)))
+			if latexMode
+				print_str("{")
+			else
+				print_str("(")
+			print_expr(exponent)
+			if latexMode
+				print_str("}")
+			else
+				print_str(")")
+		else
+			print_factor(exponent)
+
 
 print_factor = (p) ->
 	if (isnum(p))
@@ -273,57 +559,29 @@ print_factor = (p) ->
 		print_tensor(p)
 		return
 
-	if (isadd(p) || car(p) == symbol(MULTIPLY))
+	if (car(p) == symbol(MULTIPLY))
+		if (sign_of_term(p) == '-' or !latexMode)
+			if latexMode
+				print_str(" \\left (")
+			else
+				print_str("(")
+		print_expr(p)
+		if (sign_of_term(p) == '-' or !latexMode)
+			if latexMode
+				print_str(" \\right ) ")
+			else
+				print_str("(")
+		return
+	else if (isadd(p))
 		print_str("(")
 		print_expr(p)
 		print_str(")")
 		return
 
 	if (car(p) == symbol(POWER))
-
-		if (cadr(p) == symbol(E))
-			print_str("exp(")
-			print_expr(caddr(p))
-			print_str(")")
-			return
-
-		
-		if (isminusone(caddr(p)))
-			if (test_flag == 0)
-				print_str("1 / ")
-			else
-				print_str("1/")
-			if (iscons(cadr(p)))
-				print_str("(")
-				print_expr(cadr(p))
-				print_str(")")
-			else
-				print_expr(cadr(p))
-			return
-
-		if (isadd(cadr(p)) || caadr(p) == symbol(MULTIPLY) || caadr(p) == symbol(POWER) || isnegativenumber(cadr(p)))
-			print_str("(")
-			print_expr(cadr(p))
-			print_str(")")
-		else if (isnum(cadr(p)) && (lessp(cadr(p), zero) || isfraction(cadr(p))))
-			print_str("(")
-			print_factor(cadr(p))
-			print_str(")")
-		else
-			print_factor(cadr(p))
-
-		if (test_flag == 0)
-			#print_str(" ^ ")
-			print_str(power_str)
-		else
-			print_str("^")
-
-		if (iscons(caddr(p)) || isfraction(caddr(p)) || (isnum(caddr(p)) && lessp(caddr(p), zero)))
-			print_str("(")
-			print_expr(caddr(p))
-			print_str(")")
-		else
-			print_factor(caddr(p))
+		base = cadr(p)
+		exponent = caddr(p)
+		print_power(base, exponent)
 		return
 
 	#	if (car(p) == _list) {
@@ -348,6 +606,19 @@ print_factor = (p) ->
 
 	if (car(p) == symbol(FACTORIAL))
 		print_factorial_function(p)
+		return
+	else if (car(p) == symbol(ABS) && latexMode)
+		print_ABS_latex(p)
+		return
+	else if (car(p) == symbol(SQRT) && latexMode)
+		#debugger
+		print_SQRT_latex(p)
+		return
+	else if (car(p) == symbol(BINOMIAL) && latexMode)
+		print_BINOMIAL_latex(p)
+		return
+	else if (car(p) == symbol(DEFINT) && latexMode)
+		print_DEFINT_latex(p)
 		return
 
 	if (iscons(p))
@@ -374,9 +645,15 @@ print_factor = (p) ->
 	if (p == symbol(DERIVATIVE))
 		print_char('d')
 	else if (p == symbol(E))
-		print_str("exp(1)")
+		if latexMode
+			print_str("e")
+		else
+			print_str("exp(1)")
 	else if (p == symbol(PI))
-		print_str("pi")
+		if latexMode
+			print_str("\\pi")
+		else
+			print_str("pi")
 	else
 		print_str(get_printname(p))
 
@@ -421,7 +698,7 @@ print1 = (p, accumulator) ->
 		return accumulator
 
 print_multiply_sign = ->
-	if (test_flag == 0)
+	if test_flag == 0 and !codeGen
 		print_str(" ")
 	else
 		print_str("*")
