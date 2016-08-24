@@ -300,27 +300,27 @@ test_dependencies = ->
 
 findDependenciesInScript = (stringToBeParsed) ->
 
-	console.log "stringToBeParsed: " + stringToBeParsed
+	if DEBUG then console.log "stringToBeParsed: " + stringToBeParsed
 	inited = true
 	symbolsDependencies = {}
 	indexOfPartRemainingToBeParsed = 0
 
-	allReturnedStrings = ""
+	allReturnedPlainStrings = ""
 	n = 0
 	while (1)
 
 		try
 			errorMessage = ""
 			check_stack()
-			console.log "findDependenciesInScript: scanning"
+			if DEBUG then console.log "findDependenciesInScript: scanning"
 			n = scan(stringToBeParsed.substring(indexOfPartRemainingToBeParsed))
-			console.log "scanned"
+			if DEBUG then console.log "scanned"
 			pop()
 			check_stack()
 		catch error
 			if PRINTOUTRESULT then console.log error
 			#debugger
-			allReturnedStrings += error.message
+			allReturnedPlainStrings += error.message
 			init()
 			break
 
@@ -350,7 +350,7 @@ findDependenciesInScript = (stringToBeParsed) ->
 	if DEBUG then console.log "All dependencies recursively ----------------"
 	testableString += "All dependencies recursively: "
 
-	scriptEvaluation = run(stringToBeParsed)
+	scriptEvaluation = run(stringToBeParsed, true)
 
 	generatedCode = ""
 	readableSummaryOfGeneratedCode = ""
@@ -426,7 +426,7 @@ findDependenciesInScript = (stringToBeParsed) ->
 	symbolsDependencies = {}
 	if DEBUG then console.log "testable string: " + testableString
 
-	return [testableString, scriptEvaluation, generatedCode, readableSummaryOfGeneratedCode]
+	return [testableString, scriptEvaluation[0], generatedCode, readableSummaryOfGeneratedCode, scriptEvaluation[1]]
 
 recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded, variablesAlreadyFleshedOut, variablesWithCycles, chainBeingChecked, cyclesDescriptions) ->
 	variablesAlreadyFleshedOut.push variableToBeChecked
@@ -476,7 +476,7 @@ recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded,
 
 # parses and runs one statement/expression at a time
 inited = false
-run = (stringToBeRun) ->
+run = (stringToBeRun, generateLatex = false) ->
 
 	stringToBeRun = stringToBeRun # + "\n"
 
@@ -495,7 +495,10 @@ run = (stringToBeRun) ->
 	n = 0
 	indexOfPartRemainingToBeParsed = 0
 
-	allReturnedStrings = ""
+	allReturnedPlainStrings = ""
+	if generateLatex
+		allReturnedLatexStrings = ""
+
 	while (1)
 
 		try
@@ -507,7 +510,9 @@ run = (stringToBeRun) ->
 		catch error
 			if PRINTOUTRESULT then console.log error
 			#debugger
-			allReturnedStrings += error.message
+			allReturnedPlainStrings += error.message
+			if generateLatex
+				allReturnedLatexStrings += "$$\\text{" + error.message + "}$$"
 			init()
 			break
 
@@ -549,26 +554,51 @@ run = (stringToBeRun) ->
 			# in tty mode
 			# also you could just have written 
 			# printline(p2)
-			collectedResult = collectPlainResultLine(p2)
-			allReturnedStrings += collectedResult
+			collectedPlainResult = collectPlainResultLine(p2)
+			if generateLatex
+				collectedLatexResult = "$$" + collectLatexResultLine(p2) + "$$"
+				if DEBUG then console.log "collectedLatexResult: " + collectedLatexResult
+			
+			allReturnedPlainStrings += collectedPlainResult
+			if generateLatex then allReturnedLatexStrings += collectedLatexResult
 			if PRINTOUTRESULT
 				if DEBUG then console.log "printline"
-				if DEBUG then console.log collectedResult
-			#alert collectedResult
+				if DEBUG then console.log collectedPlainResult
+			#alert collectedPlainResult
 			if PRINTOUTRESULT
 				if DEBUG then console.log "display:"
 				display(p2)
-			allReturnedStrings += "\n"
+
+			allReturnedPlainStrings += "\n"
+			if generateLatex then allReturnedLatexStrings += "\n"
+
 		catch error
-			collectedResult = error.message
-			if PRINTOUTRESULT then console.log collectedResult
-			allReturnedStrings += collectedResult
-			allReturnedStrings += "\n"
+			collectedPlainResult = error.message
+			if generateLatex then collectedLatexResult = "$$\\text{" + error.message + "}$$"
+
+			if PRINTOUTRESULT then console.log collectedPlainResult
+
+			allReturnedPlainStrings += collectedPlainResult
+			allReturnedPlainStrings += "\n"
+
+			if generateLatex
+				allReturnedLatexStrings += collectedLatexResult
+				allReturnedLatexStrings += "\n"
+
 			init()
 
-	if allReturnedStrings[allReturnedStrings.length-1] == "\n"
-		allReturnedStrings = allReturnedStrings.substring(0,allReturnedStrings.length-1)
-	return allReturnedStrings
+	if allReturnedPlainStrings[allReturnedPlainStrings.length-1] == "\n"
+		allReturnedPlainStrings = allReturnedPlainStrings.substring(0,allReturnedPlainStrings.length-1)
+
+	if generateLatex
+		if allReturnedLatexStrings[allReturnedLatexStrings.length-1] == "\n"
+			allReturnedLatexStrings = allReturnedLatexStrings.substring(0,allReturnedLatexStrings.length-1)
+
+	if generateLatex
+		if DEBUG then console.log "allReturnedLatexStrings: " + allReturnedLatexStrings
+		return [allReturnedPlainStrings, allReturnedLatexStrings]
+	else
+		return allReturnedPlainStrings
 
 check_stack = ->
 	if (tos != 0)
@@ -675,11 +705,15 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	clear_symbols()
 	defn()
 
-	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode] =
+	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode, latexResult] =
 		findDependenciesInScript(codeFromAlgebraBlock)
 
-	result += "\n" + readableSummaryOfCode
-	result = result.replace /\n/g,"\n\n"
+	if readableSummaryOfCode != ""
+		result += "\n" + readableSummaryOfCode
+		result = result.replace /\n/g,"\n\n"
+
+		latexResult += "\n" + "$$" + readableSummaryOfCode + "$$"
+		latexResult = latexResult.replace /\n/g,"\n\n"
 
 	code = code.replace /Math\./g,""
 	code = code.replace /\n/g,"\n\n"
@@ -687,7 +721,8 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	#code: "// no code generated yet\n//try again later"
 	#code: "console.log('some passed code is run'); window.something = 1;"
 	code: code
-	result: result
+	result: latexResult
+	latexResult: latexResult
 	
 (exports ? this).run = run
 (exports ? this).findDependenciesInScript = findDependenciesInScript
