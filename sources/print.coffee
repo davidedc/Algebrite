@@ -315,12 +315,18 @@ print_BINOMIAL_latex = (p) ->
 	print_expr(cadr(p))
 	print_str("}{")
 	print_expr(caddr(p))
-	print_str("} ")
+	if (test_flag == 0)
+	 	print_str("} ")
+	 else
+	 	print_str("}")
 
 print_SQRT_latex = (p) ->
 	print_str("\\sqrt{")
 	print_expr(cadr(p))
-	print_str("} ")
+	if (test_flag == 0)
+	 	print_str("} ")
+	 else
+	 	print_str("}")
 
 print_DEFINT_latex = (p) ->
 	functionBody = car(cdr(p))
@@ -337,20 +343,32 @@ print_DEFINT_latex = (p) ->
 		print_expr(car(cdr(theIntegral)))
 		print_str("}_{")
 		print_expr(car(theIntegral))
-		print_str("} \\! ")
+		if (test_flag == 0)
+			print_str("} \\! ")
+		else
+			print_str("}\\!")
 		p = cdr(theIntegral)
 
 	print_expr(functionBody)
-	print_str(" \\,")
+	if (test_flag == 0)
+		print_str(" \\,")
+	else
+		print_str("\\,")
 
 	p = originalIntegral
 
 	for i in [1..numberOfIntegrals]
 		theVariable = cdr(p)
-		print_str(" \\mathrm{d} ")
+		if (test_flag == 0)
+			print_str(" \\mathrm{d} ")
+		else
+			print_str("\\mathrm{d}")
 		print_expr(car(theVariable))
 		if i < numberOfIntegrals
-			print_str(" \\, ")
+			if (test_flag == 0)
+				print_str(" \\, ")
+			else
+				print_str("\\,")
 		p = cdr(cdr(theVariable))
 
 
