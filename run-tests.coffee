@@ -20,6 +20,7 @@ test_low_level = ->
 
 selftest  = ->
 	test_low_level()
+	test_printlatex()
 	test_exp()
 	test_expand()
 	test_factorpoly()
