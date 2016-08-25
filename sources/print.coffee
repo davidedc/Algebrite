@@ -320,6 +320,20 @@ print_BINOMIAL_latex = (p) ->
 	 else
 	 	print_str("}")
 
+print_DOT_latex = (p) ->
+	if (test_flag == 0)
+	 	print_str(" ")
+	print_expr(cadr(p))
+	if (test_flag == 0)
+		print_str(" \\cdot ")
+	else
+		# note that the space "after"
+		# is needed
+		print_str("\\cdot ")
+	print_expr(caddr(p))
+	if (test_flag == 0)
+	 	print_str(" ")
+
 print_SQRT_latex = (p) ->
 	print_str("\\sqrt{")
 	print_expr(cadr(p))
@@ -647,6 +661,10 @@ print_factor = (p) ->
 	else if (car(p) == symbol(DEFINT) && latexMode)
 		print_DEFINT_latex(p)
 		return
+	else if ((car(p) == symbol(DOT) or car(p) == symbol(INNER)) && latexMode)
+		print_DOT_latex(p)
+		return
+
 
 	if (iscons(p))
 		#if (car(p) == symbol(FORMAL) && cadr(p)->k == SYM) {
