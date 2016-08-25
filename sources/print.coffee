@@ -328,6 +328,12 @@ print_SQRT_latex = (p) ->
 	 else
 	 	print_str("}")
 
+print_TRANSPOSE_latex = (p) ->
+	print_str("{")
+	print_expr(cadr(p))
+	print_str("}")
+	print_str("^T")
+
 print_DEFINT_latex = (p) ->
 	functionBody = car(cdr(p))
 
@@ -631,6 +637,9 @@ print_factor = (p) ->
 	else if (car(p) == symbol(SQRT) && latexMode)
 		#debugger
 		print_SQRT_latex(p)
+		return
+	else if (car(p) == symbol(TRANSPOSE) && latexMode)
+		print_TRANSPOSE_latex(p)
 		return
 	else if (car(p) == symbol(BINOMIAL) && latexMode)
 		print_BINOMIAL_latex(p)

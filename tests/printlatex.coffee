@@ -19,5 +19,11 @@ test_printlatex = ->
 		"printlatex(quote(1/(2*a*(x+1))))\nlastlatexprint == \"\\frac{1}{2a(x+1)}\"",
 		"1",
 
+		"printlatex(j^k^l^m)\nlastlatexprint == \"j^{k^{l^m}}\"",
+		"1",
+
+		"printlatex(quote(transpose(transpose(A))))\nlastlatexprint == \"{{A}^T}^T\"",
+		"1",
+
 
 	]
