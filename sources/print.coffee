@@ -454,7 +454,7 @@ print_power = (base, exponent) ->
 				else
 					print_str("1/")
 
-				if (iscons(base))
+				if (iscons(base) and !latexMode)
 					print_str("(")
 					print_expr(base)
 					print_str(")")
@@ -479,7 +479,7 @@ print_power = (base, exponent) ->
 				multiply()
 				newExponent = pop()
 
-				if (iscons(base))
+				if (iscons(base) and !latexMode)
 					print_str("(")
 					print_power(base, newExponent)
 					print_str(")")
@@ -716,6 +716,12 @@ print1 = (p, accumulator) ->
 		return accumulator
 
 print_multiply_sign = ->
+	if latexMode
+		if test_flag == 0
+			print_str(" ")
+		else
+			return
+
 	if test_flag == 0 and !codeGen
 		print_str(" ")
 	else
