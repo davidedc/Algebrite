@@ -130,6 +130,7 @@ init = ->
 	std_symbol("printlatex", PRINTLATEX)
 	std_symbol("printLeaveEAlone", PRINT_LEAVE_E_ALONE)
 	std_symbol("printLeaveXAlone", PRINT_LEAVE_X_ALONE)
+	std_symbol("printunevalled_list", PRINTUNEVALLED_LIST)
 	std_symbol("product", PRODUCT)
 	std_symbol("quote", QUOTE)
 	std_symbol("quotient", QUOTIENT)

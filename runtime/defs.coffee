@@ -173,6 +173,7 @@ PRINT = counter++
 PRINTLATEX = counter++
 PRINT_LEAVE_E_ALONE = counter++
 PRINT_LEAVE_X_ALONE = counter++
+PRINTUNEVALLED_LIST = counter++
 PRODUCT = counter++
 QUOTE = counter++
 QUOTIENT = counter++
