@@ -140,6 +140,7 @@ Eval_cons = ->
 		when LEADING then Eval_leading()
 		when LEGENDRE then Eval_legendre()
 		when LOG then Eval_log()
+		when LOOKUP then Eval_lookup()
 		when MAG then Eval_mag()
 		when MOD then Eval_mod()
 		when MULTIPLY then Eval_multiply()
@@ -155,7 +156,7 @@ Eval_cons = ->
 		when PRIME then Eval_prime()
 		when PRINT then Eval_display()
 		when PRINTLATEX then Eval_printlatex()
-		when PRINTUNEVALLED_LIST then Eval_printunevalled_list()
+		when PRINTLIST then Eval_printlist()
 		when PRODUCT then Eval_product()
 		when QUOTE then Eval_quote()
 		when QUOTIENT then Eval_quotient()
@@ -388,6 +389,8 @@ Eval_print = ->
 # quote definition
 Eval_quote = ->
 	push(cadr(p1))
+
+
 
 # rank definition
 Eval_rank = ->
