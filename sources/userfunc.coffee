@@ -7,6 +7,13 @@
 #define B p5 # B is the calling argument list
 #define S p6 # S is the argument substitution list
 
+# we got here because there was a function invocation and
+# it's not been parsed (and consequently tagged) as any
+# system function.
+# So we are dealing with another function.
+# The function could be actually defined, or not yet,
+# so we'll deal with both cases.
+
 Eval_user_function = ->
 
 	# Use "derivative" instead of "d" if there is no user function "d"

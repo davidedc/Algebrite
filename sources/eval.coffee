@@ -418,10 +418,12 @@ Eval_rank = ->
 #   > x
 
 Eval_setq = ->
+	# case of array
 	if (caadr(p1) == symbol(INDEX))
 		setq_indexed()
 		return
 
+	# case of function definition
 	if (iscons(cadr(p1)))
 		define_user_function()
 		return
