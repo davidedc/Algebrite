@@ -590,6 +590,23 @@ print_power = (base, exponent) ->
 		else
 			print_factor(exponent)
 
+print_index_function = (p) ->
+	p = cdr(p);
+	if (caar(p) == symbol(ADD) || caar(p) == symbol(MULTIPLY) || caar(p) == symbol(POWER) || caar(p) == symbol(FACTORIAL))
+		print_subexpr(car(p));
+	else
+		print_expr(car(p));
+	print_str('[');
+	p = cdr(p);
+	if (iscons(p))
+		print_expr(car(p));
+		p = cdr(p);
+		while(iscons(p))
+			print_str(',');
+			print_expr(car(p));
+			p = cdr(p);
+	print_str(']');
+
 
 print_factor = (p) ->
 	if (isnum(p))
