@@ -71,6 +71,20 @@ get_binding = (p) ->
 	return binding[indexFound]
 
 # p,q,r are all U
+# OK note that the arglist is stored in both
+# a special table AND ALSO in the FUNCTION node
+# Why? So that a function f can hold all the information
+# and hence we can then copy it to any other variable
+# like any other expression.
+# Example:
+#   f(x) = x + 1
+#   g = f
+# and now g has a copy of the function f
+# (if f is changed, g doesn't change)
+# If we didn't store also the arglist in the
+# FUNCTION node, we could not do that, we would
+# only copy the body and g wouldn't work.
+
 set_binding_and_arglist = (p, q, r) ->
 	if (p.k != SYM)
 		stop("symbol error")
@@ -80,6 +94,10 @@ set_binding_and_arglist = (p, q, r) ->
 		debugger
 	if DEBUG then console.log("lookup >> set_binding_and_arglist lookup " + indexFound)
 	binding[indexFound] = q
+
+	#body: car(cdr(q))
+	#arguments: car(cdr(cdr(q)))
+
 	arglist[indexFound] = r
 
 # p is U

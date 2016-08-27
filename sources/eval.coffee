@@ -41,8 +41,8 @@ Eval_sym = ->
 		return
 
 	# Evaluate symbol's binding
-
 	p2 = get_binding(p1)
+
 	push(p2)
 
 	# differently from standard Lisp,
@@ -122,6 +122,11 @@ Eval_cons = ->
 		when FLOATF then Eval_float()
 		when FLOOR then Eval_floor()
 		when FOR then Eval_for()
+		# this is invoked only when we
+		# evaluate a function that is NOT being called
+		# e.g. when f is a function as we do
+		#  g = f
+		when FUNCTION then Eval_function_reference()
 		when GAMMA then Eval_gamma()
 		when GCD then Eval_gcd()
 		when HERMITE then Eval_hermite()
@@ -389,8 +394,6 @@ Eval_print = ->
 # quote definition
 Eval_quote = ->
 	push(cadr(p1))
-
-
 
 # rank definition
 Eval_rank = ->

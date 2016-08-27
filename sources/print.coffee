@@ -664,6 +664,25 @@ print_factor = (p) ->
 	#		return
 	#	}
 
+	if (car(p) == symbol(FUNCTION))
+		fbody = cadr(p)
+		
+		if !codeGen
+			parameters = caddr(p)
+			print_str "function "
+			stringToBePrinted = print1 parameters, stringToBePrinted
+			print_str " -> "
+			print_expr fbody
+		else
+			push fbody
+			# let's simplify the body so we give it a
+			# compact expression
+			eval()
+			simplify()
+			fbody = pop()
+			print_expr fbody
+		return
+
 	if (car(p) == symbol(INDEX) && issymbol(cadr(p)))
 		print_index_function(p)
 		return

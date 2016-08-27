@@ -138,6 +138,7 @@ FILTER = counter++
 FLOATF = counter++
 FLOOR = counter++
 FOR = counter++
+FUNCTION = counter++
 GAMMA = counter++
 GCD = counter++
 HERMITE = counter++

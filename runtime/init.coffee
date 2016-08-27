@@ -95,6 +95,7 @@ init = ->
 	std_symbol("float", FLOATF)
 	std_symbol("floor", FLOOR)
 	std_symbol("for", FOR)
+	std_symbol("function", FUNCTION)
 	std_symbol("Gamma", GAMMA)
 	std_symbol("gcd", GCD)
 	std_symbol("hermite", HERMITE)
