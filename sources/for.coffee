@@ -48,10 +48,9 @@ Eval_for = ->
 
 	p1 = cddddr(p1)
 
-	# remember binding and arglist of the index
+	# remember contents of the index
 	# variable so we can put it back after the loop
 	p4 = get_binding(p6)
-	p3 = get_arglist(p6)
 
 	for i in [j..k]
 		push_integer(i)
@@ -64,9 +63,8 @@ Eval_for = ->
 			pop()
 			p2 = cdr(p2)
 
-	# put back the index variable to original
-	# binding and arglist (could have been a user function)
-	set_binding_and_arglist(p6, p4, p3)
+	# put back the index variable to original content
+	set_binding(p6, p4)
 
 	# return value
 

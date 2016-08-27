@@ -36,8 +36,9 @@ Eval_product = ->
 
 	p1 = caddddr(p1)
 
+	# remember contents of the index
+	# variable so we can put it back after the loop
 	p4 = get_binding(p6)
-	p3 = get_arglist(p6)
 
 	push_integer(1)
 
@@ -49,4 +50,5 @@ Eval_product = ->
 		Eval()
 		multiply()
 
-	set_binding_and_arglist(p6, p4, p3)
+	# put back the index variable to original content
+	set_binding(p6, p4)

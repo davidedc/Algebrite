@@ -20,7 +20,6 @@ init = ->
 	for i in [0...NSYM]
 		symtab[i].k = SYM
 		binding[i] = symtab[i]
-		arglist[i] = symbol(NIL)
 
 	p0 = symbol(NIL)
 	p1 = symbol(NIL)

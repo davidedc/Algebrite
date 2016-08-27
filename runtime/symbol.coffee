@@ -41,7 +41,6 @@ get_printname = (p) ->
 		stop("symbol error")
 	return p.printname
 
-# clears the arglist too
 
 # p and q are both U
 set_binding = (p, q) ->
@@ -53,7 +52,6 @@ set_binding = (p, q) ->
 		debugger
 	if DEBUG then console.log("lookup >> set_binding lookup " + indexFound)
 	binding[indexFound] = q
-	arglist[indexFound] = symbol(NIL)
 
 # p is a U
 get_binding = (p) ->
@@ -69,47 +67,6 @@ get_binding = (p) ->
 	#if indexFound == 137
 	#	debugger
 	return binding[indexFound]
-
-# p,q,r are all U
-# OK note that the arglist is stored in both
-# a special table AND ALSO in the FUNCTION node
-# Why? So that a function f can hold all the information
-# and hence we can then copy it to any other variable
-# like any other expression.
-# Example:
-#   f(x) = x + 1
-#   g = f
-# and now g has a copy of the function f
-# (if f is changed, g doesn't change)
-# If we didn't store also the arglist in the
-# FUNCTION node, we could not do that, we would
-# only copy the body and g wouldn't work.
-
-set_binding_and_arglist = (p, q, r) ->
-	if (p.k != SYM)
-		stop("symbol error")
-	indexFound = symtab.indexOf(p)
-	if symtab.indexOf(p, indexFound + 1) != -1
-		console.log("ops, more than one element!")
-		debugger
-	if DEBUG then console.log("lookup >> set_binding_and_arglist lookup " + indexFound)
-	binding[indexFound] = q
-
-	#body: car(cdr(q))
-	#arguments: car(cdr(cdr(q)))
-
-	arglist[indexFound] = r
-
-# p is U
-get_arglist = (p) ->
-	if (p.k != SYM)
-		stop("symbol error")
-	indexFound = symtab.indexOf(p)
-	if symtab.indexOf(p, indexFound + 1) != -1
-		console.log("ops, more than one element!")
-		debugger
-	if DEBUG then console.log("lookup >> get_arglist lookup " + indexFound)
-	return arglist[indexFound]
 
 # get symbol's number from ptr
 
@@ -140,7 +97,6 @@ clear_symbols = ->
 	i = 0
 	for i in [0...NSYM]
 		binding[i] = symtab[i]
-		arglist[i] = symbol(NIL)
 
 
 $.get_binding = get_binding
