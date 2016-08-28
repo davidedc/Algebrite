@@ -8,6 +8,15 @@ Eval_printlatex = ->
 	Eval_display()
 	latexMode = false
 
+
+Eval_printlist = ->
+	push car(cdr(p1))
+	Eval()
+	p1 = pop()
+	print1 p1
+	push(symbol(NIL))	
+
+
 Eval_display = ->
 	p1 = cdr(p1);
 
@@ -315,12 +324,38 @@ print_BINOMIAL_latex = (p) ->
 	print_expr(cadr(p))
 	print_str("}{")
 	print_expr(caddr(p))
-	print_str("} ")
+	if (test_flag == 0)
+	 	print_str("} ")
+	 else
+	 	print_str("}")
+
+print_DOT_latex = (p) ->
+	if (test_flag == 0)
+	 	print_str(" ")
+	print_expr(cadr(p))
+	if (test_flag == 0)
+		print_str(" \\cdot ")
+	else
+		# note that the space "after"
+		# is needed
+		print_str("\\cdot ")
+	print_expr(caddr(p))
+	if (test_flag == 0)
+	 	print_str(" ")
 
 print_SQRT_latex = (p) ->
 	print_str("\\sqrt{")
 	print_expr(cadr(p))
-	print_str("} ")
+	if (test_flag == 0)
+	 	print_str("} ")
+	 else
+	 	print_str("}")
+
+print_TRANSPOSE_latex = (p) ->
+	print_str("{")
+	print_expr(cadr(p))
+	print_str("}")
+	print_str("^T")
 
 print_DEFINT_latex = (p) ->
 	functionBody = car(cdr(p))
@@ -337,20 +372,32 @@ print_DEFINT_latex = (p) ->
 		print_expr(car(cdr(theIntegral)))
 		print_str("}_{")
 		print_expr(car(theIntegral))
-		print_str("} \\! ")
+		if (test_flag == 0)
+			print_str("} \\! ")
+		else
+			print_str("}\\!")
 		p = cdr(theIntegral)
 
 	print_expr(functionBody)
-	print_str(" \\,")
+	if (test_flag == 0)
+		print_str(" \\,")
+	else
+		print_str("\\,")
 
 	p = originalIntegral
 
 	for i in [1..numberOfIntegrals]
 		theVariable = cdr(p)
-		print_str(" \\mathrm{d} ")
+		if (test_flag == 0)
+			print_str(" \\mathrm{d} ")
+		else
+			print_str("\\mathrm{d}")
 		print_expr(car(theVariable))
 		if i < numberOfIntegrals
-			print_str(" \\, ")
+			if (test_flag == 0)
+				print_str(" \\, ")
+			else
+				print_str("\\,")
 		p = cdr(cdr(theVariable))
 
 
@@ -436,7 +483,7 @@ print_power = (base, exponent) ->
 				else
 					print_str("1/")
 
-				if (iscons(base))
+				if (iscons(base) and !latexMode)
 					print_str("(")
 					print_expr(base)
 					print_str(")")
@@ -461,7 +508,7 @@ print_power = (base, exponent) ->
 				multiply()
 				newExponent = pop()
 
-				if (iscons(base))
+				if (iscons(base) and !latexMode)
 					print_str("(")
 					print_power(base, newExponent)
 					print_str(")")
@@ -543,10 +590,27 @@ print_power = (base, exponent) ->
 		else
 			print_factor(exponent)
 
+print_index_function = (p) ->
+	p = cdr(p);
+	if (caar(p) == symbol(ADD) || caar(p) == symbol(MULTIPLY) || caar(p) == symbol(POWER) || caar(p) == symbol(FACTORIAL))
+		print_subexpr(car(p));
+	else
+		print_expr(car(p));
+	print_str('[');
+	p = cdr(p);
+	if (iscons(p))
+		print_expr(car(p));
+		p = cdr(p);
+		while(iscons(p))
+			print_str(',');
+			print_expr(car(p));
+			p = cdr(p);
+	print_str(']');
+
 
 print_factor = (p) ->
 	if (isnum(p))
-		print_number(p)
+		print_number(p, false)
 		return
 
 	if (isstr(p))
@@ -600,6 +664,25 @@ print_factor = (p) ->
 	#		return
 	#	}
 
+	if (car(p) == symbol(FUNCTION))
+		fbody = cadr(p)
+		
+		if !codeGen
+			parameters = caddr(p)
+			print_str "function "
+			stringToBePrinted = print1 parameters, stringToBePrinted
+			print_str " -> "
+			print_expr fbody
+		else
+			push fbody
+			# let's simplify the body so we give it a
+			# compact expression
+			eval()
+			simplify()
+			fbody = pop()
+			print_expr fbody
+		return
+
 	if (car(p) == symbol(INDEX) && issymbol(cadr(p)))
 		print_index_function(p)
 		return
@@ -614,12 +697,19 @@ print_factor = (p) ->
 		#debugger
 		print_SQRT_latex(p)
 		return
+	else if (car(p) == symbol(TRANSPOSE) && latexMode)
+		print_TRANSPOSE_latex(p)
+		return
 	else if (car(p) == symbol(BINOMIAL) && latexMode)
 		print_BINOMIAL_latex(p)
 		return
 	else if (car(p) == symbol(DEFINT) && latexMode)
 		print_DEFINT_latex(p)
 		return
+	else if ((car(p) == symbol(DOT) or car(p) == symbol(INNER)) && latexMode)
+		print_DOT_latex(p)
+		return
+
 
 	if (iscons(p))
 		#if (car(p) == symbol(FORMAL) && cadr(p)->k == SYM) {
@@ -667,7 +757,7 @@ print1 = (p, accumulator) ->
 		when CONS
 			accumulator += ("(")
 			accumulator = print1(car(p), accumulator)
-			if p == cdr(p)
+			if p == cdr(p) and p != symbol(NIL)
 				console.log "oh no recursive!"
 				debugger
 			p = cdr(p)
@@ -675,7 +765,7 @@ print1 = (p, accumulator) ->
 				accumulator += (" ")
 				accumulator = print1(car(p), accumulator)
 				p = cdr(p)
-				if p == cdr(p)
+				if p == cdr(p) and p != symbol(NIL)
 					console.log "oh no recursive!"
 					debugger
 			if (p != symbol(NIL))
@@ -687,7 +777,7 @@ print1 = (p, accumulator) ->
 			accumulator += (p.str)
 			#print_str("\"")
 		when NUM, DOUBLE
-			accumulator = print_number(p, accumulator)
+			accumulator = print_number(p, true, accumulator)
 		when SYM
 			accumulator += get_printname(p)
 		else
@@ -698,6 +788,12 @@ print1 = (p, accumulator) ->
 		return accumulator
 
 print_multiply_sign = ->
+	if latexMode
+		if test_flag == 0
+			print_str(" ")
+		else
+			return
+
 	if test_flag == 0 and !codeGen
 		print_str(" ")
 	else

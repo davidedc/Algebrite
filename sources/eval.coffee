@@ -41,8 +41,8 @@ Eval_sym = ->
 		return
 
 	# Evaluate symbol's binding
-
 	p2 = get_binding(p1)
+
 	push(p2)
 
 	# differently from standard Lisp,
@@ -122,6 +122,11 @@ Eval_cons = ->
 		when FLOATF then Eval_float()
 		when FLOOR then Eval_floor()
 		when FOR then Eval_for()
+		# this is invoked only when we
+		# evaluate a function that is NOT being called
+		# e.g. when f is a function as we do
+		#  g = f
+		when FUNCTION then Eval_function_reference()
 		when GAMMA then Eval_gamma()
 		when GCD then Eval_gcd()
 		when HERMITE then Eval_hermite()
@@ -140,6 +145,7 @@ Eval_cons = ->
 		when LEADING then Eval_leading()
 		when LEGENDRE then Eval_legendre()
 		when LOG then Eval_log()
+		when LOOKUP then Eval_lookup()
 		when MAG then Eval_mag()
 		when MOD then Eval_mod()
 		when MULTIPLY then Eval_multiply()
@@ -155,6 +161,7 @@ Eval_cons = ->
 		when PRIME then Eval_prime()
 		when PRINT then Eval_display()
 		when PRINTLATEX then Eval_printlatex()
+		when PRINTLIST then Eval_printlist()
 		when PRODUCT then Eval_product()
 		when QUOTE then Eval_quote()
 		when QUOTIENT then Eval_quotient()
@@ -414,10 +421,12 @@ Eval_rank = ->
 #   > x
 
 Eval_setq = ->
+	# case of array
 	if (caadr(p1) == symbol(INDEX))
 		setq_indexed()
 		return
 
+	# case of function definition
 	if (iscons(cadr(p1)))
 		define_user_function()
 		return

@@ -20,11 +20,14 @@
 #            |SYM f |  |SYM x |  |SYM y |  |POWER |  |SYM x |  |SYM y |
 #            |______|  |______|  |______|  |______|  |______|  |______|
 #
+# the result (in f) is a FUNCTION node
+# that contains both the body and the argument list.
+#
 # We have
 #
-#	caadr(p1) points to f
-#	cdadr(p1) points to the list (x y)
-#	caddr(p1) points to (power x y)
+#	caadr(p1) points to the function name i.e. f
+#	cdadr(p1) points to the arguments i.e. the list (x y)
+#	caddr(p1) points to the function body i.e. (power x y)
 
 
 
@@ -47,8 +50,29 @@ define_user_function = ->
 		Eval()
 		p5 = pop();  # p5 is B
 
-	set_binding_and_arglist(p3, p5, p4);  # p3 is F  # p4 is A  # p5 is B
+	# note how we don't eval/simplify
+	# the body.
+	# Why? because it's the easiest way
+	# to solve scope problems i.e.
+	#   x = 0
+	#   f(x) = x + 1
+	#   f(4) # would reply 1
+	# which would need to otherwise
+	# be solved by some scope device
+	# somehow
+	push_symbol(FUNCTION)
+	push p5
+	push p4
+	list(3)
+	p5 = pop()
+
+
+	set_binding(p3, p5);  # p3 is F  # p4 is A  # p5 is B
 
 	# return value is nil
 
 	push_symbol(NIL)
+
+Eval_function_reference = ->
+	push p1
+

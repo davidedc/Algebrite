@@ -1,5 +1,17 @@
 # 'for' function
 
+###
+x=0
+y=2
+for(k,1,9,x=sqrt(2+x),y=2*y/x)
+float(y)
+
+X: k
+B: 1...9
+
+
+###
+
 #define A p3
 #define B p4
 #define I p5
@@ -36,8 +48,9 @@ Eval_for = ->
 
 	p1 = cddddr(p1)
 
+	# remember contents of the index
+	# variable so we can put it back after the loop
 	p4 = get_binding(p6)
-	p3 = get_arglist(p6)
 
 	for i in [j..k]
 		push_integer(i)
@@ -50,7 +63,8 @@ Eval_for = ->
 			pop()
 			p2 = cdr(p2)
 
-	set_binding_and_arglist(p6, p4, p3)
+	# put back the index variable to original content
+	set_binding(p6, p4)
 
 	# return value
 
