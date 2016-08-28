@@ -41,7 +41,6 @@ get_printname = (p) ->
 		stop("symbol error")
 	return p.printname
 
-# clears the arglist too
 
 # p and q are both U
 set_binding = (p, q) ->
@@ -53,7 +52,6 @@ set_binding = (p, q) ->
 		debugger
 	if DEBUG then console.log("lookup >> set_binding lookup " + indexFound)
 	binding[indexFound] = q
-	arglist[indexFound] = symbol(NIL)
 
 # p is a U
 get_binding = (p) ->
@@ -69,29 +67,6 @@ get_binding = (p) ->
 	#if indexFound == 137
 	#	debugger
 	return binding[indexFound]
-
-# p,q,r are all U
-set_binding_and_arglist = (p, q, r) ->
-	if (p.k != SYM)
-		stop("symbol error")
-	indexFound = symtab.indexOf(p)
-	if symtab.indexOf(p, indexFound + 1) != -1
-		console.log("ops, more than one element!")
-		debugger
-	if DEBUG then console.log("lookup >> set_binding_and_arglist lookup " + indexFound)
-	binding[indexFound] = q
-	arglist[indexFound] = r
-
-# p is U
-get_arglist = (p) ->
-	if (p.k != SYM)
-		stop("symbol error")
-	indexFound = symtab.indexOf(p)
-	if symtab.indexOf(p, indexFound + 1) != -1
-		console.log("ops, more than one element!")
-		debugger
-	if DEBUG then console.log("lookup >> get_arglist lookup " + indexFound)
-	return arglist[indexFound]
 
 # get symbol's number from ptr
 
@@ -122,7 +97,6 @@ clear_symbols = ->
 	i = 0
 	for i in [0...NSYM]
 		binding[i] = symtab[i]
-		arglist[i] = symbol(NIL)
 
 
 $.get_binding = get_binding

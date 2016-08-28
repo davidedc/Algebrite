@@ -536,10 +536,14 @@ bignum_scan_integer = (s) ->
 bignum_scan_float = (s) ->
 	push_double(parseFloat(s))
 
-# print as unsigned
-
+# gives the capability of printing the unsigned
+# value. This is handy because printing of the sign
+# might be taken care of "upstream"
+# e.g. when printing a base elevated to a negative exponent
+# prints the inverse of the base powered to the unsigned
+# exponent.
 # p is a U
-print_number = (p, accumulator) ->
+print_number = (p, signed, accumulator) ->
 	topLevelCall = false
 	if !accumulator?
 		topLevelCall = true
@@ -550,8 +554,9 @@ print_number = (p, accumulator) ->
 	switch (p.k)
 		when NUM
 			aAsString = p.q.a.toString()
-			if aAsString[0] == "-"
-				aAsString = aAsString.substring(1)
+			if !signed
+				if aAsString[0] == "-"
+					aAsString = aAsString.substring(1)
 
 			if (latexMode and isfraction(p))
 				aAsString = "\\frac{"+aAsString+"}{"
@@ -567,8 +572,9 @@ print_number = (p, accumulator) ->
 				stringToBePrinted += denominatorString
 		when DOUBLE
 			aAsString = "" + doubleToReasonableString(p.d)
-			if aAsString[0] == "-"
-				aAsString = aAsString.substring(1)
+			if !signed
+				if aAsString[0] == "-"
+					aAsString = aAsString.substring(1)
 			accumulator += aAsString
 			stringToBePrinted += aAsString
 

@@ -20,7 +20,6 @@ init = ->
 	for i in [0...NSYM]
 		symtab[i].k = SYM
 		binding[i] = symtab[i]
-		arglist[i] = symbol(NIL)
 
 	p0 = symbol(NIL)
 	p1 = symbol(NIL)
@@ -95,6 +94,7 @@ init = ->
 	std_symbol("float", FLOATF)
 	std_symbol("floor", FLOOR)
 	std_symbol("for", FOR)
+	std_symbol("function", FUNCTION)
 	std_symbol("Gamma", GAMMA)
 	std_symbol("gcd", GCD)
 	std_symbol("hermite", HERMITE)
@@ -113,6 +113,7 @@ init = ->
 	std_symbol("leading", LEADING)
 	std_symbol("legendre", LEGENDRE)
 	std_symbol("log", LOG)
+	std_symbol("lookup", LOOKUP)
 	std_symbol("mag", MAG)
 	std_symbol("mod", MOD)
 	std_symbol("multiply", MULTIPLY)
@@ -130,6 +131,7 @@ init = ->
 	std_symbol("printlatex", PRINTLATEX)
 	std_symbol("printLeaveEAlone", PRINT_LEAVE_E_ALONE)
 	std_symbol("printLeaveXAlone", PRINT_LEAVE_X_ALONE)
+	std_symbol("printlist", PRINTLIST)
 	std_symbol("product", PRODUCT)
 	std_symbol("quote", QUOTE)
 	std_symbol("quotient", QUOTIENT)

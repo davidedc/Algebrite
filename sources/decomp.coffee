@@ -2,7 +2,7 @@
 
 # unclear to me at the moment
 # why this is exposed as something that can
-# be evalled
+# be evalled. Never called.
 
 Eval_decomp = ->
 	save()

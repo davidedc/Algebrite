@@ -13,6 +13,7 @@ test_low_level = ->
 	test_mgcd()
 	test_mpow()
 	test_mroot()
+	test_assignments()
 	# commenting out because it takes a looong time
 	# with the current logging. But it works now
 	# as I'm commenting it out.
@@ -20,6 +21,9 @@ test_low_level = ->
 
 selftest  = ->
 	test_low_level()
+	test_sum()
+	test_product()
+	test_printlatex()
 	test_exp()
 	test_expand()
 	test_factorpoly()
