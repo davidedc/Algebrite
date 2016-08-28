@@ -5,6 +5,8 @@
 #define I p5
 #define X p6
 
+# leaves the product at the top of the stack
+
 Eval_product = ->
 	i = 0
 	j = 0

@@ -21,6 +21,7 @@ test_low_level = ->
 
 selftest  = ->
 	test_low_level()
+	test_product()
 	test_printlatex()
 	test_exp()
 	test_expand()
