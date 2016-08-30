@@ -52,6 +52,9 @@ run_test [
 	"simplify(1 + eig(dot(x*transpose(transpose(A)), transpose(A*x))))",
 	"1+eig(cov(transpose(A)*transpose(x)))",
 
+	"simplify(1 + eig(dot(x*Aᵀᵀ, (A*x)ᵀ)))",
+	"1+eig(cov(transpose(A)*transpose(x)))",
+
 	# ideally this but we need to make simplifications work better
 	# "1+eig(cov(A*x))",
 

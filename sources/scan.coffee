@@ -43,6 +43,8 @@ predefinedSymbolsInGlobalScope_doNotTrackInDependencies =
 functionInvokationsScanningStack = null
 skipRootVariableToBeSolved = false
 
+transpose_unicode = 7488
+
 # Returns number of chars scanned and expr on stack.
 
 # Returns zero when nothing left to scan.
@@ -215,7 +217,7 @@ scan_term = ->
 
 	h = tos
 
-	scan_power()
+	scan_power_or_transposition()
 
 	# discard integer 1
 
@@ -225,13 +227,13 @@ scan_term = ->
 	while (is_factor())
 		if (token == '*')
 			get_next_token()
-			scan_power()
+			scan_power_or_transposition()
 		else if (token == '/')
 			get_next_token()
-			scan_power()
+			scan_power_or_transposition()
 			inverse()
 		else
-			scan_power()
+			scan_power_or_transposition()
 
 		# fold constants
 
@@ -251,14 +253,35 @@ scan_term = ->
 		swap()
 		cons()
 
-scan_power = ->
+scan_power_or_transposition = ->
 	scan_factor()
+	scan_power()
+	scan_transposition()
+
+scan_power = ->
 	if (token == '^')
 		get_next_token()
 		push_symbol(POWER)
 		swap()
-		scan_power()
+		scan_power_or_transposition()
 		list(3)
+	else if (token.charCodeAt?(0) == transpose_unicode)
+		scan_transposition()
+
+# in theory we could already count the
+# number of transposes and simplify them
+# away, but it's not that clean to have
+# multiple places where that happens, and
+# the parser is not the place.
+scan_transposition = ->
+	if (token.charCodeAt?(0) == transpose_unicode)
+		get_next_token()
+		push_symbol(TRANSPOSE)
+		swap()
+		list(2)
+		scan_transposition()
+	else if (token == '^')
+		scan_power()
 
 scan_factor = ->
 
