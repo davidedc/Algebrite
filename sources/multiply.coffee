@@ -356,6 +356,7 @@ divide = ->
 		inverse()
 		multiply()
 
+# this is different from inverse of a matrix (inv)!
 inverse = ->
 	if (isnum(stack[tos - 1]))
 		invert_number()

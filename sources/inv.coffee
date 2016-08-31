@@ -1,6 +1,7 @@
 #-----------------------------------------------------------------------------
 #
-#	Input:		Matrix on stack
+#	Input:		Matrix on stack (must have two dimensions but
+#				it can be non-numerical)
 #
 #	Output:		Inverse on stack
 #
@@ -8,6 +9,9 @@
 #
 #	> inv(((1,2),(3,4))
 #	((-2,1),(3/2,-1/2))
+#
+#	> inv(((a,b),(c,d))
+#	((d / (a d - b c),-b / (a d - b c)),(-c / (a d - b c),a / (a d - b c)))
 #
 #	Note:
 #
