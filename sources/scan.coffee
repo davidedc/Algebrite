@@ -44,6 +44,7 @@ functionInvokationsScanningStack = null
 skipRootVariableToBeSolved = false
 
 transpose_unicode = 7488
+dotprod_unicode = 183
 
 # Returns number of chars scanned and expr on stack.
 
@@ -202,6 +203,10 @@ scan_expression = ->
 		cons()
 
 is_factor = ->
+
+	if token.charCodeAt?(0) == dotprod_unicode
+		return 1
+
 	switch (token)
 		when '*', '/'
 			return 1
@@ -247,6 +252,13 @@ scan_term = ->
 			get_next_token()
 			scan_power()
 			inverse()
+		else if (token.charCodeAt?(0) == dotprod_unicode)
+			get_next_token()
+			push_symbol(INNER)
+			swap()
+			scan_power()
+			list(3)
+
 		else
 			scan_power()
 

@@ -65,6 +65,11 @@ test_inner = ->
 		"inner(inner(a,b),c,d+f) - ( (inner(a,inner(b,c),d)) + inner(inner(a,b),c,f) )",
 		"0",
 
+		# bring it to a canonical form
+		# using associativity
+		"inner(a,b,c)",
+		"inner(a,inner(b,c))",
+
 		"inner(a,b+c,d)",
 		"inner(a,inner(b,d))+inner(a,inner(c,d))",
 
@@ -89,5 +94,29 @@ test_inner = ->
 
 		"inner(((a,b),(c,d)),((r,s),(t,u)))",
 		"((a*r+b*t,a*s+b*u),(c*r+d*t,c*s+d*u))",
+
+		# ---------------------------------------
+		# using the dot
+		# ---------------------------------------
+
+		"a·b",
+		"inner(a,b)",
+
+		"a·b·c",
+		"inner(a,inner(b,c))",
+
+		"a·b*c",
+		"c*inner(a,b)",
+
+		# note how we use associativity to bring it all
+		# to a canonical form
+		"((a·b)·c)·d",
+		"inner(a,inner(b,inner(c,d)))",
+
+		"a*b·c",
+		"a*inner(b,c)",
+
+		"2*a·b",
+		"2*inner(a,b)",
 
 	]
