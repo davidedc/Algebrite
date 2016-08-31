@@ -353,7 +353,11 @@ print_SQRT_latex = (p) ->
 
 print_TRANSPOSE_latex = (p) ->
 	print_str("{")
+	if iscons(cadr(p))
+		print_str("(")
 	print_expr(cadr(p))
+	if iscons(cadr(p))
+		print_str(")")
 	print_str("}")
 	print_str("^T")
 
