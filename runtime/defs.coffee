@@ -275,6 +275,12 @@ MAXDIM = 24
 # in a script
 symbolsDependencies = {}
 
+# you can do some little simplifications
+# at parse time, such as calculating away
+# immediately simple operations on
+# constants, removing 1s from products
+# etc.
+parse_time_simplifications = true
 
 class tensor
 	ndim: 0

@@ -213,37 +213,46 @@ is_factor = ->
 				return 1
 	return 0
 
-scan_term = ->
 
+simplify_1_in_products = (tos,h) ->
+	if (tos > h && isrational(stack[tos - 1]) && equaln(stack[tos - 1], 1))
+		pop()
+
+# calculate away consecutive constants
+multiply_consecutive_constants = (tos,h)->
+	if (tos > h + 1 && isnum(stack[tos - 2]) && isnum(stack[tos - 1]))
+		multiply()
+
+
+scan_term = ->
 	h = tos
 
 	scan_power()
 
-	# discard integer 1
-
-	if (tos > h && isrational(stack[tos - 1]) && equaln(stack[tos - 1], 1))
-		pop()
+	if parse_time_simplifications
+		simplify_1_in_products(tos,h)
 
 	while (is_factor())
 		if (token == '*')
 			get_next_token()
 			scan_power()
 		else if (token == '/')
+			# in case of 1/... then
+			# we scanned the 1, we get rid
+			# of it because otherwise it becomes
+			# an extra factor that wasn't there and
+			# things like
+			# 1/(2*a) become 1*(1/(2*a))
+			simplify_1_in_products(tos,h)
 			get_next_token()
 			scan_power()
 			inverse()
 		else
 			scan_power()
 
-		# fold constants
-
-		if (tos > h + 1 && isnum(stack[tos - 2]) && isnum(stack[tos - 1]))
-			multiply()
-
-		# discard integer 1
-
-		if (tos > h && isrational(stack[tos - 1]) && equaln(stack[tos - 1], 1))
-			pop()
+		if parse_time_simplifications
+			multiply_consecutive_constants(tos,h)
+			simplify_1_in_products(tos,h)
 
 	if (h == tos)
 		push_integer(1)
