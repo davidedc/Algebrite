@@ -40,6 +40,36 @@ inv = ->
 
 	p1 = pop()
 
+	# an inv just goes away when
+	# applied to another inv
+	if (isinv(p1))
+		push car(cdr(p1))
+		restore()
+		return
+
+	# distribute the inverse of a dot
+	# if in expanding mode
+	# note that the distribution happens
+	# in reverse.
+	# The dot operator is not
+	# commutative, so, it matters.
+	if (expanding && isinnerordot(p1))
+		p1 = cdr(p1)
+		accumulator = []
+		while (iscons(p1))
+			accumulator.push car(p1)
+			p1 = cdr(p1)
+
+		for eachEntry in [accumulator.length-1..0]
+			push(accumulator[eachEntry])
+			inv()
+			if eachEntry != accumulator.length-1
+				inner()
+
+		restore()
+		return
+
+
 	if (INV_check_arg() == 0)
 		push_symbol(INV)
 		push(p1)
