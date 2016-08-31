@@ -119,4 +119,22 @@ test_inner = ->
 		"2*a·b",
 		"2*inner(a,b)",
 
+		"inv(a)·a",
+		"I",
+
+		"a·inv(a)",
+		"I",
+
+		"b·a·inv(a)·c",
+		"inner(b,c)",
+
+		"b·aᵀ·inv(aᵀ)·c",
+		"inner(b,c)",
+
+		"b·inv(aᵀ)·aᵀ·c",
+		"inner(b,c)",
+
+		"b·inv((a+b)ᵀ)·(b+a)ᵀ·c",
+		"inner(b,c)",
+
 	]

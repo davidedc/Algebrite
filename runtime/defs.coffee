@@ -238,6 +238,7 @@ SYMBOL_T = counter++
 SYMBOL_X = counter++
 SYMBOL_Y = counter++
 SYMBOL_Z = counter++
+SYMBOL_IDENTITY_MATRIX = counter++
 
 SYMBOL_A_UNDERSCORE = counter++
 SYMBOL_B_UNDERSCORE = counter++

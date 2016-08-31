@@ -100,10 +100,36 @@ inner = ->
 		inner()
 		p2 = pop()
 
+	# Check if one of the operands is the identity matrix
+	# we could maybe use Eval_testeq here but
+	# this seems to suffice?
+	if p1 == symbol(SYMBOL_IDENTITY_MATRIX)
+		push p2
+		restore()
+		return
+	else if p2 == symbol(SYMBOL_IDENTITY_MATRIX)
+		push p1
+		restore()
+		return
+
 
 	if (istensor(p1) && istensor(p2))
 		inner_f()
 	else
+
+		# simple check if the two elements are one the
+		# inv of the other. If they are, the answer is
+		# the identity matrix
+		push p1
+		push p2
+		inv()
+		subtract()
+		subtractionResult = pop()
+		if (iszero(subtractionResult))
+			push_symbol(SYMBOL_IDENTITY_MATRIX)
+			restore()
+			return
+
 
 		# if either operand is a sum then distribute
 		# (if we are in expanding mode)

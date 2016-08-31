@@ -196,6 +196,7 @@ init = ->
 	std_symbol("x", SYMBOL_X)
 	std_symbol("y", SYMBOL_Y)
 	std_symbol("z", SYMBOL_Z)
+	std_symbol("I", SYMBOL_IDENTITY_MATRIX)
 
 	std_symbol("a_", SYMBOL_A_UNDERSCORE)
 	std_symbol("b_", SYMBOL_B_UNDERSCORE)
