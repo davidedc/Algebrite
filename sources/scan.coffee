@@ -217,7 +217,7 @@ scan_term = ->
 
 	h = tos
 
-	scan_power_or_transposition()
+	scan_power()
 
 	# discard integer 1
 
@@ -227,13 +227,13 @@ scan_term = ->
 	while (is_factor())
 		if (token == '*')
 			get_next_token()
-			scan_power_or_transposition()
+			scan_power()
 		else if (token == '/')
 			get_next_token()
-			scan_power_or_transposition()
+			scan_power()
 			inverse()
 		else
-			scan_power_or_transposition()
+			scan_power()
 
 		# fold constants
 
@@ -253,35 +253,15 @@ scan_term = ->
 		swap()
 		cons()
 
-scan_power_or_transposition = ->
-	scan_factor()
-	scan_power()
-	scan_transposition()
-
 scan_power = ->
+	scan_factor()
 	if (token == '^')
 		get_next_token()
 		push_symbol(POWER)
 		swap()
-		scan_power_or_transposition()
-		list(3)
-	else if (token.charCodeAt?(0) == transpose_unicode)
-		scan_transposition()
-
-# in theory we could already count the
-# number of transposes and simplify them
-# away, but it's not that clean to have
-# multiple places where that happens, and
-# the parser is not the place.
-scan_transposition = ->
-	if (token.charCodeAt?(0) == transpose_unicode)
-		get_next_token()
-		push_symbol(TRANSPOSE)
-		swap()
-		list(2)
-		scan_transposition()
-	else if (token == '^')
 		scan_power()
+		list(3)
+
 
 scan_factor = ->
 
@@ -322,6 +302,17 @@ scan_factor = ->
 	while (token == '!')
 		get_next_token()
 		push_symbol(FACTORIAL)
+		swap()
+		list(2)
+
+	# in theory we could already count the
+	# number of transposes and simplify them
+	# away, but it's not that clean to have
+	# multiple places where that happens, and
+	# the parser is not the place.
+	while (token.charCodeAt?(0) == transpose_unicode)
+		get_next_token()
+		push_symbol(TRANSPOSE)
 		swap()
 		list(2)
 
