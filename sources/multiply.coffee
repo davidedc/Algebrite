@@ -365,11 +365,7 @@ inverse = ->
 		power()
 
 reciprocate = ->
-	if (isnum(stack[tos - 1]))
-		invert_number()
-	else
-		push_integer(-1)
-		power()
+	inverse()
 
 negate = ->
 	if (isnum(stack[tos - 1]))
