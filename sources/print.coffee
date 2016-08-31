@@ -357,6 +357,16 @@ print_TRANSPOSE_latex = (p) ->
 	print_str("}")
 	print_str("^T")
 
+print_INV_latex = (p) ->
+	print_str("{")
+	if iscons(cadr(p))
+		print_str("(")
+	print_expr(cadr(p))
+	if iscons(cadr(p))
+		print_str(")")
+	print_str("}")
+	print_str("^{-1}")
+
 print_DEFINT_latex = (p) ->
 	functionBody = car(cdr(p))
 
@@ -699,6 +709,9 @@ print_factor = (p) ->
 		return
 	else if (car(p) == symbol(TRANSPOSE) && latexMode)
 		print_TRANSPOSE_latex(p)
+		return
+	else if (car(p) == symbol(INV) && latexMode)
+		print_INV_latex(p)
 		return
 	else if (car(p) == symbol(BINOMIAL) && latexMode)
 		print_BINOMIAL_latex(p)
