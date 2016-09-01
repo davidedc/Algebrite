@@ -137,4 +137,10 @@ test_inner = ->
 		"b·inv((a+b)ᵀ)·(b+a)ᵀ·c",
 		"inner(b,c)",
 
+		"I·I",
+		"I",
+
+		"I·Iᵀ",
+		"I",
+
 	]
