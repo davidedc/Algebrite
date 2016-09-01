@@ -84,6 +84,21 @@ inner = ->
 	p2 = pop()
 	p1 = pop()
 
+	# more in general, when a and b are scalars,
+	# inner(a*M1, b*M2) is equal to
+	# a*b*inner(M1,M2), but of course we can only
+	# "bring out" in a and b the scalars, because
+	# it's the only commutative part.
+	# that's going to be trickier to do in general
+	# but let's start with just the signs.
+	if isnegativeterm(p2) and isnegativeterm(p1)
+		push p2
+		negate()
+		p2 = pop()
+		push p1
+		negate()
+		p1 = pop()
+
 	# since inner is associative,
 	# put it in a canonical form i.e.
 	# inner(inner(a,b),c) ->
