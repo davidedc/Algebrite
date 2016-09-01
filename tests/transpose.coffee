@@ -154,5 +154,8 @@ test_transpose = ->
 		"(a·b·c)ᵀ",
 		"inner(transpose(c),inner(transpose(b),transpose(a)))",
 
+		"Iᵀᵀᵀ",
+		"I",
+
 
 	]

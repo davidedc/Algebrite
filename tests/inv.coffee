@@ -16,6 +16,9 @@ test_inv = ->
 		"inv(a·b·c)",
 		"inner(inv(c),inner(inv(b),inv(a)))",
 
+		"inv(I)",
+		"I",
+
 	]
 
 

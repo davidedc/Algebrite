@@ -47,6 +47,13 @@ inv = ->
 		restore()
 		return
 
+	# inverse goes away in case
+	# of identity matrix
+	if isidentitymatrix(p1)
+		push p1
+		restore()
+		return
+
 	# distribute the inverse of a dot
 	# if in expanding mode
 	# note that the distribution happens

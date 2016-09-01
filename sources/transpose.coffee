@@ -49,6 +49,13 @@ transpose = ->
 		restore()
 		return
 
+	# transposition goes away for identity matrix
+	if ((isplusone(p2) and isplustwo(p3)) or (isplusone(p3) and isplustwo(p2)))
+		if isidentitymatrix(p1)
+			push p1
+			restore()
+			return
+
 	# a transposition just goes away when
 	# applied to another transposition with
 	# the same columns to be switched
