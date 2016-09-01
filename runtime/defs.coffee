@@ -411,6 +411,10 @@ isfactorial = (p) -> (car(p) == symbol(FACTORIAL))
 isinnerordot = (p) -> ((car(p) == symbol(INNER)) or (car(p) == symbol(DOT)))
 istranspose = (p) -> (car(p) == symbol(TRANSPOSE))
 isinv = (p) -> (car(p) == symbol(INV))
+# TODO this is a bit of a shallow check, we should
+# check when we are passed an actual tensor and possibly
+# cache the test result.
+isidentitymatrix = (p) -> (p == symbol(SYMBOL_IDENTITY_MATRIX))
 
 MSIGN = (p) ->
 	if p.isPositive()
