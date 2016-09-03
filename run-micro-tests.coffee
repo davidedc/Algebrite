@@ -31,13 +31,13 @@ run_test [
 
 run_test [
 
-	"addsubstrule(dot(transpose(a_),a_), cov(a_))",
+	"pattern(dot(transpose(a_),a_), cov(a_))",
 	"",
 
-	"addsubstrule(dot(a_,transpose(a_)), cov(a_))",
+	"pattern(dot(a_,transpose(a_)), cov(a_))",
 	"",
 
-	#"addsubstrule(cov(transpose(a_)), cov(a_))",
+	#"pattern(cov(transpose(a_)), cov(a_))",
 	#"",
 
 	"simplify(1 + eig(dot(transpose(A+B),B+transpose(transpose(A)))))",
@@ -77,7 +77,7 @@ run_test [
 
 run_test [
 
-	"addsubstrule(dot(transpose(a_),a_), cov(a_))",
+	"pattern(dot(transpose(a_),a_), cov(a_))",
 	"",
 
 	"simplify(integral(1/(X-A)/sqrt(X^2-A^2),X)+sqrt(X^2-A^2)/A/(X-A))",
@@ -100,7 +100,7 @@ run_test [
 
 run_test [
 
-	"addsubstrule(dot(a_,transpose(a_)), cov(a_))",
+	"pattern(dot(a_,transpose(a_)), cov(a_))",
 	"",
 
 	"simplify(eig(dot(transpose(A+B),B+transpose(transpose(A)))))",
@@ -128,10 +128,10 @@ run_test [
 
 run_test [
 
-	"addsubstrule(dot(transpose(a_),a_), cov(a_), not(number(a_)))",
+	"pattern(dot(transpose(a_),a_), cov(a_), not(number(a_)))",
 	"",
 
-	"addsubstrule(dot(transpose(a_),a_), cov(a_), number(a_),a_>0 )",
+	"pattern(dot(transpose(a_),a_), cov(a_), number(a_),a_>0 )",
 	"",
 
 	"simplify(eig(dot(transpose(3),transpose(transpose(3)))))",
@@ -150,7 +150,7 @@ run_test [
 
 run_test [
 
-	"addsubstrule(something(a_,b_),b_*somethingElse(a_))",
+	"pattern(something(a_,b_),b_*somethingElse(a_))",
 	"",
 
 	"simplify(something(x,y))",
@@ -163,7 +163,7 @@ run_test [
 
 run_test [
 
-	"addsubstrule(something(a_,b_),b_*somethingElse(a_))",
+	"pattern(something(a_,b_),b_*somethingElse(a_))",
 	"",
 
 	"indirection(h,k) = something(h,k)",
