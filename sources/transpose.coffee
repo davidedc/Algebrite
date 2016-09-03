@@ -5,6 +5,9 @@
 Eval_transpose = ->
 	push(cadr(p1))
 	Eval()
+
+	# add default params if they
+	# have not been passed
 	if (cddr(p1) == symbol(NIL))
 		push_integer(1)
 		push_integer(2)
@@ -34,6 +37,7 @@ transpose = ->
 
 	save()
 
+	# by default p3 is 2 and p2 is 1
 	p3 = pop() # index to be transposed
 	p2 = pop() # other index to be transposed
 	p1 = pop() # what needs to be transposed
@@ -44,6 +48,13 @@ transpose = ->
 		push p1
 		restore()
 		return
+
+	# transposition goes away for identity matrix
+	if ((isplusone(p2) and isplustwo(p3)) or (isplusone(p3) and isplustwo(p2)))
+		if isidentitymatrix(p1)
+			push p1
+			restore()
+			return
 
 	# a transposition just goes away when
 	# applied to another transposition with

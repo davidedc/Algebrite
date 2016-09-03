@@ -3,6 +3,10 @@
 test_low_level = ->
 	run("clear"); # to initialize stack and memory
 
+	test_inv()
+	test_printlatex()
+	test_inner()
+	test_transpose()
 	test_signs_in_rationals()
 	test_madd()
 	test_msub()
@@ -23,13 +27,11 @@ selftest  = ->
 	test_low_level()
 	test_sum()
 	test_product()
-	test_printlatex()
 	test_exp()
 	test_expand()
 	test_factorpoly()
 	test_subst()
 	test_simplify()
-	test_roots()
 
 	test_multiply()
 	test_scan()
@@ -63,7 +65,6 @@ selftest  = ->
 	test_gamma()
 	test_gcd()
 	test_imag()
-	test_inner()
 	test_lcm()
 	test_log()
 	test_mag()
@@ -78,7 +79,6 @@ selftest  = ->
 	test_rect()
 	test_sgn()
 	test_taylor()
-	test_transpose()
 	test_zero()
 	test_hermite()
 	test_laguerre()
@@ -100,10 +100,11 @@ selftest  = ->
 	test_arctanh()
 	test_index()
 	test_isprime()
-	test_integral()
 	test_eigen()
 	test_shape()
 	mini_test()
+	test_roots()
+	test_integral()
 
 
 	# alert "passed tests: " + ok_tests + " / failed tests: " + ko_tests

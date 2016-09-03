@@ -22,10 +22,16 @@ test_printlatex = ->
 		"printlatex(j^k^l^m)\nlastlatexprint == \"j^{k^{l^m}}\"",
 		"1",
 
-		"printlatex(printlatex(dot(a,b)))\nlastlatexprint == \"a\\cdot b\"",
+		"printlatex(dot(a,b))\nlastlatexprint == \"a\\cdot b\"",
 		"1",
 
-		"printlatex(printlatex(inner(a,b)))\nlastlatexprint == \"a\\cdot b\"",
+		"printlatex(inner(a,b))\nlastlatexprint == \"a\\cdot b\"",
+		"1",
+
+		"printlatex(inv(a))\nlastlatexprint == \"{a}^{-1}\"",
+		"1",
+
+		"printlatex(inv(a+1))\nlastlatexprint == \"{(1+a)}^{-1}\"",
 		"1",
 
 	]

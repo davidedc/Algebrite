@@ -101,5 +101,61 @@ test_transpose = ->
 		"transpose(a,3,4) - transpose(a,3,4)",
 		"0",
 
+		"aᵀ^b",
+		"transpose(a)^b",
+
+		"a^ᵀb",
+		"a^ᵀ ? b\nStop: syntax error",
+
+		"aᵀ^2^3",
+		"transpose(a)^8",
+
+		"aᵀ",
+		"transpose(a)",
+
+		"aᵀᵀ",
+		"a",
+
+		"aᵀᵀᵀ",
+		"transpose(a)",
+
+		"aᵀᵀᵀᵀ",
+		"a",
+
+		"aᵀ+b",
+		"b+transpose(a)",
+
+		"aᵀ*b",
+		"b*transpose(a)",
+
+		# this output could be written out more
+		# cleanly without extra parens
+		"aᵀ^bᵀ",
+		"transpose(a)^(transpose(b))",
+
+		"aᵀ*bᵀ",
+		"transpose(a)*transpose(b)",
+
+		"a^bᵀ",
+		"a^(transpose(b))",
+
+		"(a^b)ᵀ",
+		"transpose(a^b)",
+
+		"(a*b)ᵀ",
+		"transpose(a)*transpose(b)",
+
+		"inner(a,b)ᵀ",
+		"inner(transpose(b),transpose(a))",
+
+		"dot(a,b)ᵀ",
+		"inner(transpose(b),transpose(a))",
+
+		"(a·b·c)ᵀ",
+		"inner(transpose(c),inner(transpose(b),transpose(a)))",
+
+		"Iᵀᵀᵀ",
+		"I",
+
 
 	]

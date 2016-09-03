@@ -25,6 +25,33 @@ test_assignments = ->
 		"f(3,0)",
 		"5",
 
+		"f = quote(1+1)",
+		"",
+
+		"g = f",
+		"",
+
+		"g",
+		"2",
+
+		"g = quote(f)",
+		"",
+
+		"g",
+		"2",
+
+		"lookup(g)",
+		"f",
+
+		"g = lookup(f)",
+		"",
+
+		"g",
+		"2",
+
+		"lookup(g)",
+		"1+1",
+
 		# clean up
 
 		"f=quote(f)",

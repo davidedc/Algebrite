@@ -1,6 +1,7 @@
 #-----------------------------------------------------------------------------
 #
-#	Input:		Matrix on stack
+#	Input:		Matrix on stack (must have two dimensions but
+#				it can be non-numerical)
 #
 #	Output:		Inverse on stack
 #
@@ -8,6 +9,9 @@
 #
 #	> inv(((1,2),(3,4))
 #	((-2,1),(3/2,-1/2))
+#
+#	> inv(((a,b),(c,d))
+#	((d / (a d - b c),-b / (a d - b c)),(-c / (a d - b c),a / (a d - b c)))
 #
 #	Note:
 #
@@ -35,6 +39,43 @@ inv = ->
 	save()
 
 	p1 = pop()
+
+	# an inv just goes away when
+	# applied to another inv
+	if (isinv(p1))
+		push car(cdr(p1))
+		restore()
+		return
+
+	# inverse goes away in case
+	# of identity matrix
+	if isidentitymatrix(p1)
+		push p1
+		restore()
+		return
+
+	# distribute the inverse of a dot
+	# if in expanding mode
+	# note that the distribution happens
+	# in reverse.
+	# The dot operator is not
+	# commutative, so, it matters.
+	if (expanding && isinnerordot(p1))
+		p1 = cdr(p1)
+		accumulator = []
+		while (iscons(p1))
+			accumulator.push car(p1)
+			p1 = cdr(p1)
+
+		for eachEntry in [accumulator.length-1..0]
+			push(accumulator[eachEntry])
+			inv()
+			if eachEntry != accumulator.length-1
+				inner()
+
+		restore()
+		return
+
 
 	if (INV_check_arg() == 0)
 		push_symbol(INV)

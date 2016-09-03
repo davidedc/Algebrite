@@ -78,7 +78,7 @@ SYM = 5
 counter = 0
 ABS = counter++
 ADD = counter++
-ADDSUBSTRULE = counter++
+PATTERN = counter++
 ADJ = counter++
 AND = counter++
 ARCCOS = counter++
@@ -238,6 +238,7 @@ SYMBOL_T = counter++
 SYMBOL_X = counter++
 SYMBOL_Y = counter++
 SYMBOL_Z = counter++
+SYMBOL_IDENTITY_MATRIX = counter++
 
 SYMBOL_A_UNDERSCORE = counter++
 SYMBOL_B_UNDERSCORE = counter++
@@ -275,6 +276,12 @@ MAXDIM = 24
 # in a script
 symbolsDependencies = {}
 
+# you can do some little simplifications
+# at parse time, such as calculating away
+# immediately simple operations on
+# constants, removing 1s from products
+# etc.
+parse_time_simplifications = true
 
 class tensor
 	ndim: 0
@@ -403,6 +410,11 @@ ispower = (p) -> (car(p) == symbol(POWER))
 isfactorial = (p) -> (car(p) == symbol(FACTORIAL))
 isinnerordot = (p) -> ((car(p) == symbol(INNER)) or (car(p) == symbol(DOT)))
 istranspose = (p) -> (car(p) == symbol(TRANSPOSE))
+isinv = (p) -> (car(p) == symbol(INV))
+# TODO this is a bit of a shallow check, we should
+# check when we are passed an actual tensor and possibly
+# cache the test result.
+isidentitymatrix = (p) -> (p == symbol(SYMBOL_IDENTITY_MATRIX))
 
 MSIGN = (p) ->
 	if p.isPositive()
