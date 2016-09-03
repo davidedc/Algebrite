@@ -43,6 +43,9 @@ predefinedSymbolsInGlobalScope_doNotTrackInDependencies =
 functionInvokationsScanningStack = null
 skipRootVariableToBeSolved = false
 
+transpose_unicode = 7488
+dotprod_unicode = 183
+
 # Returns number of chars scanned and expr on stack.
 
 # Returns zero when nothing left to scan.
@@ -200,6 +203,10 @@ scan_expression = ->
 		cons()
 
 is_factor = ->
+
+	if token.charCodeAt?(0) == dotprod_unicode
+		return 1
+
 	switch (token)
 		when '*', '/'
 			return 1
@@ -211,37 +218,53 @@ is_factor = ->
 				return 1
 	return 0
 
-scan_term = ->
 
+simplify_1_in_products = (tos,h) ->
+	if (tos > h && isrational(stack[tos - 1]) && equaln(stack[tos - 1], 1))
+		pop()
+
+# calculate away consecutive constants
+multiply_consecutive_constants = (tos,h)->
+	if (tos > h + 1 && isnum(stack[tos - 2]) && isnum(stack[tos - 1]))
+		multiply()
+
+
+scan_term = ->
 	h = tos
 
 	scan_power()
 
-	# discard integer 1
-
-	if (tos > h && isrational(stack[tos - 1]) && equaln(stack[tos - 1], 1))
-		pop()
+	if parse_time_simplifications
+		simplify_1_in_products(tos,h)
 
 	while (is_factor())
 		if (token == '*')
 			get_next_token()
 			scan_power()
 		else if (token == '/')
+			# in case of 1/... then
+			# we scanned the 1, we get rid
+			# of it because otherwise it becomes
+			# an extra factor that wasn't there and
+			# things like
+			# 1/(2*a) become 1*(1/(2*a))
+			simplify_1_in_products(tos,h)
 			get_next_token()
 			scan_power()
 			inverse()
+		else if (token.charCodeAt?(0) == dotprod_unicode)
+			get_next_token()
+			push_symbol(INNER)
+			swap()
+			scan_power()
+			list(3)
+
 		else
 			scan_power()
 
-		# fold constants
-
-		if (tos > h + 1 && isnum(stack[tos - 2]) && isnum(stack[tos - 1]))
-			multiply()
-
-		# discard integer 1
-
-		if (tos > h && isrational(stack[tos - 1]) && equaln(stack[tos - 1], 1))
-			pop()
+		if parse_time_simplifications
+			multiply_consecutive_constants(tos,h)
+			simplify_1_in_products(tos,h)
 
 	if (h == tos)
 		push_integer(1)
@@ -259,6 +282,7 @@ scan_power = ->
 		swap()
 		scan_power()
 		list(3)
+
 
 scan_factor = ->
 
@@ -299,6 +323,17 @@ scan_factor = ->
 	while (token == '!')
 		get_next_token()
 		push_symbol(FACTORIAL)
+		swap()
+		list(2)
+
+	# in theory we could already count the
+	# number of transposes and simplify them
+	# away, but it's not that clean to have
+	# multiple places where that happens, and
+	# the parser is not the place.
+	while (token.charCodeAt?(0) == transpose_unicode)
+		get_next_token()
+		push_symbol(TRANSPOSE)
 		swap()
 		list(2)
 

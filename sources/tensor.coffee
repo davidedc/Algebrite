@@ -1,12 +1,27 @@
+#(docs are generated from top-level comments, keep an eye on the formatting!)
 
-#-----------------------------------------------------------------------------
-#
-#	Called from the "eval" module to evaluate tensor elements.
-#
-#	p1 points to the tensor operand.
-#
-#-----------------------------------------------------------------------------
+### Tensor =====================================================================
 
+Tags
+----
+[[scripting]] [[JS]] [[internal]] [[treenode]] [[generalconcept]]
+
+General description
+-------------------
+A tensor is...
+
+Limitations
+-----------
+n.a.
+
+Implementation info
+-------------------
+Tensors are implemented...
+
+###
+
+# Called from the "eval" module to evaluate tensor elements.
+# p1 points to the tensor operand.
 Eval_tensor = ->
 	i = 0
 	ndim = 0

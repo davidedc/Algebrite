@@ -62,7 +62,7 @@ Eval_cons = ->
 	switch (symnum(car(p1)))
 		when ABS then Eval_abs()
 		when ADD then Eval_add()
-		when ADDSUBSTRULE then Eval_addsubstrule()
+		when PATTERN then Eval_pattern()
 		when ADJ then Eval_adj()
 		when AND then Eval_and()
 		when ARCCOS then Eval_arccos()

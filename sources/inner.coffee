@@ -84,6 +84,21 @@ inner = ->
 	p2 = pop()
 	p1 = pop()
 
+	# more in general, when a and b are scalars,
+	# inner(a*M1, b*M2) is equal to
+	# a*b*inner(M1,M2), but of course we can only
+	# "bring out" in a and b the scalars, because
+	# it's the only commutative part.
+	# that's going to be trickier to do in general
+	# but let's start with just the signs.
+	if isnegativeterm(p2) and isnegativeterm(p1)
+		push p2
+		negate()
+		p2 = pop()
+		push p1
+		negate()
+		p1 = pop()
+
 	# since inner is associative,
 	# put it in a canonical form i.e.
 	# inner(inner(a,b),c) ->
@@ -100,10 +115,36 @@ inner = ->
 		inner()
 		p2 = pop()
 
+	# Check if one of the operands is the identity matrix
+	# we could maybe use Eval_testeq here but
+	# this seems to suffice?
+	if p1 == symbol(SYMBOL_IDENTITY_MATRIX)
+		push p2
+		restore()
+		return
+	else if p2 == symbol(SYMBOL_IDENTITY_MATRIX)
+		push p1
+		restore()
+		return
+
 
 	if (istensor(p1) && istensor(p2))
 		inner_f()
 	else
+
+		# simple check if the two elements are one the
+		# inv of the other. If they are, the answer is
+		# the identity matrix
+		push p1
+		push p2
+		inv()
+		subtract()
+		subtractionResult = pop()
+		if (iszero(subtractionResult))
+			push_symbol(SYMBOL_IDENTITY_MATRIX)
+			restore()
+			return
+
 
 		# if either operand is a sum then distribute
 		# (if we are in expanding mode)

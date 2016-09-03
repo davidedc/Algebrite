@@ -34,7 +34,7 @@ init = ->
 
 	std_symbol("abs", ABS)
 	std_symbol("add", ADD)
-	std_symbol("addsubstrule", ADDSUBSTRULE)
+	std_symbol("pattern", PATTERN)
 	std_symbol("adj", ADJ)
 	std_symbol("and", AND)
 	std_symbol("arccos", ARCCOS)
@@ -196,6 +196,7 @@ init = ->
 	std_symbol("x", SYMBOL_X)
 	std_symbol("y", SYMBOL_Y)
 	std_symbol("z", SYMBOL_Z)
+	std_symbol("I", SYMBOL_IDENTITY_MATRIX)
 
 	std_symbol("a_", SYMBOL_A_UNDERSCORE)
 	std_symbol("b_", SYMBOL_B_UNDERSCORE)

@@ -1,2 +1,8 @@
 node_modules
 
+
+tests/.DS_Store
+
+dist/.DS_Store
+
+.DS_Store
