@@ -1,6 +1,6 @@
 {
   "name": "algebrite",
-  "version": "0.3.02",
+  "version": "0.3.03",
   "description": "Computer Algebra System in Coffeescript",
   "main": "dist/algebrite.js",
   "directories": {
