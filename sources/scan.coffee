@@ -121,33 +121,34 @@ scan_stmt = ->
 		list(3)
 		isSymbolLeftOfAssignment = true
 
-		# in case of re-assignment, the symbol on the
-		# left will also be in the set of the symbols
-		# on the right. In that case just remove it from
-		# the symbols on the right.
-		indexOfSymbolLeftOfAssignment = symbolsRightOfAssignment.indexOf(symbolLeftOfAssignment)
-		if indexOfSymbolLeftOfAssignment != -1
-			symbolsRightOfAssignment.splice(indexOfSymbolLeftOfAssignment, 1) 
-		
-		# print out the immediate dependencies
-		if DEBUG then console.log "locally, " + symbolLeftOfAssignment + " depends on: "
-		for i in symbolsRightOfAssignment
-			if DEBUG then console.log "	" + i
+		if codeGen
+			# in case of re-assignment, the symbol on the
+			# left will also be in the set of the symbols
+			# on the right. In that case just remove it from
+			# the symbols on the right.
+			indexOfSymbolLeftOfAssignment = symbolsRightOfAssignment.indexOf(symbolLeftOfAssignment)
+			if indexOfSymbolLeftOfAssignment != -1
+				symbolsRightOfAssignment.splice(indexOfSymbolLeftOfAssignment, 1) 
+			
+			# print out the immediate dependencies
+			if DEBUG then console.log "locally, " + symbolLeftOfAssignment + " depends on: "
+			for i in symbolsRightOfAssignment
+				if DEBUG then console.log "	" + i
 
-		# ok add the local dependencies to the existing
-		# dependencies of this left-value symbol
-		
-		# create the exiting dependencies list if it doesn't exist
-		symbolsDependencies[symbolLeftOfAssignment] ?= []
-		existingDependencies = symbolsDependencies[symbolLeftOfAssignment]
+			# ok add the local dependencies to the existing
+			# dependencies of this left-value symbol
+			
+			# create the exiting dependencies list if it doesn't exist
+			symbolsDependencies[symbolLeftOfAssignment] ?= []
+			existingDependencies = symbolsDependencies[symbolLeftOfAssignment]
 
-		# copy over the new dependencies to the existing
-		# dependencies avoiding repetitions
-		for i in symbolsRightOfAssignment
-			if existingDependencies.indexOf(i) == -1
-				existingDependencies.push i
+			# copy over the new dependencies to the existing
+			# dependencies avoiding repetitions
+			for i in symbolsRightOfAssignment
+				if existingDependencies.indexOf(i) == -1
+					existingDependencies.push i
 
-		symbolsRightOfAssignment = []
+			symbolsRightOfAssignment = []
 
 scan_relation = ->
 	scan_expression()

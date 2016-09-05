@@ -1,6 +1,8 @@
 
 
 init = ->
+	#debugger
+	#console.log "DOING AN INIT ========================================================================"
 	i = 0
 	flag = 0
 
@@ -249,6 +251,11 @@ defn_str = ["e=exp(1)",
 ]
 
 defn = ->
+	# don't add all these functions to the
+	# symbolsDependencies, clone the original
+	originalCodeGen = codeGen
+	codeGen = false
+
 	for defn_i in [0...defn_str.length]
 		definitionOfInterest = defn_str[defn_i]
 		scan(definitionOfInterest)
@@ -258,3 +265,6 @@ defn = ->
 			print1(stack[tos-1])
 		Eval()
 		pop()
+
+	# restore the symbol dependencies as they were before.
+	codeGen = originalCodeGen

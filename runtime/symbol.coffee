@@ -46,7 +46,18 @@ get_printname = (p) ->
 set_binding = (p, q) ->
 	if (p.k != SYM)
 		stop("symbol error")
+
 	indexFound = symtab.indexOf(p)
+	###
+	if indexFound == -1
+		debugger
+		for i in [0...symtab.length]
+			if p.printname == symtab[i].printname
+				indexFound = i
+				console.log "remedied an index not founs!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+				break
+	###
+
 	if symtab.indexOf(p, indexFound + 1) != -1
 		console.log("ops, more than one element!")
 		debugger
@@ -58,6 +69,16 @@ get_binding = (p) ->
 	if (p.k != SYM)
 		stop("symbol error")
 	indexFound = symtab.indexOf(p)
+	###
+	if indexFound == -1
+		debugger
+		for i in [0...symtab.length]
+			if p.printname == symtab[i].printname
+				indexFound = i
+				console.log "remedied an index not founs!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+				break
+	###
+
 	if symtab.indexOf(p, indexFound + 1) != -1
 		console.log("ops, more than one element!")
 		debugger

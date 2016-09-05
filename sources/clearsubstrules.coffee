@@ -8,6 +8,7 @@ Eval_clearsubstrules = ->
 	# problems in the C version as it's an
 	# untracked reference
 	userSimplificationsInListForm = []
+	userSimplificationsInStringForm = []
 	
 	# return nothing
 	push_symbol(NIL)

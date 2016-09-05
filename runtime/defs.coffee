@@ -368,6 +368,10 @@ out_count = 0
 test_flag = 0
 draw_stop_return = null # extern jmp_buf ?????
 userSimplificationsInListForm = []
+userSimplificationsInStringForm = []
+
+transpose_unicode = 7488
+dotprod_unicode = 183
 
 symbol = (x) -> (symtab[x])
 iscons = (p) -> (p.k == CONS)

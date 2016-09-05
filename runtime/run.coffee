@@ -302,6 +302,7 @@ findDependenciesInScript = (stringToBeParsed) ->
 
 	if DEBUG then console.log "stringToBeParsed: " + stringToBeParsed
 	inited = true
+	codeGen = true
 	symbolsDependencies = {}
 	indexOfPartRemainingToBeParsed = 0
 
@@ -319,8 +320,8 @@ findDependenciesInScript = (stringToBeParsed) ->
 			check_stack()
 		catch error
 			if PRINTOUTRESULT then console.log error
+			errorMessage = error + ""
 			#debugger
-			allReturnedPlainStrings += error.message
 			init()
 			break
 
@@ -350,74 +351,77 @@ findDependenciesInScript = (stringToBeParsed) ->
 	if DEBUG then console.log "All dependencies recursively ----------------"
 	testableString += "All dependencies recursively: "
 
-	scriptEvaluation = run(stringToBeParsed, true)
-
+	scriptEvaluation = ["",""]
 	generatedCode = ""
 	readableSummaryOfGeneratedCode = ""
-	for key of symbolsDependencies
 
-		codeGen = true
-		if DEBUG then console.log "	variable " + key + " is: " + get_binding(usr_symbol(key)).toString()
-		codeGen = false
-		if DEBUG then console.log "	variable " + key + " depends on: "
-		testableString +=  " variable " + key + " depends on: "
+	if errorMessage == ""
+		scriptEvaluation = run(stringToBeParsed, true)
 
-		recursedDependencies = []
-		variablesWithCycles = []
-		cyclesDescriptions = []
-		recursiveDependencies key, recursedDependencies, [], variablesWithCycles, [], cyclesDescriptions
+		for key of symbolsDependencies
 
-		for i in variablesWithCycles
-			if DEBUG then console.log "		--> cycle through " + i
+			codeGen = true
+			if DEBUG then console.log "	variable " + key + " is: " + get_binding(usr_symbol(key)).toString()
+			codeGen = false
+			if DEBUG then console.log "	variable " + key + " depends on: "
+			testableString +=  " variable " + key + " depends on: "
 
-		for i in recursedDependencies
-			if DEBUG then console.log "		" + i
-			testableString +=  i + ", "
-		testableString += "; "
+			recursedDependencies = []
+			variablesWithCycles = []
+			cyclesDescriptions = []
+			recursiveDependencies key, recursedDependencies, [], variablesWithCycles, [], cyclesDescriptions
 
-		for i in cyclesDescriptions
-			testableString += " " + i + ", "
+			for i in variablesWithCycles
+				if DEBUG then console.log "		--> cycle through " + i
 
-		if DEBUG then console.log "	code generation:" + key + " is: " + get_binding(usr_symbol(key)).toString()
+			for i in recursedDependencies
+				if DEBUG then console.log "		" + i
+				testableString +=  i + ", "
+			testableString += "; "
 
-		# we really want to make an extra effort
-		# to generate simplified code, so
-		# run a "simplify" on the content of each
-		# variable that we are generating code for.
-		# Note that the variable
-		# will still point to un-simplified structures,
-		# we only simplify the generated code.
-		push get_binding(usr_symbol(key))
-		simplifyForCodeGeneration()
-		toBePrinted = pop()
+			for i in cyclesDescriptions
+				testableString += " " + i + ", "
 
-		codeGen = true
-		generatedBody = toBePrinted.toString()
-		codeGen = false
-		bodyForReadableSummaryOfGeneratedCode = toBePrinted.toString()
+			if DEBUG then console.log "	code generation:" + key + " is: " + get_binding(usr_symbol(key)).toString()
 
-		if variablesWithCycles.indexOf(key) != -1
-			generatedCode += "// " + key + " is part of a cyclic dependency, no code generated."
-			readableSummaryOfGeneratedCode += "#" + key + " is part of a cyclic dependency, no code generated."
-		else
-			if recursedDependencies.length != 0
-				parameters = "("
-				for i in recursedDependencies
-					if i.indexOf("'") == -1
-						parameters += i + ", "
-				# eliminate the last ", " for printout clarity
-				parameters = parameters.replace /, $/gm , ""
-				parameters += ")"
-				generatedCode += key + " = function " + parameters + " { return ( " + generatedBody + " ); }"
-				readableSummaryOfGeneratedCode += key + parameters + " = " + bodyForReadableSummaryOfGeneratedCode
+			# we really want to make an extra effort
+			# to generate simplified code, so
+			# run a "simplify" on the content of each
+			# variable that we are generating code for.
+			# Note that the variable
+			# will still point to un-simplified structures,
+			# we only simplify the generated code.
+			push get_binding(usr_symbol(key))
+			simplifyForCodeGeneration()
+			toBePrinted = pop()
+
+			codeGen = true
+			generatedBody = toBePrinted.toString()
+			codeGen = false
+			bodyForReadableSummaryOfGeneratedCode = toBePrinted.toString()
+
+			if variablesWithCycles.indexOf(key) != -1
+				generatedCode += "// " + key + " is part of a cyclic dependency, no code generated."
+				readableSummaryOfGeneratedCode += "#" + key + " is part of a cyclic dependency, no code generated."
 			else
-				generatedCode += key + " = " + generatedBody + ";"
-				readableSummaryOfGeneratedCode += key + " = " + bodyForReadableSummaryOfGeneratedCode
+				if recursedDependencies.length != 0
+					parameters = "("
+					for i in recursedDependencies
+						if i.indexOf("'") == -1
+							parameters += i + ", "
+					# eliminate the last ", " for printout clarity
+					parameters = parameters.replace /, $/gm , ""
+					parameters += ")"
+					generatedCode += key + " = function " + parameters + " { return ( " + generatedBody + " ); }"
+					readableSummaryOfGeneratedCode += key + parameters + " = " + bodyForReadableSummaryOfGeneratedCode
+				else
+					generatedCode += key + " = " + generatedBody + ";"
+					readableSummaryOfGeneratedCode += key + " = " + bodyForReadableSummaryOfGeneratedCode
 
-		generatedCode += "\n"
-		readableSummaryOfGeneratedCode += "\n"
+			generatedCode += "\n"
+			readableSummaryOfGeneratedCode += "\n"
 
-		if DEBUG then console.log "		" + generatedCode
+			if DEBUG then console.log "		" + generatedCode
 
 	# eliminate the last new line
 	generatedCode = generatedCode.replace /\n$/gm , ""
@@ -426,7 +430,7 @@ findDependenciesInScript = (stringToBeParsed) ->
 	symbolsDependencies = {}
 	if DEBUG then console.log "testable string: " + testableString
 
-	return [testableString, scriptEvaluation[0], generatedCode, readableSummaryOfGeneratedCode, scriptEvaluation[1]]
+	return [testableString, scriptEvaluation[0], generatedCode, readableSummaryOfGeneratedCode, scriptEvaluation[1], errorMessage]
 
 recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded, variablesAlreadyFleshedOut, variablesWithCycles, chainBeingChecked, cyclesDescriptions) ->
 	variablesAlreadyFleshedOut.push variableToBeChecked
@@ -476,6 +480,18 @@ recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded,
 
 # parses and runs one statement/expression at a time
 inited = false
+
+latexErrorSign = "\\rlap{\\large\\color{red}\\bigtriangleup}{\\ \\ \\tiny\\color{red}!}"
+turnErrorMessageToLatex = (theErrorMessage) ->
+	theErrorMessage = theErrorMessage.replace(/\n/g,"")
+	theErrorMessage = theErrorMessage.replace(new RegExp(String.fromCharCode(transpose_unicode), 'g'), "}{}^{T}\\text{");
+	theErrorMessage = theErrorMessage.replace(new RegExp(String.fromCharCode(dotprod_unicode), 'g'),"}\\cdot \\text{");
+	theErrorMessage = theErrorMessage.replace("Stop:","}\\quad \\text{Stop:");
+	theErrorMessage = theErrorMessage.replace("?","}\\quad " + latexErrorSign + "\\text{");
+	theErrorMessage = "$$\\text{" + theErrorMessage.replace(/\n/g,"") + "}$$"
+	return theErrorMessage
+
+
 run = (stringToBeRun, generateLatex = false) ->
 
 	stringToBeRun = stringToBeRun # + "\n"
@@ -512,7 +528,9 @@ run = (stringToBeRun, generateLatex = false) ->
 			#debugger
 			allReturnedPlainStrings += error.message
 			if generateLatex
-				allReturnedLatexStrings += "$$\\text{" + error.message + "}$$"
+				#debugger
+				theErrorMessage = turnErrorMessageToLatex error.message
+				allReturnedLatexStrings += theErrorMessage
 			init()
 			break
 
@@ -574,7 +592,7 @@ run = (stringToBeRun, generateLatex = false) ->
 
 		catch error
 			collectedPlainResult = error.message
-			if generateLatex then collectedLatexResult = "$$\\text{" + error.message + "}$$"
+			if generateLatex then collectedLatexResult = turnErrorMessageToLatex error.message
 
 			if PRINTOUTRESULT then console.log collectedPlainResult
 
@@ -701,22 +719,44 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	# clear all the symbols and then re-define
 	# the "starting" symbols.
 	
+	#console.log "codeFromAlgebraBlock: " + codeFromAlgebraBlock
 	##userSimplificationsInListForm = []
+	userSimplificationsInProgramForm = ""
+	for i in userSimplificationsInListForm
+		#console.log "userSimplificationsInListForm: " + i
+		#console.log "pattern(" + car(i) + ","+cdr(i)+")"
+		userSimplificationsInProgramForm += "pattern(" + car(i) + ","+ car(cdr(i))+")\n"
+
+	userSimplificationsInListForm = []
+	userSimplificationsInStringForm = []
 	clear_symbols()
 	defn()
 
-	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode, latexResult] =
+	codeFromAlgebraBlock = userSimplificationsInProgramForm + codeFromAlgebraBlock
+	#console.log "codeFromAlgebraBlock including patterns: " + codeFromAlgebraBlock
+
+	#debugger
+	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode, latexResult, errorMessage] =
 		findDependenciesInScript(codeFromAlgebraBlock)
 
-	if readableSummaryOfCode != ""
+	if readableSummaryOfCode != "" or errorMessage != ""
 		result += "\n" + readableSummaryOfCode
+		if errorMessage != ""
+			result += "\n" + errorMessage
 		result = result.replace /\n/g,"\n\n"
 
 		latexResult += "\n" + "$$" + readableSummaryOfCode + "$$"
+		if errorMessage != ""
+			latexResult += turnErrorMessageToLatex  errorMessage
 		latexResult = latexResult.replace /\n/g,"\n\n"
+
 
 	code = code.replace /Math\./g,""
 	code = code.replace /\n/g,"\n\n"
+
+	#console.log "code: " + code
+	#console.log "result: " + result
+	#console.log "latexResult: " + latexResult
 
 	#code: "// no code generated yet\n//try again later"
 	#code: "console.log('some passed code is run'); window.something = 1;"
