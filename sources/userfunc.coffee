@@ -63,7 +63,10 @@ Eval_user_function = ->
 	while (iscons(p1) && iscons(p2))
 		push(car(p1))
 		push(car(p2))
-		Eval()
+		# why explicitly Eval the parameters when
+		# the body of the function is
+		# evalled anyways? Commenting it out. All tests pass...
+		#Eval()
 		p1 = cdr(p1)
 		p2 = cdr(p2)
 
