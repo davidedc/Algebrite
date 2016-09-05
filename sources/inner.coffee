@@ -44,7 +44,7 @@
 # the "dot/inner" operator is associative and
 # distributive but not commutative.
 #
-# In Mathematica, Inner if a generalisation of Dot where
+# In Mathematica, Inner is a generalisation of Dot where
 # the user can specify the multiplication and the addition
 # operators.
 # But here in Algebrite they do the same thing.
