@@ -68,6 +68,20 @@ Eval_inner = ->
 	# to
 	#   inner(a,inner(b,c)) 
 
+	###
+	# TODO we have to take a look at the whole
+	# sequence of operands and make simplifications
+	# on that...
+	operands = []
+	get_innerprod_factors(p1, operands)
+
+	refinedOperands = []
+	for i in [0...operands.length]
+		console.log "operand " + i + " : " + operands[i]
+		if operands[i] == symbol(SYMBOL_IDENTITY_MATRIX)
+			continue
+	###
+
 	p1 = cdr(p1)
 	push(car(p1))
 	Eval()
@@ -313,4 +327,31 @@ inner_f = ->
 		for i in [0...(p2.tensor.ndim - 1)]
 			p3.tensor.dim[j + i] = p2.tensor.dim[i + 1]
 		push(p3)
+
+# Algebrite.run('c·(b+a)ᵀ·inv((a+b)ᵀ)·d').toString();
+# Algebrite.run('c*(b+a)ᵀ·inv((a+b)ᵀ)·d').toString();
+# Algebrite.run('(c·(b+a)ᵀ)·(inv((a+b)ᵀ)·d)').toString();
+get_innerprod_factors = (tree, factors_accumulator) ->
+	# console.log "extracting inner prod. factors from " + tree
+
+	if !iscons(tree)
+		add_factor_to_accumulator(tree, factors_accumulator)
+		return
+		
+	if cdr(tree) == symbol(NIL)
+		tree = get_innerprod_factors(car(tree), factors_accumulator)
+		return
+
+	if car(tree) == symbol(INNER)
+		# console.log "there is inner at top, recursing on the operands"
+		get_innerprod_factors(car(cdr(tree)),factors_accumulator)
+		get_innerprod_factors(cdr(cdr(tree)),factors_accumulator)
+		return
+	
+	add_factor_to_accumulator(tree, factors_accumulator)
+
+add_factor_to_accumulator = (tree, factors_accumulator) ->
+	if tree != symbol(NIL)
+		# console.log ">> adding to factors_accumulator: " + tree
+		factors_accumulator.push(tree)
 
