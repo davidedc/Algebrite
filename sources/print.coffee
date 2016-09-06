@@ -74,6 +74,8 @@ collectLatexResultLine = (p) ->
 	stringToBePrinted = ""
 	latexMode = true
 	print_expr(p)
+	# some variables might contain underscores, escape those
+	stringToBePrinted = stringToBePrinted.replace(/_/g, "\\\\_");
 	latexMode = false
 	return stringToBePrinted
 
