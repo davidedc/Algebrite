@@ -144,6 +144,7 @@ init = ->
 	std_symbol("roots", ROOTS)
 	std_symbol("equals", SETQ)
 	std_symbol("sgn", SGN)
+	std_symbol("silentpattern", SILENTPATTERN)
 	std_symbol("simplify", SIMPLIFY)
 	std_symbol("sin", SIN)
 	std_symbol("sinh", SINH)

@@ -699,6 +699,21 @@ print_factor = (p) ->
 			print_expr fbody
 		return
 
+	if (car(p) == symbol(PATTERN))
+
+		print_expr(caadr(p))
+		if latexMode
+			print_str(" \\rightarrow ")
+		else
+			if (test_flag == 0)
+				print_str(" -> ")
+			else
+				print_str("->")
+
+		print_expr car(cdr(cadr(p)))
+		return
+
+
 	if (car(p) == symbol(INDEX) && issymbol(cadr(p)))
 		print_index_function(p)
 		return

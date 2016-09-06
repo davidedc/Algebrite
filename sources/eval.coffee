@@ -172,6 +172,7 @@ Eval_cons = ->
 		when ROOTS then Eval_roots()
 		when SETQ then Eval_setq()
 		when SGN then Eval_sgn()
+		when SILENTPATTERN then Eval_silentpattern()
 		when SIMPLIFY then Eval_simplify()
 		when SIN then Eval_sin()
 		when SINH then Eval_sinh()

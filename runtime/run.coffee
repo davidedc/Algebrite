@@ -744,8 +744,8 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	##userSimplificationsInListForm = []
 	userSimplificationsInProgramForm = ""
 	for i in userSimplificationsInListForm
-		#console.log "pattern(" + car(i) + ","+cdr(i)+")"
-		userSimplificationsInProgramForm += "pattern(" + car(i) + ","+ car(cdr(i))+")\n"
+		#console.log "silentpattern(" + car(i) + ","+cdr(i)+")"
+		userSimplificationsInProgramForm += "silentpattern(" + car(i) + ","+ car(cdr(i))+")\n"
 
 	userSimplificationsInListForm = []
 	userSimplificationsInStringForm = []

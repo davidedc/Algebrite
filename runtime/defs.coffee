@@ -186,6 +186,7 @@ YYRECT = counter++
 ROOTS = counter++
 SETQ = counter++
 SGN = counter++
+SILENTPATTERN = counter++
 SIMPLIFY = counter++
 SIN = counter++
 SINH = counter++
