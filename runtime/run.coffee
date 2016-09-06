@@ -729,6 +729,9 @@ check_esc_flag = ->
 	if (esc_flag)
 		stop("esc key")
 
+# TODO
+clearAlgebraEnvironment = ->
+
 computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	# we start "clean" each time:
 	# clear all the symbols and then re-define
@@ -786,3 +789,4 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 (exports ? this).run = run
 (exports ? this).findDependenciesInScript = findDependenciesInScript
 (exports ? this).computeResultsAndJavaScriptFromAlgebra = computeResultsAndJavaScriptFromAlgebra
+(exports ? this).clearAlgebraEnvironment = clearAlgebraEnvironment
