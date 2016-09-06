@@ -494,7 +494,7 @@ turnErrorMessageToLatex = (theErrorMessage) ->
 
 run = (stringToBeRun, generateLatex = false) ->
 
-	stringToBeRun = stringToBeRun # + "\n"
+	#stringToBeRun = stringToBeRun + "\n"
 
 	if stringToBeRun == "selftest"
 		selftest()
