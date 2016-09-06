@@ -36,7 +36,6 @@ init = ->
 
 	std_symbol("abs", ABS)
 	std_symbol("add", ADD)
-	std_symbol("pattern", PATTERN)
 	std_symbol("adj", ADJ)
 	std_symbol("and", AND)
 	std_symbol("arccos", ARCCOS)
@@ -126,6 +125,7 @@ init = ->
 	std_symbol("operator", OPERATOR)
 	std_symbol("or", OR)
 	std_symbol("outer", OUTER)
+	std_symbol("pattern", PATTERN)
 	std_symbol("polar", POLAR)
 	std_symbol("power", POWER)
 	std_symbol("prime", PRIME)
