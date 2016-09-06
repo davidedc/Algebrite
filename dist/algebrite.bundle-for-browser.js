@@ -15363,7 +15363,7 @@
   };
 
   runUserDefinedSimplifications = function() {
-    var additionalSimplifications, originalexpanding, success;
+    var ac, additionalSimplifications, eachSimplification, len, originalexpanding, results, success;
     if (userSimplificationsInListForm.length !== 0 && !Find(cadr(p1), symbol(INTEGRAL))) {
       originalexpanding = expanding;
       expanding = false;
@@ -15374,10 +15374,19 @@
       success = true;
       p1 = pop();
       push(p1);
-      push_symbol(NIL);
-      success = transform(additionalSimplifications, true);
-      p1 = pop();
-      return push(p1);
+      results = [];
+      for (ac = 0, len = additionalSimplifications.length; ac < len; ac++) {
+        eachSimplification = additionalSimplifications[ac];
+        if (eachSimplification !== 0) {
+          push_symbol(NIL);
+          transform(eachSimplification, true);
+          p1 = pop();
+          results.push(push(p1));
+        } else {
+          results.push(void 0);
+        }
+      }
+      return results;
     }
   };
 
@@ -17190,7 +17199,7 @@
    */
 
   transform = function(s, generalTransform) {
-    var ac, ad, ae, eachTransformEntry, firstTermSuccess, firstTermTransform, i, len, len1, ref1, secondTermSuccess, secondTermTransform, transform_h, transformationSuccessful;
+    var ac, ad, eachTransformEntry, firstTermSuccess, firstTermTransform, i, len, ref1, secondTermSuccess, secondTermTransform, transform_h, transformationSuccessful;
     transform_h = 0;
     save();
     p1 = null;
@@ -17215,75 +17224,72 @@
         console.log("stack content at " + i + " " + stack[tos - i]);
       }
     }
+    transformationSuccessful = false;
+    eachTransformEntry = s;
     if (generalTransform) {
-      for (ad = 0, len = s.length; ad < len; ad++) {
-        eachTransformEntry = s[ad];
-        if (DEBUG) {
-          console.log("scanning table entry " + eachTransformEntry);
-        }
-        if (eachTransformEntry) {
-          push(eachTransformEntry);
-          push(symbol(SYMBOL_A_UNDERSCORE));
-          push(symbol(METAA));
-          subst();
-          push(symbol(SYMBOL_B_UNDERSCORE));
-          push(symbol(METAB));
-          subst();
-          push(symbol(SYMBOL_X_UNDERSCORE));
-          push(symbol(METAX));
-          subst();
-          p1 = pop();
-          p5 = car(p1);
-          p6 = cadr(p1);
-          p7 = cddr(p1);
+      if (DEBUG) {
+        console.log("scanning table entry " + eachTransformEntry);
+      }
+      push(eachTransformEntry);
+      push(symbol(SYMBOL_A_UNDERSCORE));
+      push(symbol(METAA));
+      subst();
+      push(symbol(SYMBOL_B_UNDERSCORE));
+      push(symbol(METAB));
+      subst();
+      push(symbol(SYMBOL_X_UNDERSCORE));
+      push(symbol(METAX));
+      subst();
+      p1 = pop();
+      p5 = car(p1);
+      p6 = cadr(p1);
+      p7 = cddr(p1);
 
-          /*
-          				p5 = p1.tensor.elem[0]
-          				p6 = p1.tensor.elem[1]
-          				for i in [2..(p1.tensor.elem.length-1)]
-          					push p1.tensor.elem[i]
-          				list(p1.tensor.elem.length - 2)
-          				p7 = pop()
-           */
-          if (f_equals_a(transform_h, generalTransform)) {
-            break;
+      /*
+      		p5 = p1.tensor.elem[0]
+      		p6 = p1.tensor.elem[1]
+      		for i in [2..(p1.tensor.elem.length-1)]
+      			push p1.tensor.elem[i]
+      		list(p1.tensor.elem.length - 2)
+      		p7 = pop()
+       */
+      if (f_equals_a(transform_h, generalTransform)) {
+        transformationSuccessful = true;
+      } else {
+        if (iscons(p3)) {
+          push(car(p3));
+          push_symbol(NIL);
+          firstTermSuccess = transform(s, generalTransform);
+          firstTermTransform = stack[tos - 1];
+          if (DEBUG) {
+            console.log("trying to simplify first term: " + car(p3) + " ..." + firstTermSuccess);
+          }
+          push(cdr(p3));
+          push_symbol(NIL);
+          if (DEBUG) {
+            console.log("testing: " + cdr(p3));
+          }
+          secondTermSuccess = transform(s, generalTransform);
+          secondTermTransform = stack[tos - 1];
+          if (DEBUG) {
+            console.log("trying to simplify other term: " + cdr(p3) + " ..." + secondTermSuccess);
+          }
+          tos = transform_h;
+          restoreMetaBindings();
+          push(firstTermTransform);
+          push(secondTermTransform);
+          cons();
+          restore();
+          if (firstTermSuccess || secondTermSuccess) {
+            return true;
           } else {
-            if (iscons(p3)) {
-              push(car(p3));
-              push_symbol(NIL);
-              firstTermSuccess = transform(s, generalTransform);
-              firstTermTransform = stack[tos - 1];
-              if (DEBUG) {
-                console.log("trying to simplify first term: " + car(p3) + " ..." + firstTermSuccess);
-              }
-              push(cdr(p3));
-              push_symbol(NIL);
-              if (DEBUG) {
-                console.log("testing: " + cdr(p3));
-              }
-              secondTermSuccess = transform(s, generalTransform);
-              secondTermTransform = stack[tos - 1];
-              if (DEBUG) {
-                console.log("trying to simplify other term: " + cdr(p3) + " ..." + secondTermSuccess);
-              }
-              tos = transform_h;
-              restoreMetaBindings();
-              push(firstTermTransform);
-              push(secondTermTransform);
-              cons();
-              restore();
-              if (firstTermSuccess || secondTermSuccess) {
-                return true;
-              } else {
-                return false;
-              }
-            }
+            return false;
           }
         }
       }
     } else {
-      for (ae = 0, len1 = s.length; ae < len1; ae++) {
-        eachTransformEntry = s[ae];
+      for (ad = 0, len = s.length; ad < len; ad++) {
+        eachTransformEntry = s[ad];
         if (DEBUG) {
           console.log("scanning table entry " + eachTransformEntry);
         }
@@ -17303,14 +17309,14 @@
           				p7 = pop()
            */
           if (f_equals_a(transform_h, generalTransform)) {
+            transformationSuccessful = true;
             break;
           }
         }
       }
     }
     tos = transform_h;
-    transformationSuccessful = false;
-    if (eachTransformEntry) {
+    if (transformationSuccessful) {
       push(p6);
       Eval();
       p1 = pop();
