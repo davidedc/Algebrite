@@ -490,7 +490,7 @@ turnErrorMessageToLatex = (theErrorMessage) ->
 	theErrorMessage = theErrorMessage.replace("Stop:","}  \\quad \\text{Stop:");
 	theErrorMessage = theErrorMessage.replace("?","}\\enspace " + latexErrorSign + " \\enspace  \\text{");
 	theErrorMessage = "$$\\text{" + theErrorMessage.replace(/\n/g,"") + "}$$"
-	console.log "theErrorMessage: " + theErrorMessage
+	#console.log "theErrorMessage: " + theErrorMessage
 	return theErrorMessage
 
 # there are around a dozen different unicodes that
