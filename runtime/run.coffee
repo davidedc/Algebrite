@@ -491,10 +491,23 @@ turnErrorMessageToLatex = (theErrorMessage) ->
 	theErrorMessage = "$$\\text{" + theErrorMessage.replace(/\n/g,"") + "}$$"
 	return theErrorMessage
 
+# there are around a dozen different unicodes that
+# represent some sort of middle dot, let's catch the most
+# common and turn them into what we can process
+normaliseDots = (stringToNormalise) ->
+	stringToNormalise = stringToNormalise.replace(new RegExp(String.fromCharCode(8901), 'g'), String.fromCharCode(dotprod_unicode));
+	stringToNormalise = stringToNormalise.replace(new RegExp(String.fromCharCode(8226), 'g'), String.fromCharCode(dotprod_unicode));
+	stringToNormalise = stringToNormalise.replace(new RegExp(String.fromCharCode(12539), 'g'), String.fromCharCode(dotprod_unicode));
+	stringToNormalise = stringToNormalise.replace(new RegExp(String.fromCharCode(55296), 'g'), String.fromCharCode(dotprod_unicode));
+	stringToNormalise = stringToNormalise.replace(new RegExp(String.fromCharCode(65381), 'g'), String.fromCharCode(dotprod_unicode));
+	return stringToNormalise
+
 
 run = (stringToBeRun, generateLatex = false) ->
 
 	#stringToBeRun = stringToBeRun + "\n"
+	stringToBeRun = normaliseDots stringToBeRun
+
 
 	if stringToBeRun == "selftest"
 		selftest()
@@ -720,6 +733,9 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	# the "starting" symbols.
 	
 	#console.log "codeFromAlgebraBlock: " + codeFromAlgebraBlock
+
+	codeFromAlgebraBlock = normaliseDots codeFromAlgebraBlock
+
 	##userSimplificationsInListForm = []
 	userSimplificationsInProgramForm = ""
 	for i in userSimplificationsInListForm
