@@ -72,80 +72,85 @@ transform = (s, generalTransform) ->
 		for i in [1...tos]
 			console.log "stack content at " + i + " " + stack[tos-i]
 
+	transformationSuccessful = false
+
+	eachTransformEntry = s
 	if generalTransform
-		for eachTransformEntry in s
-			if DEBUG then console.log "scanning table entry " + eachTransformEntry
-			if eachTransformEntry
+		#console.log "applying transform: " + eachTransformEntry
+		if DEBUG then console.log "scanning table entry " + eachTransformEntry
 
-				push eachTransformEntry
+		push eachTransformEntry
 
-				push symbol(SYMBOL_A_UNDERSCORE)
-				push symbol(METAA)
-				subst()
+		push symbol(SYMBOL_A_UNDERSCORE)
+		push symbol(METAA)
+		subst()
 
-				push symbol(SYMBOL_B_UNDERSCORE)
-				push symbol(METAB)
-				subst()
+		push symbol(SYMBOL_B_UNDERSCORE)
+		push symbol(METAB)
+		subst()
 
-				push symbol(SYMBOL_X_UNDERSCORE)
-				push symbol(METAX)
-				subst()
+		push symbol(SYMBOL_X_UNDERSCORE)
+		push symbol(METAX)
+		subst()
 
-				p1 = pop()
+		p1 = pop()
 
-				p5 = car(p1)
-				p6 = cadr(p1)
-				p7 = cddr(p1)
+		p5 = car(p1)
+		p6 = cadr(p1)
+		p7 = cddr(p1)
 
-				###
-				p5 = p1.tensor.elem[0]
-				p6 = p1.tensor.elem[1]
-				for i in [2..(p1.tensor.elem.length-1)]
-					push p1.tensor.elem[i]
-				list(p1.tensor.elem.length - 2)
-				p7 = pop()
-				###
+		###
+		p5 = p1.tensor.elem[0]
+		p6 = p1.tensor.elem[1]
+		for i in [2..(p1.tensor.elem.length-1)]
+			push p1.tensor.elem[i]
+		list(p1.tensor.elem.length - 2)
+		p7 = pop()
+		###
 
 
-				if (f_equals_a(transform_h, generalTransform))
-					# there is a successful transformation,
-					# transformed result is in p6
-					break
+		#if f_equals_a(transform_h, generalTransform)
+		# then there is a successful transformation,
+		# and transformed result is in p6
+		# otherwise...
+
+		if (f_equals_a(transform_h, generalTransform))
+			transformationSuccessful = true
+		else
+			# the match failed but perhaps we can match
+			# something lower in the tree
+
+			if iscons(p3)
+				push(car(p3))
+				push_symbol(NIL)
+				firstTermSuccess = transform(s, generalTransform)
+				firstTermTransform = stack[tos-1]
+				if DEBUG then console.log "trying to simplify first term: " + car(p3) + " ..." + firstTermSuccess
+
+				push(cdr(p3))
+				push_symbol(NIL)
+				if DEBUG then console.log "testing: " + cdr(p3)
+				#if (cdr(p3)+"") == "eig(A x,transpose(A x))()"
+				#	debugger
+				secondTermSuccess = transform(s, generalTransform)
+				secondTermTransform = stack[tos-1]
+				if DEBUG then console.log "trying to simplify other term: " + cdr(p3) + " ..." + secondTermSuccess
+
+				tos = transform_h
+				restoreMetaBindings()
+
+				push firstTermTransform
+				push secondTermTransform
+				cons()
+				restore()
+				if firstTermSuccess or secondTermSuccess
+					return true
+
 				else
-					# the match failed but perhaps we can match
-					# something lower in the tree
-
-					if iscons(p3)
-						push(car(p3))
-						push_symbol(NIL)
-						firstTermSuccess = transform(s, generalTransform)
-						firstTermTransform = stack[tos-1]
-						if DEBUG then console.log "trying to simplify first term: " + car(p3) + " ..." + firstTermSuccess
-
-						push(cdr(p3))
-						push_symbol(NIL)
-						if DEBUG then console.log "testing: " + cdr(p3)
-						#if (cdr(p3)+"") == "eig(A x,transpose(A x))()"
-						#	debugger
-						secondTermSuccess = transform(s, generalTransform)
-						secondTermTransform = stack[tos-1]
-						if DEBUG then console.log "trying to simplify other term: " + cdr(p3) + " ..." + secondTermSuccess
-
-						tos = transform_h
-						restoreMetaBindings()
-
-						push firstTermTransform
-						push secondTermTransform
-						cons()
-						restore()
-						if firstTermSuccess or secondTermSuccess
-							return true
-
-						else
-							return false
+					return false
 
 
-	else
+	else # "integrals" mode
 		for eachTransformEntry in s
 			if DEBUG then console.log "scanning table entry " + eachTransformEntry
 			if eachTransformEntry
@@ -169,6 +174,7 @@ transform = (s, generalTransform) ->
 				if (f_equals_a(transform_h, generalTransform))
 					# there is a successful transformation,
 					# transformed result is in p6
+					transformationSuccessful = true
 					break
 
 
@@ -176,13 +182,14 @@ transform = (s, generalTransform) ->
 
 	tos = transform_h
 
-	transformationSuccessful = false
 
-	if eachTransformEntry
+	if transformationSuccessful
+		#console.log "transformation successful"
 		# a transformation was successful
 		push(p6)
 		Eval()
 		p1 = pop()
+		#console.log "...into: " + p1
 		transformationSuccessful = true
 	else
 		# transformations failed

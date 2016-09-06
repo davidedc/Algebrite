@@ -28,11 +28,19 @@ runUserDefinedSimplifications = ->
 		#while success
 		p1 = pop()
 		push(p1)
-		push_symbol(NIL)
-		success = transform(additionalSimplifications, true)
 
-		p1 = pop()
-		push p1
+		#console.log "patterns to be checked: "
+		#for eachSimplification in additionalSimplifications
+		#	console.log "..." + eachSimplification
+
+		for eachSimplification in additionalSimplifications
+			if eachSimplification != 0
+				#console.log "simplify - tos: " + tos + " checking pattern: " + eachSimplification
+				push_symbol(NIL)
+				transform(eachSimplification, true)
+				p1 = pop()
+				#console.log "p1 at this stage of simplification: " + p1
+				push p1
 	# ------------------------
 
 simplifyForCodeGeneration = ->
