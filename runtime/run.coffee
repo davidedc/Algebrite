@@ -484,11 +484,13 @@ inited = false
 latexErrorSign = "\\rlap{\\large\\color{red}\\bigtriangleup}{\\ \\ \\tiny\\color{red}!}"
 turnErrorMessageToLatex = (theErrorMessage) ->
 	theErrorMessage = theErrorMessage.replace(/\n/g,"")
+	theErrorMessage = theErrorMessage.replace(/_/g, "} \\\\_ \\text{");
 	theErrorMessage = theErrorMessage.replace(new RegExp(String.fromCharCode(transpose_unicode), 'g'), "}{}^{T}\\text{");
 	theErrorMessage = theErrorMessage.replace(new RegExp(String.fromCharCode(dotprod_unicode), 'g'),"}\\cdot \\text{");
 	theErrorMessage = theErrorMessage.replace("Stop:","}  \\quad \\text{Stop:");
 	theErrorMessage = theErrorMessage.replace("?","}\\enspace " + latexErrorSign + " \\enspace  \\text{");
 	theErrorMessage = "$$\\text{" + theErrorMessage.replace(/\n/g,"") + "}$$"
+	console.log "theErrorMessage: " + theErrorMessage
 	return theErrorMessage
 
 # there are around a dozen different unicodes that
