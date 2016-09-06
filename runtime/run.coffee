@@ -729,8 +729,16 @@ check_esc_flag = ->
 	if (esc_flag)
 		stop("esc key")
 
-# TODO
+# this is called when the whole notebook is re-run
+# so we get the chance of clearing the whole state from
+# scratch.
+# In practice, the state we need to clear that persists
+# across blocks are only the patterns, so
+# just eject those.
 clearAlgebraEnvironment = ->
+	#console.log "CLEARING clearAlgebraEnvironment ============================================================="
+	Eval_clearsubstrules()
+	pop() # just pops the NIL put by the eval above
 
 computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	# we start "clean" each time:
