@@ -120,7 +120,7 @@ transform = (s, generalTransform) ->
 		if (f_equals_a(transform_h, generalTransform))
 			transformationSuccessful = true
 		else
- 			# the match failed but perhaps we can match
+			# the match failed but perhaps we can match
 			# something lower down in the tree, so
 			# let's recurse the tree
 
@@ -131,35 +131,30 @@ transform = (s, generalTransform) ->
 
 			if DEBUG then console.log "car(p3): " + car(p3)
 			restTerm = p3
+
+			if iscons(restTerm)
+				transformedTerms.push car(p3)
+				restTerm = cdr(p3)
+
 			while (iscons(restTerm) and !anyTermSuccess)
 				secondTerm = car(restTerm)
 				restTerm = cdr(restTerm)
 
-				# alright here is something tricky, we are recursing down
-				# the tree, going down the car and the cdr.
-				# the problem is that some of the heads here are things
-				# like "add". Now, if you take "add" as something to be replaced
-				# and start
-				if !is_native_function_node(secondTerm)
-					if DEBUG then console.log "tos before recursive transform: " + tos
-					
-					saveMetaBindings()
-					push(secondTerm)
-					push_symbol(NIL)
-					if DEBUG then console.log "testing: " + secondTerm
-					#if (secondTerm+"") == "eig(A x,transpose(A x))()"
-					#	debugger
-					if true then console.log "about to try to simplify other term: " + secondTerm
-					success = transform(s, generalTransform)					
-					anyTermSuccess = anyTermSuccess or success
-					transformationSuccessful = anyTermSuccess
+				if DEBUG then console.log "tos before recursive transform: " + tos
+				
+				push(secondTerm)
+				push_symbol(NIL)
+				if DEBUG then console.log "testing: " + secondTerm
+				#if (secondTerm+"") == "eig(A x,transpose(A x))()"
+				#	debugger
+				if true then console.log "about to try to simplify other term: " + secondTerm
+				success = transform(s, generalTransform)					
+				anyTermSuccess = anyTermSuccess or success
+				transformationSuccessful = anyTermSuccess
 
-					transformedTerms.push pop()
-					restoreMetaBindings()
+				transformedTerms.push pop()
 
-					if true then console.log "tried to simplify other term: " + secondTerm + " ...successful?: " + success + " ...transformed: " + transformedTerms[transformedTerms.length-1]
-				else
-					transformedTerms.push(secondTerm)
+				if true then console.log "tried to simplify other term: " + secondTerm + " ...successful?: " + success + " ...transformed: " + transformedTerms[transformedTerms.length-1]
 
 
 			# recreate the tree we were passed,
