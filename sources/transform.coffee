@@ -46,15 +46,13 @@ transform = (s, generalTransform) ->
 	p4 = pop() # X i.e. free variable
 	p3 = pop() # F i.e. input expression
 
-	if DEBUG
+	if true
 		console.log "         !!!!!!!!!   transform on: " + p3
 
 
 	# save symbol context in case Eval(B) below calls transform
 
-	push(get_binding(symbol(METAA)))
-	push(get_binding(symbol(METAB)))
-	push(get_binding(symbol(METAX)))
+	saveMetaBindings()
 
 	set_binding(symbol(METAX), p4)
 
@@ -66,17 +64,21 @@ transform = (s, generalTransform) ->
 	push(p4)
 	polyform(); # collect coefficients of x, x^2, etc.
 	push(p4)
+	
+	bookmarkTosToPrintDecomps = tos - 2
 	decomp(generalTransform)
+	numberOfDecomps = tos - bookmarkTosToPrintDecomps
 
-	if DEBUG
-		for i in [1...tos]
-			console.log "stack content at " + i + " " + stack[tos-i]
+	if true
+		console.log "	" + numberOfDecomps + " decomposed elements ====== "
+		for i in [0...numberOfDecomps]
+			console.log "	decomposition element " + i + ": " + stack[tos-1-i]
 
 	transformationSuccessful = false
 
 	eachTransformEntry = s
 	if generalTransform
-		#console.log "applying transform: " + eachTransformEntry
+		if DEBUG then console.log "applying transform: " + eachTransformEntry
 		if DEBUG then console.log "scanning table entry " + eachTransformEntry
 
 		push eachTransformEntry
@@ -96,6 +98,7 @@ transform = (s, generalTransform) ->
 		p1 = pop()
 
 		p5 = car(p1)
+		if DEBUG then console.log "template expression: " + p5
 		p6 = cadr(p1)
 		p7 = cddr(p1)
 
@@ -117,37 +120,56 @@ transform = (s, generalTransform) ->
 		if (f_equals_a(transform_h, generalTransform))
 			transformationSuccessful = true
 		else
-			# the match failed but perhaps we can match
-			# something lower in the tree
+ 			# the match failed but perhaps we can match
+			# something lower down in the tree, so
+			# let's recurse the tree
 
-			if iscons(p3)
-				push(car(p3))
-				push_symbol(NIL)
-				firstTermSuccess = transform(s, generalTransform)
-				firstTermTransform = stack[tos-1]
-				if DEBUG then console.log "trying to simplify first term: " + car(p3) + " ..." + firstTermSuccess
+			if true then console.log "p3 at this point: " + p3
 
-				push(cdr(p3))
-				push_symbol(NIL)
-				if DEBUG then console.log "testing: " + cdr(p3)
-				#if (cdr(p3)+"") == "eig(A x,transpose(A x))()"
-				#	debugger
-				secondTermSuccess = transform(s, generalTransform)
-				secondTermTransform = stack[tos-1]
-				if DEBUG then console.log "trying to simplify other term: " + cdr(p3) + " ..." + secondTermSuccess
+			anyTermSuccess = false
+			transformedTerms = []
 
-				tos = transform_h
-				restoreMetaBindings()
+			if DEBUG then console.log "car(p3): " + car(p3)
+			restTerm = p3
+			while (iscons(restTerm) and !anyTermSuccess)
+				secondTerm = car(restTerm)
+				restTerm = cdr(restTerm)
 
-				push firstTermTransform
-				push secondTermTransform
-				cons()
-				restore()
-				if firstTermSuccess or secondTermSuccess
-					return true
+				# alright here is something tricky, we are recursing down
+				# the tree, going down the car and the cdr.
+				# the problem is that some of the heads here are things
+				# like "add". Now, if you take "add" as something to be replaced
+				# and start
+				if !is_native_function_node(secondTerm)
+					if DEBUG then console.log "tos before recursive transform: " + tos
+					
+					saveMetaBindings()
+					push(secondTerm)
+					push_symbol(NIL)
+					if DEBUG then console.log "testing: " + secondTerm
+					#if (secondTerm+"") == "eig(A x,transpose(A x))()"
+					#	debugger
+					if true then console.log "about to try to simplify other term: " + secondTerm
+					success = transform(s, generalTransform)					
+					anyTermSuccess = anyTermSuccess or success
+					transformationSuccessful = anyTermSuccess
 
+					transformedTerms.push pop()
+					restoreMetaBindings()
+
+					if true then console.log "tried to simplify other term: " + secondTerm + " ...successful?: " + success + " ...transformed: " + transformedTerms[transformedTerms.length-1]
 				else
-					return false
+					transformedTerms.push(secondTerm)
+
+
+			# recreate the tree we were passed,
+			# but with all the terms being transformed
+			if transformedTerms.length != 0
+				for i in transformedTerms
+					push i
+				list(transformedTerms.length)
+				p6 = pop()
+
 
 
 	else # "integrals" mode
@@ -206,6 +228,11 @@ transform = (s, generalTransform) ->
 	restore()
 	return transformationSuccessful
 
+saveMetaBindings = ->
+	push(get_binding(symbol(METAA)))
+	push(get_binding(symbol(METAB)))
+	push(get_binding(symbol(METAX)))
+
 
 restoreMetaBindings = ->
 	set_binding(symbol(METAX), pop())
@@ -255,6 +282,7 @@ f_equals_a = (h, generalTransform) ->
 				# skip to the next binding of metas
 				continue
 			push(p3);			# F = A?
+			if DEBUG then console.log "about to evaluate template expression: " + p5 + " binding METAA to " + get_binding(symbol(METAA))
 			push(p5)
 			if generalTransform
 				originalexpanding = expanding

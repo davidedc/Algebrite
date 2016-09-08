@@ -103,8 +103,8 @@ selftest  = ->
 	test_eigen()
 	test_shape()
 	mini_test()
-	test_roots()
 	test_integral()
+	test_roots()
 
 
 	# alert "passed tests: " + ok_tests + " / failed tests: " + ko_tests

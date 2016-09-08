@@ -18,7 +18,9 @@ runUserDefinedSimplifications = ->
 	if userSimplificationsInListForm.length != 0 and !Find(cadr(p1), symbol(INTEGRAL))
 		originalexpanding = expanding
 		expanding = false
+		if true then console.log("runUserDefinedSimplifications passed: " + stack[tos-1].toString())
 		Eval()
+		if true then console.log("runUserDefinedSimplifications after eval no expanding: " + stack[tos-1].toString())
 		expanding = originalexpanding
 
 		additionalSimplifications = userSimplificationsInListForm.slice(0)
@@ -29,18 +31,24 @@ runUserDefinedSimplifications = ->
 		p1 = pop()
 		push(p1)
 
-		#console.log "patterns to be checked: "
-		#for eachSimplification in additionalSimplifications
-		#	console.log "..." + eachSimplification
+		if DEBUG then console.log "patterns to be checked: "
+		for eachSimplification in additionalSimplifications
+			if DEBUG then console.log "..." + eachSimplification
 
 		for eachSimplification in additionalSimplifications
 			if eachSimplification != 0
-				#console.log "simplify - tos: " + tos + " checking pattern: " + eachSimplification
+				if true then console.log "simplify - tos: " + tos + " checking pattern: " + eachSimplification + " on: " + p1
 				push_symbol(NIL)
 				transform(eachSimplification, true)
 				p1 = pop()
 				#console.log "p1 at this stage of simplification: " + p1
 				push p1
+
+		if DEBUG
+			console.log "METAX = " + get_binding(symbol(METAX))
+			console.log "METAA = " + get_binding(symbol(METAA))
+			console.log "METAB = " + get_binding(symbol(METAB))
+
 	# ------------------------
 
 simplifyForCodeGeneration = ->

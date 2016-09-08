@@ -22,6 +22,16 @@ Eval_decomp = ->
 	list(tos - h)
 	restore()
 
+
+pushTryNotToDuplicate = (toBePushed) ->
+	if tos > 0
+		if DEBUG then console.log "comparing " + toBePushed + " to: " + stack[tos-1]
+		if equal(toBePushed, stack[tos-1])
+			if DEBUG then console.log "skipping " + toBePushed + " because it's already on stack "
+			return
+	push(toBePushed)
+
+
 # returns constant expressions on the stack
 
 decomp = (generalTransform) ->
@@ -30,20 +40,20 @@ decomp = (generalTransform) ->
 	p2 = pop()
 	p1 = pop()
 
-	if DEBUG then console.log "DECOMPOSING " + p1
+	if true then console.log "DECOMPOSING " + p1
 
 	# is the entire expression constant?
 
 	if generalTransform
 		if !iscons(p1)
-			if DEBUG then console.log "ground thing: " + p1
-			push p1
+			if true then console.log " ground thing: " + p1
+			pushTryNotToDuplicate p1
 			restore()
 			return
 	else
 		if (Find(p1, p2) == 0)
-			if DEBUG then console.log "entire expression is constant"
-			push(p1)
+			if true then console.log " entire expression is constant"
+			pushTryNotToDuplicate(p1)
 			#push(p1);	# may need later for pushing both +a, -a
 			#negate()
 			restore()
@@ -58,19 +68,17 @@ decomp = (generalTransform) ->
 
 	# product?
 
-	if (car(p1) == symbol(MULTIPLY))
+	if (ismultiply(p1))
 		decomp_product(generalTransform)
 		restore()
 		return
 
 	# naive decomp if not sum or product
 
-	if DEBUG then console.log "naive decomp"
+	if true then console.log " naive decomp"
 	p3 = cdr(p1)
 	if DEBUG then console.log "startig p3: " + p3
 	while (iscons(p3))
-		if DEBUG then console.log "recursive decomposition"
-		push(car(p3))
 
 		# for a general transformations,
 		# we want to match any part of the tree so
@@ -78,6 +86,9 @@ decomp = (generalTransform) ->
 		# as recurse to its parts
 		if generalTransform
 			push(car(p3))
+
+		if DEBUG then console.log "recursive decomposition"
+		push(car(p3))
 		
 		if DEBUG then console.log "car(p3): " + car(p3)
 		push(p2)
@@ -88,14 +99,16 @@ decomp = (generalTransform) ->
 	restore()
 
 decomp_sum = (generalTransform) ->
+	if true then console.log " decomposing the sum "
 	h = 0
+
 
 	# decomp terms involving x
 
 	p3 = cdr(p1)
 
 	while (iscons(p3))
-		if (Find(car(p3), p2))
+		if (Find(car(p3), p2) or generalTransform)
 			push(car(p3))
 			push(p2)
 			decomp(generalTransform)
@@ -109,17 +122,18 @@ decomp_sum = (generalTransform) ->
 
 	while (iscons(p3))
 		if (Find(car(p3), p2) == 0)
-			push(car(p3))
+			pushTryNotToDuplicate(car(p3))
 		p3 = cdr(p3)
 
 	if (tos - h)
 		add_all(tos - h)
 		p3 = pop()
-		push(p3)
+		pushTryNotToDuplicate(p3)
 		push(p3)
 		negate();	# need both +a, -a for some integrals
 
 decomp_product = (generalTransform) ->
+	if true then console.log " decomposing the product "
 	h = 0
 
 	# decomp factors involving x
@@ -127,7 +141,7 @@ decomp_product = (generalTransform) ->
 	p3 = cdr(p1)
 
 	while (iscons(p3))
-		if (Find(car(p3), p2))
+		if (Find(car(p3), p2) or generalTransform)
 			push(car(p3))
 			push(p2)
 			decomp(generalTransform)
@@ -141,7 +155,7 @@ decomp_product = (generalTransform) ->
 
 	while (iscons(p3))
 		if (Find(car(p3), p2) == 0)
-			push(car(p3))
+			pushTryNotToDuplicate(car(p3))
 		p3 = cdr(p3)
 
 	if (tos - h)
