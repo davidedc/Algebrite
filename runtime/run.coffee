@@ -509,6 +509,7 @@ run = (stringToBeRun, generateLatex = false) ->
 
 	#stringToBeRun = stringToBeRun + "\n"
 	stringToBeRun = normaliseDots stringToBeRun
+	#console.log "run running: " + stringToBeRun
 
 
 	if stringToBeRun == "selftest"
