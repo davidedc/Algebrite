@@ -88,6 +88,9 @@ transform = (s, generalTransform) ->
 
 		push theTransform
 
+		# replacements of meta variables. Note that we don't
+		# use scan_meta because the pattern is not a string
+		# that we have to parse, it's a tree already.
 		# replace a_ with METAA in the passed transformation
 		push symbol(SYMBOL_A_UNDERSCORE)
 		push symbol(METAA)
