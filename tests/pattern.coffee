@@ -245,6 +245,48 @@ test_pattern = ->
 		"clearpatterns()",
 		"",
 
+		# ------------------------------------------------------------------
+
+		"pattern(aFunction(a_), anotherFunction(a_))",
+		"aFunction(a_)->anotherFunction(a_)",
+
+		"pattern(aFunction(a_), anotherFunctionBBBB(a_))",
+		"aFunction(a_)->anotherFunctionBBBB(a_)",
+
+		"simplify(aFunction(aFunction(someOtherArg)))",
+		"anotherFunction(anotherFunction(someOtherArg))",
+
+		"clearpatterns()",
+		"",
+
+		# ------------------------------------------------------------------
+
+		"pattern(aFunction(a_), anotherFunctionBBBB(a_))",
+		"aFunction(a_)->anotherFunctionBBBB(a_)",
+
+		"pattern(aFunction(a_), anotherFunction(a_))",
+		"aFunction(a_)->anotherFunction(a_)",
+
+		"simplify(aFunction(aFunction(someOtherArg)))",
+		"anotherFunctionBBBB(anotherFunctionBBBB(someOtherArg))",
+
+		"clearpatterns()",
+		"",
+
+		# ------------------------------------------------------------------
+
+		"pattern(aFunction(a_), anotherFunction(a_))",
+		"aFunction(a_)->anotherFunction(a_)",
+
+		"pattern(anotherFunction(a_), YETanotherFunction(a_))",
+		"anotherFunction(a_)->YETanotherFunction(a_)",
+
+		"simplify(aFunction(aFunction(someOtherArg)))",
+		"YETanotherFunction(YETanotherFunction(someOtherArg))",
+
+		"clearpatterns()",
+		"",
+
 
 
 	]

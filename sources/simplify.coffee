@@ -24,7 +24,6 @@ runUserDefinedSimplifications = ->
 		expanding = originalexpanding
 
 
-		success = true
 		p1 = stack[tos-1]
 
 		if DEBUG then console.log "patterns to be checked: "
@@ -32,6 +31,7 @@ runUserDefinedSimplifications = ->
 			if DEBUG then console.log "..." + eachSimplification
 
 		for eachSimplification in userSimplificationsInListForm
+			success = true
 			while success
 				if true then console.log "simplify - tos: " + tos + " checking pattern: " + eachSimplification + " on: " + p1
 				push_symbol(NIL)
