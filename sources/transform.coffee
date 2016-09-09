@@ -128,7 +128,6 @@ transform = (s, generalTransform) ->
 
 			if true then console.log "p3 at this point: " + p3
 
-			anyTermSuccess = false
 			transformedTerms = []
 
 			if DEBUG then console.log "car(p3): " + car(p3)
@@ -138,7 +137,7 @@ transform = (s, generalTransform) ->
 				transformedTerms.push car(p3)
 				restTerm = cdr(p3)
 
-			while (iscons(restTerm) and !anyTermSuccess)
+			while (iscons(restTerm))
 				secondTerm = car(restTerm)
 				restTerm = cdr(restTerm)
 
@@ -151,8 +150,7 @@ transform = (s, generalTransform) ->
 				#	debugger
 				if true then console.log "about to try to simplify other term: " + secondTerm
 				success = transform(s, generalTransform)					
-				anyTermSuccess = anyTermSuccess or success
-				transformationSuccessful = anyTermSuccess
+				transformationSuccessful = transformationSuccessful or success
 
 				transformedTerms.push pop()
 
