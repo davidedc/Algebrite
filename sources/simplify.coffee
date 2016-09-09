@@ -30,14 +30,20 @@ runUserDefinedSimplifications = ->
 		for eachSimplification in userSimplificationsInListForm
 			if DEBUG then console.log "..." + eachSimplification
 
-		for eachSimplification in userSimplificationsInListForm
-			success = true
-			while success
-				if true then console.log "simplify - tos: " + tos + " checking pattern: " + eachSimplification + " on: " + p1
-				push_symbol(NIL)
-				success = transform(eachSimplification, true)
-				p1 = stack[tos-1]
-				#console.log "p1 at this stage of simplification: " + p1
+		atLeastOneSuccessInRouldOfRulesApplications = true
+
+		while atLeastOneSuccessInRouldOfRulesApplications
+			atLeastOneSuccessInRouldOfRulesApplications = false
+			for eachSimplification in userSimplificationsInListForm
+				success = true
+				while success
+					if true then console.log "simplify - tos: " + tos + " checking pattern: " + eachSimplification + " on: " + p1
+					push_symbol(NIL)
+					success = transform(eachSimplification, true)
+					if success
+						atLeastOneSuccessInRouldOfRulesApplications = true
+					p1 = stack[tos-1]
+					#console.log "p1 at this stage of simplification: " + p1
 
 		if DEBUG
 			console.log "METAX = " + get_binding(symbol(METAX))

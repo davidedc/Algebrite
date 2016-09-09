@@ -287,6 +287,22 @@ test_pattern = ->
 		"clearpatterns()",
 		"",
 
+		# ------------------------------------------------------------------
+		# this one tests if multiple rounds of ruleS applications are
+		# done while there are still trasformations succeeding.
+
+		"pattern(anotherFunction(a_), YETanotherFunction(a_))",
+		"anotherFunction(a_)->YETanotherFunction(a_)",
+
+		"pattern(aFunction(a_), anotherFunction(a_))",
+		"aFunction(a_)->anotherFunction(a_)",
+
+		"simplify(aFunction(aFunction(someOtherArg)))",
+		"YETanotherFunction(YETanotherFunction(someOtherArg))",
+
+		"clearpatterns()",
+		"",
+
 
 
 	]
