@@ -19,7 +19,6 @@ test_low_level = ->
 	test_mroot()
 	test_dependencies()
 	test_assignments()
-	test_quickfactor()
 
 selftest  = ->
 	test_low_level()
@@ -102,6 +101,7 @@ selftest  = ->
 	test_eigen()
 	test_shape()
 	mini_test()
+	test_quickfactor()
 	test_integral()
 	test_roots()
 
