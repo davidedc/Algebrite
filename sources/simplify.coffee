@@ -27,9 +27,7 @@ runUserDefinedSimplifications = ->
 		additionalSimplifications.push 0
 
 		success = true
-		#while success
-		p1 = pop()
-		push(p1)
+		p1 = stack[tos-1]
 
 		if DEBUG then console.log "patterns to be checked: "
 		for eachSimplification in additionalSimplifications
@@ -37,12 +35,12 @@ runUserDefinedSimplifications = ->
 
 		for eachSimplification in additionalSimplifications
 			if eachSimplification != 0
-				if true then console.log "simplify - tos: " + tos + " checking pattern: " + eachSimplification + " on: " + p1
-				push_symbol(NIL)
-				transform(eachSimplification, true)
-				p1 = pop()
-				#console.log "p1 at this stage of simplification: " + p1
-				push p1
+				while success
+					if true then console.log "simplify - tos: " + tos + " checking pattern: " + eachSimplification + " on: " + p1
+					push_symbol(NIL)
+					success = transform(eachSimplification, true)
+					p1 = stack[tos-1]
+					#console.log "p1 at this stage of simplification: " + p1
 
 		if DEBUG
 			console.log "METAX = " + get_binding(symbol(METAX))
