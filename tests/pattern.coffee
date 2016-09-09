@@ -28,7 +28,7 @@ test_pattern = ->
 		# ideally this but we need to make simplifications work better
 		# "1+eig(cov(A*x))",
 
-		"clearsubstrules()",
+		"clearpatterns()",
 		"",
 
 		# ------------------------------------------------------------------
@@ -77,7 +77,7 @@ test_pattern = ->
 		"simplify(eig(dot(x*transpose(transpose(A)), transpose(A*x))))",
 		"eig(cov(transpose(A)*transpose(x)))",
 
-		"clearsubstrules()",
+		"clearpatterns()",
 		"",
 
 
@@ -107,7 +107,7 @@ test_pattern = ->
 		"simplify(eig(dot(transpose(-x),transpose(transpose(-x)))))",
 		"eig(cov(-x))",
 
-		"clearsubstrules()",
+		"clearpatterns()",
 		"",
 
 
@@ -121,7 +121,7 @@ test_pattern = ->
 		"simplify(something(x,y))",
 		"somethingElse(x)*y",
 
-		"clearsubstrules()",
+		"clearpatterns()",
 		"",
 
 
@@ -138,7 +138,7 @@ test_pattern = ->
 		"simplify(indirection(x,y))",
 		"somethingElse(x)*y",
 
-		"clearsubstrules()",
+		"clearpatterns()",
 		"",
 
 
@@ -155,7 +155,7 @@ test_pattern = ->
 		"simplify(1 + eig(dot(transpose(A)+transpose(B),B+transpose(transpose(A)))))",
 		"1+eig(inner(transpose(A),A)+inner(transpose(A),B)+inner(transpose(B),A)+inner(transpose(B),B))",
 
-		"clearsubstrules()",
+		"clearpatterns()",
 		"",
 
 
@@ -175,7 +175,7 @@ test_pattern = ->
 		"simplify(1 + eig(dot(b(2),transpose(b(2)))))",
 		"1+eig(cov(transpose(b(2))))",
 
-		"clearsubstrules()",
+		"clearpatterns()",
 		"",
 
 
@@ -187,7 +187,7 @@ test_pattern = ->
 		"simplify(something + somethingelse)",
 		"inner(cov(somethingelse),cov(something))",
 
-		"clearsubstrules()",
+		"clearpatterns()",
 		"",
 
 		# ------------------------------------------------------------------
@@ -198,7 +198,7 @@ test_pattern = ->
 		"simplify(aFunction(someArg))",
 		"anotherFunction(someArg)",
 
-		"clearsubstrules()",
+		"clearpatterns()",
 		"",
 
 		# ------------------------------------------------------------------
@@ -209,7 +209,7 @@ test_pattern = ->
 		"simplify(1 + aFunction(someArg))",
 		"1+anotherFunction(someArg)",
 
-		"clearsubstrules()",
+		"clearpatterns()",
 		"",
 
 		# ------------------------------------------------------------------
@@ -220,7 +220,7 @@ test_pattern = ->
 		"simplify(aFunction(someArg)+aFunction(someOtherArg))",
 		"anotherFunction(someArg)+anotherFunction(someOtherArg)",
 
-		"clearsubstrules()",
+		"clearpatterns()",
 		"",
 
 		# ------------------------------------------------------------------
@@ -231,7 +231,7 @@ test_pattern = ->
 		"simplify( a + aFunction(someArg) + b + aFunction(someOtherArg))",
 		"a+b+anotherFunction(someArg)+anotherFunction(someOtherArg)",
 
-		"clearsubstrules()",
+		"clearpatterns()",
 		"",
 
 		# ------------------------------------------------------------------
@@ -242,7 +242,7 @@ test_pattern = ->
 		"simplify(aFunction(aFunction(someOtherArg)))",
 		"anotherFunction(anotherFunction(someOtherArg))",
 
-		"clearsubstrules()",
+		"clearpatterns()",
 		"",
 
 

@@ -28,3 +28,18 @@ Eval_pattern = ->
 	push cdr(p1)
 	list(2)
 	
+
+###
+	Clear all patterns
+###
+
+
+Eval_clearpatterns = ->
+	# this is likely to create garbage collection
+	# problems in the C version as it's an
+	# untracked reference
+	userSimplificationsInListForm = []
+	userSimplificationsInStringForm = []
+	
+	# return nothing
+	push_symbol(NIL)

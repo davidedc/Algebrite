@@ -738,7 +738,7 @@ check_esc_flag = ->
 # just eject those.
 clearAlgebraEnvironment = ->
 	#console.log "CLEARING clearAlgebraEnvironment ============================================================="
-	Eval_clearsubstrules()
+	Eval_clearpatterns()
 	pop() # just pops the NIL put by the eval above
 
 computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->

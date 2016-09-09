@@ -81,7 +81,7 @@ Eval_cons = ->
 		when CHOOSE then Eval_choose()
 		when CIRCEXP then Eval_circexp()
 		when CLEAR then Eval_clear()
-		when CLEARSUBSTRULES then Eval_clearsubstrules()
+		when CLEARPATTERNS then Eval_clearpatterns()
 		when CLOCK then Eval_clock()
 		when COEFF then Eval_coeff()
 		when COFACTOR then Eval_cofactor()
