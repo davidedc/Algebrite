@@ -1,3 +1,13 @@
+# this function extract parts subtrees from a tree.
+# It is used in two
+# places that have to do with pattern matching.
+# One is for integrals, where an expression or its
+# subparts are matched against cases in an
+# integrals table.
+# Another one is for applyging tranformation patterns
+# defined via PATTERN, again patterns are applied to
+# either the whole expression or any of its parts.
+
 
 
 # unclear to me at the moment
