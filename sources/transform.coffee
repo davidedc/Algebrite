@@ -52,8 +52,6 @@ transform = (s, generalTransform) ->
 		console.log "         !!!!!!!!!   transform on: " + p3
 
 
-	# save symbol context in case Eval(B) below calls transform
-
 	saveMetaBindings()
 
 	set_binding(symbol(METAX), p4)
@@ -78,21 +76,29 @@ transform = (s, generalTransform) ->
 
 	transformationSuccessful = false
 
-	eachTransformEntry = s
 	if generalTransform
-		if DEBUG then console.log "applying transform: " + eachTransformEntry
-		if DEBUG then console.log "scanning table entry " + eachTransformEntry
+		# "general tranform" mode is supposed to be more generic than
+		# "integrals" mode.
+		# In general transform mode we get only one transformation
+		# in s
 
-		push eachTransformEntry
+		theTransform = s
+		if DEBUG then console.log "applying transform: " + theTransform
+		if DEBUG then console.log "scanning table entry " + theTransform
 
+		push theTransform
+
+		# replace a_ with METAA in the passed transformation
 		push symbol(SYMBOL_A_UNDERSCORE)
 		push symbol(METAA)
 		subst()
 
+		# replace b_ with METAB in the passed transformation
 		push symbol(SYMBOL_B_UNDERSCORE)
 		push symbol(METAB)
 		subst()
 
+		# replace x_ with METAX in the passed transformation
 		push symbol(SYMBOL_X_UNDERSCORE)
 		push symbol(METAX)
 		subst()
@@ -114,12 +120,9 @@ transform = (s, generalTransform) ->
 		###
 
 
-		#if f_equals_a(transform_h, generalTransform)
-		# then there is a successful transformation,
-		# and transformed result is in p6
-		# otherwise...
-
 		if (f_equals_a(transform_h, generalTransform))
+			# successful transformation,
+			# transformed result is in p6
 			transformationSuccessful = true
 		else
 			# the match failed but perhaps we can match
