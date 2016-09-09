@@ -1,5 +1,7 @@
 ###
-Transform an expression using table look-up
+Transform an expression using a pattern. The
+pattern can come from the integrals table or
+the user-defined patterns.
 
 The expression and free variable are on the stack.
 
