@@ -17,14 +17,13 @@ test_low_level = ->
 	test_mgcd()
 	test_mpow()
 	test_mroot()
+	test_dependencies()
 	test_assignments()
-	# commenting out because it takes a looong time
-	# with the current logging. But it works now
-	# as I'm commenting it out.
-	#test_quickfactor()
+	test_quickfactor()
 
 selftest  = ->
 	test_low_level()
+	test_pattern()
 	test_sum()
 	test_product()
 	test_exp()
