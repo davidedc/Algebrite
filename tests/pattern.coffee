@@ -181,12 +181,66 @@ test_pattern = ->
 
 		# ------------------------------------------------------------------
 
-
 		"pattern(a_ + b_, dot(cov(b_),cov(a_)))",
 		"a_+b_->dot(cov(b_),cov(a_))",
 
 		"simplify(something + somethingelse)",
 		"inner(cov(somethingelse),cov(something))",
+
+		"clearsubstrules()",
+		"",
+
+		# ------------------------------------------------------------------
+
+		"pattern(aFunction(a_), anotherFunction(a_))",
+		"aFunction(a_)->anotherFunction(a_)",
+
+		"simplify(aFunction(someArg))",
+		"anotherFunction(someArg)",
+
+		"clearsubstrules()",
+		"",
+
+		# ------------------------------------------------------------------
+
+		"pattern(aFunction(a_), anotherFunction(a_))",
+		"aFunction(a_)->anotherFunction(a_)",
+
+		"simplify(1 + aFunction(someArg))",
+		"1+anotherFunction(someArg)",
+
+		"clearsubstrules()",
+		"",
+
+		# ------------------------------------------------------------------
+
+		"pattern(aFunction(a_), anotherFunction(a_))",
+		"aFunction(a_)->anotherFunction(a_)",
+
+		"simplify(aFunction(someArg)+aFunction(someOtherArg))",
+		"anotherFunction(someArg)+anotherFunction(someOtherArg)",
+
+		"clearsubstrules()",
+		"",
+
+		# ------------------------------------------------------------------
+
+		"pattern(aFunction(a_), anotherFunction(a_))",
+		"aFunction(a_)->anotherFunction(a_)",
+
+		"simplify( a + aFunction(someArg) + b + aFunction(someOtherArg))",
+		"a+b+anotherFunction(someArg)+anotherFunction(someOtherArg)",
+
+		"clearsubstrules()",
+		"",
+
+		# ------------------------------------------------------------------
+
+		"pattern(aFunction(a_), anotherFunction(a_))",
+		"aFunction(a_)->anotherFunction(a_)",
+
+		"simplify(aFunction(aFunction(someOtherArg)))",
+		"anotherFunction(anotherFunction(someOtherArg))",
 
 		"clearsubstrules()",
 		"",
