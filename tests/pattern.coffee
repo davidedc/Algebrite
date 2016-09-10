@@ -303,6 +303,23 @@ test_pattern = ->
 		"clearpatterns()",
 		"",
 
+		# ------------------------------------------------------------------
+		# you can use transformation rules to calculate factorials
+		# you shouldn't, but you can
+
+		"pattern(fact(0), 1)",
+		"fact(0)->1",
+
+		# TODO would be nice to print out the constraints
+		# as well.
+		"pattern(fact(a_), a_*fact(a_-1), not(a_ == 0))",
+		"fact(a_)->a_*fact(a_ - 1)",
+
+		"simplify(fact(3))",
+		"6",
+
+		"clearpatterns()",
+		"",
 
 
 	]
