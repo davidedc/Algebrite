@@ -31,19 +31,29 @@ runUserDefinedSimplifications = ->
 			if DEBUG then console.log "..." + eachSimplification
 
 		atLeastOneSuccessInRouldOfRulesApplications = true
+		numberOfRulesApplications = 0
 
-		while atLeastOneSuccessInRouldOfRulesApplications
+		
+		while atLeastOneSuccessInRouldOfRulesApplications and numberOfRulesApplications < MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES
 			atLeastOneSuccessInRouldOfRulesApplications = false
+			numberOfRulesApplications++
 			for eachSimplification in userSimplificationsInListForm
 				success = true
-				while success
+				eachConsecutiveRuleApplication = 0
+				while success and eachConsecutiveRuleApplication < MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE
+					eachConsecutiveRuleApplication++
 					if true then console.log "simplify - tos: " + tos + " checking pattern: " + eachSimplification + " on: " + p1
 					push_symbol(NIL)
 					success = transform(eachSimplification, true)
 					if success
 						atLeastOneSuccessInRouldOfRulesApplications = true
 					p1 = stack[tos-1]
-					#console.log "p1 at this stage of simplification: " + p1
+					console.log "p1 at this stage of simplification: " + p1
+				if eachConsecutiveRuleApplication == MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE
+					stop("maximum application of single transformation rule exceeded: " + eachSimplification)
+
+		if numberOfRulesApplications == MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES
+			stop("maximum application of all transformation rules exceeded ")
 
 		if DEBUG
 			console.log "METAX = " + get_binding(symbol(METAX))
