@@ -82,94 +82,111 @@ transform = (s, generalTransform) ->
 		# In general transform mode we get only one transformation
 		# in s
 
-		theTransform = s
-		if DEBUG then console.log "applying transform: " + theTransform
-		if DEBUG then console.log "scanning table entry " + theTransform
+		# simple numbers can end up matching complicated templates,
+		# which we don't want.
+		# for example "1" ends up matching "inner(transpose(a_),a_)"
+		# since "1" is decomposed to "1" and replacing "a_" with "1"
+		# there is a match.
+		# Although this match is OK at some fundamental level, we want to
+		# avoid it because that's not what the spirit of this match
+		# is: "1" does not have any structural resemblance with
+		# "inner(transpose(a_),a_)". There are probably better ways
+		# to so this, for example we might notice that "inner" is an
+		# anchor since it "sits above" any meta variables, so we
+		# might want to mandate it to be matched at the top
+		# of the tree. For the time
+		# being let's just skip matching on simple numbers.
+		if !isnum(p3)
 
-		push theTransform
+			theTransform = s
+			if DEBUG then console.log "applying transform: " + theTransform
+			if DEBUG then console.log "scanning table entry " + theTransform
 
-		# replacements of meta variables. Note that we don't
-		# use scan_meta because the pattern is not a string
-		# that we have to parse, it's a tree already.
-		# replace a_ with METAA in the passed transformation
-		push symbol(SYMBOL_A_UNDERSCORE)
-		push symbol(METAA)
-		subst()
+			push theTransform
 
-		# replace b_ with METAB in the passed transformation
-		push symbol(SYMBOL_B_UNDERSCORE)
-		push symbol(METAB)
-		subst()
+			# replacements of meta variables. Note that we don't
+			# use scan_meta because the pattern is not a string
+			# that we have to parse, it's a tree already.
+			# replace a_ with METAA in the passed transformation
+			push symbol(SYMBOL_A_UNDERSCORE)
+			push symbol(METAA)
+			subst()
 
-		# replace x_ with METAX in the passed transformation
-		push symbol(SYMBOL_X_UNDERSCORE)
-		push symbol(METAX)
-		subst()
+			# replace b_ with METAB in the passed transformation
+			push symbol(SYMBOL_B_UNDERSCORE)
+			push symbol(METAB)
+			subst()
 
-		p1 = pop()
+			# replace x_ with METAX in the passed transformation
+			push symbol(SYMBOL_X_UNDERSCORE)
+			push symbol(METAX)
+			subst()
 
-		p5 = car(p1)
-		if DEBUG then console.log "template expression: " + p5
-		p6 = cadr(p1)
-		p7 = cddr(p1)
+			p1 = pop()
 
-		###
-		p5 = p1.tensor.elem[0]
-		p6 = p1.tensor.elem[1]
-		for i in [2..(p1.tensor.elem.length-1)]
-			push p1.tensor.elem[i]
-		list(p1.tensor.elem.length - 2)
-		p7 = pop()
-		###
+			p5 = car(p1)
+			if DEBUG then console.log "template expression: " + p5
+			p6 = cadr(p1)
+			p7 = cddr(p1)
 
-
-		if (f_equals_a(transform_h, generalTransform))
-			# successful transformation,
-			# transformed result is in p6
-			transformationSuccessful = true
-		else
-			# the match failed but perhaps we can match
-			# something lower down in the tree, so
-			# let's recurse the tree
-
-			if true then console.log "p3 at this point: " + p3
-
-			transformedTerms = []
-
-			if DEBUG then console.log "car(p3): " + car(p3)
-			restTerm = p3
-
-			if iscons(restTerm)
-				transformedTerms.push car(p3)
-				restTerm = cdr(p3)
-
-			while (iscons(restTerm))
-				secondTerm = car(restTerm)
-				restTerm = cdr(restTerm)
-
-				if DEBUG then console.log "tos before recursive transform: " + tos
-				
-				push(secondTerm)
-				push_symbol(NIL)
-				if DEBUG then console.log "testing: " + secondTerm
-				#if (secondTerm+"") == "eig(A x,transpose(A x))()"
-				#	debugger
-				if true then console.log "about to try to simplify other term: " + secondTerm
-				success = transform(s, generalTransform)					
-				transformationSuccessful = transformationSuccessful or success
-
-				transformedTerms.push pop()
-
-				if true then console.log "tried to simplify other term: " + secondTerm + " ...successful?: " + success + " ...transformed: " + transformedTerms[transformedTerms.length-1]
+			###
+			p5 = p1.tensor.elem[0]
+			p6 = p1.tensor.elem[1]
+			for i in [2..(p1.tensor.elem.length-1)]
+				push p1.tensor.elem[i]
+			list(p1.tensor.elem.length - 2)
+			p7 = pop()
+			###
 
 
-			# recreate the tree we were passed,
-			# but with all the terms being transformed
-			if transformedTerms.length != 0
-				for i in transformedTerms
-					push i
-				list(transformedTerms.length)
-				p6 = pop()
+
+			if (f_equals_a(transform_h, generalTransform))
+				# successful transformation,
+				# transformed result is in p6
+				transformationSuccessful = true
+			else
+				# the match failed but perhaps we can match
+				# something lower down in the tree, so
+				# let's recurse the tree
+
+				if true then console.log "p3 at this point: " + p3
+
+				transformedTerms = []
+
+				if DEBUG then console.log "car(p3): " + car(p3)
+				restTerm = p3
+
+				if iscons(restTerm)
+					transformedTerms.push car(p3)
+					restTerm = cdr(p3)
+
+				while (iscons(restTerm))
+					secondTerm = car(restTerm)
+					restTerm = cdr(restTerm)
+
+					if DEBUG then console.log "tos before recursive transform: " + tos
+					
+					push(secondTerm)
+					push_symbol(NIL)
+					if DEBUG then console.log "testing: " + secondTerm
+					#if (secondTerm+"") == "eig(A x,transpose(A x))()"
+					#	debugger
+					if true then console.log "about to try to simplify other term: " + secondTerm
+					success = transform(s, generalTransform)					
+					transformationSuccessful = transformationSuccessful or success
+
+					transformedTerms.push pop()
+
+					if true then console.log "tried to simplify other term: " + secondTerm + " ...successful?: " + success + " ...transformed: " + transformedTerms[transformedTerms.length-1]
+
+
+				# recreate the tree we were passed,
+				# but with all the terms being transformed
+				if transformedTerms.length != 0
+					for i in transformedTerms
+						push i
+					list(transformedTerms.length)
+					p6 = pop()
 
 
 
@@ -247,26 +264,14 @@ f_equals_a = (h, generalTransform) ->
 	fea_j = 0
 	for fea_i in [h...tos]
 
-		# constants might end up matching to become
-		# a more complex expression that gives out their
-		# value, we want to avoid that
-		if generalTransform and isnum(stack[fea_i])
-			continue
-
 		set_binding(symbol(METAA), stack[fea_i])
 		if DEBUG
-			console.log "binding METAA to " + get_binding(symbol(METAA))
+			console.log "  binding METAA to " + get_binding(symbol(METAA))
 		for fea_j in [h...tos]
-
-			# constants might end up matching to become
-			# a more complex expression that gives out their
-			# value, we want to avoid that
-			if generalTransform and isnum(stack[fea_j])
-				continue
 
 			set_binding(symbol(METAB), stack[fea_j])
 			if DEBUG
-				console.log "binding METAB to " + get_binding(symbol(METAB))
+				console.log "  binding METAB to " + get_binding(symbol(METAB))
 
 			# now test all the conditions (it's an and between them)
 			p1 = p7
@@ -292,7 +297,7 @@ f_equals_a = (h, generalTransform) ->
 			if generalTransform
 				expanding = originalexpanding
 			if DEBUG
-				console.log "comparing " + stack[tos-1] + " to: " + stack[tos-2]
+				console.log "  comparing " + stack[tos-1] + " to: " + stack[tos-2]
 			subtract()
 			p1 = pop()
 			if (iszero(p1))
