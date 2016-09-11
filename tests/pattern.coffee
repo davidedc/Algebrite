@@ -328,7 +328,7 @@ test_pattern = ->
 
 		# TODO would be nice to print out the constraints
 		# as well.
-		"simplify(f(1,2)))",
+		"simplify(f(1,2))",
 		"Stop: maximum application of single transformation rule exceeded: f(a_,b_)(f(b_,a_))",
 
 		"clearpatterns()",
