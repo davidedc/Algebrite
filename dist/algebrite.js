@@ -20176,7 +20176,7 @@
     userSimplificationsInProgramForm = "";
     for (ae = 0, len = userSimplificationsInListForm.length; ae < len; ae++) {
       i = userSimplificationsInListForm[ae];
-      userSimplificationsInProgramForm += "silentpattern(" + car(i) + "," + car(cdr(i)) + ")\n";
+      userSimplificationsInProgramForm += "silentpattern(" + car(i) + "," + car(cdr(i)) + "," + car(cdr(cdr(i))) + ")\n";
     }
     userSimplificationsInListForm = [];
     userSimplificationsInStringForm = [];
