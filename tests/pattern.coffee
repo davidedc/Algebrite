@@ -344,5 +344,10 @@ test_pattern = ->
 		"pattern()",
 		"Stop: pattern needs at least a template and a transformed version",
 
+		# ------------------------------------------------------------------
+
+		"pattern(f(a_,b_), f(a_,b_))",
+		"Stop: recursive pattern",
+
 
 	]

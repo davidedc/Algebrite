@@ -28,6 +28,9 @@ Eval_pattern = ->
 	else
 		thirdArgument = car(cdr(cdr(cdr(p1))))
 
+	if equal(firstArgument, secondArgument)
+		stop("recursive pattern")
+
 	# console.log "Eval_pattern of " + cdr(p1)
 	# this is likely to create garbage collection
 	# problems in the C version as it's an
