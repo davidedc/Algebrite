@@ -334,5 +334,15 @@ test_pattern = ->
 		"clearpatterns()",
 		"",
 
+		# ------------------------------------------------------------------
+
+		"pattern(f(a_,b_))",
+		"Stop: pattern needs at least a template and a transformed version",
+
+		# ------------------------------------------------------------------
+
+		"pattern()",
+		"Stop: pattern needs at least a template and a transformed version",
+
 
 	]

@@ -1,5 +1,9 @@
 ###
-	Add a pattern i.e. a substitution rule
+	Add a pattern i.e. a substitution rule.
+	Substitution rule needs a template as first argument
+	and what to transform it to as second argument.
+	Optional third argument is a boolean test which
+	adds conditions to when the rule is applied.
 ###
 
 # same as Eval_pattern but only leaves
@@ -11,6 +15,19 @@ Eval_silentpattern = ->
 	push_symbol(NIL)
 
 Eval_pattern = ->
+	# check that the parameters are allright
+	if !iscons(cdr(p1))
+		stop("pattern needs at least a template and a transformed version")
+	firstArgument = car(cdr(p1))
+	secondArgument = car(cdr(cdr(p1)))
+	if secondArgument == symbol(NIL)
+		stop("pattern needs at least a template and a transformed version")
+	# third argument is optional and contains the tests
+	if !iscons(cdr(cdr(p1)))
+		thirdArgument = symbol(NIL)
+	else
+		thirdArgument = car(cdr(cdr(cdr(p1))))
+
 	# console.log "Eval_pattern of " + cdr(p1)
 	# this is likely to create garbage collection
 	# problems in the C version as it's an
