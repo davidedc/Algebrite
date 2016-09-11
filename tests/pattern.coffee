@@ -313,7 +313,7 @@ test_pattern = ->
 		# TODO would be nice to print out the constraints
 		# as well.
 		"pattern(fact(a_), a_*fact(a_-1), not(a_ == 0))",
-		"fact(a_)->a_*fact(a_ - 1)",
+		"fact(a_)->a_*fact(a_-1)",
 
 		"simplify(fact(3))",
 		"6",
