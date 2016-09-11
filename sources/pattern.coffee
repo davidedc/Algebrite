@@ -32,9 +32,10 @@ Eval_pattern = ->
 	# this is likely to create garbage collection
 	# problems in the C version as it's an
 	# untracked reference
-	if (cdr(p1)+"") not in userSimplificationsInStringForm
+	stringKey = "template: " + firstArgument + " tests: " + thirdArgument
+	if stringKey not in userSimplificationsInStringForm
 		#console.log "adding pattern because it doesn't exist: " + cdr(p1)
-		userSimplificationsInStringForm.push(cdr(p1)+"")
+		userSimplificationsInStringForm.push(stringKey)
 		userSimplificationsInListForm.push(cdr(p1))
 	else
 		#console.log "skipping pattern because it already exists: " + cdr(p1)
