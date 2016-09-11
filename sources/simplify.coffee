@@ -18,9 +18,9 @@ runUserDefinedSimplifications = ->
 	if userSimplificationsInListForm.length != 0 and !Find(cadr(p1), symbol(INTEGRAL))
 		originalexpanding = expanding
 		expanding = false
-		if true then console.log("runUserDefinedSimplifications passed: " + stack[tos-1].toString())
+		if DEBUG then console.log("runUserDefinedSimplifications passed: " + stack[tos-1].toString())
 		Eval()
-		if true then console.log("runUserDefinedSimplifications after eval no expanding: " + stack[tos-1].toString())
+		if DEBUG then console.log("runUserDefinedSimplifications after eval no expanding: " + stack[tos-1].toString())
 		expanding = originalexpanding
 
 
@@ -42,13 +42,13 @@ runUserDefinedSimplifications = ->
 				eachConsecutiveRuleApplication = 0
 				while success and eachConsecutiveRuleApplication < MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE
 					eachConsecutiveRuleApplication++
-					if true then console.log "simplify - tos: " + tos + " checking pattern: " + eachSimplification + " on: " + p1
+					if DEBUG then console.log "simplify - tos: " + tos + " checking pattern: " + eachSimplification + " on: " + p1
 					push_symbol(NIL)
 					success = transform(eachSimplification, true)
 					if success
 						atLeastOneSuccessInRouldOfRulesApplications = true
 					p1 = stack[tos-1]
-					console.log "p1 at this stage of simplification: " + p1
+					if DEBUG then console.log "p1 at this stage of simplification: " + p1
 				if eachConsecutiveRuleApplication == MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE
 					stop("maximum application of single transformation rule exceeded: " + eachSimplification)
 

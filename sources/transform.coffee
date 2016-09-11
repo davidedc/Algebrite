@@ -48,7 +48,7 @@ transform = (s, generalTransform) ->
 	p4 = pop() # X i.e. free variable
 	p3 = pop() # F i.e. input expression
 
-	if true
+	if DEBUG
 		console.log "         !!!!!!!!!   transform on: " + p3
 
 
@@ -69,7 +69,7 @@ transform = (s, generalTransform) ->
 	decomp(generalTransform)
 	numberOfDecomps = tos - bookmarkTosToPrintDecomps
 
-	if true
+	if DEBUG
 		console.log "	" + numberOfDecomps + " decomposed elements ====== "
 		for i in [0...numberOfDecomps]
 			console.log "	decomposition element " + i + ": " + stack[tos-1-i]
@@ -149,7 +149,7 @@ transform = (s, generalTransform) ->
 				# something lower down in the tree, so
 				# let's recurse the tree
 
-				if true then console.log "p3 at this point: " + p3
+				if DEBUG then console.log "p3 at this point: " + p3
 
 				transformedTerms = []
 
@@ -171,13 +171,13 @@ transform = (s, generalTransform) ->
 					if DEBUG then console.log "testing: " + secondTerm
 					#if (secondTerm+"") == "eig(A x,transpose(A x))()"
 					#	debugger
-					if true then console.log "about to try to simplify other term: " + secondTerm
+					if DEBUG then console.log "about to try to simplify other term: " + secondTerm
 					success = transform(s, generalTransform)					
 					transformationSuccessful = transformationSuccessful or success
 
 					transformedTerms.push pop()
 
-					if true then console.log "tried to simplify other term: " + secondTerm + " ...successful?: " + success + " ...transformed: " + transformedTerms[transformedTerms.length-1]
+					if DEBUG then console.log "tried to simplify other term: " + secondTerm + " ...successful?: " + success + " ...transformed: " + transformedTerms[transformedTerms.length-1]
 
 
 				# recreate the tree we were passed,

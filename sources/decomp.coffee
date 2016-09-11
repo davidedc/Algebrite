@@ -50,19 +50,19 @@ decomp = (generalTransform) ->
 	p2 = pop()
 	p1 = pop()
 
-	if true then console.log "DECOMPOSING " + p1
+	if DEBUG then console.log "DECOMPOSING " + p1
 
 	# is the entire expression constant?
 
 	if generalTransform
 		if !iscons(p1)
-			if true then console.log " ground thing: " + p1
+			if DEBUG then console.log " ground thing: " + p1
 			pushTryNotToDuplicate p1
 			restore()
 			return
 	else
 		if (Find(p1, p2) == 0)
-			if true then console.log " entire expression is constant"
+			if DEBUG then console.log " entire expression is constant"
 			pushTryNotToDuplicate(p1)
 			#push(p1);	# may need later for pushing both +a, -a
 			#negate()
@@ -85,7 +85,7 @@ decomp = (generalTransform) ->
 
 	# naive decomp if not sum or product
 
-	if true then console.log " naive decomp"
+	if DEBUG then console.log " naive decomp"
 	p3 = cdr(p1)
 	if DEBUG then console.log "startig p3: " + p3
 	while (iscons(p3))
@@ -109,7 +109,7 @@ decomp = (generalTransform) ->
 	restore()
 
 decomp_sum = (generalTransform) ->
-	if true then console.log " decomposing the sum "
+	if DEBUG then console.log " decomposing the sum "
 	h = 0
 
 
@@ -143,7 +143,7 @@ decomp_sum = (generalTransform) ->
 		negate();	# need both +a, -a for some integrals
 
 decomp_product = (generalTransform) ->
-	if true then console.log " decomposing the product "
+	if DEBUG then console.log " decomposing the product "
 	h = 0
 
 	# decomp factors involving x
