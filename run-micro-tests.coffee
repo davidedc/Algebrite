@@ -43,6 +43,24 @@ run_test [
 	"c·d·(b+a)ᵀ·inv((a+b)ᵀ)·inv(c·d)",
 	"I",
 		
+	"c·d·(a+b)ᵀ·inv(c·d·(b+a)ᵀ)",
+	"I",
+		
+	"inv(c)·c",
+	"I",
+		
+	"inv(c·a)·c·a",
+	"I",
+		
+	"inv(c·b·c)·c·b·a",
+	"I",
+		
+	"inv(c)·d·(a+b)ᵀ·inv(inv(c)·d·(b+a)ᵀ)",
+	"I",
+		
+	"inv(c+f)·d·(a+b)ᵀ·inv(inv(f+c)·d·(b+a)ᵀ)",
+	"I",
+		
 ]
 
 
