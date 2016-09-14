@@ -52,13 +52,16 @@ run_test [
 	"inv(c·a)·c·a",
 	"I",
 		
-	"inv(c·b·c)·c·b·a",
+	"inv(c·b·a)·c·b·a",
 	"I",
 		
 	"inv(c)·d·(a+b)ᵀ·inv(inv(c)·d·(b+a)ᵀ)",
 	"I",
 		
 	"inv(c+f)·d·(a+b)ᵀ·inv(inv(f+c)·d·(b+a)ᵀ)",
+	"I",
+		
+	"c·d·inv(a)·inv(c·d·inv(a))",
 	"I",
 		
 ]
