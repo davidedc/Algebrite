@@ -99,14 +99,6 @@ Eval_inner = ->
 
 
 
-	# note that
-	#   inner(a,b,c)
-	# is
-	#   inner(inner(a,b),c)
-	# but we're gonna normalise that
-	# to
-	#   inner(a,inner(b,c)) 
-
 	# TODO we have to take a look at the whole
 	# sequence of operands and make simplifications
 	# on that...
