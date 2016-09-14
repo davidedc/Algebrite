@@ -35,6 +35,7 @@ T_STRING = 1007
 T_GTEQ = 1008
 T_LTEQ = 1009
 T_EQ = 1010
+T_NEQ = 1011
 
 token = ""
 newline_flag = 0
@@ -159,6 +160,15 @@ scan_relation = ->
 			get_next_token()
 			scan_expression()
 			list(3)
+		when T_NEQ
+			push_symbol(NOT)
+			swap()
+			push_symbol(TESTEQ)
+			swap()
+			get_next_token()
+			scan_expression()
+			list(3)
+			list(2)
 		when T_LTEQ
 			push_symbol(TESTLE)
 			swap()
@@ -614,6 +624,16 @@ get_token = ->
 	if (scanned[scan_str] == '=' && scanned[scan_str+1] == '=')
 		scan_str += 2
 		token = T_EQ
+		return
+
+	# != operator. It's a little odd because
+	# "!" is not a "not", which would make things consistent.
+	# (it's used for factorial).
+	# An alternative would be to use "<>" but it's not used
+	# a lot in other languages...
+	if (scanned[scan_str] == '!' && scanned[scan_str+1] == '=')
+		scan_str += 2
+		token = T_NEQ
 		return
 
 	if (scanned[scan_str] == '<' && scanned[scan_str+1] == '=')
