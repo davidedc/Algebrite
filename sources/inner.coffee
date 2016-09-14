@@ -59,6 +59,45 @@
 
 
 Eval_inner = ->
+	
+
+	# if there are more than two arguments then
+	# reduce it to a more standard version
+	# of two arguments, which means we need to
+	# transform the arguments into a tree of
+	# inner products e.g.
+	# inner(a,b,c) becomes inner(a,inner(b,c))
+	# this is so we can get to a standard binary-tree
+	# version that is simpler to manipulate.
+	theArguments = []
+	theArguments.push car(cdr(p1))
+	secondArgument = car(cdr(cdr(p1)))
+	if secondArgument == symbol(NIL)
+		stop("pattern needs at least a template and a transformed version")
+	
+	moretheArguments = cdr(cdr(p1))
+	while moretheArguments != symbol(NIL)
+		theArguments.push car(moretheArguments)
+		moretheArguments = cdr(moretheArguments)
+
+	# make it so e.g. inner(a,b,c) becomes inner(a,inner(b,c))
+	if theArguments.length > 2
+		push_symbol(INNER)
+		push theArguments[theArguments.length-2]
+		push theArguments[theArguments.length-1]
+		list(3)
+		for i in [2...theArguments.length]
+			push_symbol(INNER)
+			swap()
+			push theArguments[theArguments.length-i-1]
+			swap()
+			list(3)
+		p1 = pop()
+		Eval_inner()
+		return
+
+
+
 
 	# note that
 	#   inner(a,b,c)
@@ -68,19 +107,80 @@ Eval_inner = ->
 	# to
 	#   inner(a,inner(b,c)) 
 
-	###
 	# TODO we have to take a look at the whole
 	# sequence of operands and make simplifications
 	# on that...
 	operands = []
 	get_innerprod_factors(p1, operands)
 
+	#console.log "printing operands --------"
+	#for i in [0...operands.length]
+	#	console.log "operand " + i + " : " + operands[i]
+
 	refinedOperands = []
+	# removing all identity matrices
 	for i in [0...operands.length]
-		console.log "operand " + i + " : " + operands[i]
 		if operands[i] == symbol(SYMBOL_IDENTITY_MATRIX)
 			continue
-	###
+		else refinedOperands.push operands[i]
+	operands = refinedOperands
+	
+	refinedOperands = []
+	if operands.length > 1
+		# removing all consecutive couples of inverses
+		shift = 0
+		for i in [0...operands.length]
+
+			#console.log "comparing if " + operands[i+shift] + " and " + operands[i+shift+1] + " are inverses of each other"
+			if (i+shift+1) <= (operands.length - 1)
+				push operands[i+shift]
+				Eval()
+				inv()
+				push operands[i+shift+1]
+				Eval()
+				subtract()
+				difference = pop()
+				#console.log "result: " + difference
+				if (iszero(difference))
+					shift+=1
+				else
+					refinedOperands.push operands[i+shift]
+			else
+				break
+
+			#console.log "i: " + i + " shift: " + shift + " operands.length: " + operands.length
+
+			if i+shift == operands.length - 2
+				#console.log "adding last operand 2 "
+				refinedOperands.push operands[operands.length-1]
+			if i+shift >= operands.length - 1
+				break
+		operands = refinedOperands
+
+	#console.log "refined operands --------"
+	#for i in [0...refinedOperands.length]
+	#	console.log "refined operand " + i + " : " + refinedOperands[i]
+
+
+	#console.log "stack[tos-1]: " + stack[tos-1]
+
+	# now rebuild the arguments, just using the
+	# refined operands
+	push symbol(INNER)
+	#console.log "rebuilding the argument ----"
+	
+	if operands.length > 0
+		for i in [0...operands.length]
+			#console.log "pushing " + operands[i]
+			push operands[i]
+	else
+		pop()
+		push symbol(SYMBOL_IDENTITY_MATRIX)
+		return
+	#console.log "list(operands.length): " + (operands.length+1)
+	list(operands.length + 1)
+	p1 = pop()
+
 
 	p1 = cdr(p1)
 	push(car(p1))
@@ -342,7 +442,7 @@ get_innerprod_factors = (tree, factors_accumulator) ->
 		tree = get_innerprod_factors(car(tree), factors_accumulator)
 		return
 
-	if car(tree) == symbol(INNER)
+	if isinnerordot(tree)
 		# console.log "there is inner at top, recursing on the operands"
 		get_innerprod_factors(car(cdr(tree)),factors_accumulator)
 		get_innerprod_factors(cdr(cdr(tree)),factors_accumulator)

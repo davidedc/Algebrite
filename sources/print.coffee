@@ -740,7 +740,7 @@ print_factor = (p) ->
 	else if (car(p) == symbol(DEFINT) && latexMode)
 		print_DEFINT_latex(p)
 		return
-	else if ((car(p) == symbol(DOT) or car(p) == symbol(INNER)) && latexMode)
+	else if (isinnerordot(p) && latexMode)
 		print_DOT_latex(p)
 		return
 

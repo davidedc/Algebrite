@@ -200,7 +200,7 @@ f10 = ->
 
 	carp1 = car(p1)
 	miao = cdr(p1)
-	if ( carp1 == symbol(MULTIPLY) || carp1 == symbol(INNER))
+	if ( carp1 == symbol(MULTIPLY) || isinnerordot(p1))
 		# both operands a transpose?
 
 		if (car(car(cdr(p1))) == symbol(TRANSPOSE)) and (car(car(cdr(cdr(p1)))) == symbol(TRANSPOSE))
@@ -211,7 +211,7 @@ f10 = ->
 				push(a)
 				push(b)
 				multiply()
-			else if carp1 == symbol(INNER)
+			else if isinnerordot(p1)
 				push(b)
 				push(a)
 				inner()
