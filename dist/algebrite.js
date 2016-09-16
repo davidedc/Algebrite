@@ -579,8 +579,6 @@
 
   imaginaryunit = null;
 
-  symtab = [];
-
   out_buf = "";
 
   out_count = 0;
@@ -8092,7 +8090,7 @@
   };
 
   Eval_inner = function() {
-    var ac, ad, ae, atleastOneSimplification, difference, i, moretheArguments, o, operands, ref, ref1, ref2, ref3, refinedOperands, results, secondArgument, shift, theArguments;
+    var ac, ad, ae, difference, i, moretheArguments, o, operands, ref, ref1, ref2, ref3, refinedOperands, results, secondArgument, shift, theArguments;
     theArguments = [];
     theArguments.push(car(cdr(p1)));
     secondArgument = car(cdr(cdr(p1)));
@@ -8123,48 +8121,42 @@
     operands = [];
     get_innerprod_factors(p1, operands);
     refinedOperands = [];
-    atleastOneSimplification = true;
-    while (atleastOneSimplification) {
-      atleastOneSimplification = false;
-      for (i = ac = 0, ref1 = operands.length; 0 <= ref1 ? ac < ref1 : ac > ref1; i = 0 <= ref1 ? ++ac : --ac) {
-        if (operands[i] === symbol(SYMBOL_IDENTITY_MATRIX)) {
-          atleastOneSimplification = true;
-          continue;
+    for (i = ac = 0, ref1 = operands.length; 0 <= ref1 ? ac < ref1 : ac > ref1; i = 0 <= ref1 ? ++ac : --ac) {
+      if (operands[i] === symbol(SYMBOL_IDENTITY_MATRIX)) {
+        continue;
+      } else {
+        refinedOperands.push(operands[i]);
+      }
+    }
+    operands = refinedOperands;
+    refinedOperands = [];
+    if (operands.length > 1) {
+      shift = 0;
+      for (i = ad = 0, ref2 = operands.length; 0 <= ref2 ? ad < ref2 : ad > ref2; i = 0 <= ref2 ? ++ad : --ad) {
+        if ((i + shift + 1) <= (operands.length - 1)) {
+          push(operands[i + shift]);
+          Eval();
+          inv();
+          push(operands[i + shift + 1]);
+          Eval();
+          subtract();
+          difference = pop();
+          if (iszero(difference)) {
+            shift += 1;
+          } else {
+            refinedOperands.push(operands[i + shift]);
+          }
         } else {
-          refinedOperands.push(operands[i]);
+          break;
+        }
+        if (i + shift === operands.length - 2) {
+          refinedOperands.push(operands[operands.length - 1]);
+        }
+        if (i + shift >= operands.length - 1) {
+          break;
         }
       }
       operands = refinedOperands;
-      refinedOperands = [];
-      if (operands.length > 1) {
-        shift = 0;
-        for (i = ad = 0, ref2 = operands.length; 0 <= ref2 ? ad < ref2 : ad > ref2; i = 0 <= ref2 ? ++ad : --ad) {
-          if ((i + shift + 1) <= (operands.length - 1)) {
-            push(operands[i + shift]);
-            Eval();
-            inv();
-            push(operands[i + shift + 1]);
-            Eval();
-            subtract();
-            difference = pop();
-            if (iszero(difference)) {
-              atleastOneSimplification = true;
-              shift += 1;
-            } else {
-              refinedOperands.push(operands[i + shift]);
-            }
-          } else {
-            break;
-          }
-          if (i + shift === operands.length - 2) {
-            refinedOperands.push(operands[operands.length - 1]);
-          }
-          if (i + shift >= operands.length - 1) {
-            break;
-          }
-        }
-        operands = refinedOperands;
-      }
     }
     push(symbol(INNER));
     if (operands.length > 0) {
@@ -20474,7 +20466,7 @@
     		for i in [0...symtab.length]
     			if p.printname == symtab[i].printname
     				indexFound = i
-    				console.log "remedied an index not founs!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    				console.log "remedied an index not found!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     				break
      */
     if (symtab.indexOf(p, indexFound + 1) !== -1) {
