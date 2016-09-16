@@ -208,6 +208,8 @@ TRANSPOSE = counter++
 UNIT = counter++
 ZERO = counter++
 
+# ALL THE SYMBOLS ABOVE NIL ARE KEYWORDS,
+# WHICH MEANS THAT USER CANNOT REDEFINE THEM
 NIL = counter++	# nil goes here, after standard functions
 
 AUTOEXPAND = counter++

@@ -27,6 +27,11 @@ std_symbol = (s, n, latexPrint) ->
 # but still abs would be picked up by the scanner as a particular
 # node type and calls to abs() will be always to the "native" abs
 #
+# Also note that some symbols such as "zero" are (strangely) not picked up by
+# the scanner as special nodes, rather they are identified as keywords
+# (e.g. not redefinable) at time of symbol lookup (in Eval_sym) and
+# evalled, where eval has a case for ZERO.
+#
 # Also note that there are a number of symbols, such as a,b,c,x,y,z,...
 # that are actually created by std_symbols.
 # They are not special node types (like abs), they are normal symbols

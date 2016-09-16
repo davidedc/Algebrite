@@ -31,8 +31,11 @@ Eval = ->
 	restore()
 
 Eval_sym = ->
-	# bare keyword?
 
+	# bare keyword?
+	# If it's a keyword, then we don't look
+	# at the binding array, because keywords
+	# are not redefinable. 
 	if (iskeyword(p1))
 		push(p1)
 		push(symbol(LAST))
