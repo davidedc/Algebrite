@@ -13,7 +13,7 @@
     "build-for-browser": "cat runtime/defs.coffee  sources/*.coffee runtime/alloc.coffee runtime/display.coffee runtime/find.coffee runtime/init.coffee runtime/mcmp.coffee runtime/otherCFunctions.coffee runtime/run.coffee runtime/stack.coffee runtime/symbol.coffee runtime/zombocom.coffee | coffee -sc > dist/algebrite.js; browserify ./sources/mainForWebPage.js -o ./dist/algebrite.bundle-for-browser.js",
 
     "//": "this one is useful to check things quickly in the sandbox. Use after build-for-browser.",
-    "copy-to-sandbox": "[ -d \"../Algebrite-website/\" ] && cp ./dist/algebrite.bundle-for-browser.js ../Algebrite-website/dist/|| echo \"Error: Algebrite-website directory not found, check the path in the package.json file\""
+    "copy-to-sandbox": "[ -d \"../Algebrite-website/\" ] && cp ./dist/algebrite.bundle-for-browser.js ../Algebrite-website/dist/ || echo \"Error: Algebrite-website directory not found, check the path in the package.json file\""
   },
   "repository": {
     "type": "git",
