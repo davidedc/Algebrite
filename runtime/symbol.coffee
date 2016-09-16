@@ -17,11 +17,25 @@ std_symbol = (s, n, latexPrint) ->
 
 # symbol lookup, or symbol creation if symbol doesn't exist yet
 # this happens often from the scanner. When the scanner sees something
-# like a = 2, it create a tree (SETQ (a symbol as created/looked up here (2)))
+# like myVar = 2, it create a tree (SETQ ("myVar" symbol as created/looked up here (2)))
 # user-defined functions also have a usr symbol.
-# nota that STD symbols (as opposed to usr symbols) like, say, "abs",
-# are picked up by the
-# parser directly ad keywords.
+#
+# Note that some symbols like, say, "abs",
+# are picked up by the scanner directly as keywords,
+# so they are not looked up via this.
+# So in fact you could redefine abs to be abs(x) = x
+# but still abs would be picked up by the scanner as a particular
+# node type and calls to abs() will be always to the "native" abs
+#
+# Also note that there are a number of symbols, such as a,b,c,x,y,z,...
+# that are actually created by std_symbols.
+# They are not special node types (like abs), they are normal symbols
+# that are looked up, but the advantage is that since they are often
+# used internally by algebrite, we create the symbol in advance and
+# we can reference the symbol entry in a clean way
+# (e.g. symbol(SYMBOL_X)) rather than
+# by looking up a string.
+
 # s is a string
 usr_symbol = (s) ->
 
