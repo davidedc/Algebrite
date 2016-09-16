@@ -365,7 +365,6 @@ zero = null # will contain U
 one = null # will contain U
 imaginaryunit = null # will contain U
 
-symtab = [] # will contain U
 out_buf = ""
 out_count = 0
 test_flag = 0
