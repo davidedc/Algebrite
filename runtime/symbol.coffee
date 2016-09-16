@@ -15,10 +15,23 @@ std_symbol = (s, n, latexPrint) ->
 	else
 		p.latexPrint = s
 
-# symbol lookup, create symbol if need be
-
+# symbol lookup, or symbol creation if symbol doesn't exist yet
+# this happens often from the scanner. When the scanner sees something
+# like a = 2, it create a tree (SETQ (a symbol as created/looked up here (2)))
+# user-defined functions also have a usr symbol.
+# nota that STD symbols (as opposed to usr symbols) like, say, "abs",
+# are picked up by the
+# parser directly ad keywords.
 # s is a string
 usr_symbol = (s) ->
+
+	#console.log "usr_symbol of " + s
+	#if s == "aaa"
+	#	debugger
+
+	# find either the existing symbol, or if we
+	# reach an empty symbol (printname == "") then
+	# re-use that location.
 	i = 0
 	for i in [0...NSYM]
 		if (symtab[i].printname == "")
@@ -29,8 +42,19 @@ usr_symbol = (s) ->
 			return symtab[i]
 	if (i == NSYM)
 		stop("symbol table overflow")
+
 	p = symtab[i]
+
+	# strictly, this is redundant in case the symbol
+	# already existed.
 	p.printname = s
+
+	# say that we just created the symbol
+	# then, binding[the new symbol entry]
+	# by default points to the symbol.
+	# So the value of an unassigned symbol will
+	# be just its name.
+
 	return p
 
 # get the symbol's printname
@@ -43,9 +67,18 @@ get_printname = (p) ->
 
 
 # p and q are both U
+# there are two Us at play here. One belongs to the
+# symtab array and is the variable name.
+# The other one is the U with the content, and that
+# one will go in the corresponding "binding" array entry.
 set_binding = (p, q) ->
 	if (p.k != SYM)
 		stop("symbol error")
+
+
+	#console.log "setting binding of " + p.toString() + " to: " + q.toString()
+	#if p.toString() == "aaa"
+	#	debugger
 
 	indexFound = symtab.indexOf(p)
 	###
@@ -54,7 +87,7 @@ set_binding = (p, q) ->
 		for i in [0...symtab.length]
 			if p.printname == symtab[i].printname
 				indexFound = i
-				console.log "remedied an index not founs!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+				console.log "remedied an index not found!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 				break
 	###
 
@@ -68,6 +101,11 @@ set_binding = (p, q) ->
 get_binding = (p) ->
 	if (p.k != SYM)
 		stop("symbol error")
+
+	#console.log "getting binding of " + p.toString()
+	#if p.toString() == "aaa"
+	#	debugger
+
 	indexFound = symtab.indexOf(p)
 	###
 	if indexFound == -1

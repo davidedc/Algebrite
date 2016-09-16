@@ -345,8 +345,11 @@ mtotal = 0
 trigmode = 0
 logbuf = ""
 program_buf = ""
-symtab = [] # will contain U
-binding = [] # will contain *U
+# will contain the variable names
+symtab = []
+# will contain the contents of the variable
+# in the corresponding position in symtab array
+binding = []
 arglist = [] # will contain U
 stack = [] # will contain *U
 frame = 0
