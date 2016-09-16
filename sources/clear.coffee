@@ -1,13 +1,14 @@
 
 
-Eval_clear = ->
+Eval_clearall = ->
 	if (test_flag == 0)
 		clear_term()
 	clear_symbols()
 	defn()
 	push(symbol(NIL))
 
-# clear from application GUI code
+# clearall from application GUI code
 
-clear = ->
-	run("clear")
+clearall = ->
+	run("clearall")
+

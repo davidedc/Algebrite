@@ -1,7 +1,7 @@
 test_integral = ->
 	run_test [
 
-		"clear",
+		"clearall",
 		"",
 
 		"tty=1",

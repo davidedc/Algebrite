@@ -3,6 +3,14 @@
 
 
 # put symbol at index n
+count_symbols = () ->
+	debugger
+	for i in [(NIL+1)...symtab.length]
+		if symtab[i].printname == ""
+			break
+		console.log "symbol: " + symtab[i] + " value: " + binding[i]
+	return
+
 
 # s is a string, n is an int
 std_symbol = (s, n, latexPrint) ->
@@ -180,3 +188,4 @@ clear_symbols = ->
 $.get_binding = get_binding
 $.set_binding = set_binding
 $.usr_symbol = usr_symbol
+$.count_symbols = count_symbols

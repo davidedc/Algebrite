@@ -5,7 +5,7 @@ mini_test = ->
 	run_test [
 		# static spherical metric
 
-		"clear",
+		"clearall",
 		"",
 
 		"gdd=((-exp(2*Phi(r)),0,0,0),(0,exp(2*Lambda(r)),0,0),(0,0,r^2,0),(0,0,0,r^2*sin(theta)^2))",
@@ -64,7 +64,7 @@ mini_test = ->
 
 		# surface integral example from the manual
 
-		"clear",
+		"clearall",
 		"",
 
 		"z=1-x^2-y^2",
@@ -84,7 +84,7 @@ mini_test = ->
 
 	# hydrogen wavefunction example
 
-		"clear",
+		"clearall",
 		"",
 
 		"laplacian(f)=1/r^2*d(r^2*d(f,r),r)+1/(r^2*sin(theta))*d(sin(theta)*d(f,theta),theta)+1/(r*sin(theta))^2*d(f,phi,phi)",
@@ -122,7 +122,7 @@ mini_test = ->
 
 	# Green's theorem (surface integral)
 
-		"clear",
+		"clearall",
 		"",
 
 		"P=2x^3-y^3",
@@ -145,7 +145,7 @@ mini_test = ->
 
 	# Green's theorem (line integral)
 
-		"clear",
+		"clearall",
 		"",
 
 		"x=cos(t)",
@@ -171,7 +171,7 @@ mini_test = ->
 
 	# Stokes' theorem (surface integral)
 
-		"clear",
+		"clearall",
 		"",
 
 		"z=9-x^2-y^2",
@@ -197,7 +197,7 @@ mini_test = ->
 
 	# Stokes' theorem (line integral)
 
-		"clear",
+		"clearall",
 		"",
 
 		"x=3*cos(t)",

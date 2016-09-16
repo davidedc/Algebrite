@@ -1,7 +1,7 @@
 # self test functions
 
 test_low_level = ->
-	run("clear"); # to initialize stack and memory
+	run("clearall"); # to initialize stack and memory
 
 	test_inv()
 	test_printlatex()

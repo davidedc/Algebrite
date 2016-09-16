@@ -54,7 +54,7 @@ init = ->
 	std_symbol("check", CHECK)
 	std_symbol("choose", CHOOSE)
 	std_symbol("circexp", CIRCEXP)
-	std_symbol("clear", CLEAR)
+	std_symbol("clearall", CLEARALL)
 	std_symbol("clearpatterns", CLEARPATTERNS)
 	std_symbol("clock", CLOCK)
 	std_symbol("coeff", COEFF)
