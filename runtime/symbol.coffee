@@ -4,10 +4,12 @@
 
 # put symbol at index n
 count_symbols = () ->
-	debugger
 	for i in [(NIL+1)...symtab.length]
 		if symtab[i].printname == ""
-			break
+			if isSymbolReclaimable == false
+				break
+			else
+				continue
 		console.log "symbol: " + symtab[i] + " value: " + binding[i]
 	return
 
@@ -122,6 +124,7 @@ set_binding = (p, q) ->
 		console.log("ops, more than one element!")
 		debugger
 	if DEBUG then console.log("lookup >> set_binding lookup " + indexFound)
+	isSymbolReclaimable[indexFound] = false
 	binding[indexFound] = q
 
 # p is a U
@@ -180,10 +183,15 @@ push_symbol = (k) ->
 	push(symtab[k])
 
 clear_symbols = ->
-	i = 0
-	for i in [0...NSYM]
+	# we can clear just what's assignable.
+	# everything before NIL is not assignable,
+	# so there is no need to clear it.
+	for i in [(NIL+1)...NSYM]
+		symtab[i] =  new U()
+		symtab[i].k = SYM
+		symtab[i].printname = ""
 		binding[i] = symtab[i]
-
+		isSymbolReclaimable[i] = false
 
 $.get_binding = get_binding
 $.set_binding = set_binding

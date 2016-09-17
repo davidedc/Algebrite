@@ -96,6 +96,7 @@ CEILING = counter++
 CHECK = counter++
 CHOOSE = counter++
 CIRCEXP = counter++
+CLEAR = counter++
 CLEARALL = counter++
 CLEARPATTERNS = counter++
 CLOCK = counter++
@@ -352,6 +353,7 @@ symtab = []
 # will contain the contents of the variable
 # in the corresponding position in symtab array
 binding = []
+isSymbolReclaimable = []
 arglist = [] # will contain U
 stack = [] # will contain *U
 frame = 0

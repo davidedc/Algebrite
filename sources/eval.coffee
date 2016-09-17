@@ -83,6 +83,7 @@ Eval_cons = ->
 		when CHECK then Eval_check()
 		when CHOOSE then Eval_choose()
 		when CIRCEXP then Eval_circexp()
+		when CLEAR then Eval_clear()
 		when CLEARALL then Eval_clearall()
 		when CLEARPATTERNS then Eval_clearpatterns()
 		when CLOCK then Eval_clock()
