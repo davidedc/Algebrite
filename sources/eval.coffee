@@ -160,6 +160,7 @@ Eval_cons = ->
 		when OR then Eval_or()
 		when OUTER then Eval_outer()
 		when PATTERN then Eval_pattern()
+		when PATTERNSINFO then Eval_patternsinfo()
 		when POLAR then Eval_polar()
 		when POWER then Eval_power()
 		when PRIME then Eval_prime()

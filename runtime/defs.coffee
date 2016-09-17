@@ -169,6 +169,7 @@ OPERATOR = counter++
 OR = counter++
 OUTER = counter++
 PATTERN = counter++
+PATTERNSINFO = counter++
 POLAR = counter++
 POWER = counter++
 PRIME = counter++

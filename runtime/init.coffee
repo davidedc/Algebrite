@@ -128,6 +128,7 @@ init = ->
 	std_symbol("or", OR)
 	std_symbol("outer", OUTER)
 	std_symbol("pattern", PATTERN)
+	std_symbol("patternsinfo", PATTERNSINFO)
 	std_symbol("polar", POLAR)
 	std_symbol("power", POWER)
 	std_symbol("prime", PRIME)

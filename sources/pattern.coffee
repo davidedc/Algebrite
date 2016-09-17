@@ -64,3 +64,19 @@ Eval_clearpatterns = ->
 	
 	# return nothing
 	push_symbol(NIL)
+
+
+Eval_patternsinfo = ->
+	patternsinfoToBePrinted = patternsinfo()
+
+	if patternsinfoToBePrinted != ""
+		new_string(patternsinfoToBePrinted)
+	else
+		push_symbol(NIL)
+
+patternsinfo = ->
+	patternsinfoToBePrinted = ""
+	for i in userSimplificationsInListForm
+		
+		patternsinfoToBePrinted +=  userSimplificationsInListForm + "\n"
+	return patternsinfoToBePrinted
