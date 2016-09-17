@@ -3,15 +3,27 @@
 
 
 # put symbol at index n
-count_symbols = () ->
+Eval_symbolsinfo = ->
+	symbolsinfoToBePrinted = symbolsinfo()
+
+	if symbolsinfoToBePrinted != ""
+		new_string(symbolsinfoToBePrinted)
+	else
+		push_symbol(NIL)
+
+symbolsinfo = ->
+	symbolsinfoToBePrinted = ""
 	for i in [(NIL+1)...symtab.length]
 		if symtab[i].printname == ""
 			if isSymbolReclaimable == false
 				break
 			else
 				continue
-		console.log "symbol: " + symtab[i] + " value: " + binding[i]
-	return
+		symtabi = symtab[i] + ""
+		bindingi = (binding[i] + "").substring(0,4)
+		symbolsinfoToBePrinted +=  "symbol: " + symtabi + " size: " + countsize(binding[i]) +  " value: " + bindingi + "...\n"
+	return symbolsinfoToBePrinted
+
 
 
 # s is a string, n is an int
@@ -196,4 +208,4 @@ clear_symbols = ->
 $.get_binding = get_binding
 $.set_binding = set_binding
 $.usr_symbol = usr_symbol
-$.count_symbols = count_symbols
+$.symbolsinfo = symbolsinfo

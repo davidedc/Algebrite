@@ -22,3 +22,22 @@ countOccurrencesOfSymbol = (needle,p) ->
 		if equal(needle,p)
 			n = 1
 	return n
+
+
+# returns the total number of elements
+# in an expression
+countsize = (p) ->
+	n = 0
+
+	if (istensor(p))
+		for i in [0...p.tensor.nelem]
+			n += p.tensor.elem[i]
+	else if (iscons(p))
+		while (iscons(p))
+			n += count(car(p)) + 1
+			p = cdr(p)
+	else
+		n = 1
+
+	return n
+

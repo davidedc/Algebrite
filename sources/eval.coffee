@@ -185,6 +185,7 @@ Eval_cons = ->
 		when STOP then Eval_stop()
 		when SUBST then Eval_subst()
 		when SUM then Eval_sum()
+		when SYMBOLSINFO then Eval_symbolsinfo()
 		when TAN then Eval_tan()
 		when TANH then Eval_tanh()
 		when TAYLOR then Eval_taylor()

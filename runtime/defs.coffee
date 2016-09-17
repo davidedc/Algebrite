@@ -196,6 +196,7 @@ SQRT = counter++
 STOP = counter++
 SUBST = counter++
 SUM = counter++
+SYMBOLSINFO = counter++
 TAN = counter++
 TANH = counter++
 TAYLOR = counter++
@@ -288,6 +289,8 @@ symbolsDependencies = {}
 # constants, removing 1s from products
 # etc.
 parse_time_simplifications = true
+
+
 
 class tensor
 	ndim: 0

@@ -583,7 +583,6 @@ run = (stringToBeRun, generateLatex = false) ->
 			if (isstr(p2))
 				if DEBUG then console.log(p2.str)
 				if DEBUG then console.log("\n")
-				continue
 
 			# in tty mode
 			# also you could just have written 

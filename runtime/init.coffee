@@ -155,6 +155,7 @@ init = ->
 	std_symbol("stop", STOP)
 	std_symbol("subst", SUBST)
 	std_symbol("sum", SUM)
+	std_symbol("symbolsinfo", SYMBOLSINFO)
 	std_symbol("tan", TAN)
 	std_symbol("tanh", TANH)
 	std_symbol("taylor", TAYLOR)
