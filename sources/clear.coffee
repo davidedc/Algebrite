@@ -8,7 +8,6 @@ Eval_clearall = ->
 	push(symbol(NIL))
 
 # clearall from application GUI code
-
 clearall = ->
 	run("clearall")
 
