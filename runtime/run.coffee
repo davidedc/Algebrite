@@ -509,25 +509,30 @@ CACHE_DEBUGS = false
 CACHE_HITSMISS_DEBUGS = false
 TIMING_DEBUGS = true
 
+cacheMissPenalty = 0
+
 run = (stringToBeRun, generateLatex = false) ->
 
 	timeStart = new Date().getTime()
 
-	currentStateHash = getStateHash()
-	cacheKey = currentStateHash + " stringToBeRun: " + stringToBeRun
-	if CACHE_DEBUGS then console.log "cache key: " + cacheKey
-	possiblyCached = cached_runs.get(cacheKey)
-	#possiblyCached = null
-	if possiblyCached?
-		if CACHE_HITSMISS_DEBUGS then console.log "cache hit!"
-		unfreeze(possiblyCached)
-		# return the output string
-		if TIMING_DEBUGS
-			console.log "saved " + (possiblyCached[possiblyCached.length-2] - ((new Date().getTime() - timeStart))) + " ms due to cache hit"
-		return possiblyCached[possiblyCached.length - 1]
-	else
-		if CACHE_HITSMISS_DEBUGS then console.log "cache miss"
-		if TIMING_DEBUGS then console.log "lost " + (new Date().getTime() - timeStart) + " ms due to cache miss"
+	if ENABLE_CACHING
+		currentStateHash = getStateHash()
+		cacheKey = currentStateHash + " stringToBeRun: " + stringToBeRun
+		if CACHE_DEBUGS then console.log "cache key: " + cacheKey
+		possiblyCached = cached_runs.get(cacheKey)
+		#possiblyCached = null
+		if possiblyCached?
+			if CACHE_HITSMISS_DEBUGS then console.log "cache hit!"
+			unfreeze(possiblyCached)
+			# return the output string
+			if TIMING_DEBUGS
+				totalTime = new Date().getTime() - timeStart
+				console.log "core Algebrite time: " + totalTime + "ms, saved " + (possiblyCached[possiblyCached.length-2] - totalTime) + "ms due to cache hit"
+			return possiblyCached[possiblyCached.length - 1]
+		else
+			if CACHE_HITSMISS_DEBUGS then console.log "cache miss"
+			if TIMING_DEBUGS
+				cacheMissPenalty = (new Date().getTime() - timeStart)
 
 	#stringToBeRun = stringToBeRun + "\n"
 	stringToBeRun = normaliseDots stringToBeRun
@@ -656,12 +661,16 @@ run = (stringToBeRun, generateLatex = false) ->
 	else
 		stringToBeReturned = allReturnedPlainStrings
 
-	frozen = freeze()
-	toBeFrozen = [frozen[0], frozen[1], frozen[2], frozen[3], frozen[4], frozen[5], frozen[6], frozen[7], (new Date().getTime() - timeStart), stringToBeReturned]
-	if CACHE_DEBUGS then console.log "setting cache on key: " + cacheKey
-	cached_runs.set(cacheKey, toBeFrozen)
+	if ENABLE_CACHING
+		frozen = freeze()
+		toBeFrozen = [frozen[0], frozen[1], frozen[2], frozen[3], frozen[4], frozen[5], frozen[6], frozen[7], (new Date().getTime() - timeStart), stringToBeReturned]
+		if CACHE_DEBUGS then console.log "setting cache on key: " + cacheKey
+		cached_runs.set(cacheKey, toBeFrozen)
 
-	if TIMING_DEBUGS then console.log "total time: " + (new Date().getTime() - timeStart) + " ms"
+	if TIMING_DEBUGS
+		timingDebugWrite = "core Algebrite time: " + (new Date().getTime() - timeStart) + "ms"
+		if ENABLE_CACHING then timingDebugWrite += ", of which cache miss penalty: " + cacheMissPenalty + "ms"
+		console.log timingDebugWrite
 
 	return stringToBeReturned
 
@@ -773,6 +782,8 @@ clearAlgebraEnvironment = ->
 	pop() # just pops the NIL put by the eval above
 
 computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
+
+	timeStartFromAlgebra  = new Date().getTime()
 	# we start "clean" each time:
 	# clear all the symbols and then re-define
 	# the "starting" symbols.
@@ -817,6 +828,9 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	#console.log "code: " + code
 	#console.log "result: " + result
 	#console.log "latexResult: " + latexResult
+
+	console.log "total time from notebook and back: " + ((new Date().getTime()) - timeStartFromAlgebra) + "ms"
+
 
 	#code: "// no code generated yet\n//try again later"
 	#code: "console.log('some passed code is run'); window.something = 1;"
