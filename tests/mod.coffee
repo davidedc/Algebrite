@@ -1,5 +1,5 @@
 test_mod = ->
-	run_test = [
+	run_test [
 		"mod(2.0,3.0)",
 		"2",
 
