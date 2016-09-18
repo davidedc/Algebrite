@@ -214,11 +214,15 @@ ZERO = counter++
 # ALL THE SYMBOLS ABOVE NIL ARE KEYWORDS,
 # WHICH MEANS THAT USER CANNOT REDEFINE THEM
 NIL = counter++	# nil goes here, after standard functions
+LAST = counter++
+LAST_LATEX_PRINT = counter++
+
+# all stuff from here on is worth freezing/unfreezing
+# so we mark this counter value
+firstFreezableSymbol = counter
 
 AUTOEXPAND = counter++
 BAKE = counter++
-LAST = counter++
-LAST_LATEX_PRINT = counter++
 TRACE = counter++
 TTY = counter++
 
@@ -352,12 +356,14 @@ mtotal = 0
 trigmode = 0
 logbuf = ""
 program_buf = ""
+
 # will contain the variable names
 symtab = []
 # will contain the contents of the variable
 # in the corresponding position in symtab array
 binding = []
 isSymbolReclaimable = []
+
 arglist = [] # will contain U
 stack = [] # will contain *U
 frame = 0

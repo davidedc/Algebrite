@@ -505,7 +505,29 @@ normaliseDots = (stringToNormalise) ->
 	return stringToNormalise
 
 
+CACHE_DEBUGS = false
+CACHE_HITSMISS_DEBUGS = false
+TIMING_DEBUGS = true
+
 run = (stringToBeRun, generateLatex = false) ->
+
+	timeStart = new Date().getTime()
+
+	currentStateHash = getStateHash()
+	cacheKey = currentStateHash + " stringToBeRun: " + stringToBeRun
+	if CACHE_DEBUGS then console.log "cache key: " + cacheKey
+	possiblyCached = cached_runs.get(cacheKey)
+	#possiblyCached = null
+	if possiblyCached?
+		if CACHE_HITSMISS_DEBUGS then console.log "cache hit!"
+		unfreeze(possiblyCached)
+		# return the output string
+		if TIMING_DEBUGS
+			console.log "saved " + (possiblyCached[possiblyCached.length-2] - ((new Date().getTime() - timeStart))) + " ms due to cache hit"
+		return possiblyCached[possiblyCached.length - 1]
+	else
+		if CACHE_HITSMISS_DEBUGS then console.log "cache miss"
+		if TIMING_DEBUGS then console.log "lost " + (new Date().getTime() - timeStart) + " ms due to cache miss"
 
 	#stringToBeRun = stringToBeRun + "\n"
 	stringToBeRun = normaliseDots stringToBeRun
@@ -629,9 +651,19 @@ run = (stringToBeRun, generateLatex = false) ->
 
 	if generateLatex
 		if DEBUG then console.log "allReturnedLatexStrings: " + allReturnedLatexStrings
-		return [allReturnedPlainStrings, allReturnedLatexStrings]
+		# TODO handle this case of caching
+		stringToBeReturned = [allReturnedPlainStrings, allReturnedLatexStrings]
 	else
-		return allReturnedPlainStrings
+		stringToBeReturned = allReturnedPlainStrings
+
+	frozen = freeze()
+	toBeFrozen = [frozen[0], frozen[1], frozen[2], frozen[3], frozen[4], frozen[5], frozen[6], frozen[7], (new Date().getTime() - timeStart), stringToBeReturned]
+	if CACHE_DEBUGS then console.log "setting cache on key: " + cacheKey
+	cached_runs.set(cacheKey, toBeFrozen)
+
+	if TIMING_DEBUGS then console.log "total time: " + (new Date().getTime() - timeStart) + " ms"
+
+	return stringToBeReturned
 
 check_stack = ->
 	if (tos != 0)

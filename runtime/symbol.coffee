@@ -13,7 +13,7 @@ Eval_symbolsinfo = ->
 
 symbolsinfo = ->
 	symbolsinfoToBePrinted = ""
-	for i in [(NIL+1)...symtab.length]
+	for i in [firstFreezableSymbol...symtab.length]
 		if symtab[i].printname == ""
 			if isSymbolReclaimable == false
 				break
@@ -198,12 +198,20 @@ clear_symbols = ->
 	# we can clear just what's assignable.
 	# everything before NIL is not assignable,
 	# so there is no need to clear it.
-	for i in [(NIL+1)...NSYM]
+	for i in [firstFreezableSymbol...NSYM]
+
+		if symtab[i].printname == ""
+			if isSymbolReclaimable == false
+				break
+			else
+				continue
+
 		symtab[i] =  new U()
 		symtab[i].k = SYM
-		symtab[i].printname = ""
 		binding[i] = symtab[i]
 		isSymbolReclaimable[i] = false
+		#symtab[i].printname = ""
+		#binding[i] = symtab[i]
 
 $.get_binding = get_binding
 $.set_binding = set_binding

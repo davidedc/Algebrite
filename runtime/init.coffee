@@ -16,14 +16,37 @@ init = ->
 
 	flag = 1
 
+	# total clearout of symbol table
 	for i in [0...NSYM]
 		symtab[i] =  new U()
-
-	for i in [0...NSYM]
 		symtab[i].k = SYM
 		binding[i] = symtab[i]
 		isSymbolReclaimable[i] = false
 
+	defn()
+
+defn_str = [
+	"e=exp(1)",
+	"i=sqrt(-1)",
+	"autoexpand=1",
+	"trange=(-pi,pi)",
+	"xrange=(-10,10)",
+	"yrange=(-10,10)",
+	"last=0",
+	"trace=0",
+	"printLeaveEAlone=1",
+	"printLeaveXAlone=0",
+	"tty=0",
+	# cross definition
+	"cross(u,v)=(u[2]*v[3]-u[3]*v[2],u[3]*v[1]-u[1]*v[3],u[1]*v[2]-u[2]*v[1])",
+	# curl definition
+	"curl(v)=(d(v[3],y)-d(v[2],z),d(v[1],z)-d(v[3],x),d(v[2],x)-d(v[1],y))",
+	# div definition
+	"div(v)=d(v[1],x)+d(v[2],y)+d(v[3],z)",
+	"ln(x)=log(x)",
+]
+
+defn = ->
 	p0 = symbol(NIL)
 	p1 = symbol(NIL)
 	p2 = symbol(NIL)
@@ -172,33 +195,6 @@ init = ->
 
 	std_symbol("nil", NIL)
 
-	# each symbol needs a unique name because equal() compares printnames
-
-	defn()
-
-defn_str = [
-	"e=exp(1)",
-	"i=sqrt(-1)",
-	"autoexpand=1",
-	"trange=(-pi,pi)",
-	"xrange=(-10,10)",
-	"yrange=(-10,10)",
-	"last=0",
-	"trace=0",
-	"printLeaveEAlone=1",
-	"printLeaveXAlone=0",
-	"tty=0",
-	# cross definition
-	"cross(u,v)=(u[2]*v[3]-u[3]*v[2],u[3]*v[1]-u[1]*v[3],u[1]*v[2]-u[2]*v[1])",
-	# curl definition
-	"curl(v)=(d(v[3],y)-d(v[2],z),d(v[1],z)-d(v[3],x),d(v[2],x)-d(v[1],y))",
-	# div definition
-	"div(v)=d(v[1],x)+d(v[2],y)+d(v[3],z)",
-	"ln(x)=log(x)",
-]
-
-defn = ->
-
 	std_symbol("autoexpand", AUTOEXPAND)
 	std_symbol("bake", BAKE)
 	std_symbol("last", LAST)
@@ -241,22 +237,8 @@ defn = ->
 	std_symbol("$C5", C5)
 	std_symbol("$C6", C6)
 
-	push_integer(0)
-	zero = pop()		# must be untagged in gc
+	defineSomeHandyConstants()
 
-	push_integer(1)
-	one = pop()		# must be untagged in gc
-
-	# i is the square root of -1 i.e. -1 ^ 1/2
-	push_symbol(POWER)
-	if DEBUG then print1(stack[tos-1])
-	push_integer(-1)
-	if DEBUG then print1(stack[tos-1])
-	push_rational(1, 2)
-	if DEBUG then print1(stack[tos-1])
-	list(3)
-	if DEBUG then print1(stack[tos-1])
-	imaginaryunit = pop()	# must be untagged in gc
 
 	# don't add all these functions to the
 	# symbolsDependencies, clone the original
@@ -275,3 +257,21 @@ defn = ->
 
 	# restore the symbol dependencies as they were before.
 	codeGen = originalCodeGen
+
+defineSomeHandyConstants = ->
+	push_integer(0)
+	zero = pop()		# must be untagged in gc
+
+	push_integer(1)
+	one = pop()		# must be untagged in gc
+
+	# i is the square root of -1 i.e. -1 ^ 1/2
+	push_symbol(POWER)
+	if DEBUG then print1(stack[tos-1])
+	push_integer(-1)
+	if DEBUG then print1(stack[tos-1])
+	push_rational(1, 2)
+	if DEBUG then print1(stack[tos-1])
+	list(3)
+	if DEBUG then print1(stack[tos-1])
+	imaginaryunit = pop()	# must be untagged in gc
