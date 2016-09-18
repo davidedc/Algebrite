@@ -77,6 +77,5 @@ Eval_patternsinfo = ->
 patternsinfo = ->
 	patternsinfoToBePrinted = ""
 	for i in userSimplificationsInListForm
-		
 		patternsinfoToBePrinted +=  userSimplificationsInListForm + "\n"
 	return patternsinfoToBePrinted
