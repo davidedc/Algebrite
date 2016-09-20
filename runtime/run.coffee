@@ -663,7 +663,7 @@ run = (stringToBeRun, generateLatex = false) ->
 
 	if ENABLE_CACHING
 		frozen = freeze()
-		toBeFrozen = [frozen[0], frozen[1], frozen[2], frozen[3], frozen[4], frozen[5], frozen[6], frozen[7], (new Date().getTime() - timeStart), stringToBeReturned]
+		toBeFrozen = [frozen[0], frozen[1], frozen[2], frozen[3], frozen[4], frozen[5], (new Date().getTime() - timeStart), stringToBeReturned]
 		if CACHE_DEBUGS then console.log "setting cache on key: " + cacheKey
 		cached_runs.set(cacheKey, toBeFrozen)
 

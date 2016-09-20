@@ -19,6 +19,7 @@ test_low_level = ->
 	test_mroot()
 	test_dependencies()
 	test_assignments()
+	test_caching()
 
 selftest  = ->
 	test_low_level()

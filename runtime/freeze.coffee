@@ -9,7 +9,6 @@ freeze = ->
 	frozenPatterns = []
 	frozenHash = ""
 
-	#for i in [firstFreezableSymbol...symtab.length]
 	for i in [0...symtab.length]
 		#if symtab[i].printname == ""
 		#	if isSymbolReclaimable == false
@@ -22,10 +21,10 @@ freeze = ->
 	# just clone them
 	frozenPatterns= userSimplificationsInListForm.slice(0)
 
-	return [frozenSymbols, frozenContents, frozenPatterns, binding[LAST], binding[LAST_LATEX_PRINT], zero, one, imaginaryunit, getStateHash()]
+	return [frozenSymbols, frozenContents, frozenPatterns, zero, one, imaginaryunit, getStateHash()]
 
 unfreeze = (frozen) ->
-	[frozenSymbols, frozenContents, frozenPatterns, binding[LAST], binding[LAST_LATEX_PRINT], zero, one, imaginaryunit ] = frozen
+	[frozenSymbols, frozenContents, frozenPatterns, zero, one, imaginaryunit ] = frozen
 
 	#clear_symbols()
 
@@ -48,7 +47,7 @@ compareState = (previousHash) ->
 getStateHash = ->
 	frozenHash = ""
 
-	for i in [firstFreezableSymbol...symtab.length]
+	for i in [NIL+1...symtab.length]
 		if symtab[i].printname == ""
 			if isSymbolReclaimable == false
 				break
