@@ -716,8 +716,7 @@ top_level_eval = ->
 		restore()
 		return
 
-	# update "last"
-
+	# update "last" to contain the last result
 	set_binding(symbol(LAST), p2)
 
 	if (!iszero(get_binding(symbol(BAKE))))
