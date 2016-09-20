@@ -217,10 +217,6 @@ NIL = counter++	# nil goes here, after standard functions
 LAST = counter++
 LAST_LATEX_PRINT = counter++
 
-# all stuff from here on is worth freezing/unfreezing
-# so we mark this counter value
-firstFreezableSymbol = counter
-
 AUTOEXPAND = counter++
 BAKE = counter++
 TRACE = counter++

@@ -13,7 +13,7 @@ Eval_symbolsinfo = ->
 
 symbolsinfo = ->
 	symbolsinfoToBePrinted = ""
-	for i in [firstFreezableSymbol...symtab.length]
+	for i in [NIL+1...symtab.length]
 		if symtab[i].printname == ""
 			if isSymbolReclaimable == false
 				break
@@ -198,7 +198,7 @@ clear_symbols = ->
 	# we can clear just what's assignable.
 	# everything before NIL is not assignable,
 	# so there is no need to clear it.
-	for i in [firstFreezableSymbol...NSYM]
+	for i in [NIL+1...NSYM]
 
 		if symtab[i].printname == ""
 			if isSymbolReclaimable == false
