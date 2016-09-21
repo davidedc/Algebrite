@@ -210,6 +210,7 @@ test_dependencies = ->
 	if testResult[0] == "All local dependencies:  variable g depends on: 'x, x, ;  variable y depends on: ;  variable f depends on: 'x, x, g, y, ; . All dependencies recursively:  variable g depends on: 'x, ;  variable y depends on: ;  variable f depends on: 'x, ; " and
 		testResult[1] == "" and
 		testResult[2] == "g = function (x) { return ( 2 + x ); }\ny = 2;\nf = function (x) { return ( 4 + Math.pow(x, 2) ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
@@ -219,6 +220,7 @@ test_dependencies = ->
 	if testResult[0] == "All local dependencies:  variable g depends on: 'x, x, ;  variable f depends on: 'x, x, g, y, ; . All dependencies recursively:  variable g depends on: 'x, ;  variable f depends on: 'x, y, ; " and
 		testResult[1] == "" and
 		testResult[2] == "g = function (x) { return ( 2 + x ); }\nf = function (x, y) { return ( 2 + y + Math.pow(x, 2) ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
@@ -229,6 +231,7 @@ test_dependencies = ->
 	if testResult[0] == "All local dependencies:  variable g depends on: 'x, f, x, ;  variable f depends on: 'x, g, x, ; . All dependencies recursively:  variable g depends on: 'x, ;  g --> f -->  ... then g again,  variable f depends on: 'x, x, ;  f --> g -->  ... then f again, " and
 		testResult[1] == "" and
 		testResult[2] == "// g is part of a cyclic dependency, no code generated.\n// f is part of a cyclic dependency, no code generated."
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
@@ -239,6 +242,7 @@ test_dependencies = ->
 	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . All dependencies recursively:  variable f depends on: a, b, c, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (a, b, c) { return ( [-1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) + b / a),1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) - b / a)] ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
@@ -248,6 +252,7 @@ test_dependencies = ->
 	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . All dependencies recursively:  variable f depends on: a, b, c, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (a, b, c) { return ( [-1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) + b / a),1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) - b / a)] ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
@@ -257,6 +262,7 @@ test_dependencies = ->
 	if testResult[0] == "All local dependencies:  variable f depends on: a, b, ; . All dependencies recursively:  variable f depends on: a, b, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (a, b) { return ( [0,-2*b / a] ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
@@ -266,6 +272,7 @@ test_dependencies = ->
 	if testResult[0] == "All local dependencies:  variable f depends on: a, ; . All dependencies recursively:  variable f depends on: a, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (a) { return ( -1 / (2*a) ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
@@ -275,6 +282,7 @@ test_dependencies = ->
 	if testResult[0] == "All local dependencies:  variable f depends on: a, ; . All dependencies recursively:  variable f depends on: a, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (a) { return ( -1 / a ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
@@ -284,6 +292,7 @@ test_dependencies = ->
 	if testResult[0] == "All local dependencies:  variable f depends on: y, ; . All dependencies recursively:  variable f depends on: y, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (y) { return ( -2*Math.pow(y, 2) ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
@@ -293,6 +302,7 @@ test_dependencies = ->
 	if testResult[0] == "All local dependencies:  variable f depends on: ; . All dependencies recursively:  variable f depends on: ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = 55;"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
@@ -306,6 +316,7 @@ test_dependencies = ->
 	if testResult[0] == "All local dependencies:  variable a depends on: ;  variable f depends on: 'a, a, b, ; . All dependencies recursively:  variable a depends on: ;  variable f depends on: 'a, b, ; " and
 		testResult[1] == "" and
 		testResult[2] == "a = 2;\nf = function (a, b) { return ( 1 + a + b ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
@@ -317,6 +328,7 @@ test_dependencies = ->
 	if testResult[0] == "All local dependencies:  variable a depends on: ;  variable f depends on: a, ; . All dependencies recursively:  variable a depends on: ;  variable f depends on: ; " and
 		testResult[1] == "" and
 		testResult[2] == "a = 2;\nf = 3;"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
@@ -329,6 +341,7 @@ test_dependencies = ->
 	if testResult[0] == "All local dependencies:  variable a depends on: b, ;  variable f depends on: a, ; . All dependencies recursively:  variable a depends on: b, ;  variable f depends on: b, ; " and
 		testResult[1] == "" and
 		testResult[2] == "a = function (b) { return ( b ); }\nf = function (b) { return ( 1 + b ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
