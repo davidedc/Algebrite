@@ -309,6 +309,29 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
+	clear_symbols(); defn()
+
+	# similar as test above but this time we are not
+	# defining a function, so things are a bit different.
+	testResult = findDependenciesInScript('a = 2\nf = a+1')
+	if testResult[0] == "All local dependencies:  variable a depends on: ;  variable f depends on: a, ; . All dependencies recursively:  variable a depends on: ;  variable f depends on: ; " and
+		testResult[1] == "" and
+		testResult[2] == "a = 2;\nf = 3;"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	clear_symbols(); defn()
+
+	# similar as test above but this time we do a
+	# trick with the quote to see whether we
+	# get confused with the indirection
+	testResult = findDependenciesInScript('a := b\nf = a+1')
+	if testResult[0] == "All local dependencies:  variable a depends on: b, ;  variable f depends on: a, ; . All dependencies recursively:  variable a depends on: b, ;  variable f depends on: b, ; " and
+		testResult[1] == "" and
+		testResult[2] == "a = function (b) { return ( b ); }\nf = function (b) { return ( 1 + b ); }"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
 	console.log "-- done dependency tests"
 
 findDependenciesInScript = (stringToBeParsed) ->
