@@ -36,6 +36,7 @@ T_GTEQ = 1008
 T_LTEQ = 1009
 T_EQ = 1010
 T_NEQ = 1011
+T_QUOTASSIGN = 1012
 
 token = ""
 newline_flag = 0
@@ -111,15 +112,34 @@ scan_meta = (s) ->
 
 scan_stmt = ->
 	scan_relation()
-	if (token == '=')
+
+	assignmentIsOfQuotedType = false
+
+	if token == T_QUOTASSIGN
+		assignmentIsOfQuotedType = true
+
+	if (token == T_QUOTASSIGN or token == '=')
 		symbolLeftOfAssignment = lastFoundSymbol
 		if DEBUG then console.log("assignment!")
 		isSymbolLeftOfAssignment = false
+
 		get_next_token()
 		push_symbol(SETQ)
 		swap()
+
+		# if it's a := then add a quote
+		if (assignmentIsOfQuotedType)
+			push_symbol(QUOTE)
+
 		scan_relation()
+
+		# if it's a := then you have to list
+		# together the quote and its argument
+		if assignmentIsOfQuotedType
+			list(2)
+
 		list(3)
+
 		isSymbolLeftOfAssignment = true
 
 		if codeGen
@@ -619,8 +639,13 @@ get_token = ->
 		token = T_NEWLINE
 		return
 
-	# relational operator?
+	# quote-assignment
+	if (scanned[scan_str] == ':' && scanned[scan_str+1] == '=')
+		scan_str += 2
+		token = T_QUOTASSIGN
+		return
 
+	# relational operator?
 	if (scanned[scan_str] == '=' && scanned[scan_str+1] == '=')
 		scan_str += 2
 		token = T_EQ

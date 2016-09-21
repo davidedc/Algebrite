@@ -52,6 +52,14 @@ test_assignments = ->
 		"lookup(g)",
 		"1+1",
 
+		# test the abbreviated form :=
+		# of assignment with quote
+		"f := 1+1",
+		"",
+
+		"lookup(f)",
+		"1+1",
+
 		# clean up
 
 		"f=quote(f)",
