@@ -296,6 +296,19 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
+	clear_symbols(); defn()
+
+	# this example checks that functions are not meddled with,
+	# in particular that in the function body, the variables
+	# bound by the parameters remain "separate" from previous
+	# variables with the same name.
+	testResult = findDependenciesInScript('a = 2\nf(a) = a+1+b')
+	if testResult[0] == "All local dependencies:  variable a depends on: ;  variable f depends on: 'a, a, b, ; . All dependencies recursively:  variable a depends on: ;  variable f depends on: 'a, b, ; " and
+		testResult[1] == "" and
+		testResult[2] == "a = 2;\nf = function (a, b) { return ( 1 + a + b ); }"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
 	console.log "-- done dependency tests"
 
 findDependenciesInScript = (stringToBeParsed) ->
@@ -392,6 +405,16 @@ findDependenciesInScript = (stringToBeParsed) ->
 			# will still point to un-simplified structures,
 			# we only simplify the generated code.
 			push get_binding(usr_symbol(key))
+
+			for eachDependency in recursedDependencies
+				if eachDependency[0] == "'"
+					console.log "gotta do something I have to replace a parameter with something that doesn't bind " + eachDependency
+					deQuotedDep = eachDependency.substring(1)
+					push(usr_symbol(deQuotedDep))
+					push(usr_symbol("DONTBIND"+deQuotedDep))
+					subst()
+					console.log "after substitution: " + stack[tos-1]
+
 			simplifyForCodeGeneration()
 			toBePrinted = pop()
 
@@ -400,6 +423,10 @@ findDependenciesInScript = (stringToBeParsed) ->
 			codeGen = false
 			bodyForReadableSummaryOfGeneratedCode = toBePrinted.toString()
 
+			generatedBody = generatedBody.replace(/DONTBIND/g,"")
+			bodyForReadableSummaryOfGeneratedCode = bodyForReadableSummaryOfGeneratedCode.replace(/DONTBIND/g,"")
+
+
 			if variablesWithCycles.indexOf(key) != -1
 				generatedCode += "// " + key + " is part of a cyclic dependency, no code generated."
 				readableSummaryOfGeneratedCode += "#" + key + " is part of a cyclic dependency, no code generated."
@@ -407,8 +434,11 @@ findDependenciesInScript = (stringToBeParsed) ->
 				if recursedDependencies.length != 0
 					parameters = "("
 					for i in recursedDependencies
-						if i.indexOf("'") == -1
+						if i.indexOf("'") != 0
 							parameters += i + ", "
+						else
+							if recursedDependencies.indexOf(i.substring(1)) == -1
+								parameters += i.substring(1) + ", "
 					# eliminate the last ", " for printout clarity
 					parameters = parameters.replace /, $/gm , ""
 					parameters += ")"
