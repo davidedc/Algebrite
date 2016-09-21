@@ -117,9 +117,9 @@ test_dependencies = ->
 	clear_symbols(); defn()
 
 	testResult = findDependenciesInScript('x = -sqrt(2)/2')
-	if testResult[0] == "All local dependencies:  variable x depends on: sqrt, ; . All dependencies recursively:  variable x depends on: sqrt, ; " and
+	if testResult[0] == "All local dependencies:  variable x depends on: ; . All dependencies recursively:  variable x depends on: ; " and
 		testResult[1] == "" and
-		testResult[2] == "x = function (sqrt) { return ( -1/2*Math.pow(2, (1/2)) ); }"
+		testResult[2] == "x = -1/2*Math.pow(2, (1/2));"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult

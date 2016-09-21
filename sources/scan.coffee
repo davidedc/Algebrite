@@ -52,7 +52,7 @@ symbolsRightOfAssignment = null
 isSymbolLeftOfAssignment = null
 scanningParameters = null
 predefinedSymbolsInGlobalScope_doNotTrackInDependencies =
-	["rationalize", "mag", "i", "pi", "sin", "cos", "roots", "integral", "derivative", "defint"]
+	["rationalize", "mag", "i", "pi", "sin", "cos", "roots", "integral", "derivative", "defint", "sqrt"]
 functionInvokationsScanningStack = null
 skipRootVariableToBeSolved = false
 
