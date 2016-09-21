@@ -177,7 +177,7 @@ test_dependencies = ->
 	clear_symbols(); defn()
 
 	testResult = findDependenciesInScript('f(x) = x * x')
-	if testResult[0] == "All local dependencies:  variable f depends on: 'x, x, ; . All dependencies recursively:  variable f depends on: 'x, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: 'x, ; . All dependencies recursively:  variable f depends on: 'x, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (x) { return ( x*x ); }"
 			console.log "ok dependency test"
@@ -187,7 +187,7 @@ test_dependencies = ->
 	clear_symbols(); defn()
 
 	testResult = findDependenciesInScript('f(x) = x * x + g(y)')
-	if testResult[0] == "All local dependencies:  variable f depends on: 'x, x, g, y, ; . All dependencies recursively:  variable f depends on: 'x, g, y, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: 'x, g, y, ; . All dependencies recursively:  variable f depends on: 'x, g, y, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (x, g, y) { return ( g(y) + Math.pow(x, 2) ); }"
 			console.log "ok dependency test"
@@ -197,7 +197,7 @@ test_dependencies = ->
 	clear_symbols(); defn()
 
 	testResult = findDependenciesInScript('y = 2\nf(x) = x * x + g(y)')
-	if testResult[0] == "All local dependencies:  variable y depends on: ;  variable f depends on: 'x, x, g, y, ; . All dependencies recursively:  variable y depends on: ;  variable f depends on: 'x, g, ; " and
+	if testResult[0] == "All local dependencies:  variable y depends on: ;  variable f depends on: 'x, g, y, ; . All dependencies recursively:  variable y depends on: ;  variable f depends on: 'x, g, ; " and
 		testResult[1] == "" and
 		testResult[2] == "y = 2;\nf = function (x, g) { return ( g(2) + Math.pow(x, 2) ); }"
 			console.log "ok dependency test"
@@ -207,7 +207,7 @@ test_dependencies = ->
 	clear_symbols(); defn()
 
 	testResult = findDependenciesInScript('g(x) = x + 2\ny = 2\nf(x) = x * x + g(y)')
-	if testResult[0] == "All local dependencies:  variable g depends on: 'x, x, ;  variable y depends on: ;  variable f depends on: 'x, x, g, y, ; . All dependencies recursively:  variable g depends on: 'x, ;  variable y depends on: ;  variable f depends on: 'x, ; " and
+	if testResult[0] == "All local dependencies:  variable g depends on: 'x, ;  variable y depends on: ;  variable f depends on: 'x, g, y, ; . All dependencies recursively:  variable g depends on: 'x, ;  variable y depends on: ;  variable f depends on: 'x, ; " and
 		testResult[1] == "" and
 		testResult[2] == "g = function (x) { return ( 2 + x ); }\ny = 2;\nf = function (x) { return ( 4 + Math.pow(x, 2) ); }"
 			console.log "ok dependency test"
@@ -217,7 +217,7 @@ test_dependencies = ->
 	clear_symbols(); defn()
 
 	testResult = findDependenciesInScript('g(x) = x + 2\nf(x) = x * x + g(y)')
-	if testResult[0] == "All local dependencies:  variable g depends on: 'x, x, ;  variable f depends on: 'x, x, g, y, ; . All dependencies recursively:  variable g depends on: 'x, ;  variable f depends on: 'x, y, ; " and
+	if testResult[0] == "All local dependencies:  variable g depends on: 'x, ;  variable f depends on: 'x, g, y, ; . All dependencies recursively:  variable g depends on: 'x, ;  variable f depends on: 'x, y, ; " and
 		testResult[1] == "" and
 		testResult[2] == "g = function (x) { return ( 2 + x ); }\nf = function (x, y) { return ( 2 + y + Math.pow(x, 2) ); }"
 			console.log "ok dependency test"
@@ -313,7 +313,7 @@ test_dependencies = ->
 	# bound by the parameters remain "separate" from previous
 	# variables with the same name.
 	testResult = findDependenciesInScript('a = 2\nf(a) = a+1+b')
-	if testResult[0] == "All local dependencies:  variable a depends on: ;  variable f depends on: 'a, a, b, ; . All dependencies recursively:  variable a depends on: ;  variable f depends on: 'a, b, ; " and
+	if testResult[0] == "All local dependencies:  variable a depends on: ;  variable f depends on: 'a, b, ; . All dependencies recursively:  variable a depends on: ;  variable f depends on: 'a, b, ; " and
 		testResult[1] == "" and
 		testResult[2] == "a = 2;\nf = function (a, b) { return ( 1 + a + b ); }"
 			console.log "ok dependency test"
@@ -349,7 +349,7 @@ test_dependencies = ->
 
 	# another tricky case of indirection through quote
 	testResult = findDependenciesInScript('a := b\nf(a) = a+1')
-	if testResult[0] == "All local dependencies:  variable a depends on: b, ;  variable f depends on: 'a, a, ; . All dependencies recursively:  variable a depends on: b, ;  variable f depends on: 'a, ; " and
+	if testResult[0] == "All local dependencies:  variable a depends on: b, ;  variable f depends on: 'a, ; . All dependencies recursively:  variable a depends on: b, ;  variable f depends on: 'a, ; " and
 		testResult[1] == "" and
 		testResult[2] == "a = function (b) { return ( b ); }\nf = function (a) { return ( 1 + a ); }"
 			console.log "ok dependency test"

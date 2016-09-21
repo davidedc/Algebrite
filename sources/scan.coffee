@@ -382,6 +382,7 @@ scan_factor = ->
 addSymbolRightOfAssignment = (theSymbol) ->
 	if predefinedSymbolsInGlobalScope_doNotTrackInDependencies.indexOf(theSymbol) == -1 and
 		symbolsRightOfAssignment.indexOf(theSymbol) == -1 and
+		symbolsRightOfAssignment.indexOf("'"+theSymbol) == -1 and
 		!skipRootVariableToBeSolved
 			if DEBUG then console.log("... adding symbol: " + theSymbol + " to the set of the symbols right of assignment")
 			prefixVar = ""
