@@ -416,6 +416,7 @@ findDependenciesInScript = (stringToBeParsed) ->
 			recursedDependencies = []
 			variablesWithCycles = []
 			cyclesDescriptions = []
+
 			recursiveDependencies key, recursedDependencies, [], variablesWithCycles, [], cyclesDescriptions
 
 			for i in variablesWithCycles
@@ -508,8 +509,10 @@ recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded,
 			return arrayWhereDependenciesWillBeAdded
 
 	chainBeingChecked.push variableToBeChecked
+
 	if !symbolsDependencies[variableToBeChecked]?
-		# end case: there are no more dependencies
+		# end case: the passed variable has no dependencies
+		# so there is nothing else to do
 		if arrayWhereDependenciesWillBeAdded.indexOf(variableToBeChecked) == -1
 			arrayWhereDependenciesWillBeAdded.push variableToBeChecked
 		return arrayWhereDependenciesWillBeAdded
