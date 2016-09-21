@@ -507,7 +507,7 @@ normaliseDots = (stringToNormalise) ->
 
 CACHE_DEBUGS = false
 CACHE_HITSMISS_DEBUGS = false
-TIMING_DEBUGS = true
+TIMING_DEBUGS = false
 
 cacheMissPenalty = 0
 
@@ -828,7 +828,8 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	#console.log "result: " + result
 	#console.log "latexResult: " + latexResult
 
-	console.log "total time from notebook and back: " + ((new Date().getTime()) - timeStartFromAlgebra) + "ms"
+	if TIMING_DEBUGS
+		console.log "total time from notebook and back: " + ((new Date().getTime()) - timeStartFromAlgebra) + "ms"
 
 
 	#code: "// no code generated yet\n//try again later"
