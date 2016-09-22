@@ -154,9 +154,10 @@ scan_stmt = ->
 				symbolsHavingReassignments.push symbolLeftOfAssignment
 			
 			# print out the immediate dependencies
-			if DEBUG then console.log "locally, " + symbolLeftOfAssignment + " depends on: "
-			for i in symbolsRightOfAssignment
-				if DEBUG then console.log "	" + i
+			if DEBUG
+				console.log "locally, " + symbolLeftOfAssignment + " depends on: "
+				for i in symbolsRightOfAssignment
+					console.log "	" + i
 
 			# ok add the local dependencies to the existing
 			# dependencies of this left-value symbol
