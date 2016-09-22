@@ -16,6 +16,10 @@ init = ->
 
 	flag = 1
 
+	if cached_runs?
+		cached_runs.reset()
+		if true then console.log "resetting cache"
+
 	# total clearout of symbol table
 	for i in [0...NSYM]
 		symtab[i] =  new U()
