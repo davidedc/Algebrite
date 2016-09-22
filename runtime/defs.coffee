@@ -284,6 +284,7 @@ MAXDIM = 24
 # find all dependencies between variables
 # in a script
 symbolsDependencies = {}
+symbolsHavingReassignments = []
 
 # you can do some little simplifications
 # at parse time, such as calculating away

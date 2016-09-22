@@ -143,13 +143,15 @@ scan_stmt = ->
 		isSymbolLeftOfAssignment = true
 
 		if codeGen
+
 			# in case of re-assignment, the symbol on the
 			# left will also be in the set of the symbols
 			# on the right. In that case just remove it from
 			# the symbols on the right.
 			indexOfSymbolLeftOfAssignment = symbolsRightOfAssignment.indexOf(symbolLeftOfAssignment)
 			if indexOfSymbolLeftOfAssignment != -1
-				symbolsRightOfAssignment.splice(indexOfSymbolLeftOfAssignment, 1) 
+				symbolsRightOfAssignment.splice(indexOfSymbolLeftOfAssignment, 1)
+				symbolsHavingReassignments.push symbolLeftOfAssignment
 			
 			# print out the immediate dependencies
 			if DEBUG then console.log "locally, " + symbolLeftOfAssignment + " depends on: "
