@@ -604,7 +604,11 @@ run = (stringToBeRun, generateLatex = false) ->
 
 	timeStart = new Date().getTime()
 
-	if ENABLE_CACHING
+	#stringToBeRun = stringToBeRun + "\n"
+	stringToBeRun = normaliseDots stringToBeRun
+	#console.log "run running: " + stringToBeRun
+
+	if ENABLE_CACHING and stringToBeRun != "clearall"
 		currentStateHash = getStateHash()
 		cacheKey = currentStateHash + " stringToBeRun: " + stringToBeRun
 		if CACHE_DEBUGS then console.log "cache key: " + cacheKey
@@ -622,11 +626,6 @@ run = (stringToBeRun, generateLatex = false) ->
 			if CACHE_HITSMISS_DEBUGS then console.log "cache miss"
 			if TIMING_DEBUGS
 				cacheMissPenalty = (new Date().getTime() - timeStart)
-
-	#stringToBeRun = stringToBeRun + "\n"
-	stringToBeRun = normaliseDots stringToBeRun
-	#console.log "run running: " + stringToBeRun
-
 
 	if stringToBeRun == "selftest"
 		selftest()
@@ -750,7 +749,7 @@ run = (stringToBeRun, generateLatex = false) ->
 	else
 		stringToBeReturned = allReturnedPlainStrings
 
-	if ENABLE_CACHING
+	if ENABLE_CACHING and stringToBeRun != "clearall"
 		frozen = freeze()
 		toBeFrozen = [frozen[0], frozen[1], frozen[2], frozen[3], frozen[4], frozen[5], (new Date().getTime() - timeStart), stringToBeReturned]
 		if CACHE_DEBUGS then console.log "setting cache on key: " + cacheKey
@@ -758,7 +757,7 @@ run = (stringToBeRun, generateLatex = false) ->
 
 	if TIMING_DEBUGS
 		timingDebugWrite = "core Algebrite time: " + (new Date().getTime() - timeStart) + "ms"
-		if ENABLE_CACHING then timingDebugWrite += ", of which cache miss penalty: " + cacheMissPenalty + "ms"
+		if ENABLE_CACHING  and stringToBeRun != "clearall" then timingDebugWrite += ", of which cache miss penalty: " + cacheMissPenalty + "ms"
 		console.log timingDebugWrite
 
 	return stringToBeReturned
