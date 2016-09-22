@@ -618,6 +618,7 @@ turnErrorMessageToLatex = (theErrorMessage) ->
 	theErrorMessage = theErrorMessage.replace(new RegExp(String.fromCharCode(transpose_unicode), 'g'), "}{}^{T}\\text{");
 	theErrorMessage = theErrorMessage.replace(new RegExp(String.fromCharCode(dotprod_unicode), 'g'),"}\\cdot \\text{");
 	theErrorMessage = theErrorMessage.replace("Stop:","}  \\quad \\text{Stop:");
+	theErrorMessage = theErrorMessage.replace("->","}  \\rightarrow \\text{");
 	theErrorMessage = theErrorMessage.replace("?","}\\enspace " + latexErrorSign + " \\enspace  \\text{");
 	theErrorMessage = "$$\\text{" + theErrorMessage.replace(/\n/g,"") + "}$$"
 	#console.log "theErrorMessage: " + theErrorMessage
