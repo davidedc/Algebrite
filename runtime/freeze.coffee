@@ -44,6 +44,12 @@ compareState = (previousHash) ->
 	else
 		return false
 
+resetCache = ->
+	if cached_runs?
+		cached_runs.reset()
+		if DEBUG then console.log "resetting cache"
+
+
 getStateHash = ->
 	frozenHash = ""
 

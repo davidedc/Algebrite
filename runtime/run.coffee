@@ -684,6 +684,7 @@ run = (stringToBeRun, generateLatex = false) ->
 
 		push(p1)
 		#debugger
+		errorWhileExecution = false
 		try
 			top_level_eval()
 
@@ -721,6 +722,7 @@ run = (stringToBeRun, generateLatex = false) ->
 			if generateLatex then allReturnedLatexStrings += "\n"
 
 		catch error
+			errorWhileExecution = true
 			collectedPlainResult = error.message
 			if generateLatex then collectedLatexResult = turnErrorMessageToLatex error.message
 
@@ -733,6 +735,7 @@ run = (stringToBeRun, generateLatex = false) ->
 				allReturnedLatexStrings += collectedLatexResult
 				allReturnedLatexStrings += "\n"
 
+			resetCache()
 			init()
 
 	if allReturnedPlainStrings[allReturnedPlainStrings.length-1] == "\n"
@@ -749,7 +752,7 @@ run = (stringToBeRun, generateLatex = false) ->
 	else
 		stringToBeReturned = allReturnedPlainStrings
 
-	if ENABLE_CACHING and stringToBeRun != "clearall"
+	if ENABLE_CACHING and stringToBeRun != "clearall" and !errorWhileExecution
 		frozen = freeze()
 		toBeFrozen = [frozen[0], frozen[1], frozen[2], frozen[3], frozen[4], frozen[5], (new Date().getTime() - timeStart), stringToBeReturned]
 		if CACHE_DEBUGS then console.log "setting cache on key: " + cacheKey
