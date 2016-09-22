@@ -60,12 +60,69 @@ test_assignments = ->
 		"lookup(f)",
 		"1+1",
 
-		# clean up
+
+		# clean up -----------------
 
 		"f=quote(f)",
 		"",
 
 		"g=quote(g)",
 		"",
+
+		# ----------------------
+		"a = a+1",
+		"",
+
+		"a",
+		"Stop: recursive evaluation of symbols: a -> a",
+
+		# ----------------------
+		"a := b",
+		"",
+
+		"b := c",
+		"",
+
+		"c := a",
+		"",
+
+		"b",
+		"Stop: recursive evaluation of symbols: b -> c -> a -> b",
+
+		# ----------------------
+		# note how this case actually doesn't generate a recursion
+		# as in Algebrite it's not a problem when a variable
+		# just contain itself, actually that's the default of
+		# unassigned variables.
+
+		"a = b",
+		"",
+
+		"b = a",
+		"",
+
+		"a",
+		"b",
+
+		"b",
+		"b",
+
+		# ----------------------
+		# note how this case actually doesn't generate a recursion
+		# as in Algebrite it's not a problem when a variable
+		# just contain itself, actually that's the default of
+		# unassigned variables.
+
+		"a := a",
+		"",
+
+		"a",
+		"a",
+
+		# clean up -----------------
+
+		"clearall",
+		"",
+
 
 	]

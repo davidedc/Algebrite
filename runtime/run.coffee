@@ -769,6 +769,9 @@ check_stack = ->
 	if (frame != TOS)
 		debugger
 		stop("frame error")
+	if chainOfUserSymbolsNotFunctionsBeingEvaluated.length != 0
+		debugger
+		stop("symbols evaluation ongoing?")
 
 # cannot reference symbols yet
 

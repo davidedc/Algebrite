@@ -10,6 +10,7 @@ init = ->
 	esc_flag = 0
 	draw_flag = 0
 	frame = TOS
+	chainOfUserSymbolsNotFunctionsBeingEvaluated = []
 
 	if (flag)
 		return		# already initted

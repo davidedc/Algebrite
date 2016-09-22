@@ -292,6 +292,8 @@ symbolsDependencies = {}
 # etc.
 parse_time_simplifications = true
 
+chainOfUserSymbolsNotFunctionsBeingEvaluated = []
+
 
 
 class tensor

@@ -32,6 +32,11 @@ Eval = ->
 
 Eval_sym = ->
 
+	# note that function calls are not processed here
+	# because, since they have an argument (at least an empty one)
+	# they are actually CONs, which is a branch of the
+	# switch before the one that calls this function
+
 	# bare keyword?
 	# If it's a keyword, then we don't look
 	# at the binding array, because keywords
@@ -45,8 +50,10 @@ Eval_sym = ->
 
 	# Evaluate symbol's binding
 	p2 = get_binding(p1)
+	if DEBUG then console.log "looked up: " + p1 + " which contains: " + p2
 
 	push(p2)
+
 
 	# differently from standard Lisp,
 	# here the evaluation is not
@@ -56,7 +63,28 @@ Eval_sym = ->
 	# Uncomment these two lines to get Lisp
 	# behaviour (and break most tests)
 	if (p1 != p2)
+
+		# detect recursive lookup of symbols, which would otherwise
+		# cause a stack overflow.
+		# Note that recursive functions will still work because
+		# as mentioned at the top, this method doesn't look
+		# up and evaluate function calls.
+		positionIfSymbolAlreadyBeingEvaluated = chainOfUserSymbolsNotFunctionsBeingEvaluated.indexOf(p1)
+		if  positionIfSymbolAlreadyBeingEvaluated != -1
+			cycleString = ""
+			for i in [positionIfSymbolAlreadyBeingEvaluated...chainOfUserSymbolsNotFunctionsBeingEvaluated.length]
+				cycleString += chainOfUserSymbolsNotFunctionsBeingEvaluated[i].printname + " -> "
+			cycleString += p1.printname
+
+			stop("recursive evaluation of symbols: " + cycleString)
+			return
+
+		chainOfUserSymbolsNotFunctionsBeingEvaluated.push(p1)
+
+
 		Eval()
+
+		chainOfUserSymbolsNotFunctionsBeingEvaluated.pop()
 
 Eval_cons = ->
 	if (!issymbol(car(p1)))
