@@ -55,12 +55,15 @@ Eval_pattern = ->
 ###
 
 
+do_clearPatterns = ->
+	userSimplificationsInListForm = []
+	userSimplificationsInStringForm = []
+
 Eval_clearpatterns = ->
 	# this is likely to create garbage collection
 	# problems in the C version as it's an
 	# untracked reference
-	userSimplificationsInListForm = []
-	userSimplificationsInStringForm = []
+	do_clearPatterns()
 	
 	# return nothing
 	push_symbol(NIL)

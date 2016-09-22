@@ -43,7 +43,7 @@ stop = (s) ->
 # While in the second case the effort is similar to running the
 # code and simplifications in her head.
 test_dependencies = ->
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('1')
 	if testResult[0] == "All local dependencies: . Symbols with reassignments: . All dependencies recursively: " and
@@ -53,7 +53,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f = x+1\n g = f\n h = g\n f = g')
 	if testResult[0] == "All local dependencies:  variable f depends on: x, g, ;  variable g depends on: f, ;  variable h depends on: g, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: x, ;  f --> g -->  ... then f again,  variable g depends on: x, ;  g --> f -->  ... then g again,  variable h depends on: x, ;  h --> g --> f -->  ... then g again, " and
@@ -62,49 +62,49 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	if findDependenciesInScript('f = x+1\n g = f + y\n h = g')[0] == "All local dependencies:  variable f depends on: x, ;  variable g depends on: f, y, ;  variable h depends on: g, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: x, ;  variable g depends on: x, y, ;  variable h depends on: x, y, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	if findDependenciesInScript('g = h(x,y)')[0] == "All local dependencies:  variable g depends on: h, x, y, ; . Symbols with reassignments: . All dependencies recursively:  variable g depends on: h, x, y, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	if findDependenciesInScript('f(x,y) = k')[0] == "All local dependencies:  variable f depends on: 'x, 'y, k, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: 'x, 'y, k, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	if findDependenciesInScript('x = z\n f(x,y) = k')[0] == "All local dependencies:  variable x depends on: z, ;  variable f depends on: 'x, 'y, k, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: z, ;  variable f depends on: 'x, 'y, k, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	if findDependenciesInScript('x = z\n g = f(x,y)')[0] == "All local dependencies:  variable x depends on: z, ;  variable g depends on: f, x, y, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: z, ;  variable g depends on: f, z, y, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	if findDependenciesInScript('x = 1\n x = y\n x = z')[0] == "All local dependencies:  variable x depends on: y, z, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: y, z, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('x = y*y')
 	if testResult[0] == "All local dependencies:  variable x depends on: y, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: y, ; " and
@@ -114,7 +114,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('x = -sqrt(2)/2')
 	if testResult[0] == "All local dependencies:  variable x depends on: ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: ; " and
@@ -124,7 +124,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('x = 2^(1/2-a)*2^a/10')
 	if testResult[0] == "All local dependencies:  variable x depends on: a, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: a, ; " and
@@ -134,7 +134,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('x = rationalize(t*y/(t+y)+2*t^2*y*(2*t+y)^(-2))')
 	if testResult[0] == "All local dependencies:  variable x depends on: t, y, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: t, y, ; " and
@@ -144,7 +144,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('x = mag((a+i*b)/(c+i*d))')
 	if testResult[0] == "All local dependencies:  variable x depends on: a, b, c, d, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: a, b, c, d, ; " and
@@ -154,7 +154,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('x = sin(1/10)^2 + cos(1/10)^2 + y')
 	if testResult[0] == "All local dependencies:  variable x depends on: y, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: y, ; " and
@@ -164,7 +164,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('x = sin(1/10)^2 + cos(1/10)^2')
 	if testResult[0] == "All local dependencies:  variable x depends on: ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: ; " and
@@ -174,7 +174,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f(x) = x * x')
 	if testResult[0] == "All local dependencies:  variable f depends on: 'x, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: 'x, ; " and
@@ -184,7 +184,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f(x) = x * x + g(y)')
 	if testResult[0] == "All local dependencies:  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: 'x, g, y, ; " and
@@ -194,7 +194,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('y = 2\nf(x) = x * x + g(y)')
 	if testResult[0] == "All local dependencies:  variable y depends on: ;  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . All dependencies recursively:  variable y depends on: ;  variable f depends on: 'x, g, ; " and
@@ -204,7 +204,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('g(x) = x + 2\ny = 2\nf(x) = x * x + g(y)')
 	if testResult[0] == "All local dependencies:  variable g depends on: 'x, ;  variable y depends on: ;  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . All dependencies recursively:  variable g depends on: 'x, ;  variable y depends on: ;  variable f depends on: 'x, ; " and
@@ -214,7 +214,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('g(x) = x + 2\nf(x) = x * x + g(y)')
 	if testResult[0] == "All local dependencies:  variable g depends on: 'x, ;  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . All dependencies recursively:  variable g depends on: 'x, ;  variable f depends on: 'x, y, ; " and
@@ -224,7 +224,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	###
 	testResult = findDependenciesInScript('g(x) = f(x)\nf(x)=g(x)')
@@ -235,7 +235,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 	###
 
 	testResult = findDependenciesInScript('f = roots(a*x^2 + b*x + c, x)')
@@ -246,7 +246,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f = roots(a*x^2 + b*x + c)')
 	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: a, b, c, ; " and
@@ -256,7 +256,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f = roots(integral(a*x + b))')
 	if testResult[0] == "All local dependencies:  variable f depends on: a, b, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: a, b, ; " and
@@ -266,7 +266,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f = roots(defint(a*x + y,y,0,1))')
 	if testResult[0] == "All local dependencies:  variable f depends on: a, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: a, ; " and
@@ -276,7 +276,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f = roots(defint(a*x + y + z,y,0,1, z, 0, 1))')
 	if testResult[0] == "All local dependencies:  variable f depends on: a, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: a, ; " and
@@ -286,7 +286,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f = defint(2*x - 3*y,x,0,2*y)')
 	if testResult[0] == "All local dependencies:  variable f depends on: y, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: y, ; " and
@@ -296,7 +296,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f = defint(12 - x^2 - (y^2)/2,x,0,2,y,0,3)')
 	if testResult[0] == "All local dependencies:  variable f depends on: ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: ; " and
@@ -306,7 +306,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	# this example checks that functions are not meddled with,
 	# in particular that in the function body, the variables
@@ -320,7 +320,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	# similar as test above but this time we are not
 	# defining a function, so things are a bit different.
@@ -332,7 +332,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	# similar as test above but this time we do a
 	# trick with the quote to see whether we
@@ -345,7 +345,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	# another tricky case of indirection through quote
 	testResult = findDependenciesInScript('a := b\nf(a) = a+1')
@@ -356,7 +356,7 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	# reassignment
 	testResult = findDependenciesInScript('b = 1\nb=a+b+c')
@@ -913,8 +913,7 @@ check_esc_flag = ->
 # just eject those.
 clearAlgebraEnvironment = ->
 	#console.log "CLEARING clearAlgebraEnvironment ============================================================="
-	Eval_clearpatterns()
-	pop() # just pops the NIL put by the eval above
+	do_clearall()
 
 computeDependenciesFromAlgebra = (codeFromAlgebraBlock) ->
 	return findDependenciesInScript(codeFromAlgebraBlock, true)[6]
@@ -936,10 +935,7 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 		#console.log "silentpattern(" + car(i) + ","+cdr(i)+")"
 		userSimplificationsInProgramForm += "silentpattern(" + car(i) + ","+ car(cdr(i)) + "," + car(cdr(cdr(i))) + ")\n"
 
-	userSimplificationsInListForm = []
-	userSimplificationsInStringForm = []
-	clear_symbols()
-	defn()
+		do_clearall()
 
 	codeFromAlgebraBlock = userSimplificationsInProgramForm + codeFromAlgebraBlock
 	#console.log "codeFromAlgebraBlock including patterns: " + codeFromAlgebraBlock

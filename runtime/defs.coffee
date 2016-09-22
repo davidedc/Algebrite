@@ -385,6 +385,7 @@ imaginaryunit = null # will contain U
 out_buf = ""
 out_count = 0
 test_flag = 0
+codeGen = false
 draw_stop_return = null # extern jmp_buf ?????
 userSimplificationsInListForm = []
 userSimplificationsInStringForm = []

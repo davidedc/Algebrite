@@ -1,11 +1,17 @@
 
 
 Eval_clearall = ->
+	do_clearall()
+	push(symbol(NIL))
+
+do_clearall = ->
 	if (test_flag == 0)
 		clear_term()
+	
+	do_clearPatterns()
 	clear_symbols()
 	defn()
-	push(symbol(NIL))
+	codeGen = false
 
 # clearall from application GUI code
 clearall = ->
