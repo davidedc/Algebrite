@@ -536,12 +536,12 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 
 				for eachDependency in recursedDependencies
 					if eachDependency[0] == "'"
-						console.log "gotta do something I have to replace a parameter with something that doesn't bind " + eachDependency
+						if DEBUG then console.log "gotta do something I have to replace a parameter with something that doesn't bind " + eachDependency
 						deQuotedDep = eachDependency.substring(1)
 						push(usr_symbol(deQuotedDep))
 						push(usr_symbol("DONTBIND"+deQuotedDep))
 						subst()
-						console.log "after substitution: " + stack[tos-1]
+						if DEBUG then console.log "after substitution: " + stack[tos-1]
 
 				try
 					simplifyForCodeGeneration()
@@ -606,7 +606,7 @@ recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded,
 	# recursive dependencies can only be descended if the variable is not bound to a parameter
 	if symbolsDependencies[chainBeingChecked[chainBeingChecked.length-1]]?
 		if symbolsDependencies[chainBeingChecked[chainBeingChecked.length-1]].indexOf("'"+variableToBeChecked) != -1
-			console.log "can't keep following the chain of " + variableToBeChecked + " because it's actually a variable bound to a parameter"
+			if DEBUG then console.log "can't keep following the chain of " + variableToBeChecked + " because it's actually a variable bound to a parameter"
 			if arrayWhereDependenciesWillBeAdded.indexOf("'"+variableToBeChecked) == -1 and arrayWhereDependenciesWillBeAdded.indexOf(variableToBeChecked) == -1
 				arrayWhereDependenciesWillBeAdded.push variableToBeChecked
 			return arrayWhereDependenciesWillBeAdded
@@ -967,7 +967,7 @@ clearAlgebraEnvironment = ->
 computeDependenciesFromAlgebra = (codeFromAlgebraBlock) ->
 	return findDependenciesInScript(codeFromAlgebraBlock, true)[6]
 
-computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock, keepState) ->
+computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 
 	keepState = true
 
@@ -994,7 +994,7 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock, keepState) ->
 	#console.log "codeFromAlgebraBlock including patterns: " + codeFromAlgebraBlock
 
 	#debugger
-	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode, latexResult, errorMessage] =
+	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode, latexResult, errorMessage, dependencyInfo] =
 		findDependenciesInScript(codeFromAlgebraBlock)
 
 	if readableSummaryOfCode != "" or errorMessage != ""
@@ -1027,6 +1027,7 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock, keepState) ->
 	# TODO temporarily pass latex in place of standard result too
 	result: latexResult
 	latexResult: latexResult
+	dependencyInfo: dependencyInfo
 	
 (exports ? this).run = run
 (exports ? this).findDependenciesInScript = findDependenciesInScript
