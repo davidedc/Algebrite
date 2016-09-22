@@ -358,16 +358,24 @@ test_dependencies = ->
 
 	console.log "-- done dependency tests"
 
-findDependenciesInScript = (stringToBeParsed) ->
+findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 
 	if DEBUG then console.log "stringToBeParsed: " + stringToBeParsed
 	inited = true
 	codeGen = true
 	symbolsDependencies = {}
 	indexOfPartRemainingToBeParsed = 0
-
 	allReturnedPlainStrings = ""
 	n = 0
+
+	# we are going to store the dependencies _of the block as a whole_
+	# so all affected variables in the whole block are lumped
+	# together, and same for the variable that affect those, we
+	# lump them all together.
+	dependencyInfo =
+		affectedVariables: []
+		affectedBy: []
+
 	while (1)
 
 		try
@@ -420,10 +428,12 @@ findDependenciesInScript = (stringToBeParsed) ->
 
 		for key of symbolsDependencies
 
+
 			codeGen = true
 			if DEBUG then console.log "	variable " + key + " is: " + get_binding(usr_symbol(key)).toString()
 			codeGen = false
 			if DEBUG then console.log "	variable " + key + " depends on: "
+			dependencyInfo.affectedVariables.push key
 			testableString +=  " variable " + key + " depends on: "
 
 			recursedDependencies = []
@@ -437,69 +447,72 @@ findDependenciesInScript = (stringToBeParsed) ->
 
 			for i in recursedDependencies
 				if DEBUG then console.log "		" + i
+				if i[0] != "'"
+					dependencyInfo.affectedBy.push i
 				testableString +=  i + ", "
 			testableString += "; "
 
 			for i in cyclesDescriptions
 				testableString += " " + i + ", "
 
-			if DEBUG then console.log "	code generation:" + key + " is: " + get_binding(usr_symbol(key)).toString()
+			if !dontGenerateCode
+				if DEBUG then console.log "	code generation:" + key + " is: " + get_binding(usr_symbol(key)).toString()
 
-			# we really want to make an extra effort
-			# to generate simplified code, so
-			# run a "simplify" on the content of each
-			# variable that we are generating code for.
-			# Note that the variable
-			# will still point to un-simplified structures,
-			# we only simplify the generated code.
-			push get_binding(usr_symbol(key))
+				# we really want to make an extra effort
+				# to generate simplified code, so
+				# run a "simplify" on the content of each
+				# variable that we are generating code for.
+				# Note that the variable
+				# will still point to un-simplified structures,
+				# we only simplify the generated code.
+				push get_binding(usr_symbol(key))
 
-			for eachDependency in recursedDependencies
-				if eachDependency[0] == "'"
-					console.log "gotta do something I have to replace a parameter with something that doesn't bind " + eachDependency
-					deQuotedDep = eachDependency.substring(1)
-					push(usr_symbol(deQuotedDep))
-					push(usr_symbol("DONTBIND"+deQuotedDep))
-					subst()
-					console.log "after substitution: " + stack[tos-1]
+				for eachDependency in recursedDependencies
+					if eachDependency[0] == "'"
+						console.log "gotta do something I have to replace a parameter with something that doesn't bind " + eachDependency
+						deQuotedDep = eachDependency.substring(1)
+						push(usr_symbol(deQuotedDep))
+						push(usr_symbol("DONTBIND"+deQuotedDep))
+						subst()
+						console.log "after substitution: " + stack[tos-1]
 
-			simplifyForCodeGeneration()
-			toBePrinted = pop()
+				simplifyForCodeGeneration()
+				toBePrinted = pop()
 
-			codeGen = true
-			generatedBody = toBePrinted.toString()
-			codeGen = false
-			bodyForReadableSummaryOfGeneratedCode = toBePrinted.toString()
+				codeGen = true
+				generatedBody = toBePrinted.toString()
+				codeGen = false
+				bodyForReadableSummaryOfGeneratedCode = toBePrinted.toString()
 
-			generatedBody = generatedBody.replace(/DONTBIND/g,"")
-			bodyForReadableSummaryOfGeneratedCode = bodyForReadableSummaryOfGeneratedCode.replace(/DONTBIND/g,"")
+				generatedBody = generatedBody.replace(/DONTBIND/g,"")
+				bodyForReadableSummaryOfGeneratedCode = bodyForReadableSummaryOfGeneratedCode.replace(/DONTBIND/g,"")
 
 
-			if variablesWithCycles.indexOf(key) != -1
-				generatedCode += "// " + key + " is part of a cyclic dependency, no code generated."
-				readableSummaryOfGeneratedCode += "#" + key + " is part of a cyclic dependency, no code generated."
-			else
-				if recursedDependencies.length != 0
-					parameters = "("
-					for i in recursedDependencies
-						if i.indexOf("'") != 0
-							parameters += i + ", "
-						else
-							if recursedDependencies.indexOf(i.substring(1)) == -1
-								parameters += i.substring(1) + ", "
-					# eliminate the last ", " for printout clarity
-					parameters = parameters.replace /, $/gm , ""
-					parameters += ")"
-					generatedCode += key + " = function " + parameters + " { return ( " + generatedBody + " ); }"
-					readableSummaryOfGeneratedCode += key + parameters + " = " + bodyForReadableSummaryOfGeneratedCode
+				if variablesWithCycles.indexOf(key) != -1
+					generatedCode += "// " + key + " is part of a cyclic dependency, no code generated."
+					readableSummaryOfGeneratedCode += "#" + key + " is part of a cyclic dependency, no code generated."
 				else
-					generatedCode += key + " = " + generatedBody + ";"
-					readableSummaryOfGeneratedCode += key + " = " + bodyForReadableSummaryOfGeneratedCode
+					if recursedDependencies.length != 0
+						parameters = "("
+						for i in recursedDependencies
+							if i.indexOf("'") != 0
+								parameters += i + ", "
+							else
+								if recursedDependencies.indexOf(i.substring(1)) == -1
+									parameters += i.substring(1) + ", "
+						# eliminate the last ", " for printout clarity
+						parameters = parameters.replace /, $/gm , ""
+						parameters += ")"
+						generatedCode += key + " = function " + parameters + " { return ( " + generatedBody + " ); }"
+						readableSummaryOfGeneratedCode += key + parameters + " = " + bodyForReadableSummaryOfGeneratedCode
+					else
+						generatedCode += key + " = " + generatedBody + ";"
+						readableSummaryOfGeneratedCode += key + " = " + bodyForReadableSummaryOfGeneratedCode
 
-			generatedCode += "\n"
-			readableSummaryOfGeneratedCode += "\n"
+				generatedCode += "\n"
+				readableSummaryOfGeneratedCode += "\n"
 
-			if DEBUG then console.log "		" + generatedCode
+				if DEBUG then console.log "		" + generatedCode
 
 	# eliminate the last new line
 	generatedCode = generatedCode.replace /\n$/gm , ""
@@ -508,7 +521,7 @@ findDependenciesInScript = (stringToBeParsed) ->
 	symbolsDependencies = {}
 	if DEBUG then console.log "testable string: " + testableString
 
-	return [testableString, scriptEvaluation[0], generatedCode, readableSummaryOfGeneratedCode, scriptEvaluation[1], errorMessage]
+	return [testableString, scriptEvaluation[0], generatedCode, readableSummaryOfGeneratedCode, scriptEvaluation[1], errorMessage, dependencyInfo]
 
 recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded, variablesAlreadyFleshedOut, variablesWithCycles, chainBeingChecked, cyclesDescriptions) ->
 	variablesAlreadyFleshedOut.push variableToBeChecked
@@ -874,6 +887,9 @@ clearAlgebraEnvironment = ->
 	Eval_clearpatterns()
 	pop() # just pops the NIL put by the eval above
 
+computeDependenciesFromAlgebra = (codeFromAlgebraBlock) ->
+	return findDependenciesInScript(codeFromAlgebraBlock, true)[6]
+
 computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 
 	timeStartFromAlgebra  = new Date().getTime()
@@ -936,5 +952,6 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	
 (exports ? this).run = run
 (exports ? this).findDependenciesInScript = findDependenciesInScript
+(exports ? this).computeDependenciesFromAlgebra = computeDependenciesFromAlgebra
 (exports ? this).computeResultsAndJavaScriptFromAlgebra = computeResultsAndJavaScriptFromAlgebra
 (exports ? this).clearAlgebraEnvironment = clearAlgebraEnvironment
