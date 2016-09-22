@@ -367,7 +367,38 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
+	do_clearall()
+
+	# reassignment
+	testResult = findDependenciesInScript('a = a+1')
+	if testResult[0] == "All local dependencies:  variable a depends on: ; . Symbols with reassignments: a, . All dependencies recursively:  variable a depends on: ; " and
+		testResult[1] == "" and
+		testResult[2] == "" and
+		testResult[5] == "Error: Stop: recursive evaluation of symbols: a -> a"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
+	# reassignment
+	testResult = computeDependenciesFromAlgebra('pattern(a,b)\nc= d\na=a+1')
+	if testResult.affectsVariables.length is 3 and
+		testResult.affectsVariables.indexOf("c") != -1 and
+		testResult.affectsVariables.indexOf("a") != -1 and
+		testResult.affectsVariables.indexOf("PATTERN_DEPENDENCY") != -1 and
+		testResult.affectedBy.length is 3 and
+		testResult.affectedBy.indexOf("d") != -1 and
+		testResult.affectedBy.indexOf("a") != -1 and
+		testResult.affectedBy.indexOf("PATTERN_DEPENDENCY") != -1
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+
 	console.log "-- done dependency tests"
+	do_clearall()
+
 
 findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 
@@ -376,6 +407,7 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 	codeGen = true
 	symbolsDependencies = {}
 	symbolsHavingReassignments = []
+	patternHasBeenFound = false
 	indexOfPartRemainingToBeParsed = 0
 	allReturnedPlainStrings = ""
 	n = 0
@@ -385,7 +417,7 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 	# together, and same for the variable that affect those, we
 	# lump them all together.
 	dependencyInfo =
-		affectedVariables: []
+		affectsVariables: []
 		affectedBy: []
 
 	while (1)
@@ -419,9 +451,12 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 	testableString += "All local dependencies: "
 	for key, value of symbolsDependencies
 		if DEBUG then console.log "variable " + key + " depends on: "
+		dependencyInfo.affectsVariables.push key
 		testableString +=  " variable " + key + " depends on: "
 		for i in value
 			if DEBUG then console.log "		" + i
+			if i[0] != "'"
+				dependencyInfo.affectedBy.push i
 			testableString +=  i + ", "
 		testableString += "; "
 	testableString += ". "
@@ -429,11 +464,18 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 	# print out the symbols with re-assignments:
 	if DEBUG then console.log "Symbols with reassignments ----------------"
 	testableString += "Symbols with reassignments: "
-	for key of symbolsDependencies
-		if DEBUG then console.log "variable " + key + " depends on: "
-		if symbolsHavingReassignments.indexOf(key) != -1
+	for key in symbolsHavingReassignments
+		if dependencyInfo.affectedBy.indexOf(key) == -1
+			dependencyInfo.affectedBy.push key
 			testableString +=  key + ", "
 	testableString += ". "
+
+	# ALL Algebrite code is affected by any pattern changing
+	dependencyInfo.affectedBy.push "PATTERN_DEPENDENCY"
+
+	if patternHasBeenFound
+		dependencyInfo.affectsVariables.push "PATTERN_DEPENDENCY"
+		testableString += " - PATTERN_DEPENDENCY inserted - "
 
 	# print out all global dependencies as collected by this
 	# parsing pass
@@ -444,45 +486,43 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 	generatedCode = ""
 	readableSummaryOfGeneratedCode = ""
 
-	if errorMessage == ""
-		scriptEvaluation = run(stringToBeParsed, true)
+	if errorMessage == "" and !dontGenerateCode
 
-		for key of symbolsDependencies
+		try
+			scriptEvaluation = run(stringToBeParsed, true)
+		catch error
+			if PRINTOUTRESULT then console.log error
+			errorMessage = error + ""
+			#debugger
+			init()
 
-
-			codeGen = true
-			if DEBUG then console.log "	variable " + key + " is: " + get_binding(usr_symbol(key)).toString()
-			codeGen = false
-			if DEBUG then console.log "	variable " + key + " depends on: "
-			dependencyInfo.affectedVariables.push key
-			testableString +=  " variable " + key + " depends on: "
-
-			recursedDependencies = []
-			variablesWithCycles = []
-			cyclesDescriptions = []
-
-			recursiveDependencies key, recursedDependencies, [], variablesWithCycles, [], cyclesDescriptions
-
-			for i in variablesWithCycles
-				if DEBUG then console.log "		--> cycle through " + i
-
-			for i in recursedDependencies
-				if DEBUG then console.log "		" + i
-				if i[0] != "'"
-					dependencyInfo.affectedBy.push i
-				testableString +=  i + ", "
-			testableString += "; "
-
-			for i in cyclesDescriptions
-				testableString += " " + i + ", "
-
-			console.log "symbols with reassignments: " + symbolsHavingReassignments
-			for i in symbolsHavingReassignments
-				if dependencyInfo.affectedBy.indexOf(i) == -1
-					dependencyInfo.affectedBy.push i
+		if errorMessage == ""
+			for key of symbolsDependencies
 
 
-			if !dontGenerateCode
+				codeGen = true
+				if DEBUG then console.log "	variable " + key + " is: " + get_binding(usr_symbol(key)).toString()
+				codeGen = false
+				if DEBUG then console.log "	variable " + key + " depends on: "
+				testableString +=  " variable " + key + " depends on: "
+
+				recursedDependencies = []
+				variablesWithCycles = []
+				cyclesDescriptions = []
+
+				recursiveDependencies key, recursedDependencies, [], variablesWithCycles, [], cyclesDescriptions
+
+				for i in variablesWithCycles
+					if DEBUG then console.log "		--> cycle through " + i
+
+				for i in recursedDependencies
+					if DEBUG then console.log "		" + i
+					testableString +=  i + ", "
+				testableString += "; "
+
+				for i in cyclesDescriptions
+					testableString += " " + i + ", "
+
 				if DEBUG then console.log "	code generation:" + key + " is: " + get_binding(usr_symbol(key)).toString()
 
 				# we really want to make an extra effort
@@ -503,43 +543,51 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 						subst()
 						console.log "after substitution: " + stack[tos-1]
 
-				simplifyForCodeGeneration()
-				toBePrinted = pop()
+				try
+					simplifyForCodeGeneration()
+				catch error
+					if PRINTOUTRESULT then console.log error
+					errorMessage = error + ""
+					#debugger
+					init()
 
-				codeGen = true
-				generatedBody = toBePrinted.toString()
-				codeGen = false
-				bodyForReadableSummaryOfGeneratedCode = toBePrinted.toString()
+				if errorMessage == ""
+					toBePrinted = pop()
 
-				generatedBody = generatedBody.replace(/DONTBIND/g,"")
-				bodyForReadableSummaryOfGeneratedCode = bodyForReadableSummaryOfGeneratedCode.replace(/DONTBIND/g,"")
+					codeGen = true
+					generatedBody = toBePrinted.toString()
+					codeGen = false
+					bodyForReadableSummaryOfGeneratedCode = toBePrinted.toString()
+
+					generatedBody = generatedBody.replace(/DONTBIND/g,"")
+					bodyForReadableSummaryOfGeneratedCode = bodyForReadableSummaryOfGeneratedCode.replace(/DONTBIND/g,"")
 
 
-				if variablesWithCycles.indexOf(key) != -1
-					generatedCode += "// " + key + " is part of a cyclic dependency, no code generated."
-					readableSummaryOfGeneratedCode += "#" + key + " is part of a cyclic dependency, no code generated."
-				else
-					if recursedDependencies.length != 0
-						parameters = "("
-						for i in recursedDependencies
-							if i.indexOf("'") != 0
-								parameters += i + ", "
-							else
-								if recursedDependencies.indexOf(i.substring(1)) == -1
-									parameters += i.substring(1) + ", "
-						# eliminate the last ", " for printout clarity
-						parameters = parameters.replace /, $/gm , ""
-						parameters += ")"
-						generatedCode += key + " = function " + parameters + " { return ( " + generatedBody + " ); }"
-						readableSummaryOfGeneratedCode += key + parameters + " = " + bodyForReadableSummaryOfGeneratedCode
+					if variablesWithCycles.indexOf(key) != -1
+						generatedCode += "// " + key + " is part of a cyclic dependency, no code generated."
+						readableSummaryOfGeneratedCode += "#" + key + " is part of a cyclic dependency, no code generated."
 					else
-						generatedCode += key + " = " + generatedBody + ";"
-						readableSummaryOfGeneratedCode += key + " = " + bodyForReadableSummaryOfGeneratedCode
+						if recursedDependencies.length != 0
+							parameters = "("
+							for i in recursedDependencies
+								if i.indexOf("'") != 0
+									parameters += i + ", "
+								else
+									if recursedDependencies.indexOf(i.substring(1)) == -1
+										parameters += i.substring(1) + ", "
+							# eliminate the last ", " for printout clarity
+							parameters = parameters.replace /, $/gm , ""
+							parameters += ")"
+							generatedCode += key + " = function " + parameters + " { return ( " + generatedBody + " ); }"
+							readableSummaryOfGeneratedCode += key + parameters + " = " + bodyForReadableSummaryOfGeneratedCode
+						else
+							generatedCode += key + " = " + generatedBody + ";"
+							readableSummaryOfGeneratedCode += key + " = " + bodyForReadableSummaryOfGeneratedCode
 
-				generatedCode += "\n"
-				readableSummaryOfGeneratedCode += "\n"
+					generatedCode += "\n"
+					readableSummaryOfGeneratedCode += "\n"
 
-				if DEBUG then console.log "		" + generatedCode
+					if DEBUG then console.log "		" + generatedCode
 
 	# eliminate the last new line
 	generatedCode = generatedCode.replace /\n$/gm , ""
@@ -547,6 +595,7 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 
 	symbolsDependencies = {}
 	symbolsHavingReassignments = []
+	patternHasBeenFound = false
 	if DEBUG then console.log "testable string: " + testableString
 
 	return [testableString, scriptEvaluation[0], generatedCode, readableSummaryOfGeneratedCode, scriptEvaluation[1], errorMessage, dependencyInfo]
@@ -918,7 +967,9 @@ clearAlgebraEnvironment = ->
 computeDependenciesFromAlgebra = (codeFromAlgebraBlock) ->
 	return findDependenciesInScript(codeFromAlgebraBlock, true)[6]
 
-computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
+computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock, keepState) ->
+
+	keepState = true
 
 	timeStartFromAlgebra  = new Date().getTime()
 	# we start "clean" each time:
@@ -931,9 +982,11 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 
 	##userSimplificationsInListForm = []
 	userSimplificationsInProgramForm = ""
-	for i in userSimplificationsInListForm
-		#console.log "silentpattern(" + car(i) + ","+cdr(i)+")"
-		userSimplificationsInProgramForm += "silentpattern(" + car(i) + ","+ car(cdr(i)) + "," + car(cdr(cdr(i))) + ")\n"
+
+	if !keepState?
+		for i in userSimplificationsInListForm
+			#console.log "silentpattern(" + car(i) + ","+cdr(i)+")"
+			userSimplificationsInProgramForm += "silentpattern(" + car(i) + ","+ car(cdr(i)) + "," + car(cdr(cdr(i))) + ")\n"
 
 		do_clearall()
 

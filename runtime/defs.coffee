@@ -285,6 +285,7 @@ MAXDIM = 24
 # in a script
 symbolsDependencies = {}
 symbolsHavingReassignments = []
+patternHasBeenFound = false
 
 # you can do some little simplifications
 # at parse time, such as calculating away

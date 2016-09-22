@@ -489,6 +489,9 @@ scan_function_call = ->
 	list(n)
 	if functionName == "roots" or functionName == "defint"
 		functionInvokationsScanningStack.pop()
+	if functionName == symbol(PATTERN).printname
+		patternHasBeenFound = true
+
 	if DEBUG then console.log "-- scan_function_call end"
 
 # scan subexpression
