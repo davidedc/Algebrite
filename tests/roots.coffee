@@ -19,6 +19,9 @@ test_roots = ->
 		"roots(2 x^2)",
 		"0",
 
+		"roots(i*x^2-13*i*x+36*i)",
+		"(4,9)",
+
 		"roots(2 x^3)",
 		"0",
 
