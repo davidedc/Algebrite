@@ -137,9 +137,7 @@ __rationalize_tensor = ->
 		rationalize()
 		p1.tensor.elem[i] = pop()
 
-	if p1.tensor.nelem != p1.tensor.elem.length
-		console.log "something wrong in tensor dimensions"
-		debugger
+	check_tensor_dimensions p1
 
 
 	push(p1)

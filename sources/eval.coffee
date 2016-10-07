@@ -551,9 +551,7 @@ Eval_unit = ->
 	p1.tensor.dim[1] = n
 	for i in [0...n]
 		p1.tensor.elem[n * i + i] = one
-	if p1.tensor.nelem != p1.tensor.elem.length
-		console.log "something wrong in tensor dimensions"
-		debugger
+	check_tensor_dimensions p1
 	push(p1)
 
 Eval_noexpand = ->

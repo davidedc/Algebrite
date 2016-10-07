@@ -553,9 +553,7 @@ build_tensor = (n) ->
 	for i in [0...n]
 		p2.tensor.elem[i] = stack[tos-n+i]
 
-	if p2.tensor.nelem != p2.tensor.elem.length
-		if DEBUG then console.log "something wrong in tensor dimensions"
-		debugger
+	check_tensor_dimensions p2
 
 	tos -= n
 

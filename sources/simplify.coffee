@@ -127,9 +127,7 @@ simplify_tensor = ->
 		simplify()
 		p2.tensor.elem[i] = pop()
 
-	if p2.tensor.nelem != p2.tensor.elem.length
-		console.log "something wrong in tensor dimensions"
-		debugger
+	check_tensor_dimensions p2
 
 	if (iszero(p2))
 		p2 = zero; # null tensor becomes scalar zero
