@@ -65,7 +65,14 @@ runUserDefinedSimplifications = ->
 simplifyForCodeGeneration = ->
 	save()
 	runUserDefinedSimplifications()
+	codeGen = true
+	# in "codeGen" mode we completely
+	# eval and simplify the function bodies
+	# because we really want to resolve all
+	# the variables indirections and apply
+	# all the simplifications we can.
 	simplify_main()
+	codeGen = false
 	restore()
 
 simplify = ->
@@ -75,6 +82,29 @@ simplify = ->
 
 simplify_main = ->
 	p1 = pop()
+
+	# when we do code generation, we proceed to
+	# fully evaluate and simplify the body of
+	# a function, so we resolve all variables
+	# indirections and we simplify everything
+	# we can given the current assignments.
+	if codeGen and car(p1) == symbol(FUNCTION)
+		fbody = cadr(p1)		
+		push fbody
+		# let's simplify the body so we give it a
+		# compact form
+		eval()
+		simplify()
+		p3 = pop()
+
+		# replace the evaled body
+		args = caddr(p1); # p5 is B
+
+		push_symbol(FUNCTION)
+		push p3
+		push args
+		list(3)
+		p1 = pop()
 
 	if (istensor(p1))
 		simplify_tensor()

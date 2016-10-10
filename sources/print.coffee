@@ -688,15 +688,7 @@ print_factor = (p) ->
 			print_str "function "
 			stringToBePrinted = print1 parameters, stringToBePrinted
 			print_str " -> "
-			print_expr fbody
-		else
-			push fbody
-			# let's simplify the body so we give it a
-			# compact expression
-			eval()
-			simplify()
-			fbody = pop()
-			print_expr fbody
+		print_expr fbody
 		return
 
 	if (car(p) == symbol(PATTERN))

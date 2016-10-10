@@ -129,7 +129,7 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('x = 2^(1/2-a)*2^a/10')
 	if testResult[0] == "All local dependencies:  variable x depends on: a, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: a, ; " and
 		testResult[1] == "" and
-		testResult[2] == "x = function (a) { return ( 1/10*Math.pow(2, (1/2)) ); }"
+		testResult[2] == "x = 1/10*Math.pow(2, (1/2));"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
@@ -189,7 +189,7 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('f(x) = x * x + g(y)')
 	if testResult[0] == "All local dependencies:  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: 'x, g, y, ; " and
 		testResult[1] == "" and
-		testResult[2] == "f = function (x, g, y) { return ( g(y) + Math.pow(x, 2) ); }"
+		testResult[2] == "f = function (g, y, x) { return ( g(y) + Math.pow(x, 2) ); }"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
@@ -199,7 +199,7 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('y = 2\nf(x) = x * x + g(y)')
 	if testResult[0] == "All local dependencies:  variable y depends on: ;  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . All dependencies recursively:  variable y depends on: ;  variable f depends on: 'x, g, ; " and
 		testResult[1] == "" and
-		testResult[2] == "y = 2;\nf = function (x, g) { return ( g(2) + Math.pow(x, 2) ); }"
+		testResult[2] == "y = 2;\nf = function (g, x) { return ( g(2) + Math.pow(x, 2) ); }"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
@@ -219,7 +219,7 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('g(x) = x + 2\nf(x) = x * x + g(y)')
 	if testResult[0] == "All local dependencies:  variable g depends on: 'x, ;  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . All dependencies recursively:  variable g depends on: 'x, ;  variable f depends on: 'x, y, ; " and
 		testResult[1] == "" and
-		testResult[2] == "g = function (x) { return ( 2 + x ); }\nf = function (x, y) { return ( 2 + y + Math.pow(x, 2) ); }"
+		testResult[2] == "g = function (x) { return ( 2 + x ); }\nf = function (y, x) { return ( 2 + y + Math.pow(x, 2) ); }"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
@@ -395,6 +395,17 @@ test_dependencies = ->
 	else
 			console.log "fail dependency test. expected: " + testResult
 
+	do_clearall()
+
+	testResult = findDependenciesInScript('a = b\nf = a+1')
+	if testResult[0] == "All local dependencies:  variable a depends on: b, ;  variable f depends on: a, ; . Symbols with reassignments: . All dependencies recursively:  variable a depends on: b, ;  variable f depends on: b, ; " and
+		testResult[1] == "" and
+		testResult[2] == "a = function (b) { return ( b ); }\nf = function (b) { return ( 1 + b ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
 
 	console.log "-- done dependency tests"
 	do_clearall()
@@ -554,6 +565,12 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 				if errorMessage == ""
 					toBePrinted = pop()
 
+					# we have to get all the variables used on the right side
+					# here. I.e. to print the arguments it's better to look at the
+					# actual method body after simplification.
+					userVariablesMentioned = []
+					collectUserSymbols(toBePrinted, userVariablesMentioned)
+
 					codeGen = true
 					generatedBody = toBePrinted.toString()
 					codeGen = false
@@ -567,6 +584,18 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 						generatedCode += "// " + key + " is part of a cyclic dependency, no code generated."
 						readableSummaryOfGeneratedCode += "#" + key + " is part of a cyclic dependency, no code generated."
 					else
+
+						###
+						# using this paragraph instead of the following one
+						# creates methods signatures that
+						# are slightly less efficient
+						# i.e. variables compare even if they are
+						# simplified away.
+						# In theory these signatures are more stable, but
+						# in practice signatures vary quite a bit anyways
+						# depending on previous assignments for example,
+						# so it's unclear whether going for stability
+						# is sensible at all..
 						if recursedDependencies.length != 0
 							parameters = "("
 							for i in recursedDependencies
@@ -575,6 +604,14 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 								else
 									if recursedDependencies.indexOf(i.substring(1)) == -1
 										parameters += i.substring(1) + ", "
+						###
+
+						if userVariablesMentioned.length != 0
+							parameters = "("
+							for i in userVariablesMentioned
+								if i.printname.replace(/DONTBIND/g,"") != key
+									parameters += i.printname.replace(/DONTBIND/g,"") + ", "
+
 							# eliminate the last ", " for printout clarity
 							parameters = parameters.replace /, $/gm , ""
 							parameters += ")"

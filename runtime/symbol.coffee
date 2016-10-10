@@ -169,7 +169,17 @@ get_binding = (p) ->
 	#	debugger
 	return binding[indexFound]
 
-# get symbol's number from ptr
+# the concept of user symbol is a little fuzzy
+# beucase mathematics is full of symbols that actually
+# have a special meaning, e.g. e,i,I in some cases j...
+is_usr_symbol = (p) ->
+	if (p.k != SYM)
+		return false
+	theSymnum = symnum(p)
+	# see "defs" file for the naming of the symbols
+	if theSymnum > PI and theSymnum != SYMBOL_I and theSymnum != SYMBOL_IDENTITY_MATRIX
+		return true
+	return false
 
 # get symbol's number from ptr
 # p is U
@@ -214,7 +224,28 @@ clear_symbols = ->
 		#symtab[i].printname = ""
 		#binding[i] = symtab[i]
 
+
+# collect all the variables in a tree
+collectUserSymbols = (p, accumulator = []) ->
+
+	if is_usr_symbol(p)
+		if accumulator.indexOf(p) == -1
+			accumulator.push p
+			return
+
+	if (istensor(p))
+		for i in [0...p.tensor.nelem]
+			collectUserSymbols p.tensor.elem[i], accumulator
+		return
+
+	while (iscons(p))
+		collectUserSymbols(car(p), accumulator)
+		p = cdr(p)
+
+	return
+
 $.get_binding = get_binding
 $.set_binding = set_binding
 $.usr_symbol = usr_symbol
 $.symbolsinfo = symbolsinfo
+$.collectUserSymbols = collectUserSymbols
