@@ -495,6 +495,16 @@ test_roots = ->
 		"(abs(float(subst(theRoots[1],x,thePoly))) < float(2*10^(-12))) and (abs(float(subst(theRoots[2],x,thePoly))) < float(2*10^(-12))) and (abs(float(subst(theRoots[3],x,thePoly))) < float(2*10^(-12)))",
 		"1",
 
+
+		"thePoly = x^3 + x^2 - 7",
+		"",
+			
+		"theRoots = roots(thePoly)",
+		"",
+
+		"(abs(float(subst(theRoots[1],x,thePoly))) < float(2*10^(-12))) and (abs(float(subst(theRoots[2],x,thePoly))) < float(2*10^(-12))) and (abs(float(subst(theRoots[3],x,thePoly))) < float(2*10^(-12)))",
+		"1",
+
 		# some quartics
 
 		"thePoly = x^4 + 8*x^2 + 3",
