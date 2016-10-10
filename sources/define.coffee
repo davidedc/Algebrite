@@ -50,7 +50,9 @@ define_user_function = ->
 		Eval()
 		p5 = pop();  # p5 is B
 
-	# note how we don't eval/simplify
+	# note how, unless explicitly forced by an eval,
+	# (handled by if just above)
+	# we don't eval/simplify
 	# the body.
 	# Why? because it's the easiest way
 	# to solve scope problems i.e.
@@ -67,7 +69,7 @@ define_user_function = ->
 	p5 = pop()
 
 
-	set_binding(p3, p5);  # p3 is F  # p4 is A  # p5 is B
+	set_binding(p3, p5);  # p3 is F (function name)  # p4 is A  # p5 is B
 
 	# return value is nil
 
