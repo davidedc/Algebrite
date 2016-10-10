@@ -171,6 +171,7 @@ get_binding = (p) ->
 
 # get symbol's number from ptr
 
+# get symbol's number from ptr
 # p is U
 lookupsTotal = 0
 symnum = (p) ->
