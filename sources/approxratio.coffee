@@ -1,10 +1,44 @@
 ###
- Guesses a rational for a given float.
+ Guesses a rational for each float in the passed expression
 ###
 
+
 Eval_approxratio = ->
-	theArgument = cadr(p1)
-	push(theArgument)
+  theArgument = cadr(p1)
+  push(theArgument)
+  approxratioRecursive()
+
+approxratioRecursive = ->
+  i = 0
+  save()
+  p1 = pop(); # expr
+  if (istensor(p1))
+    p4 = alloc_tensor(p1.tensor.nelem)
+    p4.tensor.ndim = p1.tensor.ndim
+    for i in [0...p1.tensor.ndim]
+      p4.tensor.dim[i] = p1.tensor.dim[i]
+    for i in [0...p1.tensor.nelem]
+      push(p1.tensor.elem[i])
+      approxratioRecursive()
+      p4.tensor.elem[i] = pop()
+
+      check_tensor_dimensions p4
+
+    push(p4)
+  else if p1.k == DOUBLE
+    push(p1)
+    approxOneRatioOnly()
+  else if (iscons(p1))
+    push(car(p1))
+    approxratioRecursive()
+    push(cdr(p1))
+    approxratioRecursive()
+    cons()
+  else
+    push(p1)
+  restore()
+
+approxOneRatioOnly = ->
 	zzfloat()
 	supposedlyTheFloat = pop()
 	if supposedlyTheFloat.k == DOUBLE
@@ -13,7 +47,7 @@ Eval_approxratio = ->
     if splitBeforeAndAfterDot.length == 2
     	numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
     	precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
-    	theRatio = approxratio(theFloat,precision)
+    	theRatio = floatToRatioRoutine(theFloat,precision)
     	push_rational(theRatio[0], theRatio[1])
     else
       push_integer(theFloat)
@@ -23,7 +57,6 @@ Eval_approxratio = ->
 	push_symbol(APPROXRATIO)
 	push(theArgument)
 	list(2)
-
 
 # original routine by John Kennedy, see
 # https://web.archive.org/web/20111027100847/http://homepage.smc.edu/kennedy_john/DEC2FRAC.PDF
@@ -36,7 +69,7 @@ Eval_approxratio = ->
 #   http://www.homeschoolmath.net/teaching/rational_numbers.php
 #   http://stackoverflow.com/questions/95727/how-to-convert-floats-to-human-readable-fractions
 
-approxratio = (decimal, AccuracyFactor) ->
+floatToRatioRoutine = (decimal, AccuracyFactor) ->
   FractionNumerator = undefined
   FractionDenominator = undefined
   DecimalSign = undefined

@@ -16,7 +16,13 @@ test_approxratio = ->
 		"355/113",
 
 		"approxratio(a*3.14)",
-		"approxratio(a*3.14)",
+		"a*22/7",
+
+		"approxratio(a*b)",
+		"a*b",
+
+		"approxratio((0.5*4)^(1/3))",
+		"2^(1/3)",
 
 		"approxratio(3.14)",
 		"22/7",
