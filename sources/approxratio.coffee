@@ -25,6 +25,8 @@ Eval_approxratio = ->
 	list(2)
 
 
+# original routine by John Kennedy, see
+# https://web.archive.org/web/20111027100847/http://homepage.smc.edu/kennedy_john/DEC2FRAC.PDF
 # courtesy of Michael Borcherds
 # who ported this to JavaScript under MIT licence
 # also see
