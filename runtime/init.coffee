@@ -64,6 +64,7 @@ defn = ->
 	std_symbol("add", ADD)
 	std_symbol("adj", ADJ)
 	std_symbol("and", AND)
+	std_symbol("approxratio", APPROXRATIO)
 	std_symbol("arccos", ARCCOS)
 	std_symbol("arccosh", ARCCOSH)
 	std_symbol("arcsin", ARCSIN)

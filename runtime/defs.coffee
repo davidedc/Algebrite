@@ -80,6 +80,7 @@ ABS = counter++
 ADD = counter++
 ADJ = counter++
 AND = counter++
+APPROXRATIO = counter++
 ARCCOS = counter++
 ARCCOSH = counter++
 ARCSIN = counter++

@@ -42,6 +42,7 @@ selftest  = ->
 	test_abs()
 	test_adj()
 	test_arg()
+	test_approxratio()
 	test_besselj()
 	test_bessely()
 	test_ceiling()

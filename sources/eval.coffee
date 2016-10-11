@@ -151,6 +151,7 @@ Eval_cons = ->
 		when FACTORPOLY then Eval_factorpoly()
 		when FILTER then Eval_filter()
 		when FLOATF then Eval_float()
+		when APPROXRATIO then Eval_approxratio()
 		when FLOOR then Eval_floor()
 		when FOR then Eval_for()
 		# this is invoked only when we
