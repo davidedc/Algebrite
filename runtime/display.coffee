@@ -1,3 +1,14 @@
+###
+
+Prints in "2d", e.g. instead of 1/(x+1)^2 :
+
+     1
+----------
+        2
+ (1 + x)
+
+###
+
 #-----------------------------------------------------------------------------
 #
 #	Examples:
@@ -343,9 +354,9 @@ emit_fraction = (p, d) ->
 # p points to a multiply
 
 emit_numerators = (p) ->
-	int n
-
 	save()
+
+	n = 0
 
 	p1 = one
 
@@ -387,7 +398,6 @@ emit_numerators = (p) ->
 # p points to a multiply
 
 emit_denominators = (p) ->
-	int n
 
 	save()
 
@@ -838,6 +848,11 @@ print_it = ->
 
 	i = 0
 	accumulatedPrint = ""
+	
+	# now sort the glyphs by their vertical positions,
+	# since we are going to build a string where obviously the
+	# "upper" line has to printed out first, followed by
+	# a new line, followed by the other lines.
 	#qsort(chartab, yindex, sizeof (struct glyph), __cmp)
 	subsetOfStack = chartab.slice(0,yindex)
 	subsetOfStack.sort(cmpGlyphs)
@@ -862,7 +877,7 @@ print_it = ->
 
 		x++
 
-	if PRINTOUTRESULT then console.log accumulatedPrint
+	console.log accumulatedPrint
 
 buffer = ""
 

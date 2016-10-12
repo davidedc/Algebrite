@@ -41,15 +41,15 @@ Eval_display = ->
 
 		if (equaln(get_binding(symbol(TTY)), 1))
 			beenPrinted = printline(p2);
-		else
-			beenPrinted = printline(p2);
-			#push(p2);
-			#cmdisplay();
+		else if !latexMode
+			#beenPrinted = printline(p2);
+			display(p2);
 
 		# we put the printed string into
 		# a special variable that we are
 		# then going to check for the tests
 		if latexMode
+			beenPrinted = printline(p2);
 			scan('"' + beenPrinted + '"')
 			parsedString = pop()
 			set_binding(symbol(LAST_LATEX_PRINT), parsedString)
