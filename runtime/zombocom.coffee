@@ -33,6 +33,9 @@ parse = (argu) ->
 		throw error
 	return data
 
+# exec handles the running ia JS of all the algebrite
+# functions. The function name is passed in "name" and
+# the corresponding function is pushed at the top of the stack
 exec = (name, argus...) ->
 	fn = get_binding(usr_symbol(name))
 	check_stack()

@@ -7,7 +7,6 @@
 
 
 Eval = ->
-	#debugger
 	check_esc_flag()
 	save()
 	p1 = pop()
