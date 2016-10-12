@@ -1,5 +1,7 @@
 bigInt = require('big-integer')
 
+version = "0.3.13"
+
 SELFTEST = 1
 
 # size of the symbol table
@@ -231,6 +233,8 @@ METAB = counter++
 METAX = counter++
 SECRETX = counter++
 
+VERSION = counter++
+
 PI = counter++
 SYMBOL_A = counter++
 SYMBOL_B = counter++
@@ -461,6 +465,8 @@ MEQUAL = (p, n) ->
 
 
 $ = (exports ? this)
+
+$.version = version
 
 $.isadd = isadd
 $.ismultiply = ismultiply

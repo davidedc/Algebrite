@@ -28,6 +28,7 @@ init = ->
 	defn()
 
 defn_str = [
+	"version=\"" + version + "\"",
 	"e=exp(1)",
 	"i=sqrt(-1)",
 	"autoexpand=1",
@@ -212,6 +213,8 @@ defn = ->
 	std_symbol("$METAB", METAB)
 	std_symbol("$METAX", METAX)
 	std_symbol("$SECRETX", SECRETX)
+
+	std_symbol("version", VERSION)
 
 	std_symbol("pi", PI)
 	std_symbol("a", SYMBOL_A)

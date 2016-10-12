@@ -1,6 +1,9 @@
 {
   "name": "algebrite",
+
+  "//": "also change the version in the Algebrite variable at the top of defs file", 
   "version": "0.3.13",
+
   "description": "Computer Algebra System in Coffeescript",
   "main": "dist/algebrite.js",
   "directories": {
