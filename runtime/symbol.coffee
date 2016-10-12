@@ -155,7 +155,7 @@ get_binding = (p) ->
 		for i in [0...symtab.length]
 			if p.printname == symtab[i].printname
 				indexFound = i
-				console.log "remedied an index not founs!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+				console.log "remedied an index not found!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 				break
 	###
 
