@@ -36,7 +36,6 @@ peek = ->
 	save()
 	p1 = pop()
 	push(p1)
-	printline(p1)
 	restore()
 
 # see cmp_expr definition, this
