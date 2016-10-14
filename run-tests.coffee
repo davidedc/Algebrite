@@ -20,6 +20,7 @@ test_low_level = ->
 	test_dependencies()
 	test_assignments()
 	test_caching()
+	test_strings()
 
 selftest  = ->
 	test_low_level()
