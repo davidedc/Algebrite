@@ -10,6 +10,18 @@ NSYM = 1000
 DEBUG = false
 PRINTOUTRESULT = false
 
+# printing-related constants
+PRINTMODE_LATEX = "PRINTMODE_LATEX"
+PRINTMODE_2DASCII = "PRINTMODE_2DASCII"
+PRINTMODE_FULL = "PRINTMODE_FULL"
+PRINTMODE_PLAIN = "PRINTMODE_PLAIN"
+PRINTMODE_LIST = "PRINTMODE_LIST"
+
+# when the user uses the generic "print" statement
+# this setting kicks-in.
+environment_printmode = PRINTMODE_PLAIN
+printMode = PRINTMODE_PLAIN
+
 dontCreateNewRadicalsInDenominatorWhenEvalingMultiplication = true
 recursionLevelNestedRadicalsRemoval = 0
 do_simplify_nested_radicals = true
@@ -51,8 +63,8 @@ class U
 	k: 0
 	tag: 0
 
-	toString: -> collectPlainResultLine(this)
-	toLatexString: -> collectLatexResultLine(this)
+	toString: -> print_expr(this)
+	toLatexString: -> collectLatexStringFromReturnValue(this)
 
 	constructor: ->
 		@cons = {}
@@ -118,7 +130,6 @@ DERIVATIVE = counter++
 DET = counter++
 DIM = counter++
 DIRAC = counter++
-DISPLAY = counter++
 DIVISORS = counter++
 DO = counter++
 DOT = counter++
@@ -176,11 +187,14 @@ PATTERNSINFO = counter++
 POLAR = counter++
 POWER = counter++
 PRIME = counter++
-PRINT = counter++
-PRINTLATEX = counter++
 PRINT_LEAVE_E_ALONE = counter++
 PRINT_LEAVE_X_ALONE = counter++
+PRINT = counter++
+PRINT2DASCII = counter++
+PRINTFULL = counter++
+PRINTLATEX = counter++
 PRINTLIST = counter++
+PRINTPLAIN = counter++
 PRODUCT = counter++
 QUOTE = counter++
 QUOTIENT = counter++
@@ -218,12 +232,17 @@ ZERO = counter++
 # WHICH MEANS THAT USER CANNOT REDEFINE THEM
 NIL = counter++	# nil goes here, after standard functions
 LAST = counter++
+
+LAST_PRINT = counter++
+LAST_2DASCII_PRINT = counter++
+LAST_FULL_PRINT = counter++
 LAST_LATEX_PRINT = counter++
+LAST_LIST_PRINT = counter++
+LAST_PLAIN_PRINT = counter++
 
 AUTOEXPAND = counter++
 BAKE = counter++
 TRACE = counter++
-TTY = counter++
 
 YYE = counter++
 
@@ -301,6 +320,7 @@ parse_time_simplifications = true
 
 chainOfUserSymbolsNotFunctionsBeingEvaluated = []
 
+stringsEmittedByUserPrintouts = ""
 
 
 class tensor

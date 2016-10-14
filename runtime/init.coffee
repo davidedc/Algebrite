@@ -39,7 +39,6 @@ defn_str = [
 	"trace=0",
 	"printLeaveEAlone=1",
 	"printLeaveXAlone=0",
-	"tty=0",
 	# cross definition
 	"cross(u,v)=(u[2]*v[3]-u[3]*v[2],u[3]*v[1]-u[1]*v[3],u[1]*v[2]-u[2]*v[1])",
 	# curl definition
@@ -101,7 +100,6 @@ defn = ->
 	std_symbol("derivative", DERIVATIVE)
 	std_symbol("dim", DIM)
 	std_symbol("dirac", DIRAC)
-	std_symbol("display", DISPLAY)
 	std_symbol("divisors", DIVISORS)
 	std_symbol("do", DO)
 	std_symbol("dot", DOT)
@@ -160,10 +158,13 @@ defn = ->
 	std_symbol("power", POWER)
 	std_symbol("prime", PRIME)
 	std_symbol("print", PRINT)
+	std_symbol("print2dascii", PRINT2DASCII)
+	std_symbol("printfull", PRINTFULL)
 	std_symbol("printlatex", PRINTLATEX)
+	std_symbol("printlist", PRINTLIST)
+	std_symbol("printplain", PRINTPLAIN)
 	std_symbol("printLeaveEAlone", PRINT_LEAVE_E_ALONE)
 	std_symbol("printLeaveXAlone", PRINT_LEAVE_X_ALONE)
-	std_symbol("printlist", PRINTLIST)
 	std_symbol("product", PRODUCT)
 	std_symbol("quote", QUOTE)
 	std_symbol("quotient", QUOTIENT)
@@ -201,10 +202,17 @@ defn = ->
 
 	std_symbol("autoexpand", AUTOEXPAND)
 	std_symbol("bake", BAKE)
+
 	std_symbol("last", LAST)
+
+	std_symbol("lastprint", LAST_PRINT)
+	std_symbol("last2dasciiprint", LAST_2DASCII_PRINT)
+	std_symbol("lastfullprint", LAST_FULL_PRINT)
 	std_symbol("lastlatexprint", LAST_LATEX_PRINT)
+	std_symbol("lastlistprint", LAST_LIST_PRINT)
+	std_symbol("lastplainprint", LAST_PLAIN_PRINT)
+
 	std_symbol("trace", TRACE)
-	std_symbol("tty", TTY)
 
 	std_symbol("~", YYE)	# tilde so sort puts it after other symbols
 
@@ -257,7 +265,7 @@ defn = ->
 		if DEBUG
 			console.log "... evaling " + definitionOfInterest
 			console.log("top of stack:")
-			print1(stack[tos-1])
+			console.log print_list(stack[tos-1])
 		Eval()
 		pop()
 
@@ -273,11 +281,11 @@ defineSomeHandyConstants = ->
 
 	# i is the square root of -1 i.e. -1 ^ 1/2
 	push_symbol(POWER)
-	if DEBUG then print1(stack[tos-1])
+	if DEBUG then console.log print_list(stack[tos-1])
 	push_integer(-1)
-	if DEBUG then print1(stack[tos-1])
+	if DEBUG then console.log print_list(stack[tos-1])
 	push_rational(1, 2)
-	if DEBUG then print1(stack[tos-1])
+	if DEBUG then console.log print_list(stack[tos-1])
 	list(3)
-	if DEBUG then print1(stack[tos-1])
+	if DEBUG then console.log print_list(stack[tos-1])
 	imaginaryunit = pop()	# must be untagged in gc

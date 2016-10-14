@@ -376,7 +376,7 @@ rationalize_coefficients = (h) ->
 	reciprocate()
 	p7 = pop()
 	if DEBUG then console.log("rationalize_coefficients result")
-	#print1(p7)
+	#console.log print_list(p7)
 
 get_factor_from_real_root = ->
 
@@ -604,7 +604,7 @@ yydivpoly = ->
 		stack[polycoeff+i - 1] = pop()
 	stack[polycoeff+0] = p6
 	if DEBUG then console.log("yydivpoly Q:")
-	#print1(p6)
+	#console.log print_list(p6)
 
 Evalpoly = ->
 	i = 0
@@ -615,7 +615,7 @@ Evalpoly = ->
 		push(stack[polycoeff+i])
 		if DEBUG
 			console.log("Evalpoly top of stack:")
-			print1(stack[tos-i])
+			console.log print_list(stack[tos-i])
 		add()
 	p6 = pop()
 

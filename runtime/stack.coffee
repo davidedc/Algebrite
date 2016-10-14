@@ -31,7 +31,7 @@ push = (p) ->
 		debugger
 
 	#console.log "pushing "
-	#print1(p)
+	#console.log print_list(p)
 
 	if p == symbol(NIL)
 		nil_symbols++

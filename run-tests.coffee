@@ -5,6 +5,7 @@ test_low_level = ->
 
 	test_inv()
 	test_printlatex()
+	test_mixedprint()
 	test_inner()
 	test_transpose()
 	test_signs_in_rationals()

@@ -60,8 +60,8 @@ getStateHash = ->
 			else
 				continue
 
-		symtabi = symtab[i] + ""
-		bindingi = (binding[i] + "")
+		symtabi = print_list(symtab[i])
+		bindingi = print_list(binding[i])
 
 		frozenHash += " //" + symtabi + " : " + bindingi
 

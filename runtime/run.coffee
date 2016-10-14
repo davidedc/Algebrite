@@ -422,6 +422,8 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 	indexOfPartRemainingToBeParsed = 0
 
 	allReturnedPlainStrings = ""
+	allReturnedLatexStrings = ""
+
 	n = 0
 
 	# we are going to store the dependencies _of the block as a whole_
@@ -501,7 +503,11 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 	if errorMessage == "" and !dontGenerateCode
 
 		try
+			allReturnedPlainStrings = ""
+			allReturnedLatexStrings = ""
 			scriptEvaluation = run(stringToBeParsed, true)
+			allReturnedPlainStrings = ""
+			allReturnedLatexStrings = ""
 		catch error
 			if PRINTOUTRESULT then console.log error
 			errorMessage = error + ""
@@ -572,6 +578,8 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 					userVariablesMentioned = []
 					collectUserSymbols(toBePrinted, userVariablesMentioned)
 
+					allReturnedPlainStrings = ""
+					allReturnedLatexStrings = ""
 					codeGen = true
 					generatedBody = toBePrinted.toString()
 					codeGen = false
@@ -772,8 +780,7 @@ run = (stringToBeRun, generateLatex = false) ->
 	indexOfPartRemainingToBeParsed = 0
 
 	allReturnedPlainStrings = ""
-	if generateLatex
-		allReturnedLatexStrings = ""
+	allReturnedLatexStrings = ""
 
 	while (1)
 		# while we can keep scanning commands out of the
@@ -817,39 +824,46 @@ run = (stringToBeRun, generateLatex = false) ->
 		#debugger
 		errorWhileExecution = false
 		try
+			stringsEmittedByUserPrintouts = ""
 			top_level_eval()
+			#console.log "emitted string after top_level_eval(): >" + stringsEmittedByUserPrintouts + "<"
+			#console.log "allReturnedPlainStrings string after top_level_eval(): >" + allReturnedPlainStrings + "<"
 
 			p2 = pop()
 			check_stack()
-
-			if (p2 == symbol(NIL))
-				continue
-
-			# print string w/o quotes
 
 			if (isstr(p2))
 				if DEBUG then console.log(p2.str)
 				if DEBUG then console.log("\n")
 
-			# in tty mode
-			# also you could just have written 
-			# printline(p2)
-			collectedPlainResult = collectPlainResultLine(p2)
-			if generateLatex
-				collectedLatexResult = "$$" + collectLatexResultLine(p2) + "$$"
-				if DEBUG then console.log "collectedLatexResult: " + collectedLatexResult
+			# if the return value is nil there isn't much point
+			# in adding "nil" to the printout
+			if (p2 == symbol(NIL))
+				#collectedPlainResult = stringsEmittedByUserPrintouts
+				collectedPlainResult = stringsEmittedByUserPrintouts
+				if generateLatex
+					collectedLatexResult = "$$" + stringsEmittedByUserPrintouts + "$$"
+			else
+				#console.log "emitted string before collectPlainStringFromReturnValue: >" + stringsEmittedByUserPrintouts + "<"
+				#console.log "allReturnedPlainStrings string before collectPlainStringFromReturnValue: >" + allReturnedPlainStrings + "<"
+				collectedPlainResult = print_expr(p2)
+				collectedPlainResult += "\n"
+				#console.log "collectedPlainResult: >" + collectedPlainResult + "<"
+				if generateLatex
+					collectedLatexResult = "$$" + collectLatexStringFromReturnValue(p2) + "$$"
+					if DEBUG then console.log "collectedLatexResult: " + collectedLatexResult
 			
 			allReturnedPlainStrings += collectedPlainResult
 			if generateLatex then allReturnedLatexStrings += collectedLatexResult
+
 			if PRINTOUTRESULT
 				if DEBUG then console.log "printline"
 				if DEBUG then console.log collectedPlainResult
 			#alert collectedPlainResult
 			if PRINTOUTRESULT
 				if DEBUG then console.log "display:"
-				display(p2)
+				print2dascii(p2)
 
-			allReturnedPlainStrings += "\n"
 			if generateLatex then allReturnedLatexStrings += "\n"
 
 		catch error
@@ -860,7 +874,8 @@ run = (stringToBeRun, generateLatex = false) ->
 			if PRINTOUTRESULT then console.log collectedPlainResult
 
 			allReturnedPlainStrings += collectedPlainResult
-			allReturnedPlainStrings += "\n"
+			if collectedPlainResult != ""
+				allReturnedPlainStrings += "\n"
 
 			if generateLatex
 				allReturnedLatexStrings += collectedLatexResult
@@ -894,6 +909,8 @@ run = (stringToBeRun, generateLatex = false) ->
 		if ENABLE_CACHING  and stringToBeRun != "clearall" then timingDebugWrite += ", of which cache miss penalty: " + cacheMissPenalty + "ms"
 		console.log timingDebugWrite
 
+	allReturnedPlainStrings = ""
+	allReturnedLatexStrings = ""
 	return stringToBeReturned
 
 check_stack = ->

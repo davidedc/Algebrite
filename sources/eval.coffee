@@ -129,7 +129,6 @@ Eval_cons = ->
 		when DET then Eval_det()
 		when DIM then Eval_dim()
 		when DIRAC then Eval_dirac()
-		when DISPLAY then Eval_display()
 		when DIVISORS then Eval_divisors()
 		when DO then Eval_do()
 		when DOT then Eval_inner()
@@ -192,9 +191,12 @@ Eval_cons = ->
 		when POLAR then Eval_polar()
 		when POWER then Eval_power()
 		when PRIME then Eval_prime()
-		when PRINT then Eval_display()
+		when PRINT then Eval_print()
+		when PRINT2DASCII then Eval_print2dascii()
+		when PRINTFULL then Eval_printfull()
 		when PRINTLATEX then Eval_printlatex()
 		when PRINTLIST then Eval_printlist()
+		when PRINTPLAIN then Eval_printplain()
 		when PRODUCT then Eval_product()
 		when QUOTE then Eval_quote()
 		when QUOTIENT then Eval_quotient()
@@ -413,18 +415,6 @@ Eval_operator = ->
 		Eval()
 		p1 = cdr(p1)
 	list(tos - h)
-
-Eval_print = ->
-	p1 = cdr(p1)
-	while (iscons(p1))
-		push(car(p1))
-		Eval()
-		if (equaln(get_binding(symbol(TTY)), 1))
-			printline(pop())
-		else
-			display(pop())
-		p1 = cdr(p1)
-	push(symbol(NIL))
 
 # quote definition
 Eval_quote = ->

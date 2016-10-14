@@ -55,7 +55,7 @@ add_terms = (n) ->
 
 	if DEBUG
 		for i in [0...tos]
-			print1 stack[i]
+			console.log print_list stack[i]
 
 	for i in [0...10]
 
@@ -94,7 +94,7 @@ add_terms = (n) ->
 
 	if DEBUG
 		for i in [0...tos]
-			print1 stack[i]
+			console.log print_list stack[i]
 
 # Compare terms for order, clobbers p1 and p2.
 

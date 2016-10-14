@@ -35,7 +35,8 @@ Eval_pattern = ->
 	# this is likely to create garbage collection
 	# problems in the C version as it's an
 	# untracked reference
-	stringKey = "template: " + firstArgument + " tests: " + thirdArgument
+	stringKey = "template: " + print_list(firstArgument)
+	stringKey += " tests: " + print_list(thirdArgument)
 	if DEBUG then console.log "pattern stringkey: " + stringKey
 	if stringKey not in userSimplificationsInStringForm
 		#console.log "adding pattern because it doesn't exist: " + cdr(p1)
