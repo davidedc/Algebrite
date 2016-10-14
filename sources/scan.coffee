@@ -626,8 +626,11 @@ get_token = ->
 	if (scanned[scan_str] == '"')
 		scan_str++
 		while (scanned[scan_str] != '"')
-			if (scan_str == scanned.length || scanned[scan_str] == '\n' || scanned[scan_str] == '\r')
+			#if (scan_str == scanned.length || scanned[scan_str] == '\n' || scanned[scan_str] == '\r')
+			if (scan_str == scanned.length - 1)
+				scan_str++
 				scan_error("runaway string")
+				scan_str--
 			scan_str++
 		scan_str++
 		token = T_STRING

@@ -16,4 +16,7 @@ test_strings = ->
 		"\"hey\" * \"hey\"",
 		"\"hey\"^2",
 
+		"\"aaaaaaaaaa\nbbbbbbbbbb\"",
+		"\"aaaaaaaaaa\nbbbbbbbbbb\"",
+
 	]
