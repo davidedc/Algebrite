@@ -69,4 +69,5 @@ getStateHash = ->
 		frozenHash +=  " pattern: " + i
 
 
+	if DEBUG then console.log "frozenHash: " + frozenHash
 	return frozenHash

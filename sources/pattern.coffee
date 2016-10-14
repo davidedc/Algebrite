@@ -36,6 +36,7 @@ Eval_pattern = ->
 	# problems in the C version as it's an
 	# untracked reference
 	stringKey = "template: " + firstArgument + " tests: " + thirdArgument
+	if DEBUG then console.log "pattern stringkey: " + stringKey
 	if stringKey not in userSimplificationsInStringForm
 		#console.log "adding pattern because it doesn't exist: " + cdr(p1)
 		userSimplificationsInStringForm.push(stringKey)

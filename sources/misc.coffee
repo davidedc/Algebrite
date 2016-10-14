@@ -39,10 +39,6 @@ peek = ->
 	printline(p1)
 	restore()
 
-peek2 = ->
-	print_lisp(stack[tos - 2])
-	print_lisp(stack[tos - 1])
-
 # see cmp_expr definition, this
 # function alone just compares structures
 # can't be used alone to test

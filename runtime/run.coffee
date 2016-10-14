@@ -420,6 +420,7 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 	symbolsHavingReassignments = []
 	patternHasBeenFound = false
 	indexOfPartRemainingToBeParsed = 0
+
 	allReturnedPlainStrings = ""
 	n = 0
 
@@ -775,6 +776,8 @@ run = (stringToBeRun, generateLatex = false) ->
 		allReturnedLatexStrings = ""
 
 	while (1)
+		# while we can keep scanning commands out of the
+		# passed input AND we can execute them...
 
 		try
 			errorMessage = ""
@@ -905,11 +908,6 @@ check_stack = ->
 		stop("symbols evaluation ongoing?")
 
 # cannot reference symbols yet
-
-# s is a string here
-echo_input = (s) ->
-	console.log(s)
-	console.log("\n")
 
 # returns nil on stack if no result to print
 
