@@ -540,7 +540,7 @@ __normalize_radical_factors = (h) ->
 		subtract()
 
 		if dontCreateNewRadicalsInDenominatorWhenEvalingMultiplication
-			if (isinteger(p3) and !isinteger[stack[tos-1]] and isnegativenumber(stack[tos - 1]))
+			if (isinteger(p3) and !isinteger(stack[tos-1]) and isnegativenumber(stack[tos - 1]))
 				# bail out,
 				# we want to avoid going ahead with the subtraction of
 				# the exponents, because that would turn a perfectly good
