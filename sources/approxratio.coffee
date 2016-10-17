@@ -135,6 +135,10 @@ floatToRatioRoutine = (decimal, AccuracyFactor) ->
   ret[1] = FractionDenominator
   ret
 
+approxTrigonometric_just_an_integer = 0
+approxTrigonometric_sinus_of_rational = 1
+approxTrigonometric_sinus_of_pi_times_rational = 2
+
 approxTrigonometric = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
 
@@ -142,10 +146,38 @@ approxTrigonometric = (theFloat) ->
     numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
     precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
   else
-    return ["" + Math.floor(theFloat), Math.floor(theFloat), 1, 2]
+    return ["" + Math.floor(theFloat), approxTrigonometric_just_an_integer, Math.floor(theFloat), 1, 2]
 
   console.log "precision: " + precision
 
+  # we only check very simple rationals because they begin to get tricky
+  # quickly, also they collide often with the "rational of pi" hypothesis.
+  # For example sin(11) is veeery close to 1 (-0.99999020655)
+  # (see: http://mathworld.wolfram.com/AlmostInteger.html )
+  # we stop at rationals that mention up to 10
+  for i in [1..4]
+    for j in [1..4]
+      console.log  "i,j: " + i + "," + j
+      fraction = i/j
+      hypothesis = Math.sin(fraction)
+      console.log  "hypothesis: " + hypothesis
+      if Math.abs(hypothesis) > 1e-10
+        ratio =  theFloat/hypothesis
+        likelyMultiplier = Math.round(ratio)
+        console.log  "ratio: " + ratio
+        error = (ratio - likelyMultiplier)/likelyMultiplier
+      else
+        ratio = 1
+        likelyMultiplier = 1
+        error = theFloat - hypothesis
+      console.log  "error: " + error
+      if Math.abs(error) < 2 * precision
+        result = likelyMultiplier + " * sin( " + i + "/" + j + " )"
+        console.log result + " error: " + error
+        return [result, approxTrigonometric_sinus_of_rational, likelyMultiplier, i, j]
+
+
+  # check rational multiples of pi
   for i in [1..13]
     for j in [1..13]
       console.log  "i,j: " + i + "," + j
@@ -166,12 +198,59 @@ approxTrigonometric = (theFloat) ->
       if Math.abs(error) < 23 * precision
         result = likelyMultiplier + " * sin( " + i + "/" + j + " * pi )"
         console.log result + " error: " + error
-        return [result, likelyMultiplier, i, j]
+        return [result, approxTrigonometric_sinus_of_pi_times_rational, likelyMultiplier, i, j]
+
+
 
   return
 
 
 testApproxTrigonometric = () ->
+
+  for i in [1..4]
+    for j in [1..4]
+      console.log "testApproxTrigonometric testing: " + "1 * sin( " + i + "/" + j + " )"
+      fraction = i/j
+      value = Math.sin(fraction)
+      returned = approxTrigonometric(value)
+      returnedFraction = returned[3]/returned[4]
+      returnedValue = returned[2] * Math.sin(returnedFraction)
+      if Math.abs(value - returnedValue) > 1e-15
+        console.log "fail testApproxTrigonometric: " + "1 * sin( " + i + "/" + j + " ) . obtained: " + returned
+
+  # 5 digits create no problem
+  for i in [1..4]
+    for j in [1..4]
+      console.log "testApproxTrigonometric testing with 5 digits: " + "1 * sin( " + i + "/" + j + " )"
+      fraction = i/j
+      originalValue = Math.sin(fraction)
+      value = originalValue.toFixed(5)
+      returned = approxTrigonometric(value)
+      if !returned?
+        console.log "fail testApproxTrigonometric with 5 digits: " + "1 * sin( " + i + "/" + j + " ) . obtained:  undefined "
+      returnedFraction = returned[3]/returned[4]
+      returnedValue = returned[2] * Math.sin(returnedFraction)
+      error = Math.abs(originalValue - returnedValue)
+      if error > 1e-14
+        console.log "fail testApproxTrigonometric with 5 digits: " + "1 * sin( " + i + "/" + j + " ) . obtained: " + returned + " error: " + error
+
+  # 4 digits create two collisions
+  for i in [1..4]
+    for j in [1..4]
+
+      console.log "testApproxTrigonometric testing with 4 digits: " + "1 * sin( " + i + "/" + j + " )"
+      fraction = i/j
+      originalValue = Math.sin(fraction)
+      value = originalValue.toFixed(4)
+      returned = approxTrigonometric(value)
+      if !returned?
+        console.log "fail testApproxTrigonometric with 4 digits: " + "1 * sin( " + i + "/" + j + " ) . obtained:  undefined "
+      returnedFraction = returned[3]/returned[4]
+      returnedValue = returned[2] * Math.sin(returnedFraction)
+      error = Math.abs(originalValue - returnedValue)
+      if error > 1e-14
+        console.log "fail testApproxTrigonometric with 4 digits: " + "1 * sin( " + i + "/" + j + " ) . obtained: " + returned + " error: " + error
+
   value = 0
   if approxTrigonometric(value)[0] != "0" then console.log "fail testApproxTrigonometric: 0"
 
@@ -210,26 +289,36 @@ testApproxTrigonometric = () ->
   value = Math.sin(Math.PI/9)
   if approxTrigonometric(value)[0] != "1 * sin( 1/9 * pi )" then console.log "fail testApproxTrigonometric: Math.sin(Math.PI/9)"
 
+
   for i in [1..13]
     for j in [1..13]
       console.log "testApproxTrigonometric testing: " + "1 * sin( " + i + "/" + j + " * pi )"
       fraction = i/j
       value = Math.sin(Math.PI * fraction)
       returned = approxTrigonometric(value)
-      returnedFraction = returned[2]/returned[3]
-      returnedValue = returned[1] * Math.sin(Math.PI * returnedFraction)
+      returnedFraction = returned[3]/returned[4]
+      returnedValue = returned[2] * Math.sin(Math.PI * returnedFraction)
       if Math.abs(value - returnedValue) > 1e-15
         console.log "fail testApproxTrigonometric: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned
 
   for i in [1..13]
     for j in [1..13]
+
+      # with four digits, there are two collisions with the
+      # "simple fraction" argument hypotesis, which we prefer since
+      # it's a simpler expression, so let's skip those
+      # two tests
+      if i == 5 and j == 11 or
+       i == 6 and j == 11
+        continue
+
       console.log "testApproxTrigonometric testing with 4 digits: " + "1 * sin( " + i + "/" + j + " * pi )"
       fraction = i/j
       originalValue = Math.sin(Math.PI * fraction)
       value = originalValue.toFixed(4)
       returned = approxTrigonometric(value)
-      returnedFraction = returned[2]/returned[3]
-      returnedValue = returned[1] * Math.sin(Math.PI * returnedFraction)
+      returnedFraction = returned[3]/returned[4]
+      returnedValue = returned[2] * Math.sin(Math.PI * returnedFraction)
       error = Math.abs(originalValue - returnedValue)
       if error > 1e-14
         console.log "fail testApproxTrigonometric with 4 digits: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned + " error: " + error
