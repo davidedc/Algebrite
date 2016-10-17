@@ -134,3 +134,94 @@ floatToRatioRoutine = (decimal, AccuracyFactor) ->
   ret[0] = FractionNumerator
   ret[1] = FractionDenominator
   ret
+
+approxTrigonometric = (theFloat) ->
+  splitBeforeAndAfterDot = theFloat.toString().split(".")
+
+  if splitBeforeAndAfterDot.length == 2
+    numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
+    precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
+  else
+    return ["" + Math.floor(theFloat), Math.floor(theFloat), 1, 2]
+
+  console.log "precision: " + precision
+
+  for i in [1..13]
+    for j in [1..13]
+      console.log  "i,j: " + i + "," + j
+      fraction = i/j
+      hypothesis = Math.sin(Math.PI * fraction)
+      console.log  "hypothesis: " + hypothesis
+      if Math.abs(hypothesis) > 1e-10
+        ratio =  theFloat/hypothesis
+        likelyMultiplier = Math.round(ratio)
+        console.log  "ratio: " + ratio
+        error = (ratio - likelyMultiplier)/likelyMultiplier
+      else
+        ratio = 1
+        likelyMultiplier = 1
+        error = theFloat - hypothesis
+      console.log  "error: " + error
+      # magic number 23 comes from the case sin(pi/10)
+      if Math.abs(error) < 23 * precision
+        result = likelyMultiplier + " * sin( " + i + "/" + j + " * pi )"
+        console.log result + " error: " + error
+        return [result, likelyMultiplier, i, j]
+
+  return
+
+
+testApproxTrigonometric = () ->
+  value = 0
+  if approxTrigonometric(value)[0] != "0" then console.log "fail testApproxTrigonometric: 0"
+
+  value = 0.0
+  if approxTrigonometric(value)[0] != "0" then console.log "fail testApproxTrigonometric: 0.0"
+
+  value = Math.sqrt(2)
+  if approxTrigonometric(value)[0] != "2 * sin( 1/4 * pi )" then console.log "fail testApproxTrigonometric: Math.sqrt(2)"
+
+  value = Math.sqrt(3)
+  if approxTrigonometric(value)[0] != "2 * sin( 1/3 * pi )" then console.log "fail testApproxTrigonometric: Math.sqrt(3)"
+
+  value = (Math.sqrt(6) - Math.sqrt(2))/4
+  if approxTrigonometric(value)[0] != "1 * sin( 1/12 * pi )" then console.log "fail testApproxTrigonometric: (Math.sqrt(6) - Math.sqrt(2))/4"
+
+  value = Math.sqrt(2 - Math.sqrt(2))/2
+  if approxTrigonometric(value)[0] != "1 * sin( 1/8 * pi )" then console.log "fail testApproxTrigonometric: Math.sqrt(2 - Math.sqrt(2))/2"
+
+  value = (Math.sqrt(6) + Math.sqrt(2))/4
+  if approxTrigonometric(value)[0] != "1 * sin( 5/12 * pi )" then console.log "fail testApproxTrigonometric: (Math.sqrt(6) + Math.sqrt(2))/4"
+
+  value = Math.sqrt(2 + Math.sqrt(3))/2
+  if approxTrigonometric(value)[0] != "1 * sin( 5/12 * pi )" then console.log "fail testApproxTrigonometric: Math.sqrt(2 + Math.sqrt(3))/2"
+
+  value = (Math.sqrt(5) - 1)/4
+  if approxTrigonometric(value)[0] != "1 * sin( 1/10 * pi )" then console.log "fail testApproxTrigonometric: (Math.sqrt(5) - 1)/4"
+
+  value = Math.sqrt(10 - 2*Math.sqrt(5))/4
+  if approxTrigonometric(value)[0] != "1 * sin( 1/5 * pi )" then console.log "fail testApproxTrigonometric: Math.sqrt(10 - 2*Math.sqrt(5))/4"
+
+  # this has a radical form but it's too long to write
+  value = Math.sin(Math.PI/7)
+  if approxTrigonometric(value)[0] != "1 * sin( 1/7 * pi )" then console.log "fail testApproxTrigonometric: Math.sin(Math.PI/7)"
+
+  # this has a radical form but it's too long to write
+  value = Math.sin(Math.PI/9)
+  if approxTrigonometric(value)[0] != "1 * sin( 1/9 * pi )" then console.log "fail testApproxTrigonometric: Math.sin(Math.PI/9)"
+
+  for i in [1..13]
+    for j in [1..13]
+      console.log "testApproxTrigonometric testing: " + "1 * sin( " + i + "/" + j + " * pi )"
+      fraction = i/j
+      value = Math.sin(Math.PI * fraction)
+      returned = approxTrigonometric(value)
+      returnedFraction = returned[2]/returned[3]
+      returnedValue = returned[1] * Math.sin(Math.PI * returnedFraction)
+      if Math.abs(value - returnedValue) > 1e-15
+        console.log "fail testApproxTrigonometric: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned
+
+  console.log "testApproxTrigonometric done"
+
+$.approxTrigonometric    = approxTrigonometric 
+$.testApproxTrigonometric         = testApproxTrigonometric 
