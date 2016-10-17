@@ -221,6 +221,19 @@ testApproxTrigonometric = () ->
       if Math.abs(value - returnedValue) > 1e-15
         console.log "fail testApproxTrigonometric: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned
 
+  for i in [1..13]
+    for j in [1..13]
+      console.log "testApproxTrigonometric testing with 4 digits: " + "1 * sin( " + i + "/" + j + " * pi )"
+      fraction = i/j
+      originalValue = Math.sin(Math.PI * fraction)
+      value = originalValue.toFixed(4)
+      returned = approxTrigonometric(value)
+      returnedFraction = returned[2]/returned[3]
+      returnedValue = returned[1] * Math.sin(Math.PI * returnedFraction)
+      error = Math.abs(originalValue - returnedValue)
+      if error > 1e-14
+        console.log "fail testApproxTrigonometric with 4 digits: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned + " error: " + error
+
   console.log "testApproxTrigonometric done"
 
 $.approxTrigonometric    = approxTrigonometric 
