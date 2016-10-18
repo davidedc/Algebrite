@@ -139,6 +139,67 @@ approxTrigonometric_just_an_integer = 0
 approxTrigonometric_sinus_of_rational = 1
 approxTrigonometric_sinus_of_pi_times_rational = 2
 approxTrigonometric_rationalOfPi = 3
+approxTrigonometric_rootOfRatio = 4
+approxTrigonometric_nothingUseful = 5
+approxTrigonometric_ratioOfRoot = 6
+
+approxIrrationals = (theFloat) ->
+  splitBeforeAndAfterDot = theFloat.toString().split(".")
+
+  if splitBeforeAndAfterDot.length == 2
+    numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
+    precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
+  else
+    return ["" + Math.floor(theFloat), approxTrigonometric_just_an_integer, Math.floor(theFloat), 1, 2]
+
+  if numberOfDigitsAfterTheDot < 4
+    return ["" + theFloat, approxTrigonometric_nothingUseful, null, null, null]
+
+  console.log "precision: " + precision
+
+  # simple irrationals.
+
+  for i in [1..10]
+    for j in [1..10]
+      console.log  "i,j: " + i + "," + j
+      hypothesis = Math.sqrt(i)/j
+      console.log  "hypothesis: " + hypothesis
+      if Math.abs(hypothesis) > 1e-10
+        ratio =  theFloat/hypothesis
+        likelyMultiplier = Math.round(ratio)
+        console.log  "ratio: " + ratio
+        error = (ratio - likelyMultiplier)/likelyMultiplier
+      else
+        ratio = 1
+        likelyMultiplier = 1
+        error = theFloat - hypothesis
+      console.log  "error: " + error
+      if Math.abs(error) < 2 * precision
+        result = likelyMultiplier + " * sqrt( " + i + " ) / " + j
+        console.log result + " error: " + error
+        return [result, approxTrigonometric_ratioOfRoot, likelyMultiplier, i, j]
+
+  for i in [1,2,3,5,6,7,8,10]
+    for j in [1,2,3,5,6,7,8,10]
+      console.log  "i,j: " + i + "," + j
+      hypothesis = Math.sqrt(i/j)
+      console.log  "hypothesis: " + hypothesis
+      if Math.abs(hypothesis) > 1e-10
+        ratio =  theFloat/hypothesis
+        likelyMultiplier = Math.round(ratio)
+        console.log  "ratio: " + ratio
+        error = (ratio - likelyMultiplier)/likelyMultiplier
+      else
+        ratio = 1
+        likelyMultiplier = 1
+        error = theFloat - hypothesis
+      console.log  "error: " + error
+      if Math.abs(error) < 2 * precision
+        result = likelyMultiplier + " * (sqrt( " + i + " / " + j + " )"
+        console.log result + " error: " + error
+        return [result, approxTrigonometric_rootOfRatio, likelyMultiplier, i, j]
+
+  return
 
 approxTrigonometric = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
@@ -154,22 +215,22 @@ approxTrigonometric = (theFloat) ->
   # simple rationals of PI
   for i in [1..2]
     for j in [1..12]
-      console.log  "i,j: " + i + "," + j
+      #console.log  "i,j: " + i + "," + j
       hypothesis = Math.pow(Math.PI,i)/j
-      console.log  "hypothesis: " + hypothesis
+      #console.log  "hypothesis: " + hypothesis
       if Math.abs(hypothesis) > 1e-10
         ratio =  theFloat/hypothesis
         likelyMultiplier = Math.round(ratio)
-        console.log  "ratio: " + ratio
+        #console.log  "ratio: " + ratio
         error = (ratio - likelyMultiplier)/likelyMultiplier
       else
         ratio = 1
         likelyMultiplier = 1
         error = theFloat - hypothesis
-      console.log  "error: " + error
+      #console.log  "error: " + error
       if Math.abs(error) < 2 * precision
         result = likelyMultiplier + " * (pi ^ " + i + " ) / " + j + " )"
-        console.log result + " error: " + error
+        #console.log result + " error: " + error
         return [result, approxTrigonometric_rationalOfPi, likelyMultiplier, i, j]
 
   # we only check very simple rationals because they begin to get tricky
@@ -179,47 +240,47 @@ approxTrigonometric = (theFloat) ->
   # we stop at rationals that mention up to 10
   for i in [1..4]
     for j in [1..4]
-      console.log  "i,j: " + i + "," + j
+      #console.log  "i,j: " + i + "," + j
       fraction = i/j
       hypothesis = Math.sin(fraction)
-      console.log  "hypothesis: " + hypothesis
+      #console.log  "hypothesis: " + hypothesis
       if Math.abs(hypothesis) > 1e-10
         ratio =  theFloat/hypothesis
         likelyMultiplier = Math.round(ratio)
-        console.log  "ratio: " + ratio
+        #console.log  "ratio: " + ratio
         error = (ratio - likelyMultiplier)/likelyMultiplier
       else
         ratio = 1
         likelyMultiplier = 1
         error = theFloat - hypothesis
-      console.log  "error: " + error
+      #console.log  "error: " + error
       if Math.abs(error) < 2 * precision
         result = likelyMultiplier + " * sin( " + i + "/" + j + " )"
-        console.log result + " error: " + error
+        #console.log result + " error: " + error
         return [result, approxTrigonometric_sinus_of_rational, likelyMultiplier, i, j]
 
 
   # check rational multiples of pi
   for i in [1..13]
     for j in [1..13]
-      console.log  "i,j: " + i + "," + j
+      #console.log  "i,j: " + i + "," + j
       fraction = i/j
       hypothesis = Math.sin(Math.PI * fraction)
-      console.log  "hypothesis: " + hypothesis
+      #console.log  "hypothesis: " + hypothesis
       if Math.abs(hypothesis) > 1e-10
         ratio =  theFloat/hypothesis
         likelyMultiplier = Math.round(ratio)
-        console.log  "ratio: " + ratio
+        #console.log  "ratio: " + ratio
         error = (ratio - likelyMultiplier)/likelyMultiplier
       else
         ratio = 1
         likelyMultiplier = 1
         error = theFloat - hypothesis
-      console.log  "error: " + error
+      #console.log  "error: " + error
       # magic number 23 comes from the case sin(pi/10)
       if Math.abs(error) < 23 * precision
         result = likelyMultiplier + " * sin( " + i + "/" + j + " * pi )"
-        console.log result + " error: " + error
+        #console.log result + " error: " + error
         return [result, approxTrigonometric_sinus_of_pi_times_rational, likelyMultiplier, i, j]
 
 
@@ -228,6 +289,52 @@ approxTrigonometric = (theFloat) ->
 
 
 testApproxTrigonometric = () ->
+
+  for i in [2,3,5,6,7,8,10]
+    for j in [2,3,5,6,7,8,10]
+      if i == j then continue # this is just 1
+      console.log "testapproxIrrationals testing: " + "1 * sqrt( " + i + " ) / " + j
+      fraction = i/j
+      value = Math.sqrt(i)/j
+      returned = approxIrrationals(value)
+      returnedValue = returned[2] * Math.sqrt(returned[3])/returned[4]
+      if Math.abs(value - returnedValue) > 1e-15
+        console.log "fail testapproxIrrationals: " + "1 * sqrt( " + i + " ) / " + j + " . obtained: " + returned
+
+  for i in [2,3,5,6,7,8,10]
+    for j in [2,3,5,6,7,8,10]
+      if i == j then continue # this is just 1
+      console.log "testapproxIrrationals testing with 4 digits: " + "1 * sqrt( " + i + " ) / " + j
+      fraction = i/j
+      originalValue = Math.sqrt(i)/j
+      value = originalValue.toFixed(4)
+      returned = approxIrrationals(value)
+      returnedValue = returned[2] * Math.sqrt(returned[3])/returned[4]
+      if Math.abs(originalValue - returnedValue) > 1e-15
+        console.log "fail testapproxIrrationals with 4 digits: " + "1 * sqrt( " + i + " ) / " + j + " . obtained: " + returned
+
+  for i in [2,3,5,6,7,8,10]
+    for j in [2,3,5,6,7,8,10]
+      if i == j then continue # this is just 1
+      console.log "testapproxIrrationals testing: " + "1 * sqrt( " + i + " / " + j + " )"
+      fraction = i/j
+      value = Math.sqrt(i/j)
+      returned = approxIrrationals(value)
+      returnedValue = returned[2] * Math.sqrt(returned[3]/returned[4])
+      if returned[1] == approxTrigonometric_rootOfRatio and Math.abs(value - returnedValue) > 1e-15
+        console.log "fail testapproxIrrationals: " + "1 * sqrt( " + i + " / " + j + " ) . obtained: " + returned
+
+  for i in [1,2,3,5,6,7,8,10]
+    for j in [1,2,3,5,6,7,8,10]
+      if i == 1 and j == 1 then continue
+      console.log "testapproxIrrationals testing with 4 digits:: " + "1 * sqrt( " + i + " / " + j + " )"
+      fraction = i/j
+      originalValue = Math.sqrt(i/j)
+      value = originalValue.toFixed(4)
+      returned = approxIrrationals(value)
+      returnedValue = returned[2] * Math.sqrt(returned[3]/returned[4])
+      if returned[1] == approxTrigonometric_rootOfRatio and Math.abs(originalValue - returnedValue) > 1e-15
+        console.log "fail testapproxIrrationals with 4 digits:: " + "1 * sqrt( " + i + " / " + j + " ) . obtained: " + returned
 
   for i in [1..2]
     for j in [1..12]
