@@ -138,6 +138,7 @@ floatToRatioRoutine = (decimal, AccuracyFactor) ->
 approxTrigonometric_just_an_integer = 0
 approxTrigonometric_sinus_of_rational = 1
 approxTrigonometric_sinus_of_pi_times_rational = 2
+approxTrigonometric_rationalOfPi = 3
 
 approxTrigonometric = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
@@ -149,6 +150,27 @@ approxTrigonometric = (theFloat) ->
     return ["" + Math.floor(theFloat), approxTrigonometric_just_an_integer, Math.floor(theFloat), 1, 2]
 
   console.log "precision: " + precision
+
+  # simple rationals of PI
+  for i in [1..2]
+    for j in [1..12]
+      console.log  "i,j: " + i + "," + j
+      hypothesis = Math.pow(Math.PI,i)/j
+      console.log  "hypothesis: " + hypothesis
+      if Math.abs(hypothesis) > 1e-10
+        ratio =  theFloat/hypothesis
+        likelyMultiplier = Math.round(ratio)
+        console.log  "ratio: " + ratio
+        error = (ratio - likelyMultiplier)/likelyMultiplier
+      else
+        ratio = 1
+        likelyMultiplier = 1
+        error = theFloat - hypothesis
+      console.log  "error: " + error
+      if Math.abs(error) < 2 * precision
+        result = likelyMultiplier + " * (pi ^ " + i + " ) / " + j + " )"
+        console.log result + " error: " + error
+        return [result, approxTrigonometric_rationalOfPi, likelyMultiplier, i, j]
 
   # we only check very simple rationals because they begin to get tricky
   # quickly, also they collide often with the "rational of pi" hypothesis.
@@ -206,6 +228,27 @@ approxTrigonometric = (theFloat) ->
 
 
 testApproxTrigonometric = () ->
+
+  for i in [1..2]
+    for j in [1..12]
+      console.log "testApproxTrigonometric testing: " + "1 * pi ^ " + i + " / " + j
+      fraction = i/j
+      value = Math.pow(Math.PI,i)/j
+      returned = approxTrigonometric(value)
+      returnedValue = returned[2] * Math.pow(Math.PI,returned[3])/returned[4]
+      if Math.abs(value - returnedValue) > 1e-15
+        console.log "fail testApproxTrigonometric: " + "1 * pi ^ " + i + " / " + j + " ) . obtained: " + returned
+
+  for i in [1..2]
+    for j in [1..12]
+      console.log "testApproxTrigonometric testing with 4 digits: " + "1 * pi ^ " + i + " / " + j
+      fraction = i/j
+      originalValue = Math.pow(Math.PI,i)/j
+      value = originalValue.toFixed(4)
+      returned = approxTrigonometric(value)
+      returnedValue = returned[2] * Math.pow(Math.PI,returned[3])/returned[4]
+      if Math.abs(originalValue - returnedValue) > 1e-15
+        console.log "fail testApproxTrigonometric with 4 digits: " + "1 * pi ^ " + i + " / " + j + " ) . obtained: " + returned
 
   for i in [1..4]
     for j in [1..4]
