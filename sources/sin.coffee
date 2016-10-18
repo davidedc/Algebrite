@@ -109,6 +109,9 @@ sine_of_angle = ->
 		list(2)
 		return
 
+	# values of some famous angles. Many more here:
+	# https://en.wikipedia.org/wiki/Trigonometric_constants_expressed_in_real_radicals
+
 	switch (n % 360)
 		when 0, 180
 			push_integer(0)
