@@ -179,6 +179,9 @@ approxIrrationals = (theFloat) ->
         console.log result + " error: " + error
         return [result, approxTrigonometric_ratioOfRoot, likelyMultiplier, i, j]
 
+  # this one catches things like Math.sqrt(3/4), but
+  # things like Math.sqrt(1/2) are caught by the paragraph
+  # above (and in a better form)
   for i in [1,2,3,5,6,7,8,10]
     for j in [1,2,3,5,6,7,8,10]
       console.log  "i,j: " + i + "," + j
