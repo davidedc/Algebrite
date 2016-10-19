@@ -142,6 +142,7 @@ approx_rootOfRatiorationalOfPi = 3
 approx_rootOfRatiorootOfRatio = 4
 approx_rootOfRationothingUseful = 5
 approx_rootOfRatioratioOfRoot = 6
+approx_rootOfRatiorationalOfE = 7
 
 approxIrrationals = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
@@ -215,7 +216,28 @@ approxTrigonometric = (theFloat) ->
 
   console.log "precision: " + precision
 
-  # simple rationals of PI
+  # simple rationals of a few powers of e
+  for i in [1..2]
+    for j in [1..12]
+      #console.log  "i,j: " + i + "," + j
+      hypothesis = Math.pow(Math.E,i)/j
+      #console.log  "hypothesis: " + hypothesis
+      if Math.abs(hypothesis) > 1e-10
+        ratio =  theFloat/hypothesis
+        likelyMultiplier = Math.round(ratio)
+        #console.log  "ratio: " + ratio
+        error = (ratio - likelyMultiplier)/likelyMultiplier
+      else
+        ratio = 1
+        likelyMultiplier = 1
+        error = theFloat - hypothesis
+      #console.log  "error: " + error
+      if Math.abs(error) < 2 * precision
+        result = likelyMultiplier + " * (e ^ " + i + " ) / " + j
+        #console.log result + " error: " + error
+        return [result, approx_rootOfRatiorationalOfE, likelyMultiplier, i, j]
+
+  # simple rationals of a few powers of PI
   for i in [1..2]
     for j in [1..12]
       #console.log  "i,j: " + i + "," + j
@@ -338,6 +360,27 @@ testApproxTrigonometric = () ->
       returnedValue = returned[2] * Math.sqrt(returned[3]/returned[4])
       if returned[1] == approx_rootOfRatiorootOfRatio and Math.abs(originalValue - returnedValue) > 1e-15
         console.log "fail testapproxIrrationals with 4 digits:: " + "1 * sqrt( " + i + " / " + j + " ) . obtained: " + returned
+
+  for i in [1..2]
+    for j in [1..12]
+      console.log "testApproxTrigonometric testing: " + "1 * (e ^ " + i + " ) / " + j
+      fraction = i/j
+      value = Math.pow(Math.E,i)/j
+      returned = approxTrigonometric(value)
+      returnedValue = returned[2] * Math.pow(Math.E,returned[3])/returned[4]
+      if Math.abs(value - returnedValue) > 1e-15
+        console.log "fail testApproxTrigonometric: " + "1 * (e ^ " + i + " ) / " + j + " . obtained: " + returned
+
+  for i in [1..2]
+    for j in [1..12]
+      console.log "testApproxTrigonometric testing with 4 digits: " + "1 * (e ^ " + i + " ) / " + j
+      fraction = i/j
+      originalValue = Math.pow(Math.E,i)/j
+      value = originalValue.toFixed(4)
+      returned = approxTrigonometric(value)
+      returnedValue = returned[2] * Math.pow(Math.E,returned[3])/returned[4]
+      if Math.abs(originalValue - returnedValue) > 1e-15
+        console.log "fail testApproxTrigonometric with 4 digits: " + "1 * (e ^ " + i + " ) / " + j + " . obtained: " + returned
 
   for i in [1..2]
     for j in [1..12]
