@@ -135,13 +135,13 @@ floatToRatioRoutine = (decimal, AccuracyFactor) ->
   ret[1] = FractionDenominator
   ret
 
-approxTrigonometric_just_an_integer = 0
-approxTrigonometric_sinus_of_rational = 1
-approxTrigonometric_sinus_of_pi_times_rational = 2
-approxTrigonometric_rationalOfPi = 3
-approxTrigonometric_rootOfRatio = 4
-approxTrigonometric_nothingUseful = 5
-approxTrigonometric_ratioOfRoot = 6
+approx_rootOfRatiojust_an_integer = 0
+approx_rootOfRatiosinus_of_rational = 1
+approx_rootOfRatiosinus_of_pi_times_rational = 2
+approx_rootOfRatiorationalOfPi = 3
+approx_rootOfRatiorootOfRatio = 4
+approx_rootOfRationothingUseful = 5
+approx_rootOfRatioratioOfRoot = 6
 
 approxIrrationals = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
@@ -150,10 +150,10 @@ approxIrrationals = (theFloat) ->
     numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
     precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
   else
-    return ["" + Math.floor(theFloat), approxTrigonometric_just_an_integer, Math.floor(theFloat), 1, 2]
+    return ["" + Math.floor(theFloat), approx_rootOfRatiojust_an_integer, Math.floor(theFloat), 1, 2]
 
   if numberOfDigitsAfterTheDot < 4
-    return ["" + theFloat, approxTrigonometric_nothingUseful, null, null, null]
+    return ["" + theFloat, approx_rootOfRationothingUseful, null, null, null]
 
   console.log "precision: " + precision
 
@@ -177,7 +177,7 @@ approxIrrationals = (theFloat) ->
       if Math.abs(error) < 2 * precision
         result = likelyMultiplier + " * sqrt( " + i + " ) / " + j
         console.log result + " error: " + error
-        return [result, approxTrigonometric_ratioOfRoot, likelyMultiplier, i, j]
+        return [result, approx_rootOfRatioratioOfRoot, likelyMultiplier, i, j]
 
   # this one catches things like Math.sqrt(3/4), but
   # things like Math.sqrt(1/2) are caught by the paragraph
@@ -200,7 +200,7 @@ approxIrrationals = (theFloat) ->
       if Math.abs(error) < 2 * precision
         result = likelyMultiplier + " * (sqrt( " + i + " / " + j + " )"
         console.log result + " error: " + error
-        return [result, approxTrigonometric_rootOfRatio, likelyMultiplier, i, j]
+        return [result, approx_rootOfRatiorootOfRatio, likelyMultiplier, i, j]
 
   return
 
@@ -211,7 +211,7 @@ approxTrigonometric = (theFloat) ->
     numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
     precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
   else
-    return ["" + Math.floor(theFloat), approxTrigonometric_just_an_integer, Math.floor(theFloat), 1, 2]
+    return ["" + Math.floor(theFloat), approx_rootOfRatiojust_an_integer, Math.floor(theFloat), 1, 2]
 
   console.log "precision: " + precision
 
@@ -234,7 +234,7 @@ approxTrigonometric = (theFloat) ->
       if Math.abs(error) < 2 * precision
         result = likelyMultiplier + " * (pi ^ " + i + " ) / " + j + " )"
         #console.log result + " error: " + error
-        return [result, approxTrigonometric_rationalOfPi, likelyMultiplier, i, j]
+        return [result, approx_rootOfRatiorationalOfPi, likelyMultiplier, i, j]
 
   # we only check very simple rationals because they begin to get tricky
   # quickly, also they collide often with the "rational of pi" hypothesis.
@@ -260,7 +260,7 @@ approxTrigonometric = (theFloat) ->
       if Math.abs(error) < 2 * precision
         result = likelyMultiplier + " * sin( " + i + "/" + j + " )"
         #console.log result + " error: " + error
-        return [result, approxTrigonometric_sinus_of_rational, likelyMultiplier, i, j]
+        return [result, approx_rootOfRatiosinus_of_rational, likelyMultiplier, i, j]
 
 
   # check rational multiples of pi
@@ -284,7 +284,7 @@ approxTrigonometric = (theFloat) ->
       if Math.abs(error) < 23 * precision
         result = likelyMultiplier + " * sin( " + i + "/" + j + " * pi )"
         #console.log result + " error: " + error
-        return [result, approxTrigonometric_sinus_of_pi_times_rational, likelyMultiplier, i, j]
+        return [result, approx_rootOfRatiosinus_of_pi_times_rational, likelyMultiplier, i, j]
 
 
 
@@ -324,7 +324,7 @@ testApproxTrigonometric = () ->
       value = Math.sqrt(i/j)
       returned = approxIrrationals(value)
       returnedValue = returned[2] * Math.sqrt(returned[3]/returned[4])
-      if returned[1] == approxTrigonometric_rootOfRatio and Math.abs(value - returnedValue) > 1e-15
+      if returned[1] == approx_rootOfRatiorootOfRatio and Math.abs(value - returnedValue) > 1e-15
         console.log "fail testapproxIrrationals: " + "1 * sqrt( " + i + " / " + j + " ) . obtained: " + returned
 
   for i in [1,2,3,5,6,7,8,10]
@@ -336,7 +336,7 @@ testApproxTrigonometric = () ->
       value = originalValue.toFixed(4)
       returned = approxIrrationals(value)
       returnedValue = returned[2] * Math.sqrt(returned[3]/returned[4])
-      if returned[1] == approxTrigonometric_rootOfRatio and Math.abs(originalValue - returnedValue) > 1e-15
+      if returned[1] == approx_rootOfRatiorootOfRatio and Math.abs(originalValue - returnedValue) > 1e-15
         console.log "fail testapproxIrrationals with 4 digits:: " + "1 * sqrt( " + i + " / " + j + " ) . obtained: " + returned
 
   for i in [1..2]
