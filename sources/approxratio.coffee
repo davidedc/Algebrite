@@ -144,6 +144,7 @@ approx_rootOfRationothingUseful = 5
 approx_rootOfRatioratioOfRoot = 6
 approx_rootOfRatiorationalOfE = 7
 approx_logarithmsOfRationals = 8
+approx_rationalsOfLogarithms = 9
 
 approxIrrationals = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
@@ -217,11 +218,11 @@ approxTrigonometric = (theFloat) ->
 
   console.log "precision: " + precision
 
-  # simple logs of rationals
+  # simple rationals of logs
   for i in [1..5]
     for j in [1..5]
       console.log  "i,j: " + i + "," + j
-      hypothesis = Math.log(i/j)
+      hypothesis = Math.log(i)/j
       #console.log  "hypothesis: " + hypothesis
       if Math.abs(hypothesis) > 1e-10
         ratio =  theFloat/hypothesis
@@ -233,7 +234,39 @@ approxTrigonometric = (theFloat) ->
         likelyMultiplier = 1
         error = theFloat - hypothesis
       console.log  "error: " + error
-      if Math.abs(error) < 2 * precision
+
+      # it does happen that due to roundings 
+      # a "higher multiple" is picked, which is obviously
+      # unintended.
+      # E.g. 1 * log(1 / 3 ) doesn't match log( 3 ) BUT
+      # it matches -5 * log( 3 ) / 5
+      # so we avoid any case where the multiplier is a multiple
+      # of the divisor.
+      if likelyMultiplier != 1 and Math.abs(Math.floor(likelyMultiplier/j)) == Math.abs(likelyMultiplier/j)
+        continue
+
+      if Math.abs(error) < 2.2 * precision
+        result = likelyMultiplier + " * log( " + i + " ) / " + j
+        #console.log result + " error: " + error
+        return [result, approx_rationalsOfLogarithms, likelyMultiplier, i, j]
+
+  # simple logs of rationals
+  for i in [1..5]
+    for j in [1..5]
+      #console.log  "i,j: " + i + "," + j
+      hypothesis = Math.log(i/j)
+      #console.log  "hypothesis: " + hypothesis
+      if Math.abs(hypothesis) > 1e-10
+        ratio =  theFloat/hypothesis
+        likelyMultiplier = Math.round(ratio)
+        #console.log  "ratio: " + ratio
+        error = (ratio - likelyMultiplier)/likelyMultiplier
+      else
+        ratio = 1
+        likelyMultiplier = 1
+        error = theFloat - hypothesis
+      #console.log  "error: " + error
+      if Math.abs(error) < 1.96 * precision
         result = likelyMultiplier + " * log( " + i + " / " + j + " )"
         #console.log result + " error: " + error
         return [result, approx_logarithmsOfRationals, likelyMultiplier, i, j]
@@ -382,6 +415,27 @@ testApproxTrigonometric = () ->
       returnedValue = returned[2] * Math.sqrt(returned[3]/returned[4])
       if returned[1] == approx_rootOfRatiorootOfRatio and Math.abs(originalValue - returnedValue) > 1e-15
         console.log "fail testapproxIrrationals with 4 digits:: " + "1 * sqrt( " + i + " / " + j + " ) . obtained: " + returned
+
+  for i in [1..5]
+    for j in [1..5]
+      console.log "testApproxTrigonometric testing: " + "1 * log(" + i + " ) / " + j
+      fraction = i/j
+      value = Math.log(i)/j
+      returned = approxTrigonometric(value)
+      returnedValue = returned[2] * Math.log(returned[3])/returned[4]
+      if Math.abs(value - returnedValue) > 1e-15
+        console.log "fail testApproxTrigonometric: " + "1 * log(" + i + " ) / " + j + " . obtained: " + returned
+
+  for i in [1..5]
+    for j in [1..5]
+      console.log "testApproxTrigonometric testing with 4 digits: " + "1 * log(" + i + " ) / " + j
+      fraction = i/j
+      originalValue = Math.log(i)/j
+      value = originalValue.toFixed(4)
+      returned = approxTrigonometric(value)
+      returnedValue = returned[2] * Math.log(returned[3])/returned[4]
+      if Math.abs(originalValue - returnedValue) > 1e-15
+        console.log "fail testApproxTrigonometric with 4 digits: " + "1 * log(" + i + " ) / " + j +  " . obtained: " + returned
 
   for i in [1..5]
     for j in [1..5]
