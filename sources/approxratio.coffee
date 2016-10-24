@@ -205,9 +205,9 @@ approxIrrationals = (theFloat) ->
         console.log result + " error: " + error
         return [result, approx_rootOfRatio, likelyMultiplier, i, j]
 
-  return
+  return null
 
-approxTrigonometric = (theFloat) ->
+approxRationalsOfLogs = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
 
   if splitBeforeAndAfterDot.length == 2
@@ -250,6 +250,19 @@ approxTrigonometric = (theFloat) ->
         #console.log result + " error: " + error
         return [result, approx_rationalsOfLogarithms, likelyMultiplier, i, j]
 
+  return null
+
+approxLogsOfRationals = (theFloat) ->
+  splitBeforeAndAfterDot = theFloat.toString().split(".")
+
+  if splitBeforeAndAfterDot.length == 2
+    numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
+    precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
+  else
+    return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
+
+  console.log "precision: " + precision
+
   # simple logs of rationals
   for i in [1..5]
     for j in [1..5]
@@ -270,6 +283,19 @@ approxTrigonometric = (theFloat) ->
         result = likelyMultiplier + " * log( " + i + " / " + j + " )"
         #console.log result + " error: " + error
         return [result, approx_logarithmsOfRationals, likelyMultiplier, i, j]
+
+  return null
+
+approxRationalsOfPowersOfE = (theFloat) ->
+  splitBeforeAndAfterDot = theFloat.toString().split(".")
+
+  if splitBeforeAndAfterDot.length == 2
+    numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
+    precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
+  else
+    return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
+
+  console.log "precision: " + precision
 
   # simple rationals of a few powers of e
   for i in [1..2]
@@ -292,6 +318,19 @@ approxTrigonometric = (theFloat) ->
         #console.log result + " error: " + error
         return [result, approx_rationalOfE, likelyMultiplier, i, j]
 
+  return null
+
+approxRationalsOfPowersOfPI = (theFloat) ->
+  splitBeforeAndAfterDot = theFloat.toString().split(".")
+
+  if splitBeforeAndAfterDot.length == 2
+    numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
+    precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
+  else
+    return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
+
+  console.log "precision: " + precision
+
   # simple rationals of a few powers of PI
   for i in [1..2]
     for j in [1..12]
@@ -312,6 +351,19 @@ approxTrigonometric = (theFloat) ->
         result = likelyMultiplier + " * (pi ^ " + i + " ) / " + j + " )"
         #console.log result + " error: " + error
         return [result, approx_rationalOfPi, likelyMultiplier, i, j]
+
+  return null
+
+approxSinusOfRationals = (theFloat) ->
+  splitBeforeAndAfterDot = theFloat.toString().split(".")
+
+  if splitBeforeAndAfterDot.length == 2
+    numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
+    precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
+  else
+    return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
+
+  console.log "precision: " + precision
 
   # we only check very simple rationals because they begin to get tricky
   # quickly, also they collide often with the "rational of pi" hypothesis.
@@ -339,6 +391,18 @@ approxTrigonometric = (theFloat) ->
         #console.log result + " error: " + error
         return [result, approx_sinus_of_rational, likelyMultiplier, i, j]
 
+  return null
+
+approxSinusOfRationalMultiplesOfPI = (theFloat) ->
+  splitBeforeAndAfterDot = theFloat.toString().split(".")
+
+  if splitBeforeAndAfterDot.length == 2
+    numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
+    precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
+  else
+    return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
+
+  console.log "precision: " + precision
 
   # check rational multiples of pi
   for i in [1..13]
@@ -363,12 +427,42 @@ approxTrigonometric = (theFloat) ->
         #console.log result + " error: " + error
         return [result, approx_sinus_of_pi_times_rational, likelyMultiplier, i, j]
 
+  return null
+
+approxAll = (theFloat) ->
+  splitBeforeAndAfterDot = theFloat.toString().split(".")
+
+  if splitBeforeAndAfterDot.length == 2
+    numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
+    precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
+  else
+    return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
+
+  console.log "precision: " + precision
+
+  approxRationalsOfLogsResult =  approxRationalsOfLogs(theFloat)
+  if approxRationalsOfLogsResult? then return approxRationalsOfLogsResult
+
+  approxLogsOfRationalsResult = approxLogsOfRationals(theFloat)
+  if approxLogsOfRationalsResult? then return approxLogsOfRationalsResult
+
+  approxRationalsOfPowersOfEResult = approxRationalsOfPowersOfE(theFloat)
+  if approxRationalsOfPowersOfEResult? then return approxRationalsOfPowersOfEResult
+
+  approxRationalsOfPowersOfPIResult = approxRationalsOfPowersOfPI(theFloat)
+  if approxRationalsOfPowersOfPIResult? then return approxRationalsOfPowersOfPIResult
+
+  approxSinusOfRationalsResult = approxSinusOfRationals(theFloat)
+  if approxSinusOfRationalsResult? then return approxSinusOfRationalsResult
+
+  approxSinusOfRationalMultiplesOfPIResult = approxSinusOfRationalMultiplesOfPI(theFloat)
+  if approxSinusOfRationalMultiplesOfPIResult? then return approxSinusOfRationalMultiplesOfPIResult
 
 
-  return
+  return null
 
 
-testApproxTrigonometric = () ->
+testApproxAll = () ->
 
   for i in [2,3,5,6,7,8,10]
     for j in [2,3,5,6,7,8,10]
@@ -418,181 +512,181 @@ testApproxTrigonometric = () ->
 
   for i in [1..5]
     for j in [1..5]
-      console.log "testApproxTrigonometric testing: " + "1 * log(" + i + " ) / " + j
+      console.log "testApproxAll testing: " + "1 * log(" + i + " ) / " + j
       fraction = i/j
       value = Math.log(i)/j
-      returned = approxTrigonometric(value)
+      returned = approxAll(value)
       returnedValue = returned[2] * Math.log(returned[3])/returned[4]
       if Math.abs(value - returnedValue) > 1e-15
-        console.log "fail testApproxTrigonometric: " + "1 * log(" + i + " ) / " + j + " . obtained: " + returned
+        console.log "fail testApproxAll: " + "1 * log(" + i + " ) / " + j + " . obtained: " + returned
 
   for i in [1..5]
     for j in [1..5]
-      console.log "testApproxTrigonometric testing with 4 digits: " + "1 * log(" + i + " ) / " + j
+      console.log "testApproxAll testing with 4 digits: " + "1 * log(" + i + " ) / " + j
       fraction = i/j
       originalValue = Math.log(i)/j
       value = originalValue.toFixed(4)
-      returned = approxTrigonometric(value)
+      returned = approxAll(value)
       returnedValue = returned[2] * Math.log(returned[3])/returned[4]
       if Math.abs(originalValue - returnedValue) > 1e-15
-        console.log "fail testApproxTrigonometric with 4 digits: " + "1 * log(" + i + " ) / " + j +  " . obtained: " + returned
+        console.log "fail testApproxAll with 4 digits: " + "1 * log(" + i + " ) / " + j +  " . obtained: " + returned
 
   for i in [1..5]
     for j in [1..5]
-      console.log "testApproxTrigonometric testing: " + "1 * log(" + i + " / " + j + " )"
+      console.log "testApproxAll testing: " + "1 * log(" + i + " / " + j + " )"
       fraction = i/j
       value = Math.log(i/j)
-      returned = approxTrigonometric(value)
+      returned = approxAll(value)
       returnedValue = returned[2] * Math.log(returned[3]/returned[4])
       if Math.abs(value - returnedValue) > 1e-15
-        console.log "fail testApproxTrigonometric: " + "1 * log(" + i + " / " + j + " )" + " . obtained: " + returned
+        console.log "fail testApproxAll: " + "1 * log(" + i + " / " + j + " )" + " . obtained: " + returned
 
   for i in [1..5]
     for j in [1..5]
-      console.log "testApproxTrigonometric testing with 4 digits: " + "1 * log(" + i + " / " + j + " )"
+      console.log "testApproxAll testing with 4 digits: " + "1 * log(" + i + " / " + j + " )"
       fraction = i/j
       originalValue = Math.log(i/j)
       value = originalValue.toFixed(4)
-      returned = approxTrigonometric(value)
+      returned = approxAll(value)
       returnedValue = returned[2] * Math.log(returned[3]/returned[4])
       if Math.abs(originalValue - returnedValue) > 1e-15
-        console.log "fail testApproxTrigonometric with 4 digits: " + "1 * log(" + i + " / " + j + " )" +  " . obtained: " + returned
+        console.log "fail testApproxAll with 4 digits: " + "1 * log(" + i + " / " + j + " )" +  " . obtained: " + returned
 
   for i in [1..2]
     for j in [1..12]
-      console.log "testApproxTrigonometric testing: " + "1 * (e ^ " + i + " ) / " + j
+      console.log "testApproxAll testing: " + "1 * (e ^ " + i + " ) / " + j
       fraction = i/j
       value = Math.pow(Math.E,i)/j
-      returned = approxTrigonometric(value)
+      returned = approxAll(value)
       returnedValue = returned[2] * Math.pow(Math.E,returned[3])/returned[4]
       if Math.abs(value - returnedValue) > 1e-15
-        console.log "fail testApproxTrigonometric: " + "1 * (e ^ " + i + " ) / " + j + " . obtained: " + returned
+        console.log "fail testApproxAll: " + "1 * (e ^ " + i + " ) / " + j + " . obtained: " + returned
 
   for i in [1..2]
     for j in [1..12]
-      console.log "testApproxTrigonometric testing with 4 digits: " + "1 * (e ^ " + i + " ) / " + j
+      console.log "testApproxAll testing with 4 digits: " + "1 * (e ^ " + i + " ) / " + j
       fraction = i/j
       originalValue = Math.pow(Math.E,i)/j
       value = originalValue.toFixed(4)
-      returned = approxTrigonometric(value)
+      returned = approxAll(value)
       returnedValue = returned[2] * Math.pow(Math.E,returned[3])/returned[4]
       if Math.abs(originalValue - returnedValue) > 1e-15
-        console.log "fail testApproxTrigonometric with 4 digits: " + "1 * (e ^ " + i + " ) / " + j + " . obtained: " + returned
+        console.log "fail testApproxAll with 4 digits: " + "1 * (e ^ " + i + " ) / " + j + " . obtained: " + returned
 
   for i in [1..2]
     for j in [1..12]
-      console.log "testApproxTrigonometric testing: " + "1 * pi ^ " + i + " / " + j
+      console.log "testApproxAll testing: " + "1 * pi ^ " + i + " / " + j
       fraction = i/j
       value = Math.pow(Math.PI,i)/j
-      returned = approxTrigonometric(value)
+      returned = approxAll(value)
       returnedValue = returned[2] * Math.pow(Math.PI,returned[3])/returned[4]
       if Math.abs(value - returnedValue) > 1e-15
-        console.log "fail testApproxTrigonometric: " + "1 * pi ^ " + i + " / " + j + " ) . obtained: " + returned
+        console.log "fail testApproxAll: " + "1 * pi ^ " + i + " / " + j + " ) . obtained: " + returned
 
   for i in [1..2]
     for j in [1..12]
-      console.log "testApproxTrigonometric testing with 4 digits: " + "1 * pi ^ " + i + " / " + j
+      console.log "testApproxAll testing with 4 digits: " + "1 * pi ^ " + i + " / " + j
       fraction = i/j
       originalValue = Math.pow(Math.PI,i)/j
       value = originalValue.toFixed(4)
-      returned = approxTrigonometric(value)
+      returned = approxAll(value)
       returnedValue = returned[2] * Math.pow(Math.PI,returned[3])/returned[4]
       if Math.abs(originalValue - returnedValue) > 1e-15
-        console.log "fail testApproxTrigonometric with 4 digits: " + "1 * pi ^ " + i + " / " + j + " ) . obtained: " + returned
+        console.log "fail testApproxAll with 4 digits: " + "1 * pi ^ " + i + " / " + j + " ) . obtained: " + returned
 
   for i in [1..4]
     for j in [1..4]
-      console.log "testApproxTrigonometric testing: " + "1 * sin( " + i + "/" + j + " )"
+      console.log "testApproxAll testing: " + "1 * sin( " + i + "/" + j + " )"
       fraction = i/j
       value = Math.sin(fraction)
-      returned = approxTrigonometric(value)
+      returned = approxAll(value)
       returnedFraction = returned[3]/returned[4]
       returnedValue = returned[2] * Math.sin(returnedFraction)
       if Math.abs(value - returnedValue) > 1e-15
-        console.log "fail testApproxTrigonometric: " + "1 * sin( " + i + "/" + j + " ) . obtained: " + returned
+        console.log "fail testApproxAll: " + "1 * sin( " + i + "/" + j + " ) . obtained: " + returned
 
   # 5 digits create no problem
   for i in [1..4]
     for j in [1..4]
-      console.log "testApproxTrigonometric testing with 5 digits: " + "1 * sin( " + i + "/" + j + " )"
+      console.log "testApproxAll testing with 5 digits: " + "1 * sin( " + i + "/" + j + " )"
       fraction = i/j
       originalValue = Math.sin(fraction)
       value = originalValue.toFixed(5)
-      returned = approxTrigonometric(value)
+      returned = approxAll(value)
       if !returned?
-        console.log "fail testApproxTrigonometric with 5 digits: " + "1 * sin( " + i + "/" + j + " ) . obtained:  undefined "
+        console.log "fail testApproxAll with 5 digits: " + "1 * sin( " + i + "/" + j + " ) . obtained:  undefined "
       returnedFraction = returned[3]/returned[4]
       returnedValue = returned[2] * Math.sin(returnedFraction)
       error = Math.abs(originalValue - returnedValue)
       if error > 1e-14
-        console.log "fail testApproxTrigonometric with 5 digits: " + "1 * sin( " + i + "/" + j + " ) . obtained: " + returned + " error: " + error
+        console.log "fail testApproxAll with 5 digits: " + "1 * sin( " + i + "/" + j + " ) . obtained: " + returned + " error: " + error
 
   # 4 digits create two collisions
   for i in [1..4]
     for j in [1..4]
 
-      console.log "testApproxTrigonometric testing with 4 digits: " + "1 * sin( " + i + "/" + j + " )"
+      console.log "testApproxAll testing with 4 digits: " + "1 * sin( " + i + "/" + j + " )"
       fraction = i/j
       originalValue = Math.sin(fraction)
       value = originalValue.toFixed(4)
-      returned = approxTrigonometric(value)
+      returned = approxAll(value)
       if !returned?
-        console.log "fail testApproxTrigonometric with 4 digits: " + "1 * sin( " + i + "/" + j + " ) . obtained:  undefined "
+        console.log "fail testApproxAll with 4 digits: " + "1 * sin( " + i + "/" + j + " ) . obtained:  undefined "
       returnedFraction = returned[3]/returned[4]
       returnedValue = returned[2] * Math.sin(returnedFraction)
       error = Math.abs(originalValue - returnedValue)
       if error > 1e-14
-        console.log "fail testApproxTrigonometric with 4 digits: " + "1 * sin( " + i + "/" + j + " ) . obtained: " + returned + " error: " + error
+        console.log "fail testApproxAll with 4 digits: " + "1 * sin( " + i + "/" + j + " ) . obtained: " + returned + " error: " + error
 
   value = 0
-  if approxTrigonometric(value)[0] != "0" then console.log "fail testApproxTrigonometric: 0"
+  if approxAll(value)[0] != "0" then console.log "fail testApproxAll: 0"
 
   value = 0.0
-  if approxTrigonometric(value)[0] != "0" then console.log "fail testApproxTrigonometric: 0.0"
+  if approxAll(value)[0] != "0" then console.log "fail testApproxAll: 0.0"
 
   value = Math.sqrt(2)
-  if approxTrigonometric(value)[0] != "2 * sin( 1/4 * pi )" then console.log "fail testApproxTrigonometric: Math.sqrt(2)"
+  if approxAll(value)[0] != "2 * sin( 1/4 * pi )" then console.log "fail testApproxAll: Math.sqrt(2)"
 
   value = Math.sqrt(3)
-  if approxTrigonometric(value)[0] != "2 * sin( 1/3 * pi )" then console.log "fail testApproxTrigonometric: Math.sqrt(3)"
+  if approxAll(value)[0] != "2 * sin( 1/3 * pi )" then console.log "fail testApproxAll: Math.sqrt(3)"
 
   value = (Math.sqrt(6) - Math.sqrt(2))/4
-  if approxTrigonometric(value)[0] != "1 * sin( 1/12 * pi )" then console.log "fail testApproxTrigonometric: (Math.sqrt(6) - Math.sqrt(2))/4"
+  if approxAll(value)[0] != "1 * sin( 1/12 * pi )" then console.log "fail testApproxAll: (Math.sqrt(6) - Math.sqrt(2))/4"
 
   value = Math.sqrt(2 - Math.sqrt(2))/2
-  if approxTrigonometric(value)[0] != "1 * sin( 1/8 * pi )" then console.log "fail testApproxTrigonometric: Math.sqrt(2 - Math.sqrt(2))/2"
+  if approxAll(value)[0] != "1 * sin( 1/8 * pi )" then console.log "fail testApproxAll: Math.sqrt(2 - Math.sqrt(2))/2"
 
   value = (Math.sqrt(6) + Math.sqrt(2))/4
-  if approxTrigonometric(value)[0] != "1 * sin( 5/12 * pi )" then console.log "fail testApproxTrigonometric: (Math.sqrt(6) + Math.sqrt(2))/4"
+  if approxAll(value)[0] != "1 * sin( 5/12 * pi )" then console.log "fail testApproxAll: (Math.sqrt(6) + Math.sqrt(2))/4"
 
   value = Math.sqrt(2 + Math.sqrt(3))/2
-  if approxTrigonometric(value)[0] != "1 * sin( 5/12 * pi )" then console.log "fail testApproxTrigonometric: Math.sqrt(2 + Math.sqrt(3))/2"
+  if approxAll(value)[0] != "1 * sin( 5/12 * pi )" then console.log "fail testApproxAll: Math.sqrt(2 + Math.sqrt(3))/2"
 
   value = (Math.sqrt(5) - 1)/4
-  if approxTrigonometric(value)[0] != "1 * sin( 1/10 * pi )" then console.log "fail testApproxTrigonometric: (Math.sqrt(5) - 1)/4"
+  if approxAll(value)[0] != "1 * sin( 1/10 * pi )" then console.log "fail testApproxAll: (Math.sqrt(5) - 1)/4"
 
   value = Math.sqrt(10 - 2*Math.sqrt(5))/4
-  if approxTrigonometric(value)[0] != "1 * sin( 1/5 * pi )" then console.log "fail testApproxTrigonometric: Math.sqrt(10 - 2*Math.sqrt(5))/4"
+  if approxAll(value)[0] != "1 * sin( 1/5 * pi )" then console.log "fail testApproxAll: Math.sqrt(10 - 2*Math.sqrt(5))/4"
 
   # this has a radical form but it's too long to write
   value = Math.sin(Math.PI/7)
-  if approxTrigonometric(value)[0] != "1 * sin( 1/7 * pi )" then console.log "fail testApproxTrigonometric: Math.sin(Math.PI/7)"
+  if approxAll(value)[0] != "1 * sin( 1/7 * pi )" then console.log "fail testApproxAll: Math.sin(Math.PI/7)"
 
   # this has a radical form but it's too long to write
   value = Math.sin(Math.PI/9)
-  if approxTrigonometric(value)[0] != "1 * sin( 1/9 * pi )" then console.log "fail testApproxTrigonometric: Math.sin(Math.PI/9)"
+  if approxAll(value)[0] != "1 * sin( 1/9 * pi )" then console.log "fail testApproxAll: Math.sin(Math.PI/9)"
 
 
   for i in [1..13]
     for j in [1..13]
-      console.log "testApproxTrigonometric testing: " + "1 * sin( " + i + "/" + j + " * pi )"
+      console.log "testApproxAll testing: " + "1 * sin( " + i + "/" + j + " * pi )"
       fraction = i/j
       value = Math.sin(Math.PI * fraction)
-      returned = approxTrigonometric(value)
+      returned = approxAll(value)
       returnedFraction = returned[3]/returned[4]
       returnedValue = returned[2] * Math.sin(Math.PI * returnedFraction)
       if Math.abs(value - returnedValue) > 1e-15
-        console.log "fail testApproxTrigonometric: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned
+        console.log "fail testApproxAll: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned
 
   for i in [1..13]
     for j in [1..13]
@@ -605,18 +699,18 @@ testApproxTrigonometric = () ->
        i == 6 and j == 11
         continue
 
-      console.log "testApproxTrigonometric testing with 4 digits: " + "1 * sin( " + i + "/" + j + " * pi )"
+      console.log "testApproxAll testing with 4 digits: " + "1 * sin( " + i + "/" + j + " * pi )"
       fraction = i/j
       originalValue = Math.sin(Math.PI * fraction)
       value = originalValue.toFixed(4)
-      returned = approxTrigonometric(value)
+      returned = approxAll(value)
       returnedFraction = returned[3]/returned[4]
       returnedValue = returned[2] * Math.sin(Math.PI * returnedFraction)
       error = Math.abs(originalValue - returnedValue)
       if error > 1e-14
-        console.log "fail testApproxTrigonometric with 4 digits: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned + " error: " + error
+        console.log "fail testApproxAll with 4 digits: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned + " error: " + error
 
-  console.log "testApproxTrigonometric done"
+  console.log "testApproxAll done"
 
-$.approxTrigonometric    = approxTrigonometric 
-$.testApproxTrigonometric         = testApproxTrigonometric 
+$.approxAll    = approxAll 
+$.testApproxAll         = testApproxAll 
