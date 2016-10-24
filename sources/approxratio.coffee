@@ -146,7 +146,7 @@ approx_rationalOfE = 7
 approx_logarithmsOfRationals = 8
 approx_rationalsOfLogarithms = 9
 
-approxIrrationals = (theFloat) ->
+approxRationalsOfRoots = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
 
   if splitBeforeAndAfterDot.length == 2
@@ -182,6 +182,24 @@ approxIrrationals = (theFloat) ->
         console.log result + " error: " + error
         return [result, approx_ratioOfRoot, likelyMultiplier, i, j]
 
+  return null
+
+approxRootsOfRationals = (theFloat) ->
+  splitBeforeAndAfterDot = theFloat.toString().split(".")
+
+  if splitBeforeAndAfterDot.length == 2
+    numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
+    precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
+  else
+    return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
+
+  if numberOfDigitsAfterTheDot < 4
+    return ["" + theFloat, approx_nothingUseful, null, null, null]
+
+  console.log "precision: " + precision
+
+  # simple irrationals.
+
   # this one catches things like Math.sqrt(3/4), but
   # things like Math.sqrt(1/2) are caught by the paragraph
   # above (and in a better form)
@@ -204,6 +222,31 @@ approxIrrationals = (theFloat) ->
         result = likelyMultiplier + " * (sqrt( " + i + " / " + j + " )"
         console.log result + " error: " + error
         return [result, approx_rootOfRatio, likelyMultiplier, i, j]
+
+  return null
+
+approxIrrationals = (theFloat) ->
+  splitBeforeAndAfterDot = theFloat.toString().split(".")
+
+  if splitBeforeAndAfterDot.length == 2
+    numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
+    precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
+  else
+    return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
+
+  if numberOfDigitsAfterTheDot < 4
+    return ["" + theFloat, approx_nothingUseful, null, null, null]
+
+  console.log "precision: " + precision
+
+  # simple irrationals.
+
+  approxRationalsOfRootsResult = approxRationalsOfRoots theFloat
+  if approxRationalsOfRootsResult? then return approxRationalsOfRootsResult
+
+  approxRootsOfRationalsResult = approxRootsOfRationals theFloat
+  if approxRootsOfRationalsResult? then return approxRootsOfRationalsResult
+
 
   return null
 
