@@ -383,7 +383,7 @@ approxRationalsOfPowersOfPI = (theFloat) ->
   # exponent of pi. So we prefer the hypotheses with the
   # lower multiplier since it's likely to insert more
   # information.
-  minimumlikelyMultiplier = 2147483647
+  minimumlikelyMultiplier = Number.MAX_VALUE
 
   # simple rationals of a few powers of PI
   for i in [1..5]
@@ -498,7 +498,7 @@ approxAll = (theFloat) ->
 
   console.log "precision: " + precision
 
-  constantsSumMin = 2147483647
+  constantsSumMin = Number.MAX_VALUE
   constantsSum = 0
   bestApproxSoFar = null
 
