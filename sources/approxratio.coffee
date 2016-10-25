@@ -782,8 +782,43 @@ testApproxAll = () ->
   value = 0.0
   if approxAll(value)[0] != "0" then console.log "fail testApproxAll: 0.0"
 
+  value = 0.00
+  if approxAll(value)[0] != "0" then console.log "fail testApproxAll: 0.00"
+
+  value = 0.000
+  if approxAll(value)[0] != "0" then console.log "fail testApproxAll: 0.000"
+
+  value = 0.0000
+  if approxAll(value)[0] != "0" then console.log "fail testApproxAll: 0.0000"
+
+  value = 1
+  if approxAll(value)[0] != "1" then console.log "fail testApproxAll: 1"
+
+  value = 1.0
+  if approxAll(value)[0] != "1" then console.log "fail testApproxAll: 1.0"
+
+  value = 1.00
+  if approxAll(value)[0] != "1" then console.log "fail testApproxAll: 1.00"
+
+  value = 1.000
+  if approxAll(value)[0] != "1" then console.log "fail testApproxAll: 1.000"
+
+  value = 1.0000
+  if approxAll(value)[0] != "1" then console.log "fail testApproxAll: 1.0000"
+
+  value = 1.00000
+  if approxAll(value)[0] != "1" then console.log "fail testApproxAll: 1.00000"
+
   value = Math.sqrt(2)
   if approxAll(value)[0] != "1 * sqrt( 2 ) / 1" then console.log "fail testApproxAll: Math.sqrt(2)"
+
+  value = 1.41
+  if approxAll(value)[0] != "1 * sqrt( 2 ) / 1" then console.log "fail testApproxAll: 1.41"
+
+  # if we narrow down to a particular family then we can get
+  # an OK guess even with few digits, expecially for really "famous" numbers
+  value = 1.4
+  if approxIrrationals(value)[0] != "1 * sqrt( 2 ) / 1" then console.log "fail approxIrrationals: 1.4"
 
   value = Math.sqrt(3)
   if approxAll(value)[0] != "1 * sqrt( 3 ) / 1" then console.log "fail testApproxAll: Math.sqrt(3)"
