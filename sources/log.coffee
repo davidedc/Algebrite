@@ -1,5 +1,11 @@
-# natural logarithm
-
+# Natural logarithm.
+#
+# Note that we use the mathematics / Javascript / Mathematica
+# convention that "log" is indeed the natural logarithm.
+#
+# In engineering, biology, astronomy, "log" can stand instead
+# for the "common" logarithm i.e. base 10. Also note that Google
+# calculations use log for the common logarithm.
 
 
 Eval_log = ->

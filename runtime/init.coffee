@@ -45,6 +45,12 @@ defn_str = [
 	"curl(v)=(d(v[3],y)-d(v[2],z),d(v[1],z)-d(v[3],x),d(v[2],x)-d(v[1],y))",
 	# div definition
 	"div(v)=d(v[1],x)+d(v[2],y)+d(v[3],z)",
+	# Note that we use the mathematics / Javascript / Mathematica
+	# convention that "log" is indeed the natural logarithm.
+	#
+	# In engineering, biology, astronomy, "log" can stand instead
+	# for the "common" logarithm i.e. base 10. Also note that Google
+	# calculations use log for the common logarithm.
 	"ln(x)=log(x)",
 ]
 
