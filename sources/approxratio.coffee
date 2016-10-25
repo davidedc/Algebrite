@@ -630,10 +630,12 @@ simpleComplexityMeasure = (aResult, b, c) ->
   if aResult instanceof Array
 
     # we want PI and E to somewhat increase the
-    # complexity of the expression
+    # complexity of the expression, so basically they count
+    # more than any integer lower than 3, i.e. we consider
+    # 1,2,3 to be more fundamental than PI or E.
     switch aResult[1]
       when approx_sine_of_pi_times_rational, approx_rationalOfPi, approx_rationalOfE
-        theSum = 2
+        theSum = 4
       else theSum = 0
 
     theSum += Math.abs(aResult[2]) + Math.abs(aResult[3]) + Math.abs(aResult[4])
@@ -902,6 +904,12 @@ testApprox = () ->
 
   value = 1.098
   if approxAll(value)[0] != "1 * log( 3 ) / 1" then console.log "fail approxAll: 1.098"
+
+  value = 1.1
+  if approxAll(value)[0] != "1 * log( 3 ) / 1" then console.log "fail approxAll: 1.1"
+
+  value = 1.11
+  if approxAll(value)[0] != "1 * log( 3 ) / 1" then console.log "fail approxAll: 1.11"
 
   value = Math.sqrt(3)
   if approxAll(value)[0] != "1 * sqrt( 3 ) / 1" then console.log "fail testApproxAll: Math.sqrt(3)"
