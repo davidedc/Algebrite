@@ -934,6 +934,9 @@ testApprox = () ->
   value = 314.1592
   if approxAll(value)[0] != "100 * (pi ^ 1 ) / 1 )" then console.log "fail testApproxAll: 314.1592"
 
+  value = 31415926.53589793
+  if approxAll(value)[0] != "10000000 * (pi ^ 1 ) / 1 )" then console.log "fail testApproxAll: 31415926.53589793"
+
   value = Math.sqrt(2)
   if approxSineOfRationalMultiplesOfPI(value)[0] != "2 * sin( 1/4 * pi )" then console.log "fail approxSineOfRationalMultiplesOfPI: Math.sqrt(2)"
 
