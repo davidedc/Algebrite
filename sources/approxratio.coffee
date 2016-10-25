@@ -817,8 +817,18 @@ testApproxAll = () ->
 
   # if we narrow down to a particular family then we can get
   # an OK guess even with few digits, expecially for really "famous" numbers
+
   value = 1.4
   if approxIrrationals(value)[0] != "1 * sqrt( 2 ) / 1" then console.log "fail approxIrrationals: 1.4"
+
+  value = 0.6
+  if approxRationalsOfLogs(value)[0] != "1 * log( 2 ) / 1" then console.log "fail approxRationalsOfLogs: 0.6"
+
+  value = 0.69
+  if approxRationalsOfLogs(value)[0] != "1 * log( 2 ) / 1" then console.log "fail approxRationalsOfLogs: 0.69"
+
+  value = 0.7
+  if approxRationalsOfLogs(value)[0] != "1 * log( 2 ) / 1" then console.log "fail approxRationalsOfLogs: 0.7"
 
   value = Math.sqrt(3)
   if approxAll(value)[0] != "1 * sqrt( 3 ) / 1" then console.log "fail testApproxAll: Math.sqrt(3)"
