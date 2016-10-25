@@ -159,6 +159,9 @@ approxRationalsOfRoots = (theFloat) ->
 
   # simple irrationals.
 
+  bestResultSoFar = null
+  minimumlikelyMultiplier = Number.MAX_VALUE
+
   for i in [2,3,5,6,7,8,10]
     for j in [1..10]
       #console.log  "i,j: " + i + "," + j
@@ -175,11 +178,14 @@ approxRationalsOfRoots = (theFloat) ->
         error = Math.abs(theFloat - hypothesis)
       console.log  "error: " + error
       if error < 2 * precision
-        result = likelyMultiplier + " * sqrt( " + i + " ) / " + j
-        #console.log result + " error: " + error
-        return [result, approx_ratioOfRoot, likelyMultiplier, i, j]
+        if likelyMultiplier < minimumlikelyMultiplier
+          #console.log "MINIMUM MULTIPLIER SO FAR"
+          minimumlikelyMultiplier = likelyMultiplier
+          result = likelyMultiplier + " * sqrt( " + i + " ) / " + j
+          #console.log result + " error: " + error
+          bestResultSoFar = [result, approx_ratioOfRoot, likelyMultiplier, i, j]
 
-  return null
+  return bestResultSoFar
 
 approxRootsOfRationals = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
@@ -193,6 +199,9 @@ approxRootsOfRationals = (theFloat) ->
   console.log "precision: " + precision
 
   # simple irrationals.
+
+  bestResultSoFar = null
+  minimumlikelyMultiplier = Number.MAX_VALUE
 
   # this one catches things like Math.sqrt(3/4), but
   # things like Math.sqrt(1/2) are caught by the paragraph
@@ -213,11 +222,14 @@ approxRootsOfRationals = (theFloat) ->
         error = Math.abs(theFloat - hypothesis)
       #console.log  "error: " + error
       if error < 2 * precision
-        result = likelyMultiplier + " * (sqrt( " + i + " / " + j + " )"
-        #console.log result + " error: " + error
-        return [result, approx_rootOfRatio, likelyMultiplier, i, j]
+        if likelyMultiplier < minimumlikelyMultiplier
+          #console.log "MINIMUM MULTIPLIER SO FAR"
+          minimumlikelyMultiplier = likelyMultiplier
+          result = likelyMultiplier + " * (sqrt( " + i + " / " + j + " )"
+          #console.log result + " error: " + error
+          bestResultSoFar = [result, approx_rootOfRatio, likelyMultiplier, i, j]
 
-  return null
+  return bestResultSoFar
 
 approxIrrationals = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
@@ -257,6 +269,9 @@ approxRationalsOfLogs = (theFloat) ->
 
   console.log "precision: " + precision
 
+  bestResultSoFar = null
+  minimumlikelyMultiplier = Number.MAX_VALUE
+
   # simple rationals of logs
   for i in [2..5]
     for j in [1..5]
@@ -285,11 +300,14 @@ approxRationalsOfLogs = (theFloat) ->
         continue
 
       if error < 2.2 * precision
-        result = likelyMultiplier + " * log( " + i + " ) / " + j
-        #console.log result + " error: " + error
-        return [result, approx_rationalsOfLogarithms, likelyMultiplier, i, j]
+        if likelyMultiplier < minimumlikelyMultiplier
+          #console.log "MINIMUM MULTIPLIER SO FAR"
+          minimumlikelyMultiplier = likelyMultiplier
+          result = likelyMultiplier + " * log( " + i + " ) / " + j
+          #console.log result + " error: " + error
+          bestResultSoFar = [result, approx_rationalsOfLogarithms, likelyMultiplier, i, j]
 
-  return null
+  return bestResultSoFar
 
 approxLogsOfRationals = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
@@ -301,6 +319,9 @@ approxLogsOfRationals = (theFloat) ->
     return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
 
   console.log "precision: " + precision
+
+  bestResultSoFar = null
+  minimumlikelyMultiplier = Number.MAX_VALUE
 
   # simple logs of rationals
   for i in [1..5]
@@ -319,11 +340,14 @@ approxLogsOfRationals = (theFloat) ->
         error = Math.abs(theFloat - hypothesis)
       #console.log  "error: " + error
       if error < 1.96 * precision
-        result = likelyMultiplier + " * log( " + i + " / " + j + " )"
-        #console.log result + " error: " + error
-        return [result, approx_logarithmsOfRationals, likelyMultiplier, i, j]
+        if likelyMultiplier < minimumlikelyMultiplier
+          #console.log "MINIMUM MULTIPLIER SO FAR"
+          minimumlikelyMultiplier = likelyMultiplier
+          result = likelyMultiplier + " * log( " + i + " / " + j + " )"
+          #console.log result + " error: " + error
+          bestResultSoFar = [result, approx_logarithmsOfRationals, likelyMultiplier, i, j]
 
-  return null
+  return bestResultSoFar
 
 approxRationalsOfPowersOfE = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
@@ -335,6 +359,9 @@ approxRationalsOfPowersOfE = (theFloat) ->
     return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
 
   console.log "precision: " + precision
+
+  bestResultSoFar = null
+  minimumlikelyMultiplier = Number.MAX_VALUE
 
   # simple rationals of a few powers of e
   for i in [1..2]
@@ -353,11 +380,14 @@ approxRationalsOfPowersOfE = (theFloat) ->
         error = Math.abs(theFloat - hypothesis)
       #console.log  "error: " + error
       if error < 2 * precision
-        result = likelyMultiplier + " * (e ^ " + i + " ) / " + j
-        #console.log result + " error: " + error
-        return [result, approx_rationalOfE, likelyMultiplier, i, j]
+        if likelyMultiplier < minimumlikelyMultiplier
+          #console.log "MINIMUM MULTIPLIER SO FAR"
+          minimumlikelyMultiplier = likelyMultiplier
+          result = likelyMultiplier + " * (e ^ " + i + " ) / " + j
+          #console.log result + " error: " + error
+          bestResultSoFar = [result, approx_rationalOfE, likelyMultiplier, i, j]
 
-  return null
+  return bestResultSoFar
 
 approxRationalsOfPowersOfPI = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
@@ -419,6 +449,9 @@ approxSineOfRationals = (theFloat) ->
 
   console.log "precision: " + precision
 
+  bestResultSoFar = null
+  minimumlikelyMultiplier = Number.MAX_VALUE
+
   # we only check very simple rationals because they begin to get tricky
   # quickly, also they collide often with the "rational of pi" hypothesis.
   # For example sin(11) is veeery close to 1 (-0.99999020655)
@@ -441,11 +474,14 @@ approxSineOfRationals = (theFloat) ->
         error = Math.abs(theFloat - hypothesis)
       #console.log  "error: " + error
       if error < 2 * precision
-        result = likelyMultiplier + " * sin( " + i + "/" + j + " )"
-        #console.log result + " error: " + error
-        return [result, approx_sine_of_rational, likelyMultiplier, i, j]
+        if likelyMultiplier < minimumlikelyMultiplier
+          #console.log "MINIMUM MULTIPLIER SO FAR"
+          minimumlikelyMultiplier = likelyMultiplier
+          result = likelyMultiplier + " * sin( " + i + "/" + j + " )"
+          #console.log result + " error: " + error
+          bestResultSoFar = [result, approx_sine_of_rational, likelyMultiplier, i, j]
 
-  return null
+  return bestResultSoFar
 
 approxSineOfRationalMultiplesOfPI = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
@@ -457,6 +493,9 @@ approxSineOfRationalMultiplesOfPI = (theFloat) ->
     return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
 
   console.log "precision: " + precision
+
+  bestResultSoFar = null
+  minimumlikelyMultiplier = Number.MAX_VALUE
 
   # check rational multiples of pi
   for i in [1..13]
@@ -477,11 +516,14 @@ approxSineOfRationalMultiplesOfPI = (theFloat) ->
       #console.log  "error: " + error
       # magic number 23 comes from the case sin(pi/10)
       if error < 23 * precision
-        result = likelyMultiplier + " * sin( " + i + "/" + j + " * pi )"
-        #console.log result + " error: " + error
-        return [result, approx_sine_of_pi_times_rational, likelyMultiplier, i, j]
+        if likelyMultiplier < minimumlikelyMultiplier
+          #console.log "MINIMUM MULTIPLIER SO FAR"
+          minimumlikelyMultiplier = likelyMultiplier
+          result = likelyMultiplier + " * sin( " + i + "/" + j + " * pi )"
+          #console.log result + " error: " + error
+          bestResultSoFar = [result, approx_sine_of_pi_times_rational, likelyMultiplier, i, j]
 
-  return null
+  return bestResultSoFar
 
 approxAll = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
@@ -829,6 +871,12 @@ testApproxAll = () ->
 
   value = 0.7
   if approxRationalsOfLogs(value)[0] != "1 * log( 2 ) / 1" then console.log "fail approxRationalsOfLogs: 0.7"
+
+  value = 1.09
+  if approxRationalsOfLogs(value)[0] != "1 * log( 3 ) / 1" then console.log "fail approxRationalsOfLogs: 1.09"
+
+  value = 1.098
+  if approxAll(value)[0] != "1 * log( 3 ) / 1" then console.log "fail approxAll: 1.098"
 
   value = Math.sqrt(3)
   if approxAll(value)[0] != "1 * sqrt( 3 ) / 1" then console.log "fail testApproxAll: Math.sqrt(3)"
