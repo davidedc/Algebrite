@@ -164,13 +164,13 @@ approxRationalsOfRoots = (theFloat) ->
 
   for i in [1..10]
     for j in [1..10]
-      console.log  "i,j: " + i + "," + j
+      #console.log  "i,j: " + i + "," + j
       hypothesis = Math.sqrt(i)/j
-      console.log  "hypothesis: " + hypothesis
+      #console.log  "hypothesis: " + hypothesis
       if Math.abs(hypothesis) > 1e-10
         ratio =  theFloat/hypothesis
         likelyMultiplier = Math.round(ratio)
-        console.log  "ratio: " + ratio
+        #console.log  "ratio: " + ratio
         error = (ratio - likelyMultiplier)/likelyMultiplier
       else
         ratio = 1
@@ -179,7 +179,7 @@ approxRationalsOfRoots = (theFloat) ->
       console.log  "error: " + error
       if Math.abs(error) < 2 * precision
         result = likelyMultiplier + " * sqrt( " + i + " ) / " + j
-        console.log result + " error: " + error
+        #console.log result + " error: " + error
         return [result, approx_ratioOfRoot, likelyMultiplier, i, j]
 
   return null
@@ -205,22 +205,22 @@ approxRootsOfRationals = (theFloat) ->
   # above (and in a better form)
   for i in [1,2,3,5,6,7,8,10]
     for j in [1,2,3,5,6,7,8,10]
-      console.log  "i,j: " + i + "," + j
+      #console.log  "i,j: " + i + "," + j
       hypothesis = Math.sqrt(i/j)
-      console.log  "hypothesis: " + hypothesis
+      #console.log  "hypothesis: " + hypothesis
       if Math.abs(hypothesis) > 1e-10
         ratio =  theFloat/hypothesis
         likelyMultiplier = Math.round(ratio)
-        console.log  "ratio: " + ratio
+        #console.log  "ratio: " + ratio
         error = (ratio - likelyMultiplier)/likelyMultiplier
       else
         ratio = 1
         likelyMultiplier = 1
         error = theFloat - hypothesis
-      console.log  "error: " + error
+      #console.log  "error: " + error
       if Math.abs(error) < 2 * precision
         result = likelyMultiplier + " * (sqrt( " + i + " / " + j + " )"
-        console.log result + " error: " + error
+        #console.log result + " error: " + error
         return [result, approx_rootOfRatio, likelyMultiplier, i, j]
 
   return null
@@ -373,9 +373,20 @@ approxRationalsOfPowersOfPI = (theFloat) ->
     return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
 
   console.log "precision: " + precision
+  bestResultSoFar = null
+
+  # here we do somethng a little special: since
+  # the powers of pi can get quite big, there might
+  # be multiple hypothesis where more of the
+  # magnitude is shifted to the multiplier, and some
+  # where more of the magnitude is shifted towards the
+  # exponent of pi. So we prefer the hypotheses with the
+  # lower multiplier since it's likely to insert more
+  # information.
+  minimumlikelyMultiplier = 2147483647
 
   # simple rationals of a few powers of PI
-  for i in [1..2]
+  for i in [1..5]
     for j in [1..12]
       #console.log  "i,j: " + i + "," + j
       hypothesis = Math.pow(Math.PI,i)/j
@@ -383,7 +394,7 @@ approxRationalsOfPowersOfPI = (theFloat) ->
       if Math.abs(hypothesis) > 1e-10
         ratio =  theFloat/hypothesis
         likelyMultiplier = Math.round(ratio)
-        #console.log  "ratio: " + ratio
+        console.log  "ratio: " + ratio
         error = (ratio - likelyMultiplier)/likelyMultiplier
       else
         ratio = 1
@@ -391,11 +402,15 @@ approxRationalsOfPowersOfPI = (theFloat) ->
         error = theFloat - hypothesis
       #console.log  "error: " + error
       if Math.abs(error) < 2 * precision
-        result = likelyMultiplier + " * (pi ^ " + i + " ) / " + j + " )"
-        #console.log result + " error: " + error
-        return [result, approx_rationalOfPi, likelyMultiplier, i, j]
+        if likelyMultiplier < minimumlikelyMultiplier
+          #console.log "MINIMUM MULTIPLIER SO FAR"
+          minimumlikelyMultiplier = likelyMultiplier
+          result = likelyMultiplier + " * (pi ^ " + i + " ) / " + j + " )"
+          #console.log result + " error: " + error
+          bestResultSoFar = [result, approx_rationalOfPi, likelyMultiplier, i, j]
 
-  return null
+  #console.log "approxRationalsOfPowersOfPI returning: " + bestResultSoFar
+  return bestResultSoFar
 
 approxSinusOfRationals = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
@@ -483,26 +498,80 @@ approxAll = (theFloat) ->
 
   console.log "precision: " + precision
 
+  constantsSumMin = 2147483647
+  constantsSum = 0
+  bestApproxSoFar = null
+
   approxRationalsOfLogsResult =  approxRationalsOfLogs(theFloat)
-  if approxRationalsOfLogsResult? then return approxRationalsOfLogsResult
+  if approxRationalsOfLogsResult?
+    constantsSum = simpleComplexityMeasure approxRationalsOfLogsResult
+    if constantsSum < constantsSumMin
+      constantsSumMin = constantsSum
+      bestApproxSoFar = approxRationalsOfLogsResult
 
   approxLogsOfRationalsResult = approxLogsOfRationals(theFloat)
-  if approxLogsOfRationalsResult? then return approxLogsOfRationalsResult
+  if approxLogsOfRationalsResult?
+    constantsSum = simpleComplexityMeasure approxLogsOfRationalsResult
+    if constantsSum < constantsSumMin
+      constantsSumMin = constantsSum
+      bestApproxSoFar = approxLogsOfRationalsResult
 
   approxRationalsOfPowersOfEResult = approxRationalsOfPowersOfE(theFloat)
-  if approxRationalsOfPowersOfEResult? then return approxRationalsOfPowersOfEResult
+  if approxRationalsOfPowersOfEResult?
+    constantsSum = simpleComplexityMeasure approxRationalsOfPowersOfEResult
+    if constantsSum < constantsSumMin
+      constantsSumMin = constantsSum
+      bestApproxSoFar = approxRationalsOfPowersOfEResult
 
   approxRationalsOfPowersOfPIResult = approxRationalsOfPowersOfPI(theFloat)
-  if approxRationalsOfPowersOfPIResult? then return approxRationalsOfPowersOfPIResult
+  if approxRationalsOfPowersOfPIResult?
+    constantsSum = simpleComplexityMeasure approxRationalsOfPowersOfPIResult
+    if constantsSum < constantsSumMin
+      constantsSumMin = constantsSum
+      bestApproxSoFar = approxRationalsOfPowersOfPIResult
 
   approxSinusOfRationalsResult = approxSinusOfRationals(theFloat)
-  if approxSinusOfRationalsResult? then return approxSinusOfRationalsResult
+  if approxSinusOfRationalsResult?
+    constantsSum = simpleComplexityMeasure approxSinusOfRationalsResult
+    if constantsSum < constantsSumMin
+      constantsSumMin = constantsSum
+      bestApproxSoFar = approxSinusOfRationalsResult
 
   approxSinusOfRationalMultiplesOfPIResult = approxSinusOfRationalMultiplesOfPI(theFloat)
-  if approxSinusOfRationalMultiplesOfPIResult? then return approxSinusOfRationalMultiplesOfPIResult
+  if approxSinusOfRationalMultiplesOfPIResult?
+    constantsSum = simpleComplexityMeasure approxSinusOfRationalMultiplesOfPIResult
+    if constantsSum < constantsSumMin
+      constantsSumMin = constantsSum
+      bestApproxSoFar = approxSinusOfRationalMultiplesOfPIResult
 
 
-  return null
+  return bestApproxSoFar
+
+simpleComplexityMeasure = (aResult) ->
+  theSum = Math.abs(aResult[2]) + Math.abs(aResult[3]) + Math.abs(aResult[4])
+  
+  # heavily discount unit constants
+
+  if aResult[2] == 1
+    theSum -= 1
+  else
+    theSum += 1
+
+  if aResult[3] == 1
+    theSum -= 1
+  else
+    theSum += 1
+
+  if aResult[4] == 1
+    theSum -= 1
+  else
+    theSum += 1
+
+  if theSum < 0
+    theSum = 0
+
+  return theSum
+
 
 
 testApproxAll = () ->
@@ -718,6 +787,9 @@ testApproxAll = () ->
   # this has a radical form but it's too long to write
   value = Math.sin(Math.PI/9)
   if approxAll(value)[0] != "1 * sin( 1/9 * pi )" then console.log "fail testApproxAll: Math.sin(Math.PI/9)"
+
+  value = 1836.15267
+  if approxAll(value)[0] != "6 * (pi ^ 5 ) / 1 )" then console.log "fail testApproxAll: 1836.15267"
 
 
   for i in [1..13]
