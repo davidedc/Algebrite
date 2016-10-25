@@ -628,9 +628,17 @@ simpleComplexityMeasure = (aResult, b, c) ->
   theSum = null
 
   if aResult instanceof Array
-    theSum = Math.abs(aResult[2]) + Math.abs(aResult[3]) + Math.abs(aResult[4])
+
+    # we want PI and E to somewhat increase the
+    # complexity of the expression
+    switch aResult[1]
+      when approx_sine_of_pi_times_rational, approx_rationalOfPi, approx_rationalOfE
+        theSum = 2
+      else theSum = 0
+
+    theSum += Math.abs(aResult[2]) + Math.abs(aResult[3]) + Math.abs(aResult[4])
   else
-    theSum = Math.abs(aResult) + Math.abs(b) + Math.abs(c)
+    theSum += Math.abs(aResult) + Math.abs(b) + Math.abs(c)
   
   # heavily discount unit constants
 
@@ -888,6 +896,9 @@ testApprox = () ->
 
   value = 1.09
   if approxRationalsOfLogs(value)[0] != "1 * log( 3 ) / 1" then console.log "fail approxRationalsOfLogs: 1.09"
+
+  value = 1.09
+  if approxAll(value)[0] != "1 * log( 3 ) / 1" then console.log "fail approxAll: 1.09"
 
   value = 1.098
   if approxAll(value)[0] != "1 * log( 3 ) / 1" then console.log "fail approxAll: 1.098"
