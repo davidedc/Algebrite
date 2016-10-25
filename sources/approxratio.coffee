@@ -155,9 +155,6 @@ approxRationalsOfRoots = (theFloat) ->
   else
     return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
 
-  if numberOfDigitsAfterTheDot < 4
-    return ["" + theFloat, approx_nothingUseful, null, null, null]
-
   console.log "precision: " + precision
 
   # simple irrationals.
@@ -192,9 +189,6 @@ approxRootsOfRationals = (theFloat) ->
     precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
   else
     return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
-
-  if numberOfDigitsAfterTheDot < 4
-    return ["" + theFloat, approx_nothingUseful, null, null, null]
 
   console.log "precision: " + precision
 
@@ -233,9 +227,6 @@ approxIrrationals = (theFloat) ->
     precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
   else
     return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
-
-  if numberOfDigitsAfterTheDot < 4
-    return ["" + theFloat, approx_nothingUseful, null, null, null]
 
   console.log "precision: " + precision
 
@@ -618,9 +609,10 @@ testApproxAll = () ->
       fraction = i/j
       value = Math.sqrt(i/j)
       returned = approxIrrationals(value)
-      returnedValue = returned[2] * Math.sqrt(returned[3]/returned[4])
-      if returned[1] == approx_rootOfRatio and Math.abs(value - returnedValue) > 1e-15
-        console.log "fail testapproxIrrationals: " + "1 * sqrt( " + i + " / " + j + " ) . obtained: " + returned
+      if returned?
+        returnedValue = returned[2] * Math.sqrt(returned[3]/returned[4])
+        if returned[1] == approx_rootOfRatio and Math.abs(value - returnedValue) > 1e-15
+          console.log "fail testapproxIrrationals: " + "1 * sqrt( " + i + " / " + j + " ) . obtained: " + returned
 
   for i in [1,2,3,5,6,7,8,10]
     for j in [1,2,3,5,6,7,8,10]
