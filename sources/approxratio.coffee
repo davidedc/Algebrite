@@ -498,54 +498,77 @@ approxAll = (theFloat) ->
   constantsSum = 0
   bestApproxSoFar = null
 
+  LOG_EXPLANATIONS = true
+
   approxIrrationalsResult = approxIrrationals theFloat
   if approxIrrationalsResult?
     constantsSum = simpleComplexityMeasure approxIrrationalsResult
     if constantsSum < constantsSumMin
+      if LOG_EXPLANATIONS then console.log "better explanation by approxIrrationals: " + approxIrrationalsResult + " score: " + constantsSum
       constantsSumMin = constantsSum
       bestApproxSoFar = approxIrrationalsResult
+    else
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxIrrationals: " + approxIrrationalsResult + " score: " + constantsSum
 
   approxRationalsOfLogsResult =  approxRationalsOfLogs(theFloat)
   if approxRationalsOfLogsResult?
     constantsSum = simpleComplexityMeasure approxRationalsOfLogsResult
     if constantsSum < constantsSumMin
+      if LOG_EXPLANATIONS then console.log "better explanation by approxRationalsOfLogs: " + approxRationalsOfLogsResult + " score: " + constantsSum
       constantsSumMin = constantsSum
       bestApproxSoFar = approxRationalsOfLogsResult
+    else
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxRationalsOfLogs: " + approxRationalsOfLogsResult + " score: " + constantsSum
 
   approxLogsOfRationalsResult = approxLogsOfRationals(theFloat)
   if approxLogsOfRationalsResult?
     constantsSum = simpleComplexityMeasure approxLogsOfRationalsResult
     if constantsSum < constantsSumMin
+      if LOG_EXPLANATIONS then console.log "better explanation by approxLogsOfRationals: " + approxLogsOfRationalsResult + " score: " + constantsSum
       constantsSumMin = constantsSum
       bestApproxSoFar = approxLogsOfRationalsResult
+    else
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxLogsOfRationals: " + approxLogsOfRationalsResult + " score: " + constantsSum
 
   approxRationalsOfPowersOfEResult = approxRationalsOfPowersOfE(theFloat)
   if approxRationalsOfPowersOfEResult?
     constantsSum = simpleComplexityMeasure approxRationalsOfPowersOfEResult
     if constantsSum < constantsSumMin
+      if LOG_EXPLANATIONS then console.log "better explanation by approxRationalsOfPowersOfE: " + approxRationalsOfPowersOfEResult + " score: " + constantsSum
       constantsSumMin = constantsSum
       bestApproxSoFar = approxRationalsOfPowersOfEResult
+    else
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxRationalsOfPowersOfE: " + approxRationalsOfPowersOfEResult + " score: " + constantsSum
 
   approxRationalsOfPowersOfPIResult = approxRationalsOfPowersOfPI(theFloat)
   if approxRationalsOfPowersOfPIResult?
     constantsSum = simpleComplexityMeasure approxRationalsOfPowersOfPIResult
     if constantsSum < constantsSumMin
+      if LOG_EXPLANATIONS then console.log "better explanation by approxRationalsOfPowersOfPI: " + approxRationalsOfPowersOfPIResult + " score: " + constantsSum
       constantsSumMin = constantsSum
       bestApproxSoFar = approxRationalsOfPowersOfPIResult
+    else
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxRationalsOfPowersOfPI: " + approxRationalsOfPowersOfPIResult + " score: " + constantsSum
 
   approxSineOfRationalsResult = approxSineOfRationals(theFloat)
   if approxSineOfRationalsResult?
     constantsSum = simpleComplexityMeasure approxSineOfRationalsResult
     if constantsSum < constantsSumMin
+      if LOG_EXPLANATIONS then console.log "better explanation by approxSineOfRationals: " + approxSineOfRationalsResult + " score: " + constantsSum
       constantsSumMin = constantsSum
       bestApproxSoFar = approxSineOfRationalsResult
+    else
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxSineOfRationals: " + approxSineOfRationalsResult + " score: " + constantsSum
 
   approxSineOfRationalMultiplesOfPIResult = approxSineOfRationalMultiplesOfPI(theFloat)
   if approxSineOfRationalMultiplesOfPIResult?
     constantsSum = simpleComplexityMeasure approxSineOfRationalMultiplesOfPIResult
     if constantsSum < constantsSumMin
+      if LOG_EXPLANATIONS then console.log "better explanation by approxSineOfRationalMultiplesOfPI: " + approxSineOfRationalMultiplesOfPIResult + " score: " + constantsSum
       constantsSumMin = constantsSum
       bestApproxSoFar = approxSineOfRationalMultiplesOfPIResult
+    else
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxSineOfRationalMultiplesOfPI: " + approxSineOfRationalMultiplesOfPIResult + " score: " + constantsSum
 
 
   return bestApproxSoFar
