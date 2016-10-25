@@ -160,7 +160,7 @@ approxRationalsOfRoots = (theFloat) ->
   # simple irrationals.
 
   bestResultSoFar = null
-  minimumlikelyMultiplier = Number.MAX_VALUE
+  minimumComplexity = Number.MAX_VALUE
 
   for i in [2,3,5,6,7,8,10]
     for j in [1..10]
@@ -178,9 +178,10 @@ approxRationalsOfRoots = (theFloat) ->
         error = Math.abs(theFloat - hypothesis)
       console.log  "error: " + error
       if error < 2 * precision
-        if likelyMultiplier < minimumlikelyMultiplier
+        complexity = simpleComplexityMeasure likelyMultiplier, i, j
+        if complexity < minimumComplexity
           #console.log "MINIMUM MULTIPLIER SO FAR"
-          minimumlikelyMultiplier = likelyMultiplier
+          minimumComplexity = complexity
           result = likelyMultiplier + " * sqrt( " + i + " ) / " + j
           #console.log result + " error: " + error
           bestResultSoFar = [result, approx_ratioOfRoot, likelyMultiplier, i, j]
@@ -201,7 +202,7 @@ approxRootsOfRationals = (theFloat) ->
   # simple irrationals.
 
   bestResultSoFar = null
-  minimumlikelyMultiplier = Number.MAX_VALUE
+  minimumComplexity = Number.MAX_VALUE
 
   # this one catches things like Math.sqrt(3/4), but
   # things like Math.sqrt(1/2) are caught by the paragraph
@@ -222,9 +223,10 @@ approxRootsOfRationals = (theFloat) ->
         error = Math.abs(theFloat - hypothesis)
       #console.log  "error: " + error
       if error < 2 * precision
-        if likelyMultiplier < minimumlikelyMultiplier
+        complexity = simpleComplexityMeasure likelyMultiplier, i, j
+        if complexity < minimumComplexity
           #console.log "MINIMUM MULTIPLIER SO FAR"
-          minimumlikelyMultiplier = likelyMultiplier
+          minimumComplexity = complexity
           result = likelyMultiplier + " * (sqrt( " + i + " / " + j + " )"
           #console.log result + " error: " + error
           bestResultSoFar = [result, approx_rootOfRatio, likelyMultiplier, i, j]
@@ -270,12 +272,12 @@ approxRationalsOfLogs = (theFloat) ->
   console.log "precision: " + precision
 
   bestResultSoFar = null
-  minimumlikelyMultiplier = Number.MAX_VALUE
+  minimumComplexity = Number.MAX_VALUE
 
   # simple rationals of logs
   for i in [2..5]
     for j in [1..5]
-      console.log  "i,j: " + i + "," + j
+      #console.log  "i,j: " + i + "," + j
       hypothesis = Math.log(i)/j
       #console.log  "hypothesis: " + hypothesis
       if Math.abs(hypothesis) > 1e-10
@@ -300,9 +302,10 @@ approxRationalsOfLogs = (theFloat) ->
         continue
 
       if error < 2.2 * precision
-        if likelyMultiplier < minimumlikelyMultiplier
+        complexity = simpleComplexityMeasure likelyMultiplier, i, j
+        if complexity < minimumComplexity
           #console.log "MINIMUM MULTIPLIER SO FAR"
-          minimumlikelyMultiplier = likelyMultiplier
+          minimumComplexity = complexity
           result = likelyMultiplier + " * log( " + i + " ) / " + j
           #console.log result + " error: " + error
           bestResultSoFar = [result, approx_rationalsOfLogarithms, likelyMultiplier, i, j]
@@ -321,7 +324,7 @@ approxLogsOfRationals = (theFloat) ->
   console.log "precision: " + precision
 
   bestResultSoFar = null
-  minimumlikelyMultiplier = Number.MAX_VALUE
+  minimumComplexity = Number.MAX_VALUE
 
   # simple logs of rationals
   for i in [1..5]
@@ -340,9 +343,10 @@ approxLogsOfRationals = (theFloat) ->
         error = Math.abs(theFloat - hypothesis)
       #console.log  "error: " + error
       if error < 1.96 * precision
-        if likelyMultiplier < minimumlikelyMultiplier
+        complexity = simpleComplexityMeasure likelyMultiplier, i, j
+        if complexity < minimumComplexity
           #console.log "MINIMUM MULTIPLIER SO FAR"
-          minimumlikelyMultiplier = likelyMultiplier
+          minimumComplexity = complexity
           result = likelyMultiplier + " * log( " + i + " / " + j + " )"
           #console.log result + " error: " + error
           bestResultSoFar = [result, approx_logarithmsOfRationals, likelyMultiplier, i, j]
@@ -361,7 +365,7 @@ approxRationalsOfPowersOfE = (theFloat) ->
   console.log "precision: " + precision
 
   bestResultSoFar = null
-  minimumlikelyMultiplier = Number.MAX_VALUE
+  minimumComplexity = Number.MAX_VALUE
 
   # simple rationals of a few powers of e
   for i in [1..2]
@@ -380,9 +384,10 @@ approxRationalsOfPowersOfE = (theFloat) ->
         error = Math.abs(theFloat - hypothesis)
       #console.log  "error: " + error
       if error < 2 * precision
-        if likelyMultiplier < minimumlikelyMultiplier
+        complexity = simpleComplexityMeasure likelyMultiplier, i, j
+        if complexity < minimumComplexity
           #console.log "MINIMUM MULTIPLIER SO FAR"
-          minimumlikelyMultiplier = likelyMultiplier
+          minimumComplexity = complexity
           result = likelyMultiplier + " * (e ^ " + i + " ) / " + j
           #console.log result + " error: " + error
           bestResultSoFar = [result, approx_rationalOfE, likelyMultiplier, i, j]
@@ -409,7 +414,7 @@ approxRationalsOfPowersOfPI = (theFloat) ->
   # exponent of pi. So we prefer the hypotheses with the
   # lower multiplier since it's likely to insert more
   # information.
-  minimumlikelyMultiplier = Number.MAX_VALUE
+  minimumComplexity = Number.MAX_VALUE
 
   # simple rationals of a few powers of PI
   for i in [1..5]
@@ -428,9 +433,10 @@ approxRationalsOfPowersOfPI = (theFloat) ->
         error = Math.abs(theFloat - hypothesis)
       #console.log  "error: " + error
       if error < 2 * precision
-        if likelyMultiplier < minimumlikelyMultiplier
+        complexity = simpleComplexityMeasure likelyMultiplier, i, j
+        if complexity < minimumComplexity
           #console.log "MINIMUM MULTIPLIER SO FAR"
-          minimumlikelyMultiplier = likelyMultiplier
+          minimumComplexity = complexity
           result = likelyMultiplier + " * (pi ^ " + i + " ) / " + j + " )"
           #console.log result + " error: " + error
           bestResultSoFar = [result, approx_rationalOfPi, likelyMultiplier, i, j]
@@ -450,7 +456,7 @@ approxSineOfRationals = (theFloat) ->
   console.log "precision: " + precision
 
   bestResultSoFar = null
-  minimumlikelyMultiplier = Number.MAX_VALUE
+  minimumComplexity = Number.MAX_VALUE
 
   # we only check very simple rationals because they begin to get tricky
   # quickly, also they collide often with the "rational of pi" hypothesis.
@@ -474,9 +480,10 @@ approxSineOfRationals = (theFloat) ->
         error = Math.abs(theFloat - hypothesis)
       #console.log  "error: " + error
       if error < 2 * precision
-        if likelyMultiplier < minimumlikelyMultiplier
+        complexity = simpleComplexityMeasure likelyMultiplier, i, j
+        if complexity < minimumComplexity
           #console.log "MINIMUM MULTIPLIER SO FAR"
-          minimumlikelyMultiplier = likelyMultiplier
+          minimumComplexity = complexity
           result = likelyMultiplier + " * sin( " + i + "/" + j + " )"
           #console.log result + " error: " + error
           bestResultSoFar = [result, approx_sine_of_rational, likelyMultiplier, i, j]
@@ -495,7 +502,7 @@ approxSineOfRationalMultiplesOfPI = (theFloat) ->
   console.log "precision: " + precision
 
   bestResultSoFar = null
-  minimumlikelyMultiplier = Number.MAX_VALUE
+  minimumComplexity = Number.MAX_VALUE
 
   # check rational multiples of pi
   for i in [1..13]
@@ -516,9 +523,10 @@ approxSineOfRationalMultiplesOfPI = (theFloat) ->
       #console.log  "error: " + error
       # magic number 23 comes from the case sin(pi/10)
       if error < 23 * precision
-        if likelyMultiplier < minimumlikelyMultiplier
+        complexity = simpleComplexityMeasure likelyMultiplier, i, j
+        if complexity < minimumComplexity
           #console.log "MINIMUM MULTIPLIER SO FAR"
-          minimumlikelyMultiplier = likelyMultiplier
+          minimumComplexity = complexity
           result = likelyMultiplier + " * sin( " + i + "/" + j + " * pi )"
           #console.log result + " error: " + error
           bestResultSoFar = [result, approx_sine_of_pi_times_rational, likelyMultiplier, i, j]
@@ -546,77 +554,83 @@ approxAll = (theFloat) ->
   if approxIrrationalsResult?
     constantsSum = simpleComplexityMeasure approxIrrationalsResult
     if constantsSum < constantsSumMin
-      if LOG_EXPLANATIONS then console.log "better explanation by approxIrrationals: " + approxIrrationalsResult + " score: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "better explanation by approxIrrationals: " + approxIrrationalsResult + " complexity: " + constantsSum
       constantsSumMin = constantsSum
       bestApproxSoFar = approxIrrationalsResult
     else
-      if LOG_EXPLANATIONS then console.log "subpar explanation by approxIrrationals: " + approxIrrationalsResult + " score: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxIrrationals: " + approxIrrationalsResult + " complexity: " + constantsSum
 
   approxRationalsOfLogsResult =  approxRationalsOfLogs(theFloat)
   if approxRationalsOfLogsResult?
     constantsSum = simpleComplexityMeasure approxRationalsOfLogsResult
     if constantsSum < constantsSumMin
-      if LOG_EXPLANATIONS then console.log "better explanation by approxRationalsOfLogs: " + approxRationalsOfLogsResult + " score: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "better explanation by approxRationalsOfLogs: " + approxRationalsOfLogsResult + " complexity: " + constantsSum
       constantsSumMin = constantsSum
       bestApproxSoFar = approxRationalsOfLogsResult
     else
-      if LOG_EXPLANATIONS then console.log "subpar explanation by approxRationalsOfLogs: " + approxRationalsOfLogsResult + " score: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxRationalsOfLogs: " + approxRationalsOfLogsResult + " complexity: " + constantsSum
 
   approxLogsOfRationalsResult = approxLogsOfRationals(theFloat)
   if approxLogsOfRationalsResult?
     constantsSum = simpleComplexityMeasure approxLogsOfRationalsResult
     if constantsSum < constantsSumMin
-      if LOG_EXPLANATIONS then console.log "better explanation by approxLogsOfRationals: " + approxLogsOfRationalsResult + " score: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "better explanation by approxLogsOfRationals: " + approxLogsOfRationalsResult + " complexity: " + constantsSum
       constantsSumMin = constantsSum
       bestApproxSoFar = approxLogsOfRationalsResult
     else
-      if LOG_EXPLANATIONS then console.log "subpar explanation by approxLogsOfRationals: " + approxLogsOfRationalsResult + " score: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxLogsOfRationals: " + approxLogsOfRationalsResult + " complexity: " + constantsSum
 
   approxRationalsOfPowersOfEResult = approxRationalsOfPowersOfE(theFloat)
   if approxRationalsOfPowersOfEResult?
     constantsSum = simpleComplexityMeasure approxRationalsOfPowersOfEResult
     if constantsSum < constantsSumMin
-      if LOG_EXPLANATIONS then console.log "better explanation by approxRationalsOfPowersOfE: " + approxRationalsOfPowersOfEResult + " score: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "better explanation by approxRationalsOfPowersOfE: " + approxRationalsOfPowersOfEResult + " complexity: " + constantsSum
       constantsSumMin = constantsSum
       bestApproxSoFar = approxRationalsOfPowersOfEResult
     else
-      if LOG_EXPLANATIONS then console.log "subpar explanation by approxRationalsOfPowersOfE: " + approxRationalsOfPowersOfEResult + " score: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxRationalsOfPowersOfE: " + approxRationalsOfPowersOfEResult + " complexity: " + constantsSum
 
   approxRationalsOfPowersOfPIResult = approxRationalsOfPowersOfPI(theFloat)
   if approxRationalsOfPowersOfPIResult?
     constantsSum = simpleComplexityMeasure approxRationalsOfPowersOfPIResult
     if constantsSum < constantsSumMin
-      if LOG_EXPLANATIONS then console.log "better explanation by approxRationalsOfPowersOfPI: " + approxRationalsOfPowersOfPIResult + " score: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "better explanation by approxRationalsOfPowersOfPI: " + approxRationalsOfPowersOfPIResult + " complexity: " + constantsSum
       constantsSumMin = constantsSum
       bestApproxSoFar = approxRationalsOfPowersOfPIResult
     else
-      if LOG_EXPLANATIONS then console.log "subpar explanation by approxRationalsOfPowersOfPI: " + approxRationalsOfPowersOfPIResult + " score: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxRationalsOfPowersOfPI: " + approxRationalsOfPowersOfPIResult + " complexity: " + constantsSum
 
   approxSineOfRationalsResult = approxSineOfRationals(theFloat)
   if approxSineOfRationalsResult?
     constantsSum = simpleComplexityMeasure approxSineOfRationalsResult
     if constantsSum < constantsSumMin
-      if LOG_EXPLANATIONS then console.log "better explanation by approxSineOfRationals: " + approxSineOfRationalsResult + " score: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "better explanation by approxSineOfRationals: " + approxSineOfRationalsResult + " complexity: " + constantsSum
       constantsSumMin = constantsSum
       bestApproxSoFar = approxSineOfRationalsResult
     else
-      if LOG_EXPLANATIONS then console.log "subpar explanation by approxSineOfRationals: " + approxSineOfRationalsResult + " score: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxSineOfRationals: " + approxSineOfRationalsResult + " complexity: " + constantsSum
 
   approxSineOfRationalMultiplesOfPIResult = approxSineOfRationalMultiplesOfPI(theFloat)
   if approxSineOfRationalMultiplesOfPIResult?
     constantsSum = simpleComplexityMeasure approxSineOfRationalMultiplesOfPIResult
     if constantsSum < constantsSumMin
-      if LOG_EXPLANATIONS then console.log "better explanation by approxSineOfRationalMultiplesOfPI: " + approxSineOfRationalMultiplesOfPIResult + " score: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "better explanation by approxSineOfRationalMultiplesOfPI: " + approxSineOfRationalMultiplesOfPIResult + " complexity: " + constantsSum
       constantsSumMin = constantsSum
       bestApproxSoFar = approxSineOfRationalMultiplesOfPIResult
     else
-      if LOG_EXPLANATIONS then console.log "subpar explanation by approxSineOfRationalMultiplesOfPI: " + approxSineOfRationalMultiplesOfPIResult + " score: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxSineOfRationalMultiplesOfPI: " + approxSineOfRationalMultiplesOfPIResult + " complexity: " + constantsSum
 
 
   return bestApproxSoFar
 
-simpleComplexityMeasure = (aResult) ->
-  theSum = Math.abs(aResult[2]) + Math.abs(aResult[3]) + Math.abs(aResult[4])
+simpleComplexityMeasure = (aResult, b, c) ->
+
+  theSum = null
+
+  if aResult instanceof Array
+    theSum = Math.abs(aResult[2]) + Math.abs(aResult[3]) + Math.abs(aResult[4])
+  else
+    theSum = Math.abs(aResult) + Math.abs(b) + Math.abs(c)
   
   # heavily discount unit constants
 
@@ -641,7 +655,7 @@ simpleComplexityMeasure = (aResult) ->
   return theSum
 
 
-testApproxAll = () ->
+testApprox = () ->
 
   for i in [2,3,5,6,7,8,10]
     for j in [2,3,5,6,7,8,10]
@@ -882,10 +896,10 @@ testApproxAll = () ->
   if approxAll(value)[0] != "1 * sqrt( 3 ) / 1" then console.log "fail testApproxAll: Math.sqrt(3)"
 
   value = Math.sqrt(2)
-  if approxSineOfRationalMultiplesOfPI(value)[0] != "2 * sin( 1/4 * pi )" then console.log "fail testApproxAll: Math.sqrt(2)"
+  if approxSineOfRationalMultiplesOfPI(value)[0] != "2 * sin( 1/4 * pi )" then console.log "fail approxSineOfRationalMultiplesOfPI: Math.sqrt(2)"
 
   value = Math.sqrt(3)
-  if approxSineOfRationalMultiplesOfPI(value)[0] != "2 * sin( 1/3 * pi )" then console.log "fail testApproxAll: Math.sqrt(3)"
+  if approxSineOfRationalMultiplesOfPI(value)[0] != "2 * sin( 1/3 * pi )" then console.log "fail approxSineOfRationalMultiplesOfPI: Math.sqrt(3)"
 
   value = (Math.sqrt(6) - Math.sqrt(2))/4
   if approxAll(value)[0] != "1 * sin( 1/12 * pi )" then console.log "fail testApproxAll: (Math.sqrt(6) - Math.sqrt(2))/4"
@@ -919,7 +933,7 @@ testApproxAll = () ->
 
   for i in [1..13]
     for j in [1..13]
-      console.log "testApproxAll testing: " + "1 * sin( " + i + "/" + j + " * pi )"
+      console.log "approxSineOfRationalMultiplesOfPI testing: " + "1 * sin( " + i + "/" + j + " * pi )"
       fraction = i/j
       value = Math.sin(Math.PI * fraction)
       # we specifically search for sines of rational multiples of PI
@@ -929,7 +943,7 @@ testApproxAll = () ->
       returnedFraction = returned[3]/returned[4]
       returnedValue = returned[2] * Math.sin(Math.PI * returnedFraction)
       if Math.abs(value - returnedValue) > 1e-15
-        console.log "fail testApproxAll: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned
+        console.log "fail approxSineOfRationalMultiplesOfPI: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned
 
   for i in [1..13]
     for j in [1..13]
@@ -942,7 +956,7 @@ testApproxAll = () ->
        i == 6 and j == 11
         continue
 
-      console.log "testApproxAll testing with 4 digits: " + "1 * sin( " + i + "/" + j + " * pi )"
+      console.log "approxSineOfRationalMultiplesOfPI testing with 4 digits: " + "1 * sin( " + i + "/" + j + " * pi )"
       fraction = i/j
       originalValue = Math.sin(Math.PI * fraction)
       value = originalValue.toFixed(4)
@@ -954,11 +968,11 @@ testApproxAll = () ->
       returnedValue = returned[2] * Math.sin(Math.PI * returnedFraction)
       error = Math.abs(originalValue - returnedValue)
       if error > 1e-14
-        console.log "fail testApproxAll with 4 digits: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned + " error: " + error
+        console.log "fail approxSineOfRationalMultiplesOfPI with 4 digits: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned + " error: " + error
 
-  console.log "testApproxAll done"
+  console.log "testApprox done"
 
-$.approxIrrationals = approxIrrationals 
+$.approxIrrationals     = approxIrrationals 
 $.approxRationalsOfLogs = approxRationalsOfLogs
-$.approxAll     =     approxAll 
-$.testApproxAll =     testApproxAll
+$.approxAll             = approxAll 
+$.testApprox            = testApprox
