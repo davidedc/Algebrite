@@ -136,8 +136,8 @@ floatToRatioRoutine = (decimal, AccuracyFactor) ->
   ret
 
 approx_just_an_integer = 0
-approx_sinus_of_rational = 1
-approx_sinus_of_pi_times_rational = 2
+approx_sine_of_rational = 1
+approx_sine_of_pi_times_rational = 2
 approx_rationalOfPi = 3
 approx_rootOfRatio = 4
 approx_nothingUseful = 5
@@ -417,7 +417,7 @@ approxRationalsOfPowersOfPI = (theFloat) ->
   #console.log "approxRationalsOfPowersOfPI returning: " + bestResultSoFar
   return bestResultSoFar
 
-approxSinusOfRationals = (theFloat) ->
+approxSineOfRationals = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
 
   if splitBeforeAndAfterDot.length == 2
@@ -452,11 +452,11 @@ approxSinusOfRationals = (theFloat) ->
       if error < 2 * precision
         result = likelyMultiplier + " * sin( " + i + "/" + j + " )"
         #console.log result + " error: " + error
-        return [result, approx_sinus_of_rational, likelyMultiplier, i, j]
+        return [result, approx_sine_of_rational, likelyMultiplier, i, j]
 
   return null
 
-approxSinusOfRationalMultiplesOfPI = (theFloat) ->
+approxSineOfRationalMultiplesOfPI = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
 
   if splitBeforeAndAfterDot.length == 2
@@ -488,7 +488,7 @@ approxSinusOfRationalMultiplesOfPI = (theFloat) ->
       if error < 23 * precision
         result = likelyMultiplier + " * sin( " + i + "/" + j + " * pi )"
         #console.log result + " error: " + error
-        return [result, approx_sinus_of_pi_times_rational, likelyMultiplier, i, j]
+        return [result, approx_sine_of_pi_times_rational, likelyMultiplier, i, j]
 
   return null
 
@@ -542,19 +542,19 @@ approxAll = (theFloat) ->
       constantsSumMin = constantsSum
       bestApproxSoFar = approxRationalsOfPowersOfPIResult
 
-  approxSinusOfRationalsResult = approxSinusOfRationals(theFloat)
   if approxSinusOfRationalsResult?
     constantsSum = simpleComplexityMeasure approxSinusOfRationalsResult
+  approxSineOfRationalsResult = approxSineOfRationals(theFloat)
     if constantsSum < constantsSumMin
       constantsSumMin = constantsSum
-      bestApproxSoFar = approxSinusOfRationalsResult
+      bestApproxSoFar = approxSineOfRationalsResult
 
-  approxSinusOfRationalMultiplesOfPIResult = approxSinusOfRationalMultiplesOfPI(theFloat)
   if approxSinusOfRationalMultiplesOfPIResult?
     constantsSum = simpleComplexityMeasure approxSinusOfRationalMultiplesOfPIResult
+  approxSineOfRationalMultiplesOfPIResult = approxSineOfRationalMultiplesOfPI(theFloat)
     if constantsSum < constantsSumMin
       constantsSumMin = constantsSum
-      bestApproxSoFar = approxSinusOfRationalMultiplesOfPIResult
+      bestApproxSoFar = approxSineOfRationalMultiplesOfPIResult
 
 
   return bestApproxSoFar
@@ -775,10 +775,10 @@ testApproxAll = () ->
   if approxAll(value)[0] != "1 * sqrt( 3 ) / 1" then console.log "fail testApproxAll: Math.sqrt(3)"
 
   value = Math.sqrt(2)
-  if approxSinusOfRationalMultiplesOfPI(value)[0] != "2 * sin( 1/4 * pi )" then console.log "fail testApproxAll: Math.sqrt(2)"
+  if approxSineOfRationalMultiplesOfPI(value)[0] != "2 * sin( 1/4 * pi )" then console.log "fail testApproxAll: Math.sqrt(2)"
 
   value = Math.sqrt(3)
-  if approxSinusOfRationalMultiplesOfPI(value)[0] != "2 * sin( 1/3 * pi )" then console.log "fail testApproxAll: Math.sqrt(3)"
+  if approxSineOfRationalMultiplesOfPI(value)[0] != "2 * sin( 1/3 * pi )" then console.log "fail testApproxAll: Math.sqrt(3)"
 
   value = (Math.sqrt(6) - Math.sqrt(2))/4
   if approxAll(value)[0] != "1 * sin( 1/12 * pi )" then console.log "fail testApproxAll: (Math.sqrt(6) - Math.sqrt(2))/4"
@@ -815,10 +815,10 @@ testApproxAll = () ->
       console.log "testApproxAll testing: " + "1 * sin( " + i + "/" + j + " * pi )"
       fraction = i/j
       value = Math.sin(Math.PI * fraction)
-      # we specifically search for sinuses of rational multiples of PI
+      # we specifically search for sines of rational multiples of PI
       # because too many of them would be picked up as simple
       # rationals.
-      returned = approxSinusOfRationalMultiplesOfPI(value)
+      returned = approxSineOfRationalMultiplesOfPI(value)
       returnedFraction = returned[3]/returned[4]
       returnedValue = returned[2] * Math.sin(Math.PI * returnedFraction)
       if Math.abs(value - returnedValue) > 1e-15
@@ -839,10 +839,10 @@ testApproxAll = () ->
       fraction = i/j
       originalValue = Math.sin(Math.PI * fraction)
       value = originalValue.toFixed(4)
-      # we specifically search for sinuses of rational multiples of PI
+      # we specifically search for sines of rational multiples of PI
       # because too many of them would be picked up as simple
       # rationals.
-      returned = approxSinusOfRationalMultiplesOfPI(value)
+      returned = approxSineOfRationalMultiplesOfPI(value)
       returnedFraction = returned[3]/returned[4]
       returnedValue = returned[2] * Math.sin(Math.PI * returnedFraction)
       error = Math.abs(originalValue - returnedValue)
