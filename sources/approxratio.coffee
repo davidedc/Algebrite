@@ -533,16 +533,16 @@ approxAll = (theFloat) ->
       constantsSumMin = constantsSum
       bestApproxSoFar = approxRationalsOfPowersOfPIResult
 
-  if approxSinusOfRationalsResult?
-    constantsSum = simpleComplexityMeasure approxSinusOfRationalsResult
   approxSineOfRationalsResult = approxSineOfRationals(theFloat)
+  if approxSineOfRationalsResult?
+    constantsSum = simpleComplexityMeasure approxSineOfRationalsResult
     if constantsSum < constantsSumMin
       constantsSumMin = constantsSum
       bestApproxSoFar = approxSineOfRationalsResult
 
-  if approxSinusOfRationalMultiplesOfPIResult?
-    constantsSum = simpleComplexityMeasure approxSinusOfRationalMultiplesOfPIResult
   approxSineOfRationalMultiplesOfPIResult = approxSineOfRationalMultiplesOfPI(theFloat)
+  if approxSineOfRationalMultiplesOfPIResult?
+    constantsSum = simpleComplexityMeasure approxSineOfRationalMultiplesOfPIResult
     if constantsSum < constantsSumMin
       constantsSumMin = constantsSum
       bestApproxSoFar = approxSineOfRationalMultiplesOfPIResult
