@@ -159,7 +159,7 @@ approxRationalsOfRoots = (theFloat) ->
 
   # simple irrationals.
 
-  for i in [1..10]
+  for i in [2,3,5,6,7,8,10]
     for j in [1..10]
       #console.log  "i,j: " + i + "," + j
       hypothesis = Math.sqrt(i)/j
@@ -258,7 +258,7 @@ approxRationalsOfLogs = (theFloat) ->
   console.log "precision: " + precision
 
   # simple rationals of logs
-  for i in [1..5]
+  for i in [2..5]
     for j in [1..5]
       console.log  "i,j: " + i + "," + j
       hypothesis = Math.log(i)/j
