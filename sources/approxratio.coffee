@@ -634,13 +634,20 @@ simpleComplexityMeasure = (aResult, b, c) ->
     # more than any integer lower than 3, i.e. we consider
     # 1,2,3 to be more fundamental than PI or E.
     switch aResult[1]
-      when approx_sine_of_pi_times_rational, approx_rationalOfPi, approx_rationalOfE
+      when approx_sine_of_pi_times_rational
         theSum = 4
+      # exponents of PI and E need to be penalised as well
+      # otherwise they come to explain any big number
+      # so we count them just as much as the multiplier
+      when approx_rationalOfPi
+        theSum = Math.pow(4,Math.abs(aResult[3])) * Math.abs(aResult[2])
+      when approx_rationalOfE
+        theSum = Math.pow(3,Math.abs(aResult[3])) * Math.abs(aResult[2])
       else theSum = 0
 
-    theSum += Math.abs(aResult[2]) + Math.abs(aResult[3]) + Math.abs(aResult[4])
+    theSum += Math.abs(aResult[2]) * (Math.abs(aResult[3]) + Math.abs(aResult[4]))
   else
-    theSum += Math.abs(aResult) + Math.abs(b) + Math.abs(c)
+    theSum += Math.abs(aResult) * (Math.abs(b) + Math.abs(c))
   
   # heavily discount unit constants
 
@@ -768,14 +775,14 @@ testApprox = () ->
 
   for i in [1..2]
     for j in [1..12]
-      console.log "testApproxAll testing with 4 digits: " + "1 * (e ^ " + i + " ) / " + j
+      console.log "approxRationalsOfPowersOfE testing with 4 digits: " + "1 * (e ^ " + i + " ) / " + j
       fraction = i/j
       originalValue = Math.pow(Math.E,i)/j
       value = originalValue.toFixed(4)
-      returned = approxAll(value)
+      returned = approxRationalsOfPowersOfE(value)
       returnedValue = returned[2] * Math.pow(Math.E,returned[3])/returned[4]
       if Math.abs(originalValue - returnedValue) > 1e-15
-        console.log "fail testApproxAll with 4 digits: " + "1 * (e ^ " + i + " ) / " + j + " . obtained: " + returned
+        console.log "fail approxRationalsOfPowersOfE with 4 digits: " + "1 * (e ^ " + i + " ) / " + j + " . obtained: " + returned
 
   for i in [1..2]
     for j in [1..12]
@@ -789,14 +796,14 @@ testApprox = () ->
 
   for i in [1..2]
     for j in [1..12]
-      console.log "testApproxAll testing with 4 digits: " + "1 * pi ^ " + i + " / " + j
+      console.log "approxRationalsOfPowersOfPI testing with 4 digits: " + "1 * pi ^ " + i + " / " + j
       fraction = i/j
       originalValue = Math.pow(Math.PI,i)/j
       value = originalValue.toFixed(4)
-      returned = approxAll(value)
+      returned = approxRationalsOfPowersOfPI(value)
       returnedValue = returned[2] * Math.pow(Math.PI,returned[3])/returned[4]
       if Math.abs(originalValue - returnedValue) > 1e-15
-        console.log "fail testApproxAll with 4 digits: " + "1 * pi ^ " + i + " / " + j + " ) . obtained: " + returned
+        console.log "fail approxRationalsOfPowersOfPI with 4 digits: " + "1 * pi ^ " + i + " / " + j + " ) . obtained: " + returned
 
   for i in [1..4]
     for j in [1..4]
@@ -914,6 +921,19 @@ testApprox = () ->
   value = Math.sqrt(3)
   if approxAll(value)[0] != "1 * sqrt( 3 ) / 1" then console.log "fail testApproxAll: Math.sqrt(3)"
 
+  value = 1.0000
+  if approxAll(value)[0] != "1" then console.log "fail testApproxAll: 1.0000"
+
+
+  value = 3.141592
+  if approxAll(value)[0] != "1 * (pi ^ 1 ) / 1 )" then console.log "fail testApproxAll: 3.141592"
+
+  value = 31.41592
+  if approxAll(value)[0] != "10 * (pi ^ 1 ) / 1 )" then console.log "fail testApproxAll: 31.41592"
+
+  value = 314.1592
+  if approxAll(value)[0] != "100 * (pi ^ 1 ) / 1 )" then console.log "fail testApproxAll: 314.1592"
+
   value = Math.sqrt(2)
   if approxSineOfRationalMultiplesOfPI(value)[0] != "2 * sin( 1/4 * pi )" then console.log "fail approxSineOfRationalMultiplesOfPI: Math.sqrt(2)"
 
@@ -947,7 +967,7 @@ testApprox = () ->
   if approxAll(value)[0] != "1 * sin( 1/9 * pi )" then console.log "fail testApproxAll: Math.sin(Math.PI/9)"
 
   value = 1836.15267
-  if approxAll(value)[0] != "6 * (pi ^ 5 ) / 1 )" then console.log "fail testApproxAll: 1836.15267"
+  if approxRationalsOfPowersOfPI(value)[0] != "6 * (pi ^ 5 ) / 1 )" then console.log "fail approxRationalsOfPowersOfPI: 1836.15267"
 
 
   for i in [1..13]
