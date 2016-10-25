@@ -241,12 +241,17 @@ approxIrrationals = (theFloat) ->
 
   # simple irrationals.
 
+  # we always prefer a rational of a root of an integer
+  # to a root of a rational. Roots of rationals generate
+  # roots at the denominator which we'd rather avoid
+
   approxRationalsOfRootsResult = approxRationalsOfRoots theFloat
-  if approxRationalsOfRootsResult? then return approxRationalsOfRootsResult
+  if approxRationalsOfRootsResult?
+    return approxRationalsOfRootsResult
 
   approxRootsOfRationalsResult = approxRootsOfRationals theFloat
-  if approxRootsOfRationalsResult? then return approxRootsOfRationalsResult
-
+  if approxRootsOfRationalsResult?
+    return approxRootsOfRationalsResult
 
   return null
 
@@ -502,19 +507,12 @@ approxAll = (theFloat) ->
   constantsSum = 0
   bestApproxSoFar = null
 
-  approxRationalsOfRootsResult = approxRationalsOfRoots theFloat
-  if approxRationalsOfRootsResult?
-    constantsSum = simpleComplexityMeasure approxRationalsOfRootsResult
+  approxIrrationalsResult = approxIrrationals theFloat
+  if approxIrrationalsResult?
+    constantsSum = simpleComplexityMeasure approxIrrationalsResult
     if constantsSum < constantsSumMin
       constantsSumMin = constantsSum
-      bestApproxSoFar = approxRationalsOfRootsResult
-
-  approxRootsOfRationalsResult = approxRootsOfRationals theFloat
-  if approxRootsOfRationalsResult?
-    constantsSum = simpleComplexityMeasure approxRootsOfRationalsResult
-    if constantsSum < constantsSumMin
-      constantsSumMin = constantsSum
-      bestApproxSoFar = approxRootsOfRationalsResult
+      bestApproxSoFar = approxIrrationalsResult
 
   approxRationalsOfLogsResult =  approxRationalsOfLogs(theFloat)
   if approxRationalsOfLogsResult?
