@@ -171,13 +171,13 @@ approxRationalsOfRoots = (theFloat) ->
         ratio =  theFloat/hypothesis
         likelyMultiplier = Math.round(ratio)
         #console.log  "ratio: " + ratio
-        error = (ratio - likelyMultiplier)/likelyMultiplier
+        error = Math.abs(1 - ratio/likelyMultiplier)
       else
         ratio = 1
         likelyMultiplier = 1
-        error = theFloat - hypothesis
+        error = Math.abs(theFloat - hypothesis)
       console.log  "error: " + error
-      if Math.abs(error) < 2 * precision
+      if error < 2 * precision
         result = likelyMultiplier + " * sqrt( " + i + " ) / " + j
         #console.log result + " error: " + error
         return [result, approx_ratioOfRoot, likelyMultiplier, i, j]
@@ -212,13 +212,13 @@ approxRootsOfRationals = (theFloat) ->
         ratio =  theFloat/hypothesis
         likelyMultiplier = Math.round(ratio)
         #console.log  "ratio: " + ratio
-        error = (ratio - likelyMultiplier)/likelyMultiplier
+        error = Math.abs(1 - ratio/likelyMultiplier)
       else
         ratio = 1
         likelyMultiplier = 1
-        error = theFloat - hypothesis
+        error = Math.abs(theFloat - hypothesis)
       #console.log  "error: " + error
-      if Math.abs(error) < 2 * precision
+      if error < 2 * precision
         result = likelyMultiplier + " * (sqrt( " + i + " / " + j + " )"
         #console.log result + " error: " + error
         return [result, approx_rootOfRatio, likelyMultiplier, i, j]
@@ -271,11 +271,11 @@ approxRationalsOfLogs = (theFloat) ->
         ratio =  theFloat/hypothesis
         likelyMultiplier = Math.round(ratio)
         #console.log  "ratio: " + ratio
-        error = (ratio - likelyMultiplier)/likelyMultiplier
+        error = Math.abs(1 - ratio/likelyMultiplier)
       else
         ratio = 1
         likelyMultiplier = 1
-        error = theFloat - hypothesis
+        error = Math.abs(theFloat - hypothesis)
       console.log  "error: " + error
 
       # it does happen that due to roundings 
@@ -288,7 +288,7 @@ approxRationalsOfLogs = (theFloat) ->
       if likelyMultiplier != 1 and Math.abs(Math.floor(likelyMultiplier/j)) == Math.abs(likelyMultiplier/j)
         continue
 
-      if Math.abs(error) < 2.2 * precision
+      if error < 2.2 * precision
         result = likelyMultiplier + " * log( " + i + " ) / " + j
         #console.log result + " error: " + error
         return [result, approx_rationalsOfLogarithms, likelyMultiplier, i, j]
@@ -316,13 +316,13 @@ approxLogsOfRationals = (theFloat) ->
         ratio =  theFloat/hypothesis
         likelyMultiplier = Math.round(ratio)
         #console.log  "ratio: " + ratio
-        error = (ratio - likelyMultiplier)/likelyMultiplier
+        error = Math.abs(1 - ratio/likelyMultiplier)
       else
         ratio = 1
         likelyMultiplier = 1
-        error = theFloat - hypothesis
+        error = Math.abs(theFloat - hypothesis)
       #console.log  "error: " + error
-      if Math.abs(error) < 1.96 * precision
+      if error < 1.96 * precision
         result = likelyMultiplier + " * log( " + i + " / " + j + " )"
         #console.log result + " error: " + error
         return [result, approx_logarithmsOfRationals, likelyMultiplier, i, j]
@@ -350,13 +350,13 @@ approxRationalsOfPowersOfE = (theFloat) ->
         ratio =  theFloat/hypothesis
         likelyMultiplier = Math.round(ratio)
         #console.log  "ratio: " + ratio
-        error = (ratio - likelyMultiplier)/likelyMultiplier
+        error = Math.abs(1 - ratio/likelyMultiplier)
       else
         ratio = 1
         likelyMultiplier = 1
-        error = theFloat - hypothesis
+        error = Math.abs(theFloat - hypothesis)
       #console.log  "error: " + error
-      if Math.abs(error) < 2 * precision
+      if error < 2 * precision
         result = likelyMultiplier + " * (e ^ " + i + " ) / " + j
         #console.log result + " error: " + error
         return [result, approx_rationalOfE, likelyMultiplier, i, j]
@@ -395,13 +395,13 @@ approxRationalsOfPowersOfPI = (theFloat) ->
         ratio =  theFloat/hypothesis
         likelyMultiplier = Math.round(ratio)
         console.log  "ratio: " + ratio
-        error = (ratio - likelyMultiplier)/likelyMultiplier
+        error = Math.abs(1 - ratio/likelyMultiplier)
       else
         ratio = 1
         likelyMultiplier = 1
-        error = theFloat - hypothesis
+        error = Math.abs(theFloat - hypothesis)
       #console.log  "error: " + error
-      if Math.abs(error) < 2 * precision
+      if error < 2 * precision
         if likelyMultiplier < minimumlikelyMultiplier
           #console.log "MINIMUM MULTIPLIER SO FAR"
           minimumlikelyMultiplier = likelyMultiplier
@@ -438,13 +438,13 @@ approxSinusOfRationals = (theFloat) ->
         ratio =  theFloat/hypothesis
         likelyMultiplier = Math.round(ratio)
         #console.log  "ratio: " + ratio
-        error = (ratio - likelyMultiplier)/likelyMultiplier
+        error = Math.abs(1 - ratio/likelyMultiplier)
       else
         ratio = 1
         likelyMultiplier = 1
-        error = theFloat - hypothesis
+        error = Math.abs(theFloat - hypothesis)
       #console.log  "error: " + error
-      if Math.abs(error) < 2 * precision
+      if error < 2 * precision
         result = likelyMultiplier + " * sin( " + i + "/" + j + " )"
         #console.log result + " error: " + error
         return [result, approx_sinus_of_rational, likelyMultiplier, i, j]
@@ -473,14 +473,14 @@ approxSinusOfRationalMultiplesOfPI = (theFloat) ->
         ratio =  theFloat/hypothesis
         likelyMultiplier = Math.round(ratio)
         #console.log  "ratio: " + ratio
-        error = (ratio - likelyMultiplier)/likelyMultiplier
+        error = Math.abs(1 - ratio/likelyMultiplier)
       else
         ratio = 1
         likelyMultiplier = 1
-        error = theFloat - hypothesis
+        error = Math.abs(theFloat - hypothesis)
       #console.log  "error: " + error
       # magic number 23 comes from the case sin(pi/10)
-      if Math.abs(error) < 23 * precision
+      if error < 23 * precision
         result = likelyMultiplier + " * sin( " + i + "/" + j + " * pi )"
         #console.log result + " error: " + error
         return [result, approx_sinus_of_pi_times_rational, likelyMultiplier, i, j]
