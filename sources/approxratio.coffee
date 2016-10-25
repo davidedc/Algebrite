@@ -865,5 +865,7 @@ testApproxAll = () ->
 
   console.log "testApproxAll done"
 
-$.approxAll    = approxAll 
-$.testApproxAll         = testApproxAll 
+$.approxIrrationals = approxIrrationals 
+$.approxRationalsOfLogs = approxRationalsOfLogs
+$.approxAll     =     approxAll 
+$.testApproxAll =     testApproxAll
