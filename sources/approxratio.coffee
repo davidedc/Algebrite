@@ -502,6 +502,20 @@ approxAll = (theFloat) ->
   constantsSum = 0
   bestApproxSoFar = null
 
+  approxRationalsOfRootsResult = approxRationalsOfRoots theFloat
+  if approxRationalsOfRootsResult?
+    constantsSum = simpleComplexityMeasure approxRationalsOfRootsResult
+    if constantsSum < constantsSumMin
+      constantsSumMin = constantsSum
+      bestApproxSoFar = approxRationalsOfRootsResult
+
+  approxRootsOfRationalsResult = approxRootsOfRationals theFloat
+  if approxRootsOfRationalsResult?
+    constantsSum = simpleComplexityMeasure approxRootsOfRationalsResult
+    if constantsSum < constantsSumMin
+      constantsSumMin = constantsSum
+      bestApproxSoFar = approxRootsOfRationalsResult
+
   approxRationalsOfLogsResult =  approxRationalsOfLogs(theFloat)
   if approxRationalsOfLogsResult?
     constantsSum = simpleComplexityMeasure approxRationalsOfLogsResult
@@ -757,10 +771,16 @@ testApproxAll = () ->
   if approxAll(value)[0] != "0" then console.log "fail testApproxAll: 0.0"
 
   value = Math.sqrt(2)
-  if approxAll(value)[0] != "2 * sin( 1/4 * pi )" then console.log "fail testApproxAll: Math.sqrt(2)"
+  if approxAll(value)[0] != "1 * sqrt( 2 ) / 1" then console.log "fail testApproxAll: Math.sqrt(2)"
 
   value = Math.sqrt(3)
-  if approxAll(value)[0] != "2 * sin( 1/3 * pi )" then console.log "fail testApproxAll: Math.sqrt(3)"
+  if approxAll(value)[0] != "1 * sqrt( 3 ) / 1" then console.log "fail testApproxAll: Math.sqrt(3)"
+
+  value = Math.sqrt(2)
+  if approxSinusOfRationalMultiplesOfPI(value)[0] != "2 * sin( 1/4 * pi )" then console.log "fail testApproxAll: Math.sqrt(2)"
+
+  value = Math.sqrt(3)
+  if approxSinusOfRationalMultiplesOfPI(value)[0] != "2 * sin( 1/3 * pi )" then console.log "fail testApproxAll: Math.sqrt(3)"
 
   value = (Math.sqrt(6) - Math.sqrt(2))/4
   if approxAll(value)[0] != "1 * sin( 1/12 * pi )" then console.log "fail testApproxAll: (Math.sqrt(6) - Math.sqrt(2))/4"
@@ -797,7 +817,10 @@ testApproxAll = () ->
       console.log "testApproxAll testing: " + "1 * sin( " + i + "/" + j + " * pi )"
       fraction = i/j
       value = Math.sin(Math.PI * fraction)
-      returned = approxAll(value)
+      # we specifically search for sinuses of rational multiples of PI
+      # because too many of them would be picked up as simple
+      # rationals.
+      returned = approxSinusOfRationalMultiplesOfPI(value)
       returnedFraction = returned[3]/returned[4]
       returnedValue = returned[2] * Math.sin(Math.PI * returnedFraction)
       if Math.abs(value - returnedValue) > 1e-15
@@ -818,7 +841,10 @@ testApproxAll = () ->
       fraction = i/j
       originalValue = Math.sin(Math.PI * fraction)
       value = originalValue.toFixed(4)
-      returned = approxAll(value)
+      # we specifically search for sinuses of rational multiples of PI
+      # because too many of them would be picked up as simple
+      # rationals.
+      returned = approxSinusOfRationalMultiplesOfPI(value)
       returnedFraction = returned[3]/returned[4]
       returnedValue = returned[2] * Math.sin(Math.PI * returnedFraction)
       error = Math.abs(originalValue - returnedValue)
