@@ -468,6 +468,29 @@ approxRationalsOfPowersOfPI = (theFloat) ->
   #console.log "approxRationalsOfPowersOfPI returning: " + bestResultSoFar
   return bestResultSoFar
 
+approxTrigonometric = (theFloat) ->
+  splitBeforeAndAfterDot = theFloat.toString().split(".")
+
+  if splitBeforeAndAfterDot.length == 2
+    numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
+    precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
+  else
+    return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
+
+  console.log "precision: " + precision
+
+  # we always prefer a sin of a rational without the PI
+
+  approxSineOfRationalsResult = approxSineOfRationals theFloat
+  if approxSineOfRationalsResult?
+    return approxSineOfRationalsResult
+
+  approxSineOfRationalMultiplesOfPIResult = approxSineOfRationalMultiplesOfPI theFloat
+  if approxSineOfRationalMultiplesOfPIResult?
+    return approxSineOfRationalMultiplesOfPIResult
+
+  return null
+
 approxSineOfRationals = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
 
@@ -614,25 +637,15 @@ approxAll = (theFloat) ->
     else
       if LOG_EXPLANATIONS then console.log "subpar explanation by approxRationalsOfPowersOfPI: " + approxRationalsOfPowersOfPIResult + " complexity: " + constantsSum
 
-  approxSineOfRationalsResult = approxSineOfRationals(theFloat)
-  if approxSineOfRationalsResult?
-    constantsSum = simpleComplexityMeasure approxSineOfRationalsResult
+  approxTrigonometricResult = approxTrigonometric(theFloat)
+  if approxTrigonometricResult?
+    constantsSum = simpleComplexityMeasure approxTrigonometricResult
     if constantsSum < constantsSumMin
-      if LOG_EXPLANATIONS then console.log "better explanation by approxSineOfRationals: " + approxSineOfRationalsResult + " complexity: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "better explanation by approxTrigonometric: " + approxTrigonometricResult + " complexity: " + constantsSum
       constantsSumMin = constantsSum
-      bestApproxSoFar = approxSineOfRationalsResult
+      bestApproxSoFar = approxTrigonometricResult
     else
-      if LOG_EXPLANATIONS then console.log "subpar explanation by approxSineOfRationals: " + approxSineOfRationalsResult + " complexity: " + constantsSum
-
-  approxSineOfRationalMultiplesOfPIResult = approxSineOfRationalMultiplesOfPI(theFloat)
-  if approxSineOfRationalMultiplesOfPIResult?
-    constantsSum = simpleComplexityMeasure approxSineOfRationalMultiplesOfPIResult
-    if constantsSum < constantsSumMin
-      if LOG_EXPLANATIONS then console.log "better explanation by approxSineOfRationalMultiplesOfPI: " + approxSineOfRationalMultiplesOfPIResult + " complexity: " + constantsSum
-      constantsSumMin = constantsSum
-      bestApproxSoFar = approxSineOfRationalMultiplesOfPIResult
-    else
-      if LOG_EXPLANATIONS then console.log "subpar explanation by approxSineOfRationalMultiplesOfPI: " + approxSineOfRationalMultiplesOfPIResult + " complexity: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxTrigonometric: " + approxTrigonometricResult + " complexity: " + constantsSum
 
 
   return bestApproxSoFar
@@ -952,10 +965,10 @@ testApprox = () ->
   if approxAll(value)[0] != "10000000 * (pi ^ 1 ) / 1 )" then console.log "fail testApproxAll: 31415926.53589793"
 
   value = Math.sqrt(2)
-  if approxSineOfRationalMultiplesOfPI(value)[0] != "2 * sin( 1/4 * pi )" then console.log "fail approxSineOfRationalMultiplesOfPI: Math.sqrt(2)"
+  if approxTrigonometric(value)[0] != "2 * sin( 1/4 * pi )" then console.log "fail approxTrigonometric: Math.sqrt(2)"
 
   value = Math.sqrt(3)
-  if approxSineOfRationalMultiplesOfPI(value)[0] != "2 * sin( 1/3 * pi )" then console.log "fail approxSineOfRationalMultiplesOfPI: Math.sqrt(3)"
+  if approxTrigonometric(value)[0] != "2 * sin( 1/3 * pi )" then console.log "fail approxTrigonometric: Math.sqrt(3)"
 
   value = (Math.sqrt(6) - Math.sqrt(2))/4
   if approxAll(value)[0] != "1 * sin( 1/12 * pi )" then console.log "fail testApproxAll: (Math.sqrt(6) - Math.sqrt(2))/4"
@@ -989,17 +1002,17 @@ testApprox = () ->
 
   for i in [1..13]
     for j in [1..13]
-      console.log "approxSineOfRationalMultiplesOfPI testing: " + "1 * sin( " + i + "/" + j + " * pi )"
+      console.log "approxTrigonometric testing: " + "1 * sin( " + i + "/" + j + " * pi )"
       fraction = i/j
       value = Math.sin(Math.PI * fraction)
       # we specifically search for sines of rational multiples of PI
       # because too many of them would be picked up as simple
       # rationals.
-      returned = approxSineOfRationalMultiplesOfPI(value)
+      returned = approxTrigonometric(value)
       returnedFraction = returned[3]/returned[4]
       returnedValue = returned[2] * Math.sin(Math.PI * returnedFraction)
       if Math.abs(value - returnedValue) > 1e-15
-        console.log "fail approxSineOfRationalMultiplesOfPI: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned
+        console.log "fail approxTrigonometric: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned
 
   for i in [1..13]
     for j in [1..13]
@@ -1012,19 +1025,19 @@ testApprox = () ->
        i == 6 and j == 11
         continue
 
-      console.log "approxSineOfRationalMultiplesOfPI testing with 4 digits: " + "1 * sin( " + i + "/" + j + " * pi )"
+      console.log "approxTrigonometric testing with 4 digits: " + "1 * sin( " + i + "/" + j + " * pi )"
       fraction = i/j
       originalValue = Math.sin(Math.PI * fraction)
       value = originalValue.toFixed(4)
       # we specifically search for sines of rational multiples of PI
       # because too many of them would be picked up as simple
       # rationals.
-      returned = approxSineOfRationalMultiplesOfPI(value)
+      returned = approxTrigonometric(value)
       returnedFraction = returned[3]/returned[4]
       returnedValue = returned[2] * Math.sin(Math.PI * returnedFraction)
       error = Math.abs(originalValue - returnedValue)
       if error > 1e-14
-        console.log "fail approxSineOfRationalMultiplesOfPI with 4 digits: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned + " error: " + error
+        console.log "fail approxTrigonometric with 4 digits: " + "1 * sin( " + i + "/" + j + " * pi ) . obtained: " + returned + " error: " + error
 
   console.log "testApprox done"
 
