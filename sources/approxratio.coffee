@@ -139,14 +139,14 @@ approx_just_an_integer = 0
 approx_sine_of_rational = 1
 approx_sine_of_pi_times_rational = 2
 approx_rationalOfPi = 3
-approx_rootOfRatio = 4
+approx_radicalOfRatio = 4
 approx_nothingUseful = 5
-approx_ratioOfRoot = 6
+approx_ratioOfRadical = 6
 approx_rationalOfE = 7
 approx_logarithmsOfRationals = 8
 approx_rationalsOfLogarithms = 9
 
-approxRationalsOfRoots = (theFloat) ->
+approxRationalsOfRadicals = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
 
   if splitBeforeAndAfterDot.length == 2
@@ -157,7 +157,7 @@ approxRationalsOfRoots = (theFloat) ->
 
   console.log "precision: " + precision
 
-  # simple irrationals.
+  # simple radicals.
 
   bestResultSoFar = null
   minimumComplexity = Number.MAX_VALUE
@@ -184,11 +184,11 @@ approxRationalsOfRoots = (theFloat) ->
           minimumComplexity = complexity
           result = likelyMultiplier + " * sqrt( " + i + " ) / " + j
           #console.log result + " error: " + error
-          bestResultSoFar = [result, approx_ratioOfRoot, likelyMultiplier, i, j]
+          bestResultSoFar = [result, approx_ratioOfRadical, likelyMultiplier, i, j]
 
   return bestResultSoFar
 
-approxRootsOfRationals = (theFloat) ->
+approxRadicalsOfRationals = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
 
   if splitBeforeAndAfterDot.length == 2
@@ -199,7 +199,7 @@ approxRootsOfRationals = (theFloat) ->
 
   console.log "precision: " + precision
 
-  # simple irrationals.
+  # simple radicals.
 
   bestResultSoFar = null
   minimumComplexity = Number.MAX_VALUE
@@ -229,11 +229,11 @@ approxRootsOfRationals = (theFloat) ->
           minimumComplexity = complexity
           result = likelyMultiplier + " * (sqrt( " + i + " / " + j + " )"
           #console.log result + " error: " + error
-          bestResultSoFar = [result, approx_rootOfRatio, likelyMultiplier, i, j]
+          bestResultSoFar = [result, approx_radicalOfRatio, likelyMultiplier, i, j]
 
   return bestResultSoFar
 
-approxIrrationals = (theFloat) ->
+approxRadicals = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
 
   if splitBeforeAndAfterDot.length == 2
@@ -244,19 +244,19 @@ approxIrrationals = (theFloat) ->
 
   console.log "precision: " + precision
 
-  # simple irrationals.
+  # simple radicals.
 
-  # we always prefer a rational of a root of an integer
-  # to a root of a rational. Roots of rationals generate
-  # roots at the denominator which we'd rather avoid
+  # we always prefer a rational of a radical of an integer
+  # to a radical of a rational. Radicals of rationals generate
+  # radicals at the denominator which we'd rather avoid
 
-  approxRationalsOfRootsResult = approxRationalsOfRoots theFloat
-  if approxRationalsOfRootsResult?
-    return approxRationalsOfRootsResult
+  approxRationalsOfRadicalsResult = approxRationalsOfRadicals theFloat
+  if approxRationalsOfRadicalsResult?
+    return approxRationalsOfRadicalsResult
 
-  approxRootsOfRationalsResult = approxRootsOfRationals theFloat
-  if approxRootsOfRationalsResult?
-    return approxRootsOfRationalsResult
+  approxRadicalsOfRationalsResult = approxRadicalsOfRationals theFloat
+  if approxRadicalsOfRationalsResult?
+    return approxRadicalsOfRationalsResult
 
   return null
 
@@ -597,15 +597,15 @@ approxAll = (theFloat) ->
 
   LOG_EXPLANATIONS = true
 
-  approxIrrationalsResult = approxIrrationals theFloat
-  if approxIrrationalsResult?
-    constantsSum = simpleComplexityMeasure approxIrrationalsResult
+  approxRadicalsResult = approxRadicals theFloat
+  if approxRadicalsResult?
+    constantsSum = simpleComplexityMeasure approxRadicalsResult
     if constantsSum < constantsSumMin
-      if LOG_EXPLANATIONS then console.log "better explanation by approxIrrationals: " + approxIrrationalsResult + " complexity: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "better explanation by approxRadicals: " + approxRadicalsResult + " complexity: " + constantsSum
       constantsSumMin = constantsSum
-      bestApproxSoFar = approxIrrationalsResult
+      bestApproxSoFar = approxRadicalsResult
     else
-      if LOG_EXPLANATIONS then console.log "subpar explanation by approxIrrationals: " + approxIrrationalsResult + " complexity: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxRadicals: " + approxRadicalsResult + " complexity: " + constantsSum
 
   approxLogsResult =  approxLogs(theFloat)
   if approxLogsResult?
@@ -704,49 +704,49 @@ testApprox = () ->
   for i in [2,3,5,6,7,8,10]
     for j in [2,3,5,6,7,8,10]
       if i == j then continue # this is just 1
-      console.log "testapproxIrrationals testing: " + "1 * sqrt( " + i + " ) / " + j
+      console.log "testapproxRadicals testing: " + "1 * sqrt( " + i + " ) / " + j
       fraction = i/j
       value = Math.sqrt(i)/j
-      returned = approxIrrationals(value)
+      returned = approxRadicals(value)
       returnedValue = returned[2] * Math.sqrt(returned[3])/returned[4]
       if Math.abs(value - returnedValue) > 1e-15
-        console.log "fail testapproxIrrationals: " + "1 * sqrt( " + i + " ) / " + j + " . obtained: " + returned
+        console.log "fail testapproxRadicals: " + "1 * sqrt( " + i + " ) / " + j + " . obtained: " + returned
 
   for i in [2,3,5,6,7,8,10]
     for j in [2,3,5,6,7,8,10]
       if i == j then continue # this is just 1
-      console.log "testapproxIrrationals testing with 4 digits: " + "1 * sqrt( " + i + " ) / " + j
+      console.log "testapproxRadicals testing with 4 digits: " + "1 * sqrt( " + i + " ) / " + j
       fraction = i/j
       originalValue = Math.sqrt(i)/j
       value = originalValue.toFixed(4)
-      returned = approxIrrationals(value)
+      returned = approxRadicals(value)
       returnedValue = returned[2] * Math.sqrt(returned[3])/returned[4]
       if Math.abs(originalValue - returnedValue) > 1e-15
-        console.log "fail testapproxIrrationals with 4 digits: " + "1 * sqrt( " + i + " ) / " + j + " . obtained: " + returned
+        console.log "fail testapproxRadicals with 4 digits: " + "1 * sqrt( " + i + " ) / " + j + " . obtained: " + returned
 
   for i in [2,3,5,6,7,8,10]
     for j in [2,3,5,6,7,8,10]
       if i == j then continue # this is just 1
-      console.log "testapproxIrrationals testing: " + "1 * sqrt( " + i + " / " + j + " )"
+      console.log "testapproxRadicals testing: " + "1 * sqrt( " + i + " / " + j + " )"
       fraction = i/j
       value = Math.sqrt(i/j)
-      returned = approxIrrationals(value)
+      returned = approxRadicals(value)
       if returned?
         returnedValue = returned[2] * Math.sqrt(returned[3]/returned[4])
-        if returned[1] == approx_rootOfRatio and Math.abs(value - returnedValue) > 1e-15
-          console.log "fail testapproxIrrationals: " + "1 * sqrt( " + i + " / " + j + " ) . obtained: " + returned
+        if returned[1] == approx_radicalOfRatio and Math.abs(value - returnedValue) > 1e-15
+          console.log "fail testapproxRadicals: " + "1 * sqrt( " + i + " / " + j + " ) . obtained: " + returned
 
   for i in [1,2,3,5,6,7,8,10]
     for j in [1,2,3,5,6,7,8,10]
       if i == 1 and j == 1 then continue
-      console.log "testapproxIrrationals testing with 4 digits:: " + "1 * sqrt( " + i + " / " + j + " )"
+      console.log "testapproxRadicals testing with 4 digits:: " + "1 * sqrt( " + i + " / " + j + " )"
       fraction = i/j
       originalValue = Math.sqrt(i/j)
       value = originalValue.toFixed(4)
-      returned = approxIrrationals(value)
+      returned = approxRadicals(value)
       returnedValue = returned[2] * Math.sqrt(returned[3]/returned[4])
-      if returned[1] == approx_rootOfRatio and Math.abs(originalValue - returnedValue) > 1e-15
-        console.log "fail testapproxIrrationals with 4 digits:: " + "1 * sqrt( " + i + " / " + j + " ) . obtained: " + returned
+      if returned[1] == approx_radicalOfRatio and Math.abs(originalValue - returnedValue) > 1e-15
+        console.log "fail testapproxRadicals with 4 digits:: " + "1 * sqrt( " + i + " / " + j + " ) . obtained: " + returned
 
   for i in [1..5]
     for j in [1..5]
@@ -919,7 +919,7 @@ testApprox = () ->
   # an OK guess even with few digits, expecially for really "famous" numbers
 
   value = 1.4
-  if approxIrrationals(value)[0] != "1 * sqrt( 2 ) / 1" then console.log "fail approxIrrationals: 1.4"
+  if approxRadicals(value)[0] != "1 * sqrt( 2 ) / 1" then console.log "fail approxRadicals: 1.4"
 
   value = 0.6
   if approxLogs(value)[0] != "1 * log( 2 ) / 1" then console.log "fail approxLogs: 0.6"
@@ -1041,7 +1041,7 @@ testApprox = () ->
 
   console.log "testApprox done"
 
-$.approxIrrationals     = approxIrrationals 
+$.approxRadicals     = approxRadicals 
 $.approxRationalsOfLogs = approxRationalsOfLogs
 $.approxAll             = approxAll 
 $.testApprox            = testApprox
