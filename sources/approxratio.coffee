@@ -260,6 +260,30 @@ approxIrrationals = (theFloat) ->
 
   return null
 
+approxLogs = (theFloat) ->
+  splitBeforeAndAfterDot = theFloat.toString().split(".")
+
+  if splitBeforeAndAfterDot.length == 2
+    numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
+    precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
+  else
+    return ["" + Math.floor(theFloat), approx_just_an_integer, Math.floor(theFloat), 1, 2]
+
+  console.log "precision: " + precision
+
+  # we always prefer a rational of a log to a log of
+  # a rational
+
+  approxRationalsOfLogsResult = approxRationalsOfLogs theFloat
+  if approxRationalsOfLogsResult?
+    return approxRationalsOfLogsResult
+
+  approxLogsOfRationalsResult = approxLogsOfRationals theFloat
+  if approxLogsOfRationalsResult?
+    return approxLogsOfRationalsResult
+
+  return null
+
 approxRationalsOfLogs = (theFloat) ->
   splitBeforeAndAfterDot = theFloat.toString().split(".")
 
@@ -560,25 +584,15 @@ approxAll = (theFloat) ->
     else
       if LOG_EXPLANATIONS then console.log "subpar explanation by approxIrrationals: " + approxIrrationalsResult + " complexity: " + constantsSum
 
-  approxRationalsOfLogsResult =  approxRationalsOfLogs(theFloat)
-  if approxRationalsOfLogsResult?
-    constantsSum = simpleComplexityMeasure approxRationalsOfLogsResult
+  approxLogsResult =  approxLogs(theFloat)
+  if approxLogsResult?
+    constantsSum = simpleComplexityMeasure approxLogsResult
     if constantsSum < constantsSumMin
-      if LOG_EXPLANATIONS then console.log "better explanation by approxRationalsOfLogs: " + approxRationalsOfLogsResult + " complexity: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "better explanation by approxLogs: " + approxLogsResult + " complexity: " + constantsSum
       constantsSumMin = constantsSum
-      bestApproxSoFar = approxRationalsOfLogsResult
+      bestApproxSoFar = approxLogsResult
     else
-      if LOG_EXPLANATIONS then console.log "subpar explanation by approxRationalsOfLogs: " + approxRationalsOfLogsResult + " complexity: " + constantsSum
-
-  approxLogsOfRationalsResult = approxLogsOfRationals(theFloat)
-  if approxLogsOfRationalsResult?
-    constantsSum = simpleComplexityMeasure approxLogsOfRationalsResult
-    if constantsSum < constantsSumMin
-      if LOG_EXPLANATIONS then console.log "better explanation by approxLogsOfRationals: " + approxLogsOfRationalsResult + " complexity: " + constantsSum
-      constantsSumMin = constantsSum
-      bestApproxSoFar = approxLogsOfRationalsResult
-    else
-      if LOG_EXPLANATIONS then console.log "subpar explanation by approxLogsOfRationals: " + approxLogsOfRationalsResult + " complexity: " + constantsSum
+      if LOG_EXPLANATIONS then console.log "subpar explanation by approxLogs: " + approxLogsResult + " complexity: " + constantsSum
 
   approxRationalsOfPowersOfEResult = approxRationalsOfPowersOfE(theFloat)
   if approxRationalsOfPowersOfEResult?
@@ -895,16 +909,16 @@ testApprox = () ->
   if approxIrrationals(value)[0] != "1 * sqrt( 2 ) / 1" then console.log "fail approxIrrationals: 1.4"
 
   value = 0.6
-  if approxRationalsOfLogs(value)[0] != "1 * log( 2 ) / 1" then console.log "fail approxRationalsOfLogs: 0.6"
+  if approxLogs(value)[0] != "1 * log( 2 ) / 1" then console.log "fail approxLogs: 0.6"
 
   value = 0.69
-  if approxRationalsOfLogs(value)[0] != "1 * log( 2 ) / 1" then console.log "fail approxRationalsOfLogs: 0.69"
+  if approxLogs(value)[0] != "1 * log( 2 ) / 1" then console.log "fail approxLogs: 0.69"
 
   value = 0.7
-  if approxRationalsOfLogs(value)[0] != "1 * log( 2 ) / 1" then console.log "fail approxRationalsOfLogs: 0.7"
+  if approxLogs(value)[0] != "1 * log( 2 ) / 1" then console.log "fail approxLogs: 0.7"
 
   value = 1.09
-  if approxRationalsOfLogs(value)[0] != "1 * log( 3 ) / 1" then console.log "fail approxRationalsOfLogs: 1.09"
+  if approxLogs(value)[0] != "1 * log( 3 ) / 1" then console.log "fail approxLogs: 1.09"
 
   value = 1.09
   if approxAll(value)[0] != "1 * log( 3 ) / 1" then console.log "fail approxAll: 1.09"
