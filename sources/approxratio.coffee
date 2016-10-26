@@ -176,7 +176,7 @@ approxRationalsOfRoots = (theFloat) ->
         ratio = 1
         likelyMultiplier = 1
         error = Math.abs(theFloat - hypothesis)
-      console.log  "error: " + error
+      #console.log  "error: " + error
       if error < 2 * precision
         complexity = simpleComplexityMeasure likelyMultiplier, i, j
         if complexity < minimumComplexity
@@ -313,7 +313,7 @@ approxRationalsOfLogs = (theFloat) ->
         ratio = 1
         likelyMultiplier = 1
         error = Math.abs(theFloat - hypothesis)
-      console.log  "error: " + error
+      #console.log  "error: " + error
 
       # it does happen that due to roundings 
       # a "higher multiple" is picked, which is obviously
@@ -449,7 +449,7 @@ approxRationalsOfPowersOfPI = (theFloat) ->
       if Math.abs(hypothesis) > 1e-10
         ratio =  theFloat/hypothesis
         likelyMultiplier = Math.round(ratio)
-        console.log  "ratio: " + ratio
+        #console.log  "ratio: " + ratio
         error = Math.abs(1 - ratio/likelyMultiplier)
       else
         ratio = 1
