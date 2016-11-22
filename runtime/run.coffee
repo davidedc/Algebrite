@@ -1060,6 +1060,11 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 			latexResult += turnErrorMessageToLatex  errorMessage
 		latexResult = latexResult.replace /\n/g,"\n\n"
 
+	# remove empty results altogether from latex output, which happens
+	# for example for assignments to variables or
+	# functions definitions
+	latexResult = latexResult.replace /\n*/,""
+	latexResult = latexResult.replace /\$\$\$\$\n*/g,""
 
 	code = code.replace /Math\./g,""
 	code = code.replace /\n/g,"\n\n"
