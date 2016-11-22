@@ -7,7 +7,7 @@
 
   bigInt = require('big-integer');
 
-  version = "0.3.13";
+  version = "0.3.14";
 
   SELFTEST = 1;
 
@@ -485,6 +485,8 @@
   symbolsHavingReassignments = [];
 
   patternHasBeenFound = false;
+
+  predefinedSymbolsInGlobalScope_doNotTrackInDependencies = ["rationalize", "mag", "i", "pi", "sin", "cos", "roots", "integral", "derivative", "defint", "sqrt", "eig", "cov"];
 
   parse_time_simplifications = true;
 
@@ -16870,8 +16872,6 @@
 
   scanningParameters = null;
 
-  predefinedSymbolsInGlobalScope_doNotTrackInDependencies = ["rationalize", "mag", "i", "pi", "sin", "cos", "roots", "integral", "derivative", "defint", "sqrt"];
-
   functionInvokationsScanningStack = null;
 
   skipRootVariableToBeSolved = false;
@@ -21115,6 +21115,13 @@
       console.log("fail dependency test. expected: " + testResult);
     }
     do_clearall();
+    testResult = findDependenciesInScript('PCA(M) = eig(cov(M))');
+    if (testResult[0] === "All local dependencies:  variable PCA depends on: 'M, ; . Symbols with reassignments: . All dependencies recursively:  variable PCA depends on: 'M, ; " && testResult[1] === "" && testResult[2] === "PCA = function (M) { return ( eig(cov(M)) ); }") {
+      console.log("ok dependency test");
+    } else {
+      console.log("fail dependency test. expected: " + testResult);
+    }
+    do_clearall();
     console.log("-- done dependency tests");
     return do_clearall();
   };
@@ -21327,6 +21334,9 @@
               									if recursedDependencies.indexOf(i.substring(1)) == -1
               										parameters += i.substring(1) + ", "
                */
+              userVariablesMentioned = userVariablesMentioned.filter(function(x) {
+                return predefinedSymbolsInGlobalScope_doNotTrackInDependencies.indexOf(x + "") === -1;
+              });
               if (userVariablesMentioned.length !== 0) {
                 parameters = "(";
                 for (am = 0, len6 = userVariablesMentioned.length; am < len6; am++) {
