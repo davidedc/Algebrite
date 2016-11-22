@@ -407,6 +407,16 @@ test_dependencies = ->
 
 	do_clearall()
 
+	testResult = findDependenciesInScript('PCA(M) = eig(cov(M))')
+	if testResult[0] == "All local dependencies:  variable PCA depends on: 'M, ; . Symbols with reassignments: . All dependencies recursively:  variable PCA depends on: 'M, ; " and
+		testResult[1] == "" and
+		testResult[2] == "PCA = function (M) { return ( eig(cov(M)) ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
 	console.log "-- done dependency tests"
 	do_clearall()
 
@@ -614,6 +624,13 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 									if recursedDependencies.indexOf(i.substring(1)) == -1
 										parameters += i.substring(1) + ", "
 						###
+
+
+						# remove all native functions from the
+						# parameters as well.
+						userVariablesMentioned = userVariablesMentioned.filter (x) ->
+							predefinedSymbolsInGlobalScope_doNotTrackInDependencies.indexOf(x + "") == -1
+
 
 						if userVariablesMentioned.length != 0
 							parameters = "("
