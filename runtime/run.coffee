@@ -769,15 +769,15 @@ run = (stringToBeRun, generateLatex = false) ->
 		possiblyCached = cached_runs.get(cacheKey)
 		#possiblyCached = null
 		if possiblyCached?
-			if CACHE_HITSMISS_DEBUGS then console.log "cache hit!"
+			if CACHE_HITSMISS_DEBUGS then console.log "cached_runs hit on: " + stringToBeRun
 			unfreeze(possiblyCached)
 			# return the output string
 			if TIMING_DEBUGS
 				totalTime = new Date().getTime() - timeStart
-				console.log "core Algebrite time: " + totalTime + "ms, saved " + (possiblyCached[possiblyCached.length-2] - totalTime) + "ms due to cache hit"
+				console.log "run time: " + totalTime + "ms, saved " + (possiblyCached[possiblyCached.length-2] - totalTime) + "ms due to cache hit"
 			return possiblyCached[possiblyCached.length - 1]
 		else
-			if CACHE_HITSMISS_DEBUGS then console.log "cache miss"
+			if CACHE_HITSMISS_DEBUGS then console.log "cached_runs miss on: " + stringToBeRun
 			if TIMING_DEBUGS
 				cacheMissPenalty = (new Date().getTime() - timeStart)
 
@@ -922,7 +922,7 @@ run = (stringToBeRun, generateLatex = false) ->
 		cached_runs.set(cacheKey, toBeFrozen)
 
 	if TIMING_DEBUGS
-		timingDebugWrite = "core Algebrite time: " + (new Date().getTime() - timeStart) + "ms"
+		timingDebugWrite = "run time on: " + stringToBeRun + " : " + (new Date().getTime() - timeStart) + "ms"
 		if ENABLE_CACHING  and stringToBeRun != "clearall" then timingDebugWrite += ", of which cache miss penalty: " + cacheMissPenalty + "ms"
 		console.log timingDebugWrite
 
@@ -1038,9 +1038,15 @@ computeDependenciesFromAlgebra = (codeFromAlgebraBlock) ->
 
 computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 
+
+	originalcodeFromAlgebraBlock = codeFromAlgebraBlock
 	keepState = true
 
 	timeStartFromAlgebra  = new Date().getTime()
+
+	if CACHE_DEBUGS or CACHE_HITSMISS_DEBUGS or TIMING_DEBUGS
+		console.log " --------- computeResultsAndJavaScriptFromAlgebra input: " + codeFromAlgebraBlock + " at: " + (new Date())
+
 	# we start "clean" each time:
 	# clear all the symbols and then re-define
 	# the "starting" symbols.
@@ -1048,6 +1054,36 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	#console.log "codeFromAlgebraBlock: " + codeFromAlgebraBlock
 
 	codeFromAlgebraBlock = normaliseDots codeFromAlgebraBlock
+
+
+
+	stringToBeRun = codeFromAlgebraBlock
+	if ENABLE_CACHING and stringToBeRun != "clearall"
+		currentStateHash = getStateHash()
+		cacheKey = currentStateHash + " stringToBeRun: " + stringToBeRun
+		if CACHE_DEBUGS then console.log "cached_computeResultsAndJavaScriptFromAlgebra key: " + cacheKey
+		possiblyCached = cached_computeResultsAndJavaScriptFromAlgebra.get(cacheKey)
+		if possiblyCached?
+			if CACHE_HITSMISS_DEBUGS then console.log "cache_computeResultsAndJavaScriptFromAlgebra hit on " + stringToBeRun
+			unfreeze(possiblyCached)
+			# return the output string
+			if TIMING_DEBUGS
+				totalTime = new Date().getTime() - timeStartFromAlgebra
+				console.log "computeResultsAndJavaScriptFromAlgebra input: " + stringToBeRun + " time: " + totalTime + "ms, saved " + (possiblyCached[possiblyCached.length-5] - totalTime) + "ms due to cache hit"
+			return 	{
+					code:  possiblyCached[possiblyCached.length - 4]
+					# TODO temporarily pass latex in place of standard result too
+					result: possiblyCached[possiblyCached.length - 2]
+					latexResult: possiblyCached[possiblyCached.length - 2]
+					dependencyInfo: possiblyCached[possiblyCached.length - 1]
+				}
+
+		else
+			if CACHE_HITSMISS_DEBUGS then console.log "cached_computeResultsAndJavaScriptFromAlgebra miss on: " + stringToBeRun
+			if TIMING_DEBUGS
+				cacheMissPenalty = (new Date().getTime() - timeStartFromAlgebra)
+
+
 
 	##userSimplificationsInListForm = []
 	userSimplificationsInProgramForm = ""
@@ -1066,9 +1102,11 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode, latexResult, errorMessage, dependencyInfo] =
 		findDependenciesInScript(codeFromAlgebraBlock)
 
+	anyErrors = false
 	if readableSummaryOfCode != "" or errorMessage != ""
 		result += "\n" + readableSummaryOfCode
 		if errorMessage != ""
+			anyErrors = true
 			result += "\n" + errorMessage
 		result = result.replace /\n/g,"\n\n"
 
@@ -1091,7 +1129,13 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	#console.log "latexResult: " + latexResult
 
 	if TIMING_DEBUGS
-		console.log "total time from notebook and back: " + ((new Date().getTime()) - timeStartFromAlgebra) + "ms"
+		console.log "computeResultsAndJavaScriptFromAlgebra time (total time from notebook and back) for: " + stringToBeRun + " : "+ ((new Date().getTime()) - timeStartFromAlgebra) + "ms"
+
+	if ENABLE_CACHING and stringToBeRun != "clearall" and !anyErrors
+		frozen = freeze()
+		toBeFrozen = [frozen[0], frozen[1], frozen[2], frozen[3], frozen[4], frozen[5], (new Date().getTime() - timeStartFromAlgebra), code, result, latexResult, dependencyInfo]
+		if CACHE_DEBUGS then console.log "setting cached_computeResultsAndJavaScriptFromAlgebra on key: " + cacheKey
+		cached_computeResultsAndJavaScriptFromAlgebra.set(cacheKey, toBeFrozen)
 
 
 	#code: "// no code generated yet\n//try again later"
@@ -1102,9 +1146,17 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	result: latexResult
 	latexResult: latexResult
 	dependencyInfo: dependencyInfo
-	
+
+enableCaching = ->
+	ENABLE_CACHING = true
+
+disableCaching = ->
+	ENABLE_CACHING = false
+
 (exports ? this).run = run
 (exports ? this).findDependenciesInScript = findDependenciesInScript
 (exports ? this).computeDependenciesFromAlgebra = computeDependenciesFromAlgebra
 (exports ? this).computeResultsAndJavaScriptFromAlgebra = computeResultsAndJavaScriptFromAlgebra
 (exports ? this).clearAlgebraEnvironment = clearAlgebraEnvironment
+(exports ? this).enableCaching = enableCaching
+(exports ? this).disableCaching = disableCaching

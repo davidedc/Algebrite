@@ -1,6 +1,6 @@
 
 cached_runs = new LRUCache(100, 60000 * 60 * 24 * 265)
-
+cached_computeResultsAndJavaScriptFromAlgebra = new LRUCache(100, 60000 * 60 * 24 * 265)
 
 freeze = ->
 
@@ -47,8 +47,11 @@ compareState = (previousHash) ->
 resetCache = ->
 	if cached_runs?
 		cached_runs.reset()
-		if DEBUG then console.log "resetting cache"
+		if DEBUG then console.log "resetting cached_runs"
 
+	if cached_computeResultsAndJavaScriptFromAlgebra?
+		cached_computeResultsAndJavaScriptFromAlgebra.reset()
+		if DEBUG then console.log "resetting cached_computeResultsAndJavaScriptFromAlgebra"
 
 getStateHash = ->
 	frozenHash = ""
