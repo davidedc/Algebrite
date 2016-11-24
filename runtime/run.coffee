@@ -417,6 +417,15 @@ test_dependencies = ->
 
 	do_clearall()
 
+	computeResultsAndJavaScriptFromAlgebra('PCA(M) = eig(Mᵀ⋅M)')
+	testResult = run('symbolsinfo')
+	if testResult.indexOf('AVOID_BINDING_TO_EXTERNAL_SCOPE_VALUE') != -1 
+			console.log "fail dependency tests. found AVOID_BINDING_TO_EXTERNAL_SCOPE_VALUE"
+	else
+			console.log "ok dependency test"
+
+	do_clearall()
+
 	console.log "-- done dependency tests"
 	do_clearall()
 
@@ -562,12 +571,35 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 				# we only simplify the generated code.
 				push get_binding(usr_symbol(key))
 
+				# Since we go and simplify all variables we meet,
+				# we have to replace each variable passed as a parameter
+				# with something entirely new, so that there is no chance
+				# that it might evoke previous values in the external scope
+				# as in this case:
+				#  a = 2
+				#  f(a) = a+1+b
+				# we don't want 'a' in the body of f to be simplified to 2
+				# There are two cases: 1) the variable actually was already in
+				# the symble table, in which case there is goong to be this new
+				# one prepended with AVOID_BINDING_TO_EXTERNAL_SCOPE_VALUE, and
+				# we'll have to remove up this variable later.
+				# OR 2) the variable wasn't already in the symbol table, in which
+				# case we directly create this one, which means that we'll have
+				# to rename it later to the correct name without the prepended
+				# part.
+
+				replacementsFrom = []
+				replacementsTo = []
+
 				for eachDependency in recursedDependencies
 					if eachDependency[0] == "'"
-						if DEBUG then console.log "gotta do something I have to replace a parameter with something that doesn't bind " + eachDependency
 						deQuotedDep = eachDependency.substring(1)
-						push(usr_symbol(deQuotedDep))
-						push(usr_symbol("DONTBIND"+deQuotedDep))
+						originalUserSymbol = usr_symbol(deQuotedDep)
+						newUserSymbol = usr_symbol("AVOID_BINDING_TO_EXTERNAL_SCOPE_VALUE"+deQuotedDep)
+						replacementsFrom.push originalUserSymbol
+						replacementsTo.push newUserSymbol
+						push(originalUserSymbol)
+						push(newUserSymbol)
 						subst()
 						if DEBUG then console.log "after substitution: " + stack[tos-1]
 
@@ -578,6 +610,14 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 					errorMessage = error + ""
 					#debugger
 					init()
+
+				for indexOfEachReplacement in [0...replacementsFrom.length]
+					#console.log "replacing back " + replacementsTo[indexOfEachReplacement] + " into: " + replacementsFrom[indexOfEachReplacement]
+					push(replacementsTo[indexOfEachReplacement])
+					push(replacementsFrom[indexOfEachReplacement])
+					subst()
+
+				clearRenamedVariablesToAvoidBindingToExternalScope()
 
 				if errorMessage == ""
 					toBePrinted = pop()
@@ -594,10 +634,6 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 					generatedBody = toBePrinted.toString()
 					codeGen = false
 					bodyForReadableSummaryOfGeneratedCode = toBePrinted.toString()
-
-					generatedBody = generatedBody.replace(/DONTBIND/g,"")
-					bodyForReadableSummaryOfGeneratedCode = bodyForReadableSummaryOfGeneratedCode.replace(/DONTBIND/g,"")
-
 
 					if variablesWithCycles.indexOf(key) != -1
 						generatedCode += "// " + key + " is part of a cyclic dependency, no code generated."
@@ -635,8 +671,8 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 						if userVariablesMentioned.length != 0
 							parameters = "("
 							for i in userVariablesMentioned
-								if i.printname.replace(/DONTBIND/g,"") != key
-									parameters += i.printname.replace(/DONTBIND/g,"") + ", "
+								if i.printname != key
+									parameters += i.printname + ", "
 
 							# eliminate the last ", " for printout clarity
 							parameters = parameters.replace /, $/gm , ""
@@ -655,6 +691,7 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 	# eliminate the last new line
 	generatedCode = generatedCode.replace /\n$/gm , ""
 	readableSummaryOfGeneratedCode = readableSummaryOfGeneratedCode.replace /\n$/gm , ""
+
 
 	symbolsDependencies = {}
 	symbolsHavingReassignments = []
@@ -918,7 +955,7 @@ run = (stringToBeRun, generateLatex = false) ->
 	if ENABLE_CACHING and stringToBeRun != "clearall" and !errorWhileExecution
 		frozen = freeze()
 		toBeFrozen = [frozen[0], frozen[1], frozen[2], frozen[3], frozen[4], frozen[5], (new Date().getTime() - timeStart), stringToBeReturned]
-		if CACHE_DEBUGS then console.log "setting cache on key: " + cacheKey
+		if CACHE_DEBUGS then console.log "setting cached_runs on key: " + cacheKey
 		cached_runs.set(cacheKey, toBeFrozen)
 
 	if TIMING_DEBUGS

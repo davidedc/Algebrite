@@ -17,6 +17,17 @@ do_clearall = ->
 clearall = ->
 	run("clearall")
 
+# this transformation is done in run.coffee, see there
+# for more info.
+clearRenamedVariablesToAvoidBindingToExternalScope = ->
+	for i in [0...symtab.length]
+		if symtab[i].printname.indexOf("AVOID_BINDING_TO_EXTERNAL_SCOPE_VALUE") != -1
+			# just clear it
+			symtab[i].k = SYM
+			symtab[i].printname = ""
+			binding[i] = symtab[i]
+			isSymbolReclaimable[i] = true
+
 Eval_clear = ->
 	p2 = cdr(p1)
 
