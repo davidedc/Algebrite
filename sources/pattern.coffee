@@ -43,7 +43,7 @@ Eval_pattern = ->
 		userSimplificationsInStringForm.push(stringKey)
 		userSimplificationsInListForm.push(cdr(p1))
 	else
-		#console.log "skipping pattern because it already exists: " + cdr(p1)
+		if DEBUG then console.log "skipping pattern because it already exists: " + cdr(p1)
 
 	# return the pattern node itself so we can
 	# give some printout feedback

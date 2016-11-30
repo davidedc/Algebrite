@@ -1133,7 +1133,6 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 		do_clearall()
 
 	codeFromAlgebraBlock = userSimplificationsInProgramForm + codeFromAlgebraBlock
-	#console.log "codeFromAlgebraBlock including patterns: " + codeFromAlgebraBlock
 
 	#debugger
 	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode, latexResult, errorMessage, dependencyInfo] =
