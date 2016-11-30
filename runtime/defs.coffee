@@ -486,6 +486,13 @@ MEQUAL = (p, n) ->
 	p.equals(n)
 
 
+reset_after_error = ->
+	tos = 0
+	esc_flag = 0
+	draw_flag = 0
+	frame = TOS
+
+
 
 $ = (exports ? this)
 

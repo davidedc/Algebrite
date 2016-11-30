@@ -60,12 +60,6 @@ exec = (name, argus...) ->
 	return result
 
 
-reset_after_error = ->
-	tos = 0
-	esc_flag = 0
-	draw_flag = 0
-	frame = TOS
-
 fixed_top_level_eval = ->
 	save()
 

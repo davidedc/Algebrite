@@ -6,10 +6,7 @@ init = ->
 	i = 0
 	flag = 0
 
-	tos = 0
-	esc_flag = 0
-	draw_flag = 0
-	frame = TOS
+	reset_after_error()
 	chainOfUserSymbolsNotFunctionsBeingEvaluated = []
 
 	if (flag)

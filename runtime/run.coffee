@@ -397,6 +397,29 @@ test_dependencies = ->
 
 	do_clearall()
 
+	testResult = computeDependenciesFromAlgebra('PCA(M) = eig(Mᵀ⋅M)')
+	if testResult.affectsVariables.length is 1 and
+		testResult.affectsVariables.indexOf("PCA") != -1 and
+		testResult.affectsVariables.indexOf("PATTERN_DEPENDENCY") == -1 and
+		testResult.affectedBy.length is 1 and
+		testResult.affectedBy.indexOf("PATTERN_DEPENDENCY") != -1
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
+	testResult = computeDependenciesFromAlgebra('pattern(a_ᵀ⋅a_, cov(a_))')
+	if testResult.affectsVariables.length is 1 and
+		testResult.affectsVariables.indexOf("PATTERN_DEPENDENCY") != -1 and
+		testResult.affectedBy.length is 1 and
+		testResult.affectedBy.indexOf("PATTERN_DEPENDENCY") != -1
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
 	testResult = findDependenciesInScript('a = b\nf = a+1')
 	if testResult[0] == "All local dependencies:  variable a depends on: b, ;  variable f depends on: a, ; . Symbols with reassignments: . All dependencies recursively:  variable a depends on: b, ;  variable f depends on: b, ; " and
 		testResult[1] == "" and
@@ -423,6 +446,40 @@ test_dependencies = ->
 			console.log "fail dependency tests. found AVOID_BINDING_TO_EXTERNAL_SCOPE_VALUE"
 	else
 			console.log "ok dependency test"
+
+	do_clearall()
+
+	# this checks error handling in case of pattern and syntax error
+	# picked up during scanning.
+	computeResultsAndJavaScriptFromAlgebra('pattern(a_ᵀ⋅a_, cov(a_))')
+	computeResultsAndJavaScriptFromAlgebra('simplify(')
+	testResult = computeResultsAndJavaScriptFromAlgebra('PCA = Mᵀ·M')
+
+	if testResult.code == "PCA = function (M) { return ( cov(M) ); }" and
+		testResult.latexResult == "$$PCA(M) = cov(M)$$" and
+		testResult.result == "$$PCA(M) = cov(M)$$" and
+		testResult.dependencyInfo.affectedBy[0] == "M" and
+		testResult.dependencyInfo.affectedBy[1] == "PATTERN_DEPENDENCY" and
+		testResult.dependencyInfo.affectsVariables.length == 1 and
+		testResult.dependencyInfo.affectsVariables[0] == "PCA"
+				console.log "ok dependency test"
+		else
+				console.log "fail dependency tests. Error handling 1"
+
+	do_clearall()
+
+	computeResultsAndJavaScriptFromAlgebra('x = y + 2')
+	testResult = computeResultsAndJavaScriptFromAlgebra('x + x + x')
+
+	if testResult.code == "" and
+		testResult.latexResult == "$$3y+6$$" and
+		testResult.result == "$$3y+6$$" and
+		testResult.dependencyInfo.affectedBy.length == 1 and
+		testResult.dependencyInfo.affectedBy[0] == "PATTERN_DEPENDENCY" and
+		testResult.dependencyInfo.affectsVariables.length == 0
+				console.log "ok dependency test"
+		else
+				console.log "fail dependency tests"
 
 	do_clearall()
 
@@ -467,7 +524,8 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 			if PRINTOUTRESULT then console.log error
 			errorMessage = error + ""
 			#debugger
-			init()
+			reset_after_error()
+
 			break
 
 
@@ -854,7 +912,8 @@ run = (stringToBeRun, generateLatex = false) ->
 				#debugger
 				theErrorMessage = turnErrorMessageToLatex error.message
 				allReturnedLatexStrings += theErrorMessage
-			init()
+			reset_after_error()
+
 			break
 
 
@@ -1071,6 +1130,31 @@ clearAlgebraEnvironment = ->
 	do_clearall()
 
 computeDependenciesFromAlgebra = (codeFromAlgebraBlock) ->
+	# return findDependenciesInScript(codeFromAlgebraBlock, true)[6]
+
+	# TODO this part below is duplicated from computeResultsAndJavaScriptFromAlgebra
+	#      ...should refactor.
+	originalcodeFromAlgebraBlock = codeFromAlgebraBlock
+	keepState = true
+
+	#console.log "codeFromAlgebraBlock: " + codeFromAlgebraBlock
+
+	codeFromAlgebraBlock = normaliseDots codeFromAlgebraBlock
+	stringToBeRun = codeFromAlgebraBlock
+
+	##userSimplificationsInListForm = []
+	userSimplificationsInProgramForm = ""
+
+	if !keepState?
+		for i in userSimplificationsInListForm
+			#console.log "silentpattern(" + car(i) + ","+cdr(i)+")"
+			userSimplificationsInProgramForm += "silentpattern(" + car(i) + ","+ car(cdr(i)) + "," + car(cdr(cdr(i))) + ")\n"
+
+	do_clearall()
+
+	codeFromAlgebraBlock = userSimplificationsInProgramForm + codeFromAlgebraBlock
+	if DEBUG then console.log "codeFromAlgebraBlock including patterns: " + codeFromAlgebraBlock
+
 	return findDependenciesInScript(codeFromAlgebraBlock, true)[6]
 
 computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
@@ -1133,6 +1217,7 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 		do_clearall()
 
 	codeFromAlgebraBlock = userSimplificationsInProgramForm + codeFromAlgebraBlock
+	if DEBUG then console.log "codeFromAlgebraBlock including patterns: " + codeFromAlgebraBlock
 
 	#debugger
 	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode, latexResult, errorMessage, dependencyInfo] =
