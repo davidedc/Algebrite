@@ -465,8 +465,85 @@ test_dependencies = ->
 				console.log "ok dependency test"
 		else
 				console.log "fail dependency tests. Error handling 1"
+				console.log testResult
+				return
 
 	do_clearall()
+
+	
+	console.log "checking hit/miss patterns ======================="
+	resetCache()
+	original_CACHE_HITSMISS_DEBUGS = CACHE_HITSMISS_DEBUGS
+	CACHE_HITSMISS_DEBUGS = true
+
+	# first two should miss because caches are completely empty
+	# note that each call produces two misses because one is from
+	# "findDependenciesInScript" itself and one is from "run" 
+	# after these two, all the others should hit a cache
+	computeResultsAndJavaScriptFromAlgebra('pattern(a_ᵀ⋅a_, cov(a_))')
+	computeResultsAndJavaScriptFromAlgebra('PCA = Mᵀ·M')
+
+	if totalAllCachesHits() != 0
+		console.log "test hecking hit/miss patterns fail, got: " + totalAllCachesHits() + " instead of 0"
+
+	clearAlgebraEnvironment()
+	console.log "\nclearAlgebraEnvironment()"
+	currentStateHash = getStateHash()
+	console.log "state hash after nclearAlgebraEnvironment: " + currentStateHash
+	console.log "\n"
+
+	computeResultsAndJavaScriptFromAlgebra('pattern(a_ᵀ⋅a_, cov(a_))')
+	computeResultsAndJavaScriptFromAlgebra('PCA = Mᵀ·M')
+
+	if totalAllCachesHits() != 2
+		console.log "test hecking hit/miss patterns fail, got: " + totalAllCachesHits() + " instead of 2"
+
+	clearAlgebraEnvironment()
+	console.log "\nclearAlgebraEnvironment()"
+	currentStateHash = getStateHash()
+	console.log "state hash after nclearAlgebraEnvironment: " + currentStateHash
+	console.log "\n"
+
+	computeResultsAndJavaScriptFromAlgebra('pattern(a_ᵀ⋅a_, cov(a_))')
+	computeResultsAndJavaScriptFromAlgebra('PCA = Mᵀ·M')
+	CACHE_HITSMISS_DEBUGS = original_CACHE_HITSMISS_DEBUGS
+
+	if totalAllCachesHits() != 4
+		console.log "test hecking hit/miss patterns fail, got: " + totalAllCachesHits() + " instead of 4"
+
+	clearAlgebraEnvironment()
+	console.log "\nclearAlgebraEnvironment()"
+	currentStateHash = getStateHash()
+	console.log "state hash after nclearAlgebraEnvironment: " + currentStateHash
+	console.log "\n"
+
+	computeResultsAndJavaScriptFromAlgebra('pattern(a_ᵀ⋅a_, cov(a_))')
+	# note that in case of syntax error, "last" is not updated.
+	# so if new symbols have been scanned yet, then they are not created
+	# and the cache should hit
+	# TODO ideally a scan resulting in an error should produce no new
+	# symbols in the symbol table at all
+	computeResultsAndJavaScriptFromAlgebra('simplify(')
+
+	currentStateHash = getStateHash()
+	console.log "state hash after syntax error: " + currentStateHash
+
+	computeResultsAndJavaScriptFromAlgebra('PCA = Mᵀ·M')
+	CACHE_HITSMISS_DEBUGS = original_CACHE_HITSMISS_DEBUGS
+
+	if totalAllCachesHits() != 6
+		console.log "test hecking hit/miss patterns fail, got: " + totalAllCachesHits() + " instead of 6"
+
+	if totalAllCachesMisses() != 5
+		console.log "test hecking hit/miss patterns fail, got: " + totalAllCachesMisses() + " instead of 5"
+
+
+	resetCache()
+	console.log "end of checking hit/miss patterns ======================="
+
+
+	do_clearall()
+
 
 	computeResultsAndJavaScriptFromAlgebra('x = y + 2')
 	testResult = computeResultsAndJavaScriptFromAlgebra('x + x + x')
@@ -490,6 +567,15 @@ test_dependencies = ->
 findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 
 	if DEBUG then console.log "stringToBeParsed: " + stringToBeParsed
+
+	timeStartFromAlgebra  = new Date().getTime()
+
+	if CACHE_DEBUGS or CACHE_HITSMISS_DEBUGS or TIMING_DEBUGS
+		console.log " --------- findDependenciesInScript input: " + stringToBeParsed + " at: " + (new Date())
+		currentStateHash = getStateHash()
+		console.log "state hash: " + currentStateHash
+
+
 	inited = true
 	codeGen = true
 	symbolsDependencies = {}
@@ -510,8 +596,40 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 		affectsVariables: []
 		affectedBy: []
 
-	while (1)
 
+	stringToBeRun = stringToBeParsed
+	if ENABLE_CACHING and stringToBeRun != "clearall"
+		currentStateHash = getStateHash()
+		cacheKey = currentStateHash + " stringToBeRun: " + stringToBeRun + " - " + dontGenerateCode
+		if CACHE_DEBUGS then console.log "cached_findDependenciesInScript key: " + cacheKey
+		possiblyCached = cached_findDependenciesInScript.get(cacheKey)
+		if possiblyCached?
+			if CACHE_HITSMISS_DEBUGS then console.log "cached_findDependenciesInScript hit on " + stringToBeRun
+			unfreeze(possiblyCached)
+			# return the output string
+			if TIMING_DEBUGS
+				totalTime = new Date().getTime() - timeStartFromAlgebra
+				console.log "findDependenciesInScript input: " + stringToBeRun + " time: " + totalTime + "ms, saved " + (possiblyCached[possiblyCached.length-5] - totalTime) + "ms due to cache hit"
+
+			return [
+				possiblyCached[possiblyCached.length - 7],
+				possiblyCached[possiblyCached.length - 6],
+				possiblyCached[possiblyCached.length - 5],
+				possiblyCached[possiblyCached.length - 4],
+				possiblyCached[possiblyCached.length - 3],
+				possiblyCached[possiblyCached.length - 2],
+				possiblyCached[possiblyCached.length - 1]
+				]
+
+		else
+			if CACHE_HITSMISS_DEBUGS then console.log "cached_findDependenciesInScript miss on: " + stringToBeRun
+			if TIMING_DEBUGS
+				cacheMissPenalty = (new Date().getTime() - timeStartFromAlgebra)
+
+
+	# parse the input. This collects the
+	# dependency information
+	while (1)
 		try
 			errorMessage = ""
 			check_stack()
@@ -525,9 +643,7 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 			errorMessage = error + ""
 			#debugger
 			reset_after_error()
-
 			break
-
 
 		if (n == 0)
 			break
@@ -751,10 +867,37 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 	readableSummaryOfGeneratedCode = readableSummaryOfGeneratedCode.replace /\n$/gm , ""
 
 
+	# cleanup
 	symbolsDependencies = {}
 	symbolsHavingReassignments = []
 	patternHasBeenFound = false
+
 	if DEBUG then console.log "testable string: " + testableString
+
+	if TIMING_DEBUGS
+		console.log "findDependenciesInScript time for: " + stringToBeRun + " : "+ ((new Date().getTime()) - timeStartFromAlgebra) + "ms"
+
+	if ENABLE_CACHING and stringToBeRun != "clearall" and errorMessage == ""
+		frozen = freeze()
+		toBeFrozen = [
+			frozen[0],
+			frozen[1],
+			frozen[2],
+			frozen[3],
+			frozen[4],
+			frozen[5],
+			(new Date().getTime() - timeStartFromAlgebra),
+			testableString,
+			scriptEvaluation[0],
+			generatedCode,
+			readableSummaryOfGeneratedCode,
+			scriptEvaluation[1],
+			errorMessage,
+			dependencyInfo
+		]
+		if CACHE_DEBUGS then console.log "setting cached_findDependenciesInScript on key: " + cacheKey
+		cached_findDependenciesInScript.set(cacheKey, toBeFrozen)
+
 
 	return [testableString, scriptEvaluation[0], generatedCode, readableSummaryOfGeneratedCode, scriptEvaluation[1], errorMessage, dependencyInfo]
 
@@ -860,7 +1003,7 @@ run = (stringToBeRun, generateLatex = false) ->
 	if ENABLE_CACHING and stringToBeRun != "clearall"
 		currentStateHash = getStateHash()
 		cacheKey = currentStateHash + " stringToBeRun: " + stringToBeRun
-		if CACHE_DEBUGS then console.log "cache key: " + cacheKey
+		if CACHE_DEBUGS then console.log "cached_runs key: " + cacheKey
 		possiblyCached = cached_runs.get(cacheKey)
 		#possiblyCached = null
 		if possiblyCached?
@@ -1165,7 +1308,7 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 
 	timeStartFromAlgebra  = new Date().getTime()
 
-	if CACHE_DEBUGS or CACHE_HITSMISS_DEBUGS or TIMING_DEBUGS
+	if TIMING_DEBUGS
 		console.log " --------- computeResultsAndJavaScriptFromAlgebra input: " + codeFromAlgebraBlock + " at: " + (new Date())
 
 	# we start "clean" each time:
@@ -1179,33 +1322,6 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 
 
 	stringToBeRun = codeFromAlgebraBlock
-	if ENABLE_CACHING and stringToBeRun != "clearall"
-		currentStateHash = getStateHash()
-		cacheKey = currentStateHash + " stringToBeRun: " + stringToBeRun
-		if CACHE_DEBUGS then console.log "cached_computeResultsAndJavaScriptFromAlgebra key: " + cacheKey
-		possiblyCached = cached_computeResultsAndJavaScriptFromAlgebra.get(cacheKey)
-		if possiblyCached?
-			if CACHE_HITSMISS_DEBUGS then console.log "cache_computeResultsAndJavaScriptFromAlgebra hit on " + stringToBeRun
-			unfreeze(possiblyCached)
-			# return the output string
-			if TIMING_DEBUGS
-				totalTime = new Date().getTime() - timeStartFromAlgebra
-				console.log "computeResultsAndJavaScriptFromAlgebra input: " + stringToBeRun + " time: " + totalTime + "ms, saved " + (possiblyCached[possiblyCached.length-5] - totalTime) + "ms due to cache hit"
-			return 	{
-					code:  possiblyCached[possiblyCached.length - 4]
-					# TODO temporarily pass latex in place of standard result too
-					result: possiblyCached[possiblyCached.length - 2]
-					latexResult: possiblyCached[possiblyCached.length - 2]
-					dependencyInfo: possiblyCached[possiblyCached.length - 1]
-				}
-
-		else
-			if CACHE_HITSMISS_DEBUGS then console.log "cached_computeResultsAndJavaScriptFromAlgebra miss on: " + stringToBeRun
-			if TIMING_DEBUGS
-				cacheMissPenalty = (new Date().getTime() - timeStartFromAlgebra)
-
-
-
 	##userSimplificationsInListForm = []
 	userSimplificationsInProgramForm = ""
 
@@ -1223,11 +1339,9 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode, latexResult, errorMessage, dependencyInfo] =
 		findDependenciesInScript(codeFromAlgebraBlock)
 
-	anyErrors = false
 	if readableSummaryOfCode != "" or errorMessage != ""
 		result += "\n" + readableSummaryOfCode
 		if errorMessage != ""
-			anyErrors = true
 			result += "\n" + errorMessage
 		result = result.replace /\n/g,"\n\n"
 
@@ -1251,13 +1365,6 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 
 	if TIMING_DEBUGS
 		console.log "computeResultsAndJavaScriptFromAlgebra time (total time from notebook and back) for: " + stringToBeRun + " : "+ ((new Date().getTime()) - timeStartFromAlgebra) + "ms"
-
-	if ENABLE_CACHING and stringToBeRun != "clearall" and !anyErrors
-		frozen = freeze()
-		toBeFrozen = [frozen[0], frozen[1], frozen[2], frozen[3], frozen[4], frozen[5], (new Date().getTime() - timeStartFromAlgebra), code, result, latexResult, dependencyInfo]
-		if CACHE_DEBUGS then console.log "setting cached_computeResultsAndJavaScriptFromAlgebra on key: " + cacheKey
-		cached_computeResultsAndJavaScriptFromAlgebra.set(cacheKey, toBeFrozen)
-
 
 	#code: "// no code generated yet\n//try again later"
 	#code: "console.log('some passed code is run'); window.something = 1;"

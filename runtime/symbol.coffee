@@ -15,7 +15,7 @@ symbolsinfo = ->
 	symbolsinfoToBePrinted = ""
 	for i in [NIL+1...symtab.length]
 		if symtab[i].printname == ""
-			if isSymbolReclaimable == false
+			if isSymbolReclaimable[i] == false
 				break
 			else
 				continue
@@ -27,6 +27,10 @@ symbolsinfo = ->
 
 
 # s is a string, n is an int
+# TODO: elsewhere when we create a symbol we
+# rather prefer to create a new entry. Here we just
+# reuse the existing one. If that can never be a problem
+# then explain why, otherwise do create a new entry.
 std_symbol = (s, n, latexPrint) ->
 	p = symtab[n]
 	if !p?
@@ -84,19 +88,19 @@ usr_symbol = (s) ->
 	if (i == NSYM)
 		stop("symbol table overflow")
 
-	p = symtab[i]
 
-	# strictly, this is redundant in case the symbol
-	# already existed.
-	p.printname = s
-
+	symtab[i] =  new U()
+	symtab[i].k = SYM
+	symtab[i].printname = s
 	# say that we just created the symbol
 	# then, binding[the new symbol entry]
 	# by default points to the symbol.
 	# So the value of an unassigned symbol will
 	# be just its name.
+	binding[i] = symtab[i]
+	isSymbolReclaimable[i] = false
 
-	return p
+	return symtab[i]
 
 # get the symbol's printname
 
@@ -211,8 +215,10 @@ clear_symbols = ->
 	# so there is no need to clear it.
 	for i in [NIL+1...NSYM]
 
+		# stop at the first empty
+		# entry that is not reclaimable
 		if symtab[i].printname == ""
-			if isSymbolReclaimable == false
+			if isSymbolReclaimable[i] == false
 				break
 			else
 				continue

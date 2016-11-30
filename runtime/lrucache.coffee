@@ -36,6 +36,10 @@ class LRUCache
   constructor: (@capacity = 10, @maxAge = 60000) ->
     @_linkList = new DoubleLinkedList()
     @reset()
+    @hitCount = @missCount = 0
+
+  resetHitMissCount: ->
+    @hitCount = @missCount = 0
 
   keys: ->
     return Object.keys @_hash
@@ -56,6 +60,7 @@ class LRUCache
   reset: ->
     @_hash = {}
     @size = 0
+    @resetHitMissCount()
     @_linkList.clear()
 
   set: (key, value, onDispose) ->
@@ -78,11 +83,15 @@ class LRUCache
 
   get: (key) ->
     node = @_hash[key]
-    if !node then return undefined
+    if !node
+      @missCount++
+      return undefined
     if @_isExpiredNode node
       @remove key
+      @missCount++
       return undefined
     @_refreshNode node
+    @hitCount++
     return node.data.value
 
   _refreshNode: (node) ->

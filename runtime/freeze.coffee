@@ -1,6 +1,6 @@
 
 cached_runs = new LRUCache(100, 60000 * 60 * 24 * 265)
-cached_computeResultsAndJavaScriptFromAlgebra = new LRUCache(100, 60000 * 60 * 24 * 265)
+cached_findDependenciesInScript = new LRUCache(100, 60000 * 60 * 24 * 265)
 
 freeze = ->
 
@@ -11,12 +11,13 @@ freeze = ->
 
 	for i in [0...symtab.length]
 		#if symtab[i].printname == ""
-		#	if isSymbolReclaimable == false
+		#	if isSymbolReclaimable[i] == false
 		#		break
 		#	else
 		#		continue
-		frozenSymbols.push symtab[i]
-		frozenContents.push binding[i]
+		if isSymbolReclaimable[i] == false
+			frozenSymbols.push symtab[i]
+			frozenContents.push binding[i]
 
 	# just clone them
 	frozenPatterns= userSimplificationsInListForm.slice(0)
@@ -49,16 +50,29 @@ resetCache = ->
 		cached_runs.reset()
 		if DEBUG then console.log "resetting cached_runs"
 
-	if cached_computeResultsAndJavaScriptFromAlgebra?
-		cached_computeResultsAndJavaScriptFromAlgebra.reset()
-		if DEBUG then console.log "resetting cached_computeResultsAndJavaScriptFromAlgebra"
+	if cached_findDependenciesInScript?
+		cached_findDependenciesInScript.reset()
+		if DEBUG then console.log "resetting cached_findDependenciesInScript"
+
+resetCacheHitMissCounts = ->
+	if cached_runs?
+		cached_runs.resetHitMissCount()
+
+	if cached_findDependenciesInScript?
+		cached_findDependenciesInScript.resetHitMissCount()
+
+totalAllCachesHits = ->
+	cached_runs.hitCount + cached_findDependenciesInScript.hitCount
+
+totalAllCachesMisses = ->
+	cached_runs.missCount + cached_findDependenciesInScript.missCount
 
 getStateHash = ->
 	frozenHash = ""
 
 	for i in [NIL+1...symtab.length]
 		if symtab[i].printname == ""
-			if isSymbolReclaimable == false
+			if isSymbolReclaimable[i] == false
 				break
 			else
 				continue
