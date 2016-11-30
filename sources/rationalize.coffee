@@ -1,7 +1,5 @@
 
 
-DEBUG = 0
-
 Eval_rationalize = ->
 	push(cadr(p1))
 	Eval()
