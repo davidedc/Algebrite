@@ -311,6 +311,7 @@ MAXDIM = 24
 # in a script
 symbolsDependencies = {}
 symbolsHavingReassignments = []
+symbolsInExpressionsWithoutAssignments = []
 patternHasBeenFound = false
 predefinedSymbolsInGlobalScope_doNotTrackInDependencies = ["rationalize", "mag", "i", "pi", "sin", "cos", "roots", "integral", "derivative", "defint", "sqrt", "eig", "cov"]
 

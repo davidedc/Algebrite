@@ -46,7 +46,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('1')
-	if testResult[0] == "All local dependencies: . Symbols with reassignments: . All dependencies recursively: " and
+	if testResult[0] == "All local dependencies: . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively: " and
 		testResult[1] == "1" and
 		testResult[2] == ""
 			console.log "ok dependency test"
@@ -56,7 +56,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('f = x+1\n g = f\n h = g\n f = g')
-	if testResult[0] == "All local dependencies:  variable f depends on: x, g, ;  variable g depends on: f, ;  variable h depends on: g, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: x, ;  f --> g -->  ... then f again,  variable g depends on: x, ;  g --> f -->  ... then g again,  variable h depends on: x, ;  h --> g --> f -->  ... then g again, " and
+	if testResult[0] == "All local dependencies:  variable f depends on: x, g, ;  variable g depends on: f, ;  variable h depends on: g, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: x, ;  f --> g -->  ... then f again,  variable g depends on: x, ;  g --> f -->  ... then g again,  variable h depends on: x, ;  h --> g --> f -->  ... then g again, " and
 		testResult[1] == "" and
 		testResult[2] == "// f is part of a cyclic dependency, no code generated.\n// g is part of a cyclic dependency, no code generated.\n// h is part of a cyclic dependency, no code generated."
 	else
@@ -64,42 +64,42 @@ test_dependencies = ->
 
 	do_clearall()
 
-	if findDependenciesInScript('f = x+1\n g = f + y\n h = g')[0] == "All local dependencies:  variable f depends on: x, ;  variable g depends on: f, y, ;  variable h depends on: g, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: x, ;  variable g depends on: x, y, ;  variable h depends on: x, y, ; "
+	if findDependenciesInScript('f = x+1\n g = f + y\n h = g')[0] == "All local dependencies:  variable f depends on: x, ;  variable g depends on: f, y, ;  variable h depends on: g, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: x, ;  variable g depends on: x, y, ;  variable h depends on: x, y, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
 	do_clearall()
 
-	if findDependenciesInScript('g = h(x,y)')[0] == "All local dependencies:  variable g depends on: h, x, y, ; . Symbols with reassignments: . All dependencies recursively:  variable g depends on: h, x, y, ; "
+	if findDependenciesInScript('g = h(x,y)')[0] == "All local dependencies:  variable g depends on: h, x, y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable g depends on: h, x, y, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
 	do_clearall()
 
-	if findDependenciesInScript('f(x,y) = k')[0] == "All local dependencies:  variable f depends on: 'x, 'y, k, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: 'x, 'y, k, ; "
+	if findDependenciesInScript('f(x,y) = k')[0] == "All local dependencies:  variable f depends on: 'x, 'y, k, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: 'x, 'y, k, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
 	do_clearall()
 
-	if findDependenciesInScript('x = z\n f(x,y) = k')[0] == "All local dependencies:  variable x depends on: z, ;  variable f depends on: 'x, 'y, k, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: z, ;  variable f depends on: 'x, 'y, k, ; "
+	if findDependenciesInScript('x = z\n f(x,y) = k')[0] == "All local dependencies:  variable x depends on: z, ;  variable f depends on: 'x, 'y, k, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: z, ;  variable f depends on: 'x, 'y, k, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
 	do_clearall()
 
-	if findDependenciesInScript('x = z\n g = f(x,y)')[0] == "All local dependencies:  variable x depends on: z, ;  variable g depends on: f, x, y, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: z, ;  variable g depends on: f, z, y, ; "
+	if findDependenciesInScript('x = z\n g = f(x,y)')[0] == "All local dependencies:  variable x depends on: z, ;  variable g depends on: f, x, y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: z, ;  variable g depends on: f, z, y, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
 	do_clearall()
 
-	if findDependenciesInScript('x = 1\n x = y\n x = z')[0] == "All local dependencies:  variable x depends on: y, z, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: y, z, ; "
+	if findDependenciesInScript('x = 1\n x = y\n x = z')[0] == "All local dependencies:  variable x depends on: y, z, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: y, z, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
@@ -107,7 +107,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('x = y*y')
-	if testResult[0] == "All local dependencies:  variable x depends on: y, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: y, ; " and
+	if testResult[0] == "All local dependencies:  variable x depends on: y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: y, ; " and
 		testResult[1] == "" and
 		testResult[2] == "x = function (y) { return ( Math.pow(y, 2) ); }"
 			console.log "ok dependency test"
@@ -117,7 +117,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('x = -sqrt(2)/2')
-	if testResult[0] == "All local dependencies:  variable x depends on: ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: ; " and
+	if testResult[0] == "All local dependencies:  variable x depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: ; " and
 		testResult[1] == "" and
 		testResult[2] == "x = -1/2*Math.pow(2, (1/2));"
 			console.log "ok dependency test"
@@ -127,7 +127,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('x = 2^(1/2-a)*2^a/10')
-	if testResult[0] == "All local dependencies:  variable x depends on: a, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: a, ; " and
+	if testResult[0] == "All local dependencies:  variable x depends on: a, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: a, ; " and
 		testResult[1] == "" and
 		testResult[2] == "x = 1/10*Math.pow(2, (1/2));"
 			console.log "ok dependency test"
@@ -137,7 +137,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('x = rationalize(t*y/(t+y)+2*t^2*y*(2*t+y)^(-2))')
-	if testResult[0] == "All local dependencies:  variable x depends on: t, y, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: t, y, ; " and
+	if testResult[0] == "All local dependencies:  variable x depends on: t, y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: t, y, ; " and
 		testResult[1] == "" and
 		testResult[2] == "x = function (t, y) { return ( t*y*(6*Math.pow(t, 2) + Math.pow(y, 2) + 6*t*y) / ((t + y)*Math.pow((2*t + y), 2)) ); }"
 			console.log "ok dependency test"
@@ -147,7 +147,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('x = mag((a+i*b)/(c+i*d))')
-	if testResult[0] == "All local dependencies:  variable x depends on: a, b, c, d, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: a, b, c, d, ; " and
+	if testResult[0] == "All local dependencies:  variable x depends on: a, b, c, d, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: a, b, c, d, ; " and
 		testResult[1] == "" and
 		testResult[2] == "x = function (a, b, c, d) { return ( Math.pow((Math.pow(a, 2) + Math.pow(b, 2)), (1/2)) / (Math.pow((Math.pow(c, 2) + Math.pow(d, 2)), (1/2))) ); }"
 			console.log "ok dependency test"
@@ -157,7 +157,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('x = sin(1/10)^2 + cos(1/10)^2 + y')
-	if testResult[0] == "All local dependencies:  variable x depends on: y, ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: y, ; " and
+	if testResult[0] == "All local dependencies:  variable x depends on: y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: y, ; " and
 		testResult[1] == "" and
 		testResult[2] == "x = function (y) { return ( 1 + y ); }"
 			console.log "ok dependency test"
@@ -167,7 +167,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('x = sin(1/10)^2 + cos(1/10)^2')
-	if testResult[0] == "All local dependencies:  variable x depends on: ; . Symbols with reassignments: . All dependencies recursively:  variable x depends on: ; " and
+	if testResult[0] == "All local dependencies:  variable x depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: ; " and
 		testResult[1] == "" and
 		testResult[2] == "x = 1;"
 			console.log "ok dependency test"
@@ -177,7 +177,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('f(x) = x * x')
-	if testResult[0] == "All local dependencies:  variable f depends on: 'x, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: 'x, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: 'x, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: 'x, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (x) { return ( x*x ); }"
 			console.log "ok dependency test"
@@ -187,7 +187,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('f(x) = x * x + g(y)')
-	if testResult[0] == "All local dependencies:  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: 'x, g, y, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: 'x, g, y, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (g, y, x) { return ( g(y) + Math.pow(x, 2) ); }"
 			console.log "ok dependency test"
@@ -197,7 +197,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('y = 2\nf(x) = x * x + g(y)')
-	if testResult[0] == "All local dependencies:  variable y depends on: ;  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . All dependencies recursively:  variable y depends on: ;  variable f depends on: 'x, g, ; " and
+	if testResult[0] == "All local dependencies:  variable y depends on: ;  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable y depends on: ;  variable f depends on: 'x, g, ; " and
 		testResult[1] == "" and
 		testResult[2] == "y = 2;\nf = function (g, x) { return ( g(2) + Math.pow(x, 2) ); }"
 			console.log "ok dependency test"
@@ -207,7 +207,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('g(x) = x + 2\ny = 2\nf(x) = x * x + g(y)')
-	if testResult[0] == "All local dependencies:  variable g depends on: 'x, ;  variable y depends on: ;  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . All dependencies recursively:  variable g depends on: 'x, ;  variable y depends on: ;  variable f depends on: 'x, ; " and
+	if testResult[0] == "All local dependencies:  variable g depends on: 'x, ;  variable y depends on: ;  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable g depends on: 'x, ;  variable y depends on: ;  variable f depends on: 'x, ; " and
 		testResult[1] == "" and
 		testResult[2] == "g = function (x) { return ( 2 + x ); }\ny = 2;\nf = function (x) { return ( 4 + Math.pow(x, 2) ); }"
 			console.log "ok dependency test"
@@ -217,7 +217,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('g(x) = x + 2\nf(x) = x * x + g(y)')
-	if testResult[0] == "All local dependencies:  variable g depends on: 'x, ;  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . All dependencies recursively:  variable g depends on: 'x, ;  variable f depends on: 'x, y, ; " and
+	if testResult[0] == "All local dependencies:  variable g depends on: 'x, ;  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable g depends on: 'x, ;  variable f depends on: 'x, y, ; " and
 		testResult[1] == "" and
 		testResult[2] == "g = function (x) { return ( 2 + x ); }\nf = function (y, x) { return ( 2 + y + Math.pow(x, 2) ); }"
 			console.log "ok dependency test"
@@ -228,7 +228,7 @@ test_dependencies = ->
 
 	###
 	testResult = findDependenciesInScript('g(x) = f(x)\nf(x)=g(x)')
-	if testResult[0] == "All local dependencies:  variable g depends on: 'x, f, x, ;  variable f depends on: 'x, g, x, ; . Symbols with reassignments: . All dependencies recursively:  variable g depends on: 'x, ;  g --> f -->  ... then g again,  variable f depends on: 'x, x, ;  f --> g -->  ... then f again, " and
+	if testResult[0] == "All local dependencies:  variable g depends on: 'x, f, x, ;  variable f depends on: 'x, g, x, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable g depends on: 'x, ;  g --> f -->  ... then g again,  variable f depends on: 'x, x, ;  f --> g -->  ... then f again, " and
 		testResult[1] == "" and
 		testResult[2] == "// g is part of a cyclic dependency, no code generated.\n// f is part of a cyclic dependency, no code generated."
 			console.log "ok dependency test"
@@ -239,7 +239,7 @@ test_dependencies = ->
 	###
 
 	testResult = findDependenciesInScript('f = roots(a*x^2 + b*x + c, x)')
-	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: a, b, c, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: a, b, c, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (a, b, c) { return ( [-1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) + b / a),1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) - b / a)] ); }"
 			console.log "ok dependency test"
@@ -249,7 +249,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('f = roots(a*x^2 + b*x + c)')
-	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: a, b, c, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: a, b, c, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (a, b, c) { return ( [-1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) + b / a),1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) - b / a)] ); }"
 			console.log "ok dependency test"
@@ -259,7 +259,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('f = roots(integral(a*x + b))')
-	if testResult[0] == "All local dependencies:  variable f depends on: a, b, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: a, b, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: a, b, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: a, b, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (a, b) { return ( [0,-2*b / a] ); }"
 			console.log "ok dependency test"
@@ -269,7 +269,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('f = roots(defint(a*x + y,y,0,1))')
-	if testResult[0] == "All local dependencies:  variable f depends on: a, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: a, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: a, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: a, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (a) { return ( -1 / (2*a) ); }"
 			console.log "ok dependency test"
@@ -279,7 +279,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('f = roots(defint(a*x + y + z,y,0,1, z, 0, 1))')
-	if testResult[0] == "All local dependencies:  variable f depends on: a, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: a, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: a, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: a, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (a) { return ( -1 / a ); }"
 			console.log "ok dependency test"
@@ -289,7 +289,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('f = defint(2*x - 3*y,x,0,2*y)')
-	if testResult[0] == "All local dependencies:  variable f depends on: y, ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: y, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: y, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (y) { return ( -2*Math.pow(y, 2) ); }"
 			console.log "ok dependency test"
@@ -299,7 +299,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('f = defint(12 - x^2 - (y^2)/2,x,0,2,y,0,3)')
-	if testResult[0] == "All local dependencies:  variable f depends on: ; . Symbols with reassignments: . All dependencies recursively:  variable f depends on: ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = 55;"
 			console.log "ok dependency test"
@@ -313,7 +313,7 @@ test_dependencies = ->
 	# bound by the parameters remain "separate" from previous
 	# variables with the same name.
 	testResult = findDependenciesInScript('a = 2\nf(a) = a+1+b')
-	if testResult[0] == "All local dependencies:  variable a depends on: ;  variable f depends on: 'a, b, ; . Symbols with reassignments: . All dependencies recursively:  variable a depends on: ;  variable f depends on: 'a, b, ; " and
+	if testResult[0] == "All local dependencies:  variable a depends on: ;  variable f depends on: 'a, b, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: ;  variable f depends on: 'a, b, ; " and
 		testResult[1] == "" and
 		testResult[2] == "a = 2;\nf = function (a, b) { return ( 1 + a + b ); }"
 			console.log "ok dependency test"
@@ -325,7 +325,7 @@ test_dependencies = ->
 	# similar as test above but this time we are not
 	# defining a function, so things are a bit different.
 	testResult = findDependenciesInScript('a = 2\nf = a+1')
-	if testResult[0] == "All local dependencies:  variable a depends on: ;  variable f depends on: a, ; . Symbols with reassignments: . All dependencies recursively:  variable a depends on: ;  variable f depends on: ; " and
+	if testResult[0] == "All local dependencies:  variable a depends on: ;  variable f depends on: a, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: ;  variable f depends on: ; " and
 		testResult[1] == "" and
 		testResult[2] == "a = 2;\nf = 3;"
 			console.log "ok dependency test"
@@ -338,7 +338,7 @@ test_dependencies = ->
 	# trick with the quote to see whether we
 	# get confused with the indirection
 	testResult = findDependenciesInScript('a := b\nf = a+1')
-	if testResult[0] == "All local dependencies:  variable a depends on: b, ;  variable f depends on: a, ; . Symbols with reassignments: . All dependencies recursively:  variable a depends on: b, ;  variable f depends on: b, ; " and
+	if testResult[0] == "All local dependencies:  variable a depends on: b, ;  variable f depends on: a, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: b, ;  variable f depends on: b, ; " and
 		testResult[1] == "" and
 		testResult[2] == "a = function (b) { return ( b ); }\nf = function (b) { return ( 1 + b ); }"
 			console.log "ok dependency test"
@@ -349,7 +349,7 @@ test_dependencies = ->
 
 	# another tricky case of indirection through quote
 	testResult = findDependenciesInScript('a := b\nf(a) = a+1')
-	if testResult[0] == "All local dependencies:  variable a depends on: b, ;  variable f depends on: 'a, ; . Symbols with reassignments: . All dependencies recursively:  variable a depends on: b, ;  variable f depends on: 'a, ; " and
+	if testResult[0] == "All local dependencies:  variable a depends on: b, ;  variable f depends on: 'a, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: b, ;  variable f depends on: 'a, ; " and
 		testResult[1] == "" and
 		testResult[2] == "a = function (b) { return ( b ); }\nf = function (a) { return ( 1 + a ); }"
 			console.log "ok dependency test"
@@ -360,7 +360,7 @@ test_dependencies = ->
 
 	# reassignment
 	testResult = findDependenciesInScript('b = 1\nb=a+b+c')
-	if testResult[0] == "All local dependencies:  variable b depends on: a, c, ; . Symbols with reassignments: b, . All dependencies recursively:  variable b depends on: a, c, ; " and
+	if testResult[0] == "All local dependencies:  variable b depends on: a, c, ; . Symbols with reassignments: b, . Symbols in expressions without assignments: . All dependencies recursively:  variable b depends on: a, c, ; " and
 		testResult[1] == "" and
 		testResult[2] == "b = function (a, c) { return ( 1 + a + c ); }"
 			console.log "ok dependency test"
@@ -371,7 +371,7 @@ test_dependencies = ->
 
 	# reassignment
 	testResult = findDependenciesInScript('a = a+1')
-	if testResult[0] == "All local dependencies:  variable a depends on: ; . Symbols with reassignments: a, . All dependencies recursively:  variable a depends on: ; " and
+	if testResult[0] == "All local dependencies:  variable a depends on: ; . Symbols with reassignments: a, . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: ; " and
 		testResult[1] == "" and
 		testResult[2] == "" and
 		testResult[5] == "Error: Stop: recursive evaluation of symbols: a -> a"
@@ -421,7 +421,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('a = b\nf = a+1')
-	if testResult[0] == "All local dependencies:  variable a depends on: b, ;  variable f depends on: a, ; . Symbols with reassignments: . All dependencies recursively:  variable a depends on: b, ;  variable f depends on: b, ; " and
+	if testResult[0] == "All local dependencies:  variable a depends on: b, ;  variable f depends on: a, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: b, ;  variable f depends on: b, ; " and
 		testResult[1] == "" and
 		testResult[2] == "a = function (b) { return ( b ); }\nf = function (b) { return ( 1 + b ); }"
 			console.log "ok dependency test"
@@ -431,7 +431,7 @@ test_dependencies = ->
 	do_clearall()
 
 	testResult = findDependenciesInScript('PCA(M) = eig(cov(M))')
-	if testResult[0] == "All local dependencies:  variable PCA depends on: 'M, ; . Symbols with reassignments: . All dependencies recursively:  variable PCA depends on: 'M, ; " and
+	if testResult[0] == "All local dependencies:  variable PCA depends on: 'M, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable PCA depends on: 'M, ; " and
 		testResult[1] == "" and
 		testResult[2] == "PCA = function (M) { return ( eig(cov(M)) ); }"
 			console.log "ok dependency test"
@@ -544,6 +544,20 @@ test_dependencies = ->
 
 	do_clearall()
 
+	testResult = computeResultsAndJavaScriptFromAlgebra('x + x + x')
+
+	if testResult.code == "" and
+		testResult.latexResult == "$$3x$$" and
+		testResult.result == "$$3x$$" and
+		testResult.dependencyInfo.affectedBy.length == 2 and
+		testResult.dependencyInfo.affectedBy[0] == "x" and
+		testResult.dependencyInfo.affectedBy[1] == "PATTERN_DEPENDENCY" and
+		testResult.dependencyInfo.affectsVariables.length == 0
+				console.log "ok dependency test"
+		else
+				console.log "fail dependency tests"
+
+	do_clearall()
 
 	computeResultsAndJavaScriptFromAlgebra('x = y + 2')
 	testResult = computeResultsAndJavaScriptFromAlgebra('x + x + x')
@@ -551,8 +565,9 @@ test_dependencies = ->
 	if testResult.code == "" and
 		testResult.latexResult == "$$3y+6$$" and
 		testResult.result == "$$3y+6$$" and
-		testResult.dependencyInfo.affectedBy.length == 1 and
-		testResult.dependencyInfo.affectedBy[0] == "PATTERN_DEPENDENCY" and
+		testResult.dependencyInfo.affectedBy.length == 2 and
+		testResult.dependencyInfo.affectedBy[0] == "x" and
+		testResult.dependencyInfo.affectedBy[1] == "PATTERN_DEPENDENCY" and
 		testResult.dependencyInfo.affectsVariables.length == 0
 				console.log "ok dependency test"
 		else
@@ -564,6 +579,11 @@ test_dependencies = ->
 	do_clearall()
 
 
+# if we just want to compute the dependencies, we don't need to do
+# anything costly, we don't "run" the code and we don't simplify
+# the code. Just finding the plain dependencies
+# TODO change the name of this function, as it doesn't just find the
+# dependencies. It also runs it and generates the JS code.
 findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 
 	if DEBUG then console.log "stringToBeParsed: " + stringToBeParsed
@@ -580,6 +600,7 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 	codeGen = true
 	symbolsDependencies = {}
 	symbolsHavingReassignments = []
+	symbolsInExpressionsWithoutAssignments = []
 	patternHasBeenFound = false
 	indexOfPartRemainingToBeParsed = 0
 
@@ -672,6 +693,15 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 	if DEBUG then console.log "Symbols with reassignments ----------------"
 	testableString += "Symbols with reassignments: "
 	for key in symbolsHavingReassignments
+		if dependencyInfo.affectedBy.indexOf(key) == -1
+			dependencyInfo.affectedBy.push key
+			testableString +=  key + ", "
+	testableString += ". "
+
+	# print out the symbols that appear in expressions without assignments
+	if DEBUG then console.log "Symbols in expressions without assignments ----------------"
+	testableString += "Symbols in expressions without assignments: "
+	for key in symbolsInExpressionsWithoutAssignments
 		if dependencyInfo.affectedBy.indexOf(key) == -1
 			dependencyInfo.affectedBy.push key
 			testableString +=  key + ", "
@@ -871,6 +901,7 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 	symbolsDependencies = {}
 	symbolsHavingReassignments = []
 	patternHasBeenFound = false
+	symbolsInExpressionsWithoutAssignments = []
 
 	if DEBUG then console.log "testable string: " + testableString
 

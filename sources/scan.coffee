@@ -49,10 +49,12 @@ token_buf = 0
 
 lastFoundSymbol = null
 symbolsRightOfAssignment = null
+symbolsLeftOfAssignment = null
 isSymbolLeftOfAssignment = null
 scanningParameters = null
 functionInvokationsScanningStack = null
 skipRootVariableToBeSolved = false
+assignmentFound = null
 
 
 # Returns number of chars scanned and expr on stack.
@@ -73,9 +75,11 @@ scan = (s) ->
 
 	lastFoundSymbol = null
 	symbolsRightOfAssignment = []
+	symbolsLeftOfAssignment = []
 	isSymbolLeftOfAssignment = true
 	scanningParameters = []
 	functionInvokationsScanningStack = [""]
+	assignmentFound = false
 
 
 	scanned = s
@@ -90,6 +94,10 @@ scan = (s) ->
 		return 0
 	scan_stmt()
 	expanding--
+
+	if !assignmentFound
+		symbolsInExpressionsWithoutAssignments = symbolsInExpressionsWithoutAssignments.concat symbolsLeftOfAssignment
+
 	return token_str - input_str
 
 # takes a string
@@ -119,6 +127,7 @@ scan_stmt = ->
 	if (token == T_QUOTASSIGN or token == '=')
 		symbolLeftOfAssignment = lastFoundSymbol
 		if DEBUG then console.log("assignment!")
+		assignmentFound = true
 		isSymbolLeftOfAssignment = false
 
 		get_next_token()
@@ -394,6 +403,20 @@ addSymbolRightOfAssignment = (theSymbol) ->
 			theSymbol = prefixVar + theSymbol
 			symbolsRightOfAssignment.push theSymbol
 
+addSymbolLeftOfAssignment = (theSymbol) ->
+	if predefinedSymbolsInGlobalScope_doNotTrackInDependencies.indexOf(theSymbol) == -1 and
+		symbolsLeftOfAssignment.indexOf(theSymbol) == -1 and
+		symbolsLeftOfAssignment.indexOf("'"+theSymbol) == -1 and
+		!skipRootVariableToBeSolved
+			if DEBUG then console.log("... adding symbol: " + theSymbol + " to the set of the symbols left of assignment")
+			prefixVar = ""
+			for i in [1...functionInvokationsScanningStack.length]
+				if functionInvokationsScanningStack[i] != ""
+					prefixVar += functionInvokationsScanningStack[i] + "_" + i + "_"
+
+			theSymbol = prefixVar + theSymbol
+			symbolsLeftOfAssignment.push theSymbol
+
 scan_symbol = ->
 	if (token != T_SYMBOL)
 		scan_error("symbol expected")
@@ -413,6 +436,8 @@ scan_symbol = ->
 	if scanningParameters.length == 0
 		if DEBUG then console.log "out of scanning parameters, processing " + token_buf
 		lastFoundSymbol = token_buf
+		if isSymbolLeftOfAssignment
+			addSymbolLeftOfAssignment token_buf
 	else
 		if DEBUG then console.log "still scanning parameters, skipping " + token_buf
 		if isSymbolLeftOfAssignment
