@@ -341,7 +341,7 @@ multiply_all_noexpand = (n) ->
 
 #-----------------------------------------------------------------------------
 #
-#	Symbolic division
+#	Symbolic division, or numeric division if doubles are found.
 #
 #	Input:		Dividend and divisor on stack
 #
