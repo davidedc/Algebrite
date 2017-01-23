@@ -1209,7 +1209,10 @@ check_stack = ->
 		stop("frame error")
 	if chainOfUserSymbolsNotFunctionsBeingEvaluated.length != 0
 		debugger
-		stop("symbols evaluation ongoing?")
+		stop("symbols evaluation still ongoing?")
+	if evaluatingAsFloats != 0
+		debugger
+		stop("numeric evaluation still ongoing?")
 
 # cannot reference symbols yet
 
