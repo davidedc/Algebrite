@@ -484,7 +484,7 @@ pop_integer = ->
 				n = 0x80000000
 
 		when DOUBLE
-			n = Math.floor p1.q.a
+			n = Math.floor p1.d
 
 		else
 			n = 0x80000000
