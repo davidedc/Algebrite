@@ -469,7 +469,7 @@ push_rational = (a,b) ->
 	push(p)
 
 pop_integer = ->
-	n = 0
+	n = 0x80000000
 
 	save()
 
@@ -480,14 +480,14 @@ pop_integer = ->
 		when NUM
 			if (isinteger(p1) && p1.q.a.isSmall)
 				n = p1.q.a.toJSNumber()
-			else
-				n = 0x80000000
 
 		when DOUBLE
-			n = Math.floor p1.d
-
-		else
-			n = 0x80000000
+			if DEBUG
+				console.log "popping integer but double is found"
+			if Math.floor(p1.d) == p1.d
+				if DEBUG
+					console.log "...altough it's an integer"
+				n = p1.d
 
 	restore()
 	return n
