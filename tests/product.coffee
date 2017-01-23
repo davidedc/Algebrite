@@ -1,5 +1,8 @@
 test_product = ->
 	run_test [
+		
+		# compute pi using Viete's formula
+
 		"a(n)=test(n=0,0,sqrt(2+a(n-1)))",
 		"",
 
