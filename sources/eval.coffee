@@ -15,11 +15,7 @@ Eval = ->
 	switch (p1.k)
 		when CONS
 			Eval_cons()
-		when NUM
-			push(p1)
-		when DOUBLE
-			push(p1)
-		when STR
+		when NUM, DOUBLE, STR
 			push(p1)
 		when TENSOR
 			Eval_tensor()
