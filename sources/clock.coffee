@@ -15,6 +15,8 @@
 # definition specific to eigenmath.
 
 
+DEBUG_CLOCKFORM = false
+
 Eval_clock = ->
 	push(cadr(p1))
 	Eval()
@@ -26,9 +28,13 @@ clockform = ->
 	p1 = pop()
 	push(p1)
 	mag()
+	if DEBUG_CLOCKFORM then console.log "clockform: mag of " + p1 + " : " + stack[tos-1]
+
 	push_integer(-1)
+
 	push(p1)
 	arg()
+	if DEBUG_CLOCKFORM then console.log "clockform: arg of " + p1 + " : " + stack[tos-1]
 	if evaluatingAsFloats
 		push_double(Math.PI)
 	else
@@ -36,6 +42,7 @@ clockform = ->
 	divide()
 	power()
 	multiply()
+	if DEBUG_CLOCKFORM then console.log "clockform: multiply : " + stack[tos-1]
 	#else
 	###
 	p1 = pop()
