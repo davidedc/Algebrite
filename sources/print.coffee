@@ -408,10 +408,10 @@ print_TRANSPOSE_latex = (p) ->
 	accumulator = ""
 	accumulator += print_str("{")
 	if iscons(cadr(p))
-		accumulator += print_str("(")
+		accumulator += print_str('(')
 	accumulator += print_expr(cadr(p))
 	if iscons(cadr(p))
-		accumulator += print_str(")")
+		accumulator += print_str(')')
 	accumulator += print_str("}")
 	accumulator += print_str("^T")
 	return accumulator
@@ -420,10 +420,10 @@ print_INV_latex = (p) ->
 	accumulator = ""
 	accumulator += print_str("{")
 	if iscons(cadr(p))
-		accumulator += print_str("(")
+		accumulator += print_str('(')
 	accumulator += print_expr(cadr(p))
 	if iscons(cadr(p))
-		accumulator += print_str(")")
+		accumulator += print_str(')')
 	accumulator += print_str("}")
 	accumulator += print_str("^{-1}")
 	return accumulator
@@ -471,7 +471,7 @@ print_tensor = (p) ->
 print_tensor_inner = (p, j, k) ->
 	accumulator = ""
 	i = 0
-	if codeGen then accumulator += print_str("[") else accumulator += print_str("(")
+	if codeGen then accumulator += print_str("[") else accumulator += print_str('(')
 	for i in [0...p.tensor.dim[j]]
 		if (j + 1 == p.tensor.ndim)
 			accumulator += print_expr(p.tensor.elem[k])
@@ -481,19 +481,19 @@ print_tensor_inner = (p, j, k) ->
 			accumulator += retString
 		if (i + 1 < p.tensor.dim[j])
 			accumulator += print_str(",")
-	if codeGen then accumulator += print_str("]") else accumulator += print_str(")")
+	if codeGen then accumulator += print_str("]") else accumulator += print_str(')')
 	return [k, accumulator]
 
 print_base = (p) ->
 	accumulator = ""
 	if (isadd(cadr(p)) || caadr(p) == symbol(MULTIPLY) || caadr(p) == symbol(POWER) || isnegativenumber(cadr(p)))
-		accumulator += print_str("(")
+		accumulator += print_str('(')
 		accumulator += print_expr(cadr(p))
-		accumulator += print_str(")")
+		accumulator += print_str(')')
 	else if (isnum(cadr(p)) && (lessp(cadr(p), zero) || isfraction(cadr(p))))
-		accumulator += print_str("(")
+		accumulator += print_str('(')
 		accumulator += print_factor(cadr(p))
-		accumulator += print_str(")")
+		accumulator += print_str(')')
 	else
 		accumulator += print_factor(cadr(p))
 	return accumulator
@@ -501,9 +501,9 @@ print_base = (p) ->
 print_exponent = (p) ->
 	accumulator = ""
 	if (iscons(caddr(p)) || isfraction(caddr(p)) || (isnum(caddr(p)) && lessp(caddr(p), zero)))
-		accumulator += print_str("(")
+		accumulator += print_str('(')
 		accumulator += print_expr(caddr(p))
-		accumulator += print_str(")")
+		accumulator += print_str(')')
 	else
 		accumulator += print_factor(caddr(p))
 	return accumulator
@@ -518,7 +518,7 @@ print_power = (base, exponent) ->
 		accumulator += print_base_of_denom base
 		accumulator += print_str(", ")
 		accumulator += print_expo_of_denom exponent
-		accumulator += print_str(")")
+		accumulator += print_str(')')
 		return accumulator
 
 	if ((equaln(get_binding(symbol(PRINT_LEAVE_E_ALONE)), 1)) and base == symbol(E))
@@ -529,7 +529,7 @@ print_power = (base, exponent) ->
 		else
 			accumulator += print_str("exp(")
 			accumulator += print_expr(exponent)
-			accumulator += print_str(")")
+			accumulator += print_str(')')
 		return accumulator
 
 	
@@ -551,9 +551,9 @@ print_power = (base, exponent) ->
 					accumulator += print_str("1/")
 
 				if (iscons(base) and printMode != PRINTMODE_LATEX)
-					accumulator += print_str("(")
+					accumulator += print_str('(')
 					accumulator += print_expr(base)
-					accumulator += print_str(")")
+					accumulator += print_str(')')
 				else
 					accumulator += print_expr(base)
 
@@ -576,9 +576,9 @@ print_power = (base, exponent) ->
 				newExponent = pop()
 
 				if (iscons(base) and printMode != PRINTMODE_LATEX)
-					accumulator += print_str("(")
+					accumulator += print_str('(')
 					accumulator += print_power(base, newExponent)
-					accumulator += print_str(")")
+					accumulator += print_str(')')
 				else
 					accumulator += print_power(base, newExponent)
 
@@ -621,17 +621,17 @@ print_power = (base, exponent) ->
 		# determining if it needs to be
 		# wrapped in parentheses or not
 		if (isadd(base) || isnegativenumber(base))
-			accumulator += print_str("(")
+			accumulator += print_str('(')
 			accumulator += print_expr(base)
-			accumulator += print_str(")")
+			accumulator += print_str(')')
 		else if ( car(base) == symbol(MULTIPLY) || car(base) == symbol(POWER))
-			if printMode != PRINTMODE_LATEX then accumulator += print_str("(")
 			accumulator += print_factor(base)
-			if printMode != PRINTMODE_LATEX then accumulator += print_str(")")
+			if printMode != PRINTMODE_LATEX then accumulator += print_str('(')
+			if printMode != PRINTMODE_LATEX then accumulator += print_str(')')
 		else if (isnum(base) && (lessp(base, zero) || isfraction(base)))
-			accumulator += print_str("(")
+			accumulator += print_str('(')
 			accumulator += print_factor(base)
-			accumulator += print_str(")")
+			accumulator += print_str(')')
 		else
 			accumulator += print_factor(base)
 
@@ -648,12 +648,12 @@ print_power = (base, exponent) ->
 			if printMode == PRINTMODE_LATEX
 				accumulator += print_str("{")
 			else
-				accumulator += print_str("(")
+				accumulator += print_str('(')
 			accumulator += print_expr(exponent)
 			if printMode == PRINTMODE_LATEX
 				accumulator += print_str("}")
 			else
-				accumulator += print_str(")")
+				accumulator += print_str(')')
 		else
 			accumulator += print_factor(exponent)
 	return accumulator
@@ -833,7 +833,7 @@ print_list = (p) ->
 	accumulator = ""
 	switch (p.k)
 		when CONS
-			accumulator += ("(")
+			accumulator += ('(')
 			accumulator += print_list(car(p))
 			if p == cdr(p) and p != symbol(NIL)
 				console.log "oh no recursive!"
@@ -849,7 +849,7 @@ print_list = (p) ->
 			if (p != symbol(NIL))
 				accumulator += (" . ")
 				accumulator += print_list(p)
-			accumulator += (")")
+			accumulator += (')')
 		when STR
 			#print_str("\"")
 			accumulator += (p.str)
