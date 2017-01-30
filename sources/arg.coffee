@@ -73,6 +73,13 @@ yyarg = ->
 	save()
 	p1 = pop()
 	if (isnegativenumber(p1))
+	# case of plain number
+	if (ispositivenumber(p1))
+		if isdouble(p1) or evaluatingAsFloats
+			push_double(0)
+		else
+			push_integer(0)
+	else if (isnegativenumber(p1))
 		if isdouble(p1) or evaluatingAsFloats
 			push_double(Math.PI)
 		else
