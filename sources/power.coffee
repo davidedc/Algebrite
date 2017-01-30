@@ -7,8 +7,10 @@
 	Output:		Result on stack
 ###
 
+DEBUG_POWER = false
 
 Eval_power = ->
+	if DEBUG_POWER then debugger
 	push(cadr(p1))
 	Eval()
 	push(caddr(p1))
@@ -21,12 +23,17 @@ power = ->
 	restore()
 
 yypower = ->
+	if DEBUG_POWER then debugger
 	n = 0
 
 	p2 = pop() # exponent
-	#console.log("EVALING THE BASE: " + stack[tos-1].toString())
-
 	p1 = pop() # base
+
+	inputExp = p2
+	inputBase = p1
+
+	if DEBUG_POWER
+		console.log("POWER: " + p1 + " ^ " + p2)
 
 	# first, some very basic simplifications right away
 
@@ -34,24 +41,26 @@ yypower = ->
 	#	a ^ 0		->	1
 	if (equal(p1, one) || iszero(p2))
 		push(one)
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
 	#	a ^ 1		->	a
 	if (equal(p2, one))
 		push(p1)
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
 	#   -1 ^ -1		->	-1
 	if (isminusone(p1) and isminusone(p2))
-		#console.log("************** replacing -1^1/2 with i *********** ")
 		push(one)
 		negate()
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
 	#   -1 ^ 1/2	->	i
 	if (isminusone(p1) and (isoneovertwo(p2)))
-		#console.log("************** replacing -1^1/2 with i *********** ")
 		push(imaginaryunit)
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
 	#   -1 ^ -1/2	->	-i
@@ -65,32 +74,40 @@ yypower = ->
 	# both base and exponent are rational numbers?
 
 	if (isrational(p1) && isrational(p2))
-		#console.log("isrational(p1) && isrational(p2)")
+		if DEBUG_POWER then console.log("   power: isrational(p1) && isrational(p2)")
 		push(p1)
 		push(p2)
 		qpow()
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
 	# both base and exponent are either rational or double?
 	if (isnum(p1) && isnum(p2))
-		#console.log("isnum(p1) && isnum(p2)")
+		if DEBUG_POWER then console.log "   power: both base and exponent are either rational or double "
+		if DEBUG_POWER then console.log("POWER - isnum(p1) && isnum(p2)")
 		push(p1)
 		push(p2)
 		dpow()
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
 	if (istensor(p1))
+		if DEBUG_POWER then console.log "   power: istensor(p1) "
 		power_tensor()
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
 	# e^log(...)
 	if (p1 == symbol(E) && car(p2) == symbol(LOG))
 		push(cadr(p2))
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
 	# e^some_float
 	if (p1 == symbol(E) && isdouble(p2))
+		if DEBUG_POWER then console.log "   power: p1 == symbol(E) && isdouble(p2) "
 		push_double(Math.exp(p2.d))
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
 
@@ -110,6 +127,7 @@ yypower = ->
 			power()
 			multiply()
 			p1 = cdr(p1)
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
 	# (a ^ b) ^ c	->	a ^ (b * c)
@@ -124,18 +142,23 @@ yypower = ->
 		power()
 		return
 
+
+	#	when expanding,
 	#	(a + b) ^ n	->	(a + b) * (a + b) ...
 
 	if (expanding && isadd(p1) && isnum(p2))
 		push(p2)
 		n = pop_integer()
 		if (n > 1 && n != 0x80000000)
+			if DEBUG_POWER then console.log "   power: expanding && isadd(p1) && isnum(p2) "
 			power_sum(n)
+			if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 			return
 
 	#	sin(x) ^ 2n -> (1 - cos(x) ^ 2) ^ n
 
 	if (trigmode == 1 && car(p1) == symbol(SIN) && iseveninteger(p2))
+		if DEBUG_POWER then console.log "   power: trigmode == 1 && car(p1) == symbol(SIN) && iseveninteger(p2) "
 		push_integer(1)
 		push(cadr(p1))
 		cosine()
@@ -146,11 +169,13 @@ yypower = ->
 		push_rational(1, 2)
 		multiply()
 		power()
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
 	#	cos(x) ^ 2n -> (1 - sin(x) ^ 2) ^ n
 
 	if (trigmode == 2 && car(p1) == symbol(COS) && iseveninteger(p2))
+		if DEBUG_POWER then console.log "   power: trigmode == 2 && car(p1) == symbol(COS) && iseveninteger(p2) "
 		push_integer(1)
 		push(cadr(p1))
 		sine()
@@ -161,12 +186,15 @@ yypower = ->
 		push_rational(1, 2)
 		multiply()
 		power()
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
+
 
 	# complex number? (just number, not expression)
 
 	if (iscomplexnumber(p1))
 
+		if DEBUG_POWER then console.log " power - handling the case (a + ib) ^ n"
 		# integer power?
 
 		# n will be negative here, positive n already handled
@@ -188,6 +216,7 @@ yypower = ->
 			push(p3)
 			push(p1)
 			multiply()
+			
 			divide()
 			push(p2)
 			negate()
@@ -232,6 +261,7 @@ yypower = ->
 					push(p2)
 					list(3)
 
+			if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 			return
 
 			#
@@ -251,12 +281,17 @@ yypower = ->
 			#
 
 	if (simplify_polar())
+		if DEBUG_POWER then console.log "   power: using simplify_polar"
 		return
 
+
+
+	if DEBUG_POWER then console.log "   power: nothing can be done "
 	push_symbol(POWER)
 	push(p1)
 	push(p2)
 	list(3)
+	if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 
 #-----------------------------------------------------------------------------
 #
