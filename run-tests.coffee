@@ -3,6 +3,7 @@
 test_low_level = ->
 	run("clearall"); # to initialize stack and memory
 
+	test_clearall()
 	test_inv()
 	test_printlatex()
 	test_mixedprint()
