@@ -492,7 +492,7 @@ reset_after_error = ->
 	esc_flag = 0
 	draw_flag = 0
 	frame = TOS
-
+	evaluatingAsFloats = 0
 
 
 $ = (exports ? this)
