@@ -46,8 +46,10 @@ clockform = ->
 	else
 		push(symbol(PI))
 	divide()
+	if DEBUG_CLOCKFORM then console.log "clockform: divide : " + stack[tos-1]
 	list(3)
 
+	if DEBUG_CLOCKFORM then console.log "clockform: power : " + stack[tos-1]
 	multiply()
 	if DEBUG_CLOCKFORM then console.log "clockform: multiply : " + stack[tos-1]
 	#else
