@@ -11,6 +11,9 @@
 #static void parse_p2(void)
 #static void __normalize_radical_factors(int)
 
+# this one doesn't eval the factors,
+# so you pass i*(-1)^(1/2), it wouldnt't
+# give -1, because i is not evalled
 multiply = ->
 	if (esc_flag)
 		stop("escape key stop")

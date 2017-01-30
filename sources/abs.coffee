@@ -82,6 +82,7 @@ absval = ->
 
 	restore()
 
+# also called the "norm" of a vector
 absval_tensor = ->
 	if (p1.tensor.ndim != 1)
 		stop("abs(tensor) with tensor rank > 1")

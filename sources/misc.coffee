@@ -39,9 +39,10 @@ peek = ->
 	restore()
 
 # see cmp_expr definition, this
-# function alone just compares structures
-# can't be used alone to test
-# mathematical equalities...
+# function alone just does simple structure comparison
+# or compares numbers (either rationals or integers or doubles)
+# but can't be used alone to test
+# more complex mathematical equalities...
 equal = (p1,p2) ->
 	if (cmp_expr(p1, p2) == 0)
 		return 1

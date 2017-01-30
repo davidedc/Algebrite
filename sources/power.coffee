@@ -32,29 +32,29 @@ yypower = ->
 
 	#	1 ^ a		->	1
 	#	a ^ 0		->	1
-
 	if (equal(p1, one) || iszero(p2))
 		push(one)
 		return
 
 	#	a ^ 1		->	a
-
 	if (equal(p2, one))
 		push(p1)
 		return
 
-
+	#   -1 ^ -1		->	-1
 	if (isminusone(p1) and isminusone(p2))
 		#console.log("************** replacing -1^1/2 with i *********** ")
 		push(one)
 		negate()
 		return
 
+	#   -1 ^ 1/2	->	i
 	if (isminusone(p1) and (isoneovertwo(p2)))
 		#console.log("************** replacing -1^1/2 with i *********** ")
 		push(imaginaryunit)
 		return
 
+	#   -1 ^ -1/2	->	-i
 	if (isminusone(p1) and isminusoneovertwo(p2))
 		#console.log("************** replacing -1^1/2 with i *********** ")
 		push(imaginaryunit)
@@ -83,16 +83,20 @@ yypower = ->
 		power_tensor()
 		return
 
+	# e^log(...)
 	if (p1 == symbol(E) && car(p2) == symbol(LOG))
 		push(cadr(p2))
 		return
 
+	# e^some_float
 	if (p1 == symbol(E) && isdouble(p2))
 		push_double(Math.exp(p2.d))
 		return
 
 
 	#	(a * b) ^ c	->	(a ^ c) * (b ^ c)
+	# note that we can't in general do this, for example
+	# sqrt(x*y) != x^(1/2) y^(1/2) (counterexample" x = -1 and y = -1)
 
 	if (car(p1) == symbol(MULTIPLY))
 		p1 = cdr(p1)
@@ -108,7 +112,9 @@ yypower = ->
 			p1 = cdr(p1)
 		return
 
-	#	(a ^ b) ^ c	->	a ^ (b * c)
+	# (a ^ b) ^ c	->	a ^ (b * c)
+	# note that we can't in general do this, for example
+	# sqrt(x^y) !=  x^(1/2 y) (counterexample x = -1)
 
 	if (car(p1) == symbol(POWER))
 		push(cadr(p1))
@@ -177,6 +183,8 @@ yypower = ->
 			conjugate()
 			p3 = pop()
 			push(p3)
+
+			# gets the denominator
 			push(p3)
 			push(p1)
 			multiply()

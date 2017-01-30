@@ -15,6 +15,8 @@ Eval_conj = ->
 		conjugate()
 
 
+# careful is you pass this one an expression with
+# i (instead of (-1)^(1/2)) then this doesn't work!
 conjugate = ->
 	push(imaginaryunit)
 	push(imaginaryunit)

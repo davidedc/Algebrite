@@ -305,7 +305,8 @@ Eval_Eval = ->
 		p1 = cddr(p1)
 	Eval()
 
-# exp definition
+# exp evaluation: it replaces itself with
+# a POWER(E,something) node and evals that one
 Eval_exp = ->
 	push(cadr(p1))
 	Eval()
