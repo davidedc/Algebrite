@@ -34,7 +34,7 @@ test_multiply = ->
 			# clean in numerator, avoid these
 			# forms
 			#"2^(-1/2)",
-			"1/2*2^(1/2)"
+			"1/2*2^(1/2)",
 
 			"2/sqrt(2)",
 			"2^(1/2)",

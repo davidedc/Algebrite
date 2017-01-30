@@ -666,7 +666,7 @@ test_integral = ->
 		"integral(cosh(X)^2,X)-sinh(2*X)/4-X/2",
 		"0",
 
-	# test integral(exp(a*x^2))
+		# test integral(exp(a*x^2))
 
 		"integral(exp(a*x^2))+i*sqrt(pi)*erf(i*sqrt(a)*x)/sqrt(a)/2",
 		"0",

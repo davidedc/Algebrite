@@ -25,16 +25,16 @@ test_rect = ->
 		"rect(exp(-3/4*i*pi))",
 		"-1/2*2^(1/2)-1/2*i*2^(1/2)",
 
-		"rect(exp(-1/4*i*pi))"
+		"rect(exp(-1/4*i*pi))",
 		"1/2*2^(1/2)-1/2*i*2^(1/2)",
 
-		"rect(exp(-2/4*i*pi))"
+		"rect(exp(-2/4*i*pi))",
 		"-i",
 
-		"rect(exp(-3/4*i*pi))"
+		"rect(exp(-3/4*i*pi))",
 		"-1/2*2^(1/2)-1/2*i*2^(1/2)",
 
-		"rect(exp(-4/4*i*pi))"
+		"rect(exp(-4/4*i*pi))",
 		"-1",
 
 	]
