@@ -625,8 +625,8 @@ print_power = (base, exponent) ->
 			accumulator += print_expr(base)
 			accumulator += print_str(')')
 		else if ( car(base) == symbol(MULTIPLY) || car(base) == symbol(POWER))
-			accumulator += print_factor(base)
 			if printMode != PRINTMODE_LATEX then accumulator += print_str('(')
+			accumulator += print_factor(base, true)
 			if printMode != PRINTMODE_LATEX then accumulator += print_str(')')
 		else if (isnum(base) && (lessp(base, zero) || isfraction(base)))
 			accumulator += print_str('(')
@@ -678,7 +678,7 @@ print_index_function = (p) ->
 	return accumulator
 
 
-print_factor = (p) ->
+print_factor = (p, omitParens) ->
 	accumulator = ""
 	if (isnum(p))
 		accumulator += print_number(p, false)
@@ -695,22 +695,24 @@ print_factor = (p) ->
 		return accumulator
 
 	if (car(p) == symbol(MULTIPLY))
-		if (sign_of_term(p) == '-' or printMode != PRINTMODE_LATEX)
-			if printMode == PRINTMODE_LATEX
-				accumulator += print_str(" \\left (")
-			else
-				accumulator += print_str("(")
+		if !omitParens
+			if (sign_of_term(p) == '-' or printMode != PRINTMODE_LATEX)
+				if printMode == PRINTMODE_LATEX
+					accumulator += print_str(" \\left (")
+				else
+					accumulator += print_str('(')
 		accumulator += print_expr(p)
-		if (sign_of_term(p) == '-' or printMode != PRINTMODE_LATEX)
-			if printMode == PRINTMODE_LATEX
-				accumulator += print_str(" \\right ) ")
-			else
-				accumulator += print_str("(")
+		if !omitParens
+			if (sign_of_term(p) == '-' or printMode != PRINTMODE_LATEX)
+				if printMode == PRINTMODE_LATEX
+					accumulator += print_str(" \\right ) ")
+				else
+					accumulator += print_str(')')
 		return accumulator
 	else if (isadd(p))
-		accumulator += print_str("(")
+		if !omitParens then accumulator += print_str('(')
 		accumulator += print_expr(p)
-		accumulator += print_str(")")
+		if !omitParens then accumulator += print_str(')')
 		return accumulator
 
 	if (car(p) == symbol(POWER))
@@ -801,7 +803,7 @@ print_factor = (p) ->
 		#}
 		accumulator += print_factor(car(p))
 		p = cdr(p)
-		accumulator += print_str("(")
+		if !omitParens then accumulator += print_str('(')
 		if (iscons(p))
 			accumulator += print_expr(car(p))
 			p = cdr(p)
@@ -809,7 +811,7 @@ print_factor = (p) ->
 				accumulator += print_str(",")
 				accumulator += print_expr(car(p))
 				p = cdr(p)
-		accumulator += print_str(")")
+		if !omitParens then accumulator += print_str(')')
 		return accumulator
 
 	if (p == symbol(DERIVATIVE))
