@@ -149,8 +149,18 @@ yyarg = ->
 				else
 					add();		# quadrant 4 -> 2
 	else
-		# pure real
-		push_integer(0)
+
+		if (!iszero(get_binding(symbol(ASSUME_REAL_VARIABLES))))
+			# if we assume all passed values are real
+			push_integer(0)
+		else
+			# if we don't assume all passed values are real, all
+			# we con do is to leave unexpressed
+			push_symbol(ARG)
+			push(p1)
+			list(2)
+
+
 	restore()
 
 
