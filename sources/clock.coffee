@@ -30,6 +30,12 @@ clockform = ->
 	mag()
 	if DEBUG_CLOCKFORM then console.log "clockform: mag of " + p1 + " : " + stack[tos-1]
 
+	# pushing the expression (-1)^... but note
+	# that we can't use "power", as "power" evaluates
+	# clock forms into rectangular form (see "-1 ^ rational"
+	# section in power)
+	push_symbol(POWER)
+
 	push_integer(-1)
 
 	push(p1)
@@ -40,7 +46,8 @@ clockform = ->
 	else
 		push(symbol(PI))
 	divide()
-	power()
+	list(3)
+
 	multiply()
 	if DEBUG_CLOCKFORM then console.log "clockform: multiply : " + stack[tos-1]
 	#else
