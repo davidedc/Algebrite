@@ -97,6 +97,16 @@ yyarg = ->
 		# exponential
 		push(caddr(p1))
 		imag()
+	# arg(a^(1/2)) is always equal to 1/2 * arg(a)
+	# this can obviously be made more generic TODO
+	else if (car(p1) == symbol(POWER) && isoneovertwo(caddr(p1)))
+		if DEBUG_ARG then console.log "arg of a sqrt: " + p1
+		if DEBUG_ARG then debugger
+		push(cadr(p1))
+		arg()
+		if DEBUG_ARG then console.log " = 1/2 * " + stack[tos-1]
+		push(caddr(p1))
+		multiply()
 	else if (car(p1) == symbol(MULTIPLY))
 		# product of factors
 		push_integer(0)
