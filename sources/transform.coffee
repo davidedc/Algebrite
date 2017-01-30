@@ -192,7 +192,10 @@ transform = (s, generalTransform) ->
 
 	else # "integrals" mode
 		for eachTransformEntry in s
-			if DEBUG then console.log "scanning table entry " + eachTransformEntry
+			if DEBUG
+				console.log "scanning table entry " + eachTransformEntry
+				if (eachTransformEntry + "").indexOf("f(sqrt(a+b*x),2/3*1/b*sqrt((a+b*x)^3))") != -1
+					debugger
 			if eachTransformEntry
 				scan_meta(eachTransformEntry)
 				p1 = pop()
@@ -288,7 +291,11 @@ f_equals_a = (h, generalTransform) ->
 				# skip to the next binding of metas
 				continue
 			push(p3);			# F = A?
-			if DEBUG then console.log "about to evaluate template expression: " + p5 + " binding METAA to " + get_binding(symbol(METAA))
+			if DEBUG
+				console.log "about to evaluate template expression: " + p5 +
+					" binding METAA to " + get_binding(symbol(METAA)) +
+					" and binding METAB to " + get_binding(symbol(METAB)) +
+					" and binding METAX to " + get_binding(symbol(METAX))
 			push(p5)
 			if generalTransform
 				originalexpanding = expanding
@@ -304,6 +311,7 @@ f_equals_a = (h, generalTransform) ->
 				if DEBUG
 					console.log "binding METAA to " + get_binding(symbol(METAA))
 					console.log "binding METAB to " + get_binding(symbol(METAB))
+					console.log "binding METAX to " + get_binding(symbol(METAX))
 					console.log "comparing " + p3 + " to: " + p5
 				return 1;		# yes
 	return 0;					# no
