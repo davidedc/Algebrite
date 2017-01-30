@@ -384,16 +384,6 @@ Eval_isinteger = ->
 	push(p1)
 	list(2)
 
-Eval_multiply = ->
-	push(cadr(p1))
-	Eval()
-	p1 = cddr(p1)
-	while (iscons(p1))
-		push(car(p1))
-		Eval()
-		multiply()
-		p1 = cdr(p1)
-
 Eval_number = ->
 	push(cadr(p1))
 	Eval()

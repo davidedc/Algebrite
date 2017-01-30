@@ -11,6 +11,16 @@
 #static void parse_p2(void)
 #static void __normalize_radical_factors(int)
 
+Eval_multiply = ->
+	push(cadr(p1))
+	Eval()
+	p1 = cddr(p1)
+	while (iscons(p1))
+		push(car(p1))
+		Eval()
+		multiply()
+		p1 = cdr(p1)
+
 # this one doesn't eval the factors,
 # so you pass i*(-1)^(1/2), it wouldnt't
 # give -1, because i is not evalled
