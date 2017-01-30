@@ -22,8 +22,12 @@ qpowf = ->
 		push_integer(1)
 		return
 
-	# if base is zero then return 0
+	# if (-1)^(1/2) -> leave it as is
+	if (isminusone(p1) and isoneovertwo(p2))  # p1 is BASE  # p2 is EXPO
+		push(imaginaryunit)
+		return
 
+	# if base is zero then return 0
 	if (iszero(p1))  # p1 is BASE
 		if (isnegativenumber(p2))  # p2 is EXPO
 			stop("divide by zero")
