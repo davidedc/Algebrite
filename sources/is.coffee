@@ -1,5 +1,7 @@
 
 
+DEBUG_IS = false
+
 # p is a U
 iszero = (p) ->
 	i = 0
@@ -173,13 +175,16 @@ iscomplexnumberdouble = (p) ->
 		return 0
 
 iscomplexnumber = (p) ->
+	if DEBUG_IS then debugger
 	if ((car(p) == symbol(ADD) \
 	&& length(p) == 3 \
 	&& isnum(cadr(p)) \
 	&& isimaginarynumber(caddr(p))) \
 	|| isimaginarynumber(p))
+		if DEBUG then console.log "iscomplexnumber: " + p.toString() + " is imaginary number"
 		return 1
 	else
+		if DEBUG then console.log "iscomplexnumber: " + p.toString() + " is imaginary number"
 		return 0
 
 iseveninteger = (p) ->
@@ -197,7 +202,9 @@ isnegative = (p) ->
 		return 0
 
 # returns 1 if there's a symbol somewhere
-
+# not used anywhere. Note that PI is a symbol,
+# while -1^(1/2) i.e. 'i' is not, so this can
+# be tricky to use.
 issymbolic = (p) ->
 	if (issymbol(p))
 		return 1
