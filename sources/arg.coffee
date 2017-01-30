@@ -72,7 +72,7 @@ arg = ->
 yyarg = ->
 	save()
 	p1 = pop()
-	if (isnegativenumber(p1))
+
 	# case of plain number
 	if (ispositivenumber(p1))
 		if isdouble(p1) or evaluatingAsFloats
