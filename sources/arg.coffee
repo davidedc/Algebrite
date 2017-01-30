@@ -47,7 +47,7 @@ Notes
 	   automatic.
 ###
 
-
+DEBUG_ARG = false
 
 Eval_arg = ->
 	push(cadr(p1))
@@ -85,6 +85,7 @@ yyarg = ->
 		else
 			push(symbol(PI))
 		negate()
+
 	else if (car(p1) == symbol(POWER) && equaln(cadr(p1), -1))
 		# -1 to a power
 		if evaluatingAsFloats
