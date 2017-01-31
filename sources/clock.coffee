@@ -14,10 +14,11 @@
 # of the naming "clock form" anywhere on the web, seems like a
 # naming specific to eigenmath.
 # Clock form is another way to express a complex number, and
-# it has two advantages
+# it has three advantages
 #   1) it's uniform with how for example
 #      i is expressed i.e. (-1)^(1/2)
 #   2) it's very compact
+#   3) it's a straighforward notation for roots of 1 and -1
 
 
 DEBUG_CLOCKFORM = false
