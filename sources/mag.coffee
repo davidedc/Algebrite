@@ -68,11 +68,6 @@ yymag = ->
 		if DEBUG_MAG then console.log " mag: " + p1 + " just a negative"
 		push(p1)
 		negate()
-	else if (car(p1) == symbol(POWER) && cadr(p1) == symbol(E))
-		# exponential
-		push(caddr(p1))
-		real()
-		exponential()
 	else if (car(p1) == symbol(MULTIPLY))
 		# product
 		push_integer(1)
@@ -121,6 +116,17 @@ yymag = ->
 		if DEBUG_MAG then console.log " mag: " + p1 + " is -1 to any power"
 		# -1 to any power
 		push_integer(1)
+		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		restore()
+		return
+
+	# mag(e^something)
+	if (car(p1) == symbol(POWER) && cadr(p1) == symbol(E))
+		if DEBUG_MAG then console.log " mag: " + p1 + " is an exponential"
+		# exponential
+		push(caddr(p1))
+		real()
+		exponential()
 		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
 		restore()
 		return
