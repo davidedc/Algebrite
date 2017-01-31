@@ -392,5 +392,27 @@ test_simplify = ->
 		"simplify(inner(transpose(A),transpose(x)))",
 		"transpose(inner(x,A))",
 
+		# ---------------------------------------------
+		# checking that simplify doesn't make incorrect
+		# simplifications
+
+		"simplify(sqrt(-1/2 -1/2 * x))",
+		"(-1/2*x-1/2)^(1/2)",
+
+		"simplify(sqrt(x*y))",
+		"(x*y)^(1/2)",
+
+		"simplify(sqrt(1/x))",
+		"(1/x)^(1/2)",
+
+		"simplify(sqrt(x^y))",
+		"(x^y)^(1/2)",
+
+		"simplify(sqrt(x)^2)",
+		"x",
+
+		"simplify(sqrt(x^2))",
+		"mag(x)",
+
 
 	]
