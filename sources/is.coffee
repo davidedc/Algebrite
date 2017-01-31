@@ -216,7 +216,8 @@ isnegative = (p) ->
 		return 0
 
 # returns 1 if there's a symbol somewhere
-# not used anywhere. Note that PI is a symbol,
+# not used anywhere. Note that PI and POWER are symbols,
+# so for example 2^3 would be symbolic
 # while -1^(1/2) i.e. 'i' is not, so this can
 # be tricky to use.
 issymbolic = (p) ->
