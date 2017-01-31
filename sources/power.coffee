@@ -210,6 +210,24 @@ yypower = ->
 		push(p2)
 		multiply()
 		power()
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
+		return
+
+	b_isEven_and_c_isItsInverse = false
+	if iseveninteger(caddr(p1))
+		push caddr(p1)
+		push p2
+		multiply()
+
+		isThisOne = pop()
+		if isone(isThisOne)
+			b_isEven_and_c_isItsInverse = true
+
+	if (car(p1) == symbol(POWER) && b_isEven_and_c_isItsInverse)
+		if DEBUG_POWER then console.log "   power: car(p1) == symbol(POWER) && b_isEven_and_c_isItsInverse "
+		push(cadr(p1))
+		mag()
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
 
