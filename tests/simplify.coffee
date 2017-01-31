@@ -62,6 +62,11 @@ test_simplify = ->
 		"simplify(cos(x)^2-1)",
 		"-sin(x)^2",
 
+		# tries to get rid of sin and cos if there are more
+		# compact clockforms or exponential forms
+		"simplify(-cos(2/5*pi)*(k/a)^(1/5)-i*(k/a)^(1/5)*sin(2/5*pi))",
+		"((k/a)^(2/5))^(1/2)/((-1)^(3/5))",
+
 		#"simfac(n!/n)-(n-1)!",
 		#"0",
 
@@ -155,7 +160,7 @@ test_simplify = ->
 		"2-2^(1/2)",
 
 		"4-4*(-1)^(1/3)+4*(-1)^(2/3)",
-		"4-4*(-1)^(1/3)+4*(-1)^(2/3)",
+		"0",
 
 		"simplify(4-4*(-1)^(1/3)+4*(-1)^(2/3))",
 		"0",
@@ -191,22 +196,26 @@ test_simplify = ->
 		# where 108 is factored and some parts get out of the
 		# radical but there is no way to de-nest this.
 		"simplify((-108+108*(-1)^(1/2)*3^(1/2))^(1/3))",
-		"(-108+108*i*3^(1/2))^(1/3)",
+		"6*(-1)^(2/9)",
+		# also: "(-108+108*i*3^(1/2))^(1/3)" is a possible result
 
 		# you can take that 4 out of the radical
 		# but other than that there is no
 		# "sum or radicals" form of this
 		"simplify((-4+4*(-1)^(1/2)*3^(1/2))^(1/3))",
-		"(-4+4*i*3^(1/2))^(1/3)",
+		"2*(-1)^(2/9)",
+		# also: "(-4+4*i*3^(1/2))^(1/3)" is a possible result
 
 
 		# scrambling the order of things a little
 		# and checking whether the nested radical
 		# still gets simplified.
 		"simplify((((-3)^(1/2) + 1)/2)^(1/2))",
+		#"(-1)^(1/6)",
 		"1/2*(i+3^(1/2))",
 
 		"simplify((1/2 + (-3)^(1/2)/2)^(1/2))",
+		#"(-1)^(1/6)",
 		"1/2*(i+3^(1/2))",
 
 		# no possible de-nesting, should
@@ -235,6 +244,7 @@ test_simplify = ->
 		"2-i",
 
 		"simplify((-2 +2*3^(1/2)*i)^(1/2))",
+		#"2*(-1)^(1/3)",
 		"1+i*3^(1/2)",
 
 		"simplify((9 - 4*5^(1/2))^(1/2))",
@@ -251,14 +261,16 @@ test_simplify = ->
 		"-1+2^(1/2)",
 
 		"simplify((27/2+27/2*(-1)^(1/2)*3^(1/2))^(1/3))",
-		"(27/2+27/2*i*3^(1/2))^(1/3)",
+		"3*(-1)^(1/9)",
+		# also good: (27/2+27/2*i*3^(1/2))^(1/3)
 
 		# this nested radical is also equal to
 		# (-1)^(1/9)
 		# but there is no "sum of radicals" form
 		# for this.
 		"simplify((1/2+1/2*(-1)^(1/2)*3^(1/2))^(1/3))",
-		"(1/2+1/2*i*3^(1/2))^(1/3)",
+		"(-1)^(1/9)",
+		# also good: (1/2+1/2*i*3^(1/2))^(1/3)
 
 		"simplify((2 + 5^(1/2))^(1/3))",
 		"1/2*(1+5^(1/2))",
@@ -290,13 +302,13 @@ test_simplify = ->
 		"1/2*(17+3*5^(1/2))",
 
 		"-i*(-2*(-1)^(1/6)/(3^(1/2))+2*(-1)^(5/6)/(3^(1/2)))^(1/4)*(2*(-1)^(1/6)/(3^(1/2))-2*(-1)^(5/6)/(3^(1/2)))^(1/4)/(2^(1/2))",
-		"-i*(-2*(-1)^(1/6)/(3^(1/2))+2*(-1)^(5/6)/(3^(1/2)))^(1/4)*(2*(-1)^(1/6)/(3^(1/2))-2*(-1)^(5/6)/(3^(1/2)))^(1/4)/(2^(1/2))",
+		"1/2^(1/2)-i/(2^(1/2))",
 
 		"simplify(-i*(-2*(-1)^(1/6)/(3^(1/2))+2*(-1)^(5/6)/(3^(1/2)))^(1/4)*(2*(-1)^(1/6)/(3^(1/2))-2*(-1)^(5/6)/(3^(1/2)))^(1/4)/(2^(1/2)))",
 		# this one simplifies to any of these two, these are all the same:
-		#    (1-i)/(2^(1/2))
+		"(1-i)/(2^(1/2))",
 		#    -(-1)^(3/4)
-		"-(-1)^(3/4)",
+		#"-(-1)^(3/4)",
 
 		"(-1)^(-5/a)",
 		#"(-1)^(-5/a)",
@@ -346,6 +358,16 @@ test_simplify = ->
 
 		"simplify((1)^(6))",
 		"1",
+
+		# clockform can be much more compact than the
+		# rectangular format so we return that one,
+		# the user can always do a rect or a circexp on
+		# the result if she desires other forms
+		"simplify(i*2^(1/4)*sin(1/8*pi)+2^(1/4)*cos(1/8*pi))",
+		"(-1)^(1/8)*2^(1/4)",
+		# the circexp of the above is
+		# 2^(1/4) exp(1/8 i pi), which is less compact
+
 
 		# seems here that the simplification
 		# has more nodes than the result but
