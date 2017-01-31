@@ -96,7 +96,7 @@ yymag = ->
 
 		# sum
 		push(p1)
-		rect(); # convert polar terms, if any
+		rect() # convert polar terms, if any
 		p1 = pop()
 		push(p1)
 		real()
