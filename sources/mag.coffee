@@ -68,7 +68,9 @@ yymag = ->
 		if DEBUG_MAG then console.log " mag: " + p1 + " just a negative"
 		push(p1)
 		negate()
-	else if (car(p1) == symbol(ADD))
+		restore()
+		return
+
 	if (ispositivenumber(p1))
 		if DEBUG_MAG then console.log " mag: " + p1 + " just a positive"
 		push(p1)
@@ -85,6 +87,16 @@ yymag = ->
 
 	# ??? should there be a shortcut case here for the imaginary unit?
 
+	# Note that for this routine to give a correct result, this
+	# must be a sum where a complex number appears.
+	# If we apply this to "a+b", we get an incorrect result.
+	if (car(p1) == symbol(ADD) and (
+	 findPossibleClockForm(p1) or
+	 findPossibleExponentialForm(p1) or
+	 Find(p1,imaginaryunit))
+	)
+		if DEBUG_MAG then console.log " mag: " + p1 + " is a sum"
+		if DEBUG_MAG then console.log "mag of a sum"
 		# sum
 		push(p1)
 		rect() # convert polar terms, if any
