@@ -123,6 +123,17 @@ yymag = ->
 		restore()
 		return
 
+	# mag(a^b) is equal to mag(a)^b IF b is positive
+	if (car(p1) == symbol(POWER) && ispositivenumber(caddr(p1)))
+		if DEBUG_MAG then console.log " mag: " + p1 + " is something to the power of a positive number"
+		push cadr(p1)
+		mag()
+		push caddr(p1)
+		power()
+		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		restore()
+		return
+
 	# mag(e^something)
 	if (car(p1) == symbol(POWER) && cadr(p1) == symbol(E))
 		if DEBUG_MAG then console.log " mag: " + p1 + " is an exponential"
