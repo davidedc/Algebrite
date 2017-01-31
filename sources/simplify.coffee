@@ -144,6 +144,8 @@ simplify_main = ->
 			simplify()
 			return
 
+	simplify_rectToClock()
+
 	push(p1)
 
 simplify_tensor = ->
@@ -295,8 +297,28 @@ f9 = ->
 	if (count(p2) < count(p1))
 		p1 = p2
 
+# things like 6*(cos(2/9*pi)+i*sin(2/9*pi))
+# where we have sin and cos, those might start to
+# look better in clock form i.e.  6*(-1)^(2/9) 
+simplify_rectToClock = ->
+	#debugger
+
+	if (Find(p1, symbol(SIN)) == 0 && Find(p1, symbol(COS)) == 0)
+		return
+
+	push(p1)
+	Eval()
+	clockform()
+
+	p2 = pop(); # put new (hopefully simplified expr) in p2
+	if DEBUG then console.log "before simplification clockform: " + p1 + " after: " + p2
+
+	if (count(p2) < count(p1))
+		p1 = p2
+
 simplify_polarRect = ->
 	push(p1)
+
 	polarRectAMinusOneBase()
 	Eval()
 
