@@ -74,7 +74,7 @@ yyarg = ->
 	p1 = pop()
 
 	# case of plain number
-	if (ispositivenumber(p1))
+	if (ispositivenumber(p1) or p1 == symbol(PI))
 		if isdouble(p1) or evaluatingAsFloats
 			push_double(0)
 		else
@@ -85,6 +85,15 @@ yyarg = ->
 		else
 			push(symbol(PI))
 		negate()
+
+	# you'd think that something like
+	# arg(a) is always 0 when a is real but no,
+	# arg(a) is pi when a is negative so we have
+	# to leave unexpressed
+	else if (issymbol(p1))
+		push_symbol(ARG)
+		push(p1)
+		list(2)
 
 	else if (car(p1) == symbol(POWER) && equaln(cadr(p1), -1))
 		# -1 to a power
