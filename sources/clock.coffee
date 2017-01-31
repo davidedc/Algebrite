@@ -11,8 +11,11 @@
 ###
 
 # P.S. I couldn't find independent definition/aknowledgment
-# of a "clock form" anywhere on the web, seems like a
-# definition specific to eigenmath.
+# of the naming "clock form" anywhere on the web, seems like a
+# naming specific to eigenmath.
+# Clock form is another way to express a complex number, and
+# it has the advantage that it's uniform with how for example
+# i is expressed i.e. (-1)^(1/2)
 
 
 DEBUG_CLOCKFORM = false
