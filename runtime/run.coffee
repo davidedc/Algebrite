@@ -1213,6 +1213,9 @@ check_stack = ->
 	if evaluatingAsFloats != 0
 		debugger
 		stop("numeric evaluation still ongoing?")
+	if evaluatingPolar != 0
+		debugger
+		stop("evaluation of polar still ongoing?")
 
 # cannot reference symbols yet
 
