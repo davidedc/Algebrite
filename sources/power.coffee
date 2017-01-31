@@ -306,9 +306,12 @@ yypower = ->
 			multiply()
 			
 			divide()
-			push(p2)
-			negate()
-			power()
+
+			if !isone(p2)
+				push(p2)
+				negate()
+				power()
+			
 			return
 
 		# noninteger or floating power?
