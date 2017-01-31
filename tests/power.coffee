@@ -92,10 +92,10 @@ test_power = ->
 		"(-4.0)^(3/2)",
 		"-8*i",
 
-		# if you want some other form e.g. rectangular or polar
-		# you have to ask for it.
+		# usually the rectangular form is returned.
 		"(-1)^(1/3)",
-		"(-1)^(1/3)",
+		#"(-1)^(1/3)",
+		"1/2+1/2*i*3^(1/2)",
 
 		# note how the "double" type
 		# is toxic i.e. it propagates through
@@ -107,7 +107,8 @@ test_power = ->
 		# form but we are not calculating
 		# that.
 		"(-1)^(1/3)*2^(1/4)",
-		"(-1)^(1/3)*2^(1/4)",
+		#"(-1)^(1/3)*2^(1/4)",
+		"1/2*2^(1/4)+1/2*i*2^(1/4)*3^(1/2)",
 
 		"(-1)^(1/2)",
 		"i",
@@ -163,7 +164,8 @@ test_power = ->
 		"-1/2*i",
 
 		"(1+i)^(1/2)",
-		"(-1)^(1/8)*2^(1/4)",
+		#"(-1)^(1/8)*2^(1/4)",
+		"i*2^(1/4)*sin(1/8*pi)+2^(1/4)*cos(1/8*pi)",
 
 		"(1+i)^(-1/2)",
 		"-(-1)^(7/8)/(2^(1/4))",
