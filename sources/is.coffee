@@ -144,11 +144,21 @@ isnegativeterm = (p) ->
 	else
 		return 0
 
+hasNegativeRationalExponent = (p) ->
+	if (car(p) == symbol(POWER) \
+	&& isrational(car(cdr(cdr(p)))) \
+	&& isnegativenumber(car(cdr(p))))
+		if DEBUG_IS then console.log "hasNegativeRationalExponent: " + p.toString() + " has imaginary component"
+		return 1
+	else
+		if DEBUG_IS then console.log "hasNegativeRationalExponent: " + p.toString() + " has NO imaginary component"
+		return 0
+
 isimaginarynumberdouble = (p) ->
 	if ((car(p) == symbol(MULTIPLY) \
 	&& length(p) == 3 \
 	&& isdouble(cadr(p)) \
-	&& equal(caddr(p), imaginaryunit)) \
+	&& hasNegativeRationalExponent(caddr(p))) \
 	|| equal(p, imaginaryunit))
 		return 1
 	else 
@@ -159,9 +169,13 @@ isimaginarynumber = (p) ->
 	&& length(p) == 3 \
 	&& isnum(cadr(p)) \
 	&& equal(caddr(p), imaginaryunit)) \
-	|| equal(p, imaginaryunit))
+	|| equal(p, imaginaryunit) \
+	|| hasNegativeRationalExponent(caddr(p))
+	)
+		if DEBUG_IS then console.log "isimaginarynumber: " + p.toString() + " is imaginary number"
 		return 1
 	else 
+		if DEBUG_IS then console.log "isimaginarynumber: " + p.toString() + " isn't an imaginary number"
 		return 0
 
 iscomplexnumberdouble = (p) ->
