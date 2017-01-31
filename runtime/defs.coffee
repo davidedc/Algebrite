@@ -354,6 +354,7 @@ class text_metric
 tos = 0 # top of stack
 expanding = 0
 evaluatingAsFloats = 0
+evaluatingPolar = 0
 fmt_x = 0
 fmt_index = 0
 fmt_level = 0
@@ -493,6 +494,7 @@ reset_after_error = ->
 	draw_flag = 0
 	frame = TOS
 	evaluatingAsFloats = 0
+	evaluatingPolar = 0
 
 
 $ = (exports ? this)

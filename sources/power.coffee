@@ -149,6 +149,23 @@ yypower = ->
 		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
+	# complex number in exponential form, get it to rectangular
+	# but only if we are not in the process of calculating a polar form,
+	# otherwise we'd just undo the work we want to do
+	if (p1 == symbol(E) && Find(p2, imaginaryunit) != 0 and Find(p2, symbol(PI))!= 0 and !evaluatingPolar)
+		push_symbol(POWER)
+		push(p1)
+		push(p2)
+		list(3)
+		if DEBUG_POWER then console.log "   power: turning complex exponential to rect: " + stack[tos-1]
+		rect()
+
+		hopefullySimplified = pop(); # put new (hopefully simplified expr) in p2
+		if Find(hopefullySimplified, symbol(PI)) == 0
+			if DEBUG_POWER then console.log "   power: turned complex exponential to rect: " + hopefullySimplified
+			push hopefullySimplified
+			return
+
 
 	#	(a * b) ^ c	->	(a ^ c) * (b ^ c)
 	# note that we can't in general do this, for example
