@@ -56,6 +56,14 @@ yymag = ->
 	if DEBUG_MAG then console.log "MAG of " + p1
 
 
+	# handle all the "number" cases first -----------------------------------------
+	if (iszero(p1))
+		if DEBUG_MAG then console.log " mag: " + p1 + " just zero"
+		push(zero)
+		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		restore()
+		return
+
 	if (isnegativenumber(p1))
 		if DEBUG_MAG then console.log " mag: " + p1 + " just a negative"
 		push(p1)
@@ -78,6 +86,22 @@ yymag = ->
 			multiply()
 			p1 = cdr(p1)
 	else if (car(p1) == symbol(ADD))
+	if (ispositivenumber(p1))
+		if DEBUG_MAG then console.log " mag: " + p1 + " just a positive"
+		push(p1)
+		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		restore()
+		return
+
+	if (p1 == symbol(PI))
+		if DEBUG_MAG then console.log " mag: " + p1 + " of PI"
+		push(p1)
+		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		restore()
+		return
+
+	# ??? should there be a shortcut case here for the imaginary unit?
+
 		# sum
 		push(p1)
 		rect(); # convert polar terms, if any
