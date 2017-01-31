@@ -280,6 +280,7 @@ yypower = ->
 
 	# complex number? (just number, not expression)
 
+
 	if (iscomplexnumber(p1))
 
 		if DEBUG_POWER then console.log " power - handling the case (a + ib) ^ n"
@@ -312,6 +313,7 @@ yypower = ->
 				negate()
 				power()
 			
+			if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 			return
 
 		# noninteger or floating power?
