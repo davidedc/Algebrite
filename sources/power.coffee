@@ -31,6 +31,7 @@ yypower = ->
 
 	inputExp = p2
 	inputBase = p1
+	#debugger
 
 	if DEBUG_POWER
 		console.log("POWER: " + p1 + " ^ " + p2)
@@ -65,9 +66,9 @@ yypower = ->
 
 	#   -1 ^ -1/2	->	-i
 	if (isminusone(p1) and isminusoneovertwo(p2))
-		#console.log("************** replacing -1^1/2 with i *********** ")
 		push(imaginaryunit)
 		negate()
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
 
