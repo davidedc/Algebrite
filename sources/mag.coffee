@@ -158,6 +158,17 @@ yymag = ->
 		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
 		restore()
 		return
+
+	if (car(p1) == symbol(MAG))
+		if DEBUG_MAG then console.log " mag: " + p1 + " is mag of a mag"
+		# mag of a mag
+		push_symbol(MAG)
+		push cadr(p1)
+		list(2)
+		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		restore()
+		return
+
 		push(p1)
 	restore()
 
