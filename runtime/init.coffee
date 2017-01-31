@@ -29,6 +29,7 @@ defn_str = [
 	"e=exp(1)",
 	"i=sqrt(-1)",
 	"autoexpand=1",
+	"assumeRealVariables=1",
 	"trange=(-pi,pi)",
 	"xrange=(-10,10)",
 	"yrange=(-10,10)",
@@ -205,6 +206,8 @@ defn = ->
 
 	std_symbol("autoexpand", AUTOEXPAND)
 	std_symbol("bake", BAKE)
+	std_symbol("assumeRealVariables", ASSUME_REAL_VARIABLES)
+
 
 	std_symbol("last", LAST)
 

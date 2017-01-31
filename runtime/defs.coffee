@@ -243,6 +243,7 @@ LAST_PLAIN_PRINT = counter++
 
 AUTOEXPAND = counter++
 BAKE = counter++
+ASSUME_REAL_VARIABLES = counter++
 TRACE = counter++
 
 YYE = counter++
