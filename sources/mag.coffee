@@ -29,6 +29,7 @@ Notes
 ###
 
 
+DEBUG_MAG = false
 
 Eval_mag = ->
 	push(cadr(p1))
@@ -50,7 +51,13 @@ mag = ->
 yymag = ->
 	save()
 	p1 = pop()
+	input = p1
+
+	if DEBUG_MAG then console.log "MAG of " + p1
+
+
 	if (isnegativenumber(p1))
+		if DEBUG_MAG then console.log " mag: " + p1 + " just a negative"
 		push(p1)
 		negate()
 	else if (car(p1) == symbol(POWER) && equaln(cadr(p1), -1))
