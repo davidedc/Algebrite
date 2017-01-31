@@ -87,6 +87,12 @@ yymag = ->
 
 	# ??? should there be a shortcut case here for the imaginary unit?
 
+	# now handle decomposition cases ----------------------------------------------
+
+	# we catch the "add", "power", "multiply" cases first,
+	# before falling back to the
+	# negative/positive cases because there are some
+	# simplification thay we might be able to do.
 	# Note that for this routine to give a correct result, this
 	# must be a sum where a complex number appears.
 	# If we apply this to "a+b", we get an incorrect result.
@@ -113,8 +119,10 @@ yymag = ->
 		push_rational(1, 2)
 		power()
 		simplify_trig()
-	else
-		# default (all real)
+		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		restore()
+		return
+
 	if (car(p1) == symbol(POWER) && equaln(cadr(p1), -1))
 		if DEBUG_MAG then console.log " mag: " + p1 + " is -1 to any power"
 		# -1 to any power
@@ -169,7 +177,42 @@ yymag = ->
 		restore()
 		return
 
+	###
+	# Evaluation via zzfloat()
+	# ...while this is in theory a powerful mechanism, I've commented it
+	# out because I've refined this method enough to not need this.
+	# Evaling via zzfloat() is in principle more problematic because it could
+	# require further evlauations which could end up in further "mag" which
+	# would end up in infinite loops. Better not use it if not necessary.
+
+	# we look directly at the float evaluation of the argument
+	# to see if we end up with a number, which would mean that there
+	# is no imaginary component and we can just return the input
+	# (or its negation) as the result.
+	push p1
+	zzfloat()
+	floatEvaluation = pop()
+
+	if (isnegativenumber(floatEvaluation))
+		if DEBUG_MAG then console.log " mag: " + p1 + " just a negative"
 		push(p1)
+		negate()
+		restore()
+		return
+
+	if (ispositivenumber(floatEvaluation))
+		if DEBUG_MAG then console.log " mag: " + p1 + " just a positive"
+		push(p1)
+		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		restore()
+		return
+	###
 
 
+	if DEBUG_MAG then console.log " mag: " + p1 + " is nothing decomposable"
+	push_symbol(MAG)
+	push(p1)
+	list(2)
+
+	if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
 	restore()
