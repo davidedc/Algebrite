@@ -127,6 +127,15 @@ yypower = ->
 		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
+	# if we only assume variables to be real, then |a|^2 = a^2
+	if (car(p1) == symbol(MAG) && iseveninteger(p2) and !iszero(get_binding(symbol(ASSUME_REAL_VARIABLES))))
+		if DEBUG_POWER then console.log "   power: even power of absolute of real value "
+		push(cadr(p1))
+		push(p2)
+		power()
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
+		return
+
 	# e^log(...)
 	if (p1 == symbol(E) && car(p2) == symbol(LOG))
 		push(cadr(p2))
