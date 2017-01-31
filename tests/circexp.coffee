@@ -24,4 +24,7 @@ test_circexp = ->
 
 		"circexp(cos(x)*sin(x))-expcos(x)*expsin(x)",
 		"0",
+
+		"circexp(i*2^(1/4)*sin(1/8*pi)+2^(1/4)*cos(1/8*pi))",
+		"2^(1/4)*exp(1/8*i*pi)",
 	]
