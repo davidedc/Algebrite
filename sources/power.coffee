@@ -192,8 +192,19 @@ yypower = ->
 	# (a ^ b) ^ c	->	a ^ (b * c)
 	# note that we can't in general do this, for example
 	# sqrt(x^y) !=  x^(1/2 y) (counterexample x = -1)
+	# BUT we can carve-out here some cases where this
+	# transformation is correct
 
-	if (car(p1) == symbol(POWER))
+
+	# simple numeric check to see if a is a number > 0
+	is_a_moreThanZero = false
+	if isnum(cadr(p1))
+		is_a_moreThanZero = sign(compare_numbers(cadr(p1), zero))
+
+	if (car(p1) == symbol(POWER) && (
+	  isinteger(p2) or # when c is an integer
+	  is_a_moreThanZero # when a is >= 0
+	 ))
 		push(cadr(p1))
 		push(caddr(p1))
 		push(p2)
