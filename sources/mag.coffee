@@ -68,9 +68,6 @@ yymag = ->
 		if DEBUG_MAG then console.log " mag: " + p1 + " just a negative"
 		push(p1)
 		negate()
-	else if (car(p1) == symbol(POWER) && equaln(cadr(p1), -1))
-		# -1 to a power
-		push_integer(1)
 	else if (car(p1) == symbol(POWER) && cadr(p1) == symbol(E))
 		# exponential
 		push(caddr(p1))
@@ -120,6 +117,14 @@ yymag = ->
 		simplify_trig()
 	else
 		# default (all real)
+	if (car(p1) == symbol(POWER) && equaln(cadr(p1), -1))
+		if DEBUG_MAG then console.log " mag: " + p1 + " is -1 to any power"
+		# -1 to any power
+		push_integer(1)
+		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		restore()
+		return
+
 		push(p1)
 	restore()
 
