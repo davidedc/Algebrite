@@ -71,6 +71,35 @@ yypower = ->
 		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
+	#   -1 ^ rational
+	if (isminusone(p1) and !isdouble(p1) and isrational(p2) and !isinteger(p2) and ispositivenumber(p2) and !evaluatingAsFloats)
+		if DEBUG_POWER then console.log("   power: -1 ^ rational")
+		if DEBUG_POWER then console.log " trick: p2.q.a , p2.q.b " + p2.q.a + " , " + p2.q.b 
+		if p2.q.a < p2.q.b
+			push_symbol(POWER)
+			push(p1)
+			push(p2)
+			list(3)
+		else
+			push_symbol(MULTIPLY)
+			
+			push(p1)
+
+			push_symbol(POWER)
+			push(p1)
+			push_rational(p2.q.a.mod(p2.q.b), p2.q.b)
+			list(3)
+
+			list(3)
+			if DEBUG_POWER then console.log " trick applied : " + stack[tos-1]
+
+		# evaluates clock form into
+		# rectangular form. This seems to give
+		# slightly better form to some test results.
+		rect()
+		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
+		return
+
 
 	# both base and exponent are rational numbers?
 
