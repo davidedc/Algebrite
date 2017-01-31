@@ -58,6 +58,7 @@ test_abs = ->
 		"(1+u^2)^(1/2)",
 
 		# todo this should become "1"
+		# "mag" can grok this
 		"abs((-1)^(-0.666667+0.0291367/pi))",
 		"abs((-1)^(-0.666667+0.0291367/pi))",
 
