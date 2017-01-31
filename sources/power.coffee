@@ -170,8 +170,11 @@ yypower = ->
 	#	(a * b) ^ c	->	(a ^ c) * (b ^ c)
 	# note that we can't in general do this, for example
 	# sqrt(x*y) != x^(1/2) y^(1/2) (counterexample" x = -1 and y = -1)
+	# BUT we can carve-out here some cases where this
+	# transformation is correct
 
-	if (car(p1) == symbol(MULTIPLY))
+	if (car(p1) == symbol(MULTIPLY) && isinteger(p2))
+		if DEBUG_POWER then console.log "   power: (a * b) ^ c	->	(a ^ c) * (b ^ c) "
 		p1 = cdr(p1)
 		push(car(p1))
 		push(p2)
