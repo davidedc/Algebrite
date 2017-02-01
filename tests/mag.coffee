@@ -85,4 +85,74 @@ test_mag = ->
 		"mag(1 / a)",
 		"1/(mag(a))",
 
+		# ---------- old abs tests
+
+		"mag(2)",
+		"2",
+
+		"mag(2.0)",
+		"2.0",
+
+		"mag(-2)",
+		"2",
+
+		"mag(-2.0)",
+		"2.0",
+
+		"mag(a)",
+		"mag(a)",
+
+		"mag(-a)",
+		"mag(a)",
+
+		"mag(2*a)",
+		"2*mag(a)",
+
+		"mag(-2*a)",
+		"2*mag(a)",
+
+		"mag(2.0*a)",
+		"2.0*mag(a)",
+
+		"mag(-2.0*a)",
+		"2.0*mag(a)",
+
+		"mag(a-b)+mag(b-a)",
+		"2*mag(a-b)",
+
+		"mag(3 + 4 i)",
+		"5",
+
+		"mag((2,3,4))",
+		"29^(1/2)",
+
+		"mag(a*b)",
+		"mag(a)*mag(b)",
+
+		"mag(a/b)",
+		"mag(a)/mag(b)",
+
+		"mag(1/a^b)",
+		"1/(mag(a^b))",
+
+		# Check that vector length is simplified
+
+		"P=(u*cos(v),u*sin(v),v)",
+		"",
+
+		"mag(cross(d(P,u),d(P,v)))",
+		"(1+u^2)^(1/2)",
+
+		"mag((-1)^(-0.666667+0.0291367/pi))",
+		"1.0",
+
+		"mag((-1)^(9/3))",
+		"1",
+
+		"mag((1)^(9/3))",
+		"1",
+
+		"mag((-1.0)^(9/3))",
+		"1.0",
+
 	]
