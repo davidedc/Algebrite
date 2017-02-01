@@ -75,8 +75,8 @@ rect = ->
 		# where theta is arg(p1)
 		if DEBUG_RECT then console.log " rect - " + input + " is NOT a sum "
 
-		push(p1);	# mag(z) * (cos(arg(z)) + i sin(arg(z)))
-		mag()
+		push(p1);	# abs(z) * (cos(arg(z)) + i sin(arg(z)))
+		abs()
 
 		if DEBUG_RECT then console.log " rect - " + input + " abs: " + stack[tos-1].toString()
 		push(p1)

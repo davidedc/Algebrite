@@ -9,9 +9,9 @@ test_rect = ->
 		"rect(a)",
 
 		# same as rect(a) + i*rect(b)
-		# where rect(b) is mag(b)*(cos(arg(b)) + i*sin(arg(b)))
+		# where rect(b) is abs(b)*(cos(arg(b)) + i*sin(arg(b)))
 		"rect(a+i*b)",
-		"rect(a)-mag(b)*sin(arg(b))+i*cos(arg(b))*mag(b)",
+		"rect(a)-abs(b)*sin(arg(b))+i*abs(b)*cos(arg(b))",
 
 		"assumeRealVariables = 1",
 		"",

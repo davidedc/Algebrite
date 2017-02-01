@@ -81,13 +81,13 @@ test_legendre = ->
 		"legendre(cos(theta),1,0)-cos(theta)",
 		"0",
 
-		"legendre(cos(theta),1,1)+mag(sin(theta))",
+		"legendre(cos(theta),1,1)+abs(sin(theta))",
 		"0",
 
 		"legendre(cos(theta),2,0)-1/2*(3*cos(theta)^2-1)",
 		"0",
 
-		"legendre(cos(theta),2,1)+3*cos(theta)*mag(sin(theta))",
+		"legendre(cos(theta),2,1)+3*cos(theta)*abs(sin(theta))",
 		"0",
 
 		"legendre(cos(theta),2,2)-3*sin(theta)^2",
@@ -96,7 +96,7 @@ test_legendre = ->
 		"legendre(cos(theta),3,0)-1/2*cos(theta)*(5*cos(theta)^2-3)",
 		"0",
 
-		"legendre(cos(theta),3,1)- (3/2*mag(sin(theta))-15/2*cos(theta)^2*mag(sin(theta)))",
+		"legendre(cos(theta),3,1)- (3/2*abs(sin(theta))-15/2*cos(theta)^2*abs(sin(theta)))",
 		"0",
 
 		"legendre(cos(theta),3,2)-15*cos(theta)*sin(theta)^2",

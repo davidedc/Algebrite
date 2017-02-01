@@ -1,7 +1,7 @@
 ###
- Magnitude of complex z
+ Absolute value of a number,or magnitude of complex z, or norm of a vector
 
-	z		mag(z)
+	z		abs(z)
 	-		------
 
 	a		a
@@ -12,7 +12,7 @@
 
 	exp(a + i b)	exp(a)
 
-	a b		mag(a) mag(b)
+	a b		abs(a) abs(b)
 
 	a + i b		sqrt(a^2 + b^2)
 
@@ -22,66 +22,79 @@ Notes
 
 	2. jean-francois.debroux reports that when z=(a+i*b)/(c+i*d) then
 
-		mag(numerator(z)) / mag(denominator(z))
+		abs(numerator(z)) / abs(denominator(z))
 
 	   must be used to get the correct answer. Now the operation is
 	   automatic.
 ###
 
 
-DEBUG_MAG = false
+DEBUG_ABS = false
 
-Eval_mag = ->
+Eval_abs = ->
 	push(cadr(p1))
 	Eval()
-	mag()
+	abs()
 
-mag = ->
+absValFloat = ->
+	Eval()
+	absval()
+	Eval(); # normalize
+	zzfloat()
+	# zzfloat of an abs doesn't necessarily result in a double
+	# , for example if there are variables. But
+	# in many of the tests there should be indeed
+	# a float, these two lines come handy to highlight
+	# when that doesn't happen for those tests.
+	#if !isdouble(stack[tos-1])
+	#	stop("absValFloat should return a double and instead got: " + stack[tos-1])
+
+abs = ->
 	save()
 	p1 = pop()
 	push(p1)
 	numerator()
-	yymag()
+	absval()
 	push(p1)
 	denominator()
-	yymag()
+	absval()
 	divide()
 	restore()
 
-yymag = ->
+absval = ->
 	save()
 	p1 = pop()
 	input = p1
 
-	if DEBUG_MAG then console.log "MAG of " + p1
+	if DEBUG_ABS then console.log "ABS of " + p1
 
 
 	# handle all the "number" cases first -----------------------------------------
 	if (iszero(p1))
-		if DEBUG_MAG then console.log " mag: " + p1 + " just zero"
+		if DEBUG_ABS then console.log " abs: " + p1 + " just zero"
 		push(zero)
-		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		if DEBUG_ABS then console.log " --> ABS of " + input + " : " + stack[tos-1]
 		restore()
 		return
 
 	if (isnegativenumber(p1))
-		if DEBUG_MAG then console.log " mag: " + p1 + " just a negative"
+		if DEBUG_ABS then console.log " abs: " + p1 + " just a negative"
 		push(p1)
 		negate()
 		restore()
 		return
 
 	if (ispositivenumber(p1))
-		if DEBUG_MAG then console.log " mag: " + p1 + " just a positive"
+		if DEBUG_ABS then console.log " abs: " + p1 + " just a positive"
 		push(p1)
-		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		if DEBUG_ABS then console.log " --> ABS of " + input + " : " + stack[tos-1]
 		restore()
 		return
 
 	if (p1 == symbol(PI))
-		if DEBUG_MAG then console.log " mag: " + p1 + " of PI"
+		if DEBUG_ABS then console.log " abs: " + p1 + " of PI"
 		push(p1)
-		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		if DEBUG_ABS then console.log " --> ABS of " + input + " : " + stack[tos-1]
 		restore()
 		return
 
@@ -101,8 +114,8 @@ yymag = ->
 	 findPossibleExponentialForm(p1) or
 	 Find(p1,imaginaryunit))
 	)
-		if DEBUG_MAG then console.log " mag: " + p1 + " is a sum"
-		if DEBUG_MAG then console.log "mag of a sum"
+		if DEBUG_ABS then console.log " abs: " + p1 + " is a sum"
+		if DEBUG_ABS then console.log "abs of a sum"
 		# sum
 		push(p1)
 		rect() # convert polar terms, if any
@@ -119,66 +132,66 @@ yymag = ->
 		push_rational(1, 2)
 		power()
 		simplify_trig()
-		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		if DEBUG_ABS then console.log " --> ABS of " + input + " : " + stack[tos-1]
 		restore()
 		return
 
 	if (car(p1) == symbol(POWER) && equaln(cadr(p1), -1))
-		if DEBUG_MAG then console.log " mag: " + p1 + " is -1 to any power"
+		if DEBUG_ABS then console.log " abs: " + p1 + " is -1 to any power"
 		# -1 to any power
 		if evaluatingAsFloats
-			if DEBUG_MAG then console.log " mag: numeric, so result is 1.0"
+			if DEBUG_ABS then console.log " abs: numeric, so result is 1.0"
 			push_double(1.0)
 		else
-			if DEBUG_MAG then console.log " mag: symbolic, so result is 1"
+			if DEBUG_ABS then console.log " abs: symbolic, so result is 1"
 			push_integer(1)
-		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		if DEBUG_ABS then console.log " --> ABS of " + input + " : " + stack[tos-1]
 		restore()
 		return
 
-	# mag(a^b) is equal to mag(a)^b IF b is positive
+	# abs(a^b) is equal to abs(a)^b IF b is positive
 	if (car(p1) == symbol(POWER) && ispositivenumber(caddr(p1)))
-		if DEBUG_MAG then console.log " mag: " + p1 + " is something to the power of a positive number"
+		if DEBUG_ABS then console.log " abs: " + p1 + " is something to the power of a positive number"
 		push cadr(p1)
-		mag()
+		abs()
 		push caddr(p1)
 		power()
-		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		if DEBUG_ABS then console.log " --> ABS of " + input + " : " + stack[tos-1]
 		restore()
 		return
 
-	# mag(e^something)
+	# abs(e^something)
 	if (car(p1) == symbol(POWER) && cadr(p1) == symbol(E))
-		if DEBUG_MAG then console.log " mag: " + p1 + " is an exponential"
+		if DEBUG_ABS then console.log " abs: " + p1 + " is an exponential"
 		# exponential
 		push(caddr(p1))
 		real()
 		exponential()
-		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		if DEBUG_ABS then console.log " --> ABS of " + input + " : " + stack[tos-1]
 		restore()
 		return
 
 	if (car(p1) == symbol(MULTIPLY))
-		if DEBUG_MAG then console.log " mag: " + p1 + " is a product"
+		if DEBUG_ABS then console.log " abs: " + p1 + " is a product"
 		# product
 		push_integer(1)
 		p1 = cdr(p1)
 		while (iscons(p1))
 			push(car(p1))
-			mag()
+			abs()
 			multiply()
 			p1 = cdr(p1)
-		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		if DEBUG_ABS then console.log " --> ABS of " + input + " : " + stack[tos-1]
 		restore()
 		return
 
-	if (car(p1) == symbol(MAG))
-		if DEBUG_MAG then console.log " mag: " + p1 + " is mag of a mag"
-		# mag of a mag
-		push_symbol(MAG)
+	if (car(p1) == symbol(ABS))
+		if DEBUG_ABS then console.log " abs: " + p1 + " is abs of a abs"
+		# abs of a abs
+		push_symbol(ABS)
 		push cadr(p1)
 		list(2)
-		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		if DEBUG_ABS then console.log " --> ABS of " + input + " : " + stack[tos-1]
 		restore()
 		return
 
@@ -187,7 +200,7 @@ yymag = ->
 	# ...while this is in theory a powerful mechanism, I've commented it
 	# out because I've refined this method enough to not need this.
 	# Evaling via zzfloat() is in principle more problematic because it could
-	# require further evlauations which could end up in further "mag" which
+	# require further evlauations which could end up in further "abs" which
 	# would end up in infinite loops. Better not use it if not necessary.
 
 	# we look directly at the float evaluation of the argument
@@ -199,16 +212,16 @@ yymag = ->
 	floatEvaluation = pop()
 
 	if (isnegativenumber(floatEvaluation))
-		if DEBUG_MAG then console.log " mag: " + p1 + " just a negative"
+		if DEBUG_ABS then console.log " abs: " + p1 + " just a negative"
 		push(p1)
 		negate()
 		restore()
 		return
 
 	if (ispositivenumber(floatEvaluation))
-		if DEBUG_MAG then console.log " mag: " + p1 + " just a positive"
+		if DEBUG_ABS then console.log " abs: " + p1 + " just a positive"
 		push(p1)
-		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+		if DEBUG_ABS then console.log " --> ABS of " + input + " : " + stack[tos-1]
 		restore()
 		return
 	###
@@ -223,12 +236,12 @@ yymag = ->
 		negate()
 		p1 = pop()
 
-	if DEBUG_MAG then console.log " mag: " + p1 + " is nothing decomposable"
-	push_symbol(MAG)
+	if DEBUG_ABS then console.log " abs: " + p1 + " is nothing decomposable"
+	push_symbol(ABS)
 	push(p1)
 	list(2)
 
-	if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
+	if DEBUG_ABS then console.log " --> ABS of " + input + " : " + stack[tos-1]
 	restore()
 
 # also called the "norm" of a vector

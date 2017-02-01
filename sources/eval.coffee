@@ -189,7 +189,6 @@ Eval_cons = ->
 		when LEGENDRE then Eval_legendre()
 		when LOG then Eval_log()
 		when LOOKUP then Eval_lookup()
-		when MAG then Eval_mag()
 		when MOD then Eval_mod()
 		when MULTIPLY then Eval_multiply()
 		when NOT then Eval_not()

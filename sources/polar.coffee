@@ -5,7 +5,7 @@ Convert complex z to polar form
 
 	Output:		Result on stack
 
-	polar(z) = mag(z) * exp(i * arg(z))
+	polar(z) = abs(z) * exp(i * arg(z))
 ###
 
 
@@ -24,7 +24,7 @@ polar = ->
 	save()
 	p1 = pop()
 	push(p1)
-	mag()
+	abs()
 	push(imaginaryunit)
 	push(p1)
 	arg()

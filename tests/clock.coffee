@@ -17,7 +17,7 @@ test_clock = ->
 		# TODO
 		# the changes to abs/mag of Jan 2017
 		# make it so a ends up as absolute value
-		#     (-1)^(1/5)*mag(a)
+		#     (-1)^(1/5)*abs(a)
 		# Rather, clock should somehow recognize
 		# that this is already very close to clock
 		# form and just replace the exponential with

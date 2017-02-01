@@ -37,7 +37,7 @@ Notes
 
 	3. Negative direction adds -pi to angle.
 
-	   Example: z = (-1)^(1/3), mag(z) = 1/3 pi, mag(-z) = -2/3 pi
+	   Example: z = (-1)^(1/3), abs(z) = 1/3 pi, abs(-z) = -2/3 pi
 
 	4. jean-francois.debroux reports that when z=(a+i*b)/(c+i*d) then
 

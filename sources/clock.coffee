@@ -5,7 +5,7 @@
 
 	Output:		Result on stack
 
-	clock(z) = mag(z) * (-1) ^ (arg(z) / pi)
+	clock(z) = abs(z) * (-1) ^ (arg(z) / pi)
 
 	For example, clock(exp(i pi/3)) gives the result (-1)^(1/3)
 ###
@@ -33,8 +33,8 @@ clockform = ->
 	#if 1
 	p1 = pop()
 	push(p1)
-	mag()
-	if DEBUG_CLOCKFORM then console.log "clockform: mag of " + p1 + " : " + stack[tos-1]
+	abs()
+	if DEBUG_CLOCKFORM then console.log "clockform: abs of " + p1 + " : " + stack[tos-1]
 
 	# pushing the expression (-1)^... but note
 	# that we can't use "power", as "power" evaluates
@@ -62,7 +62,7 @@ clockform = ->
 	###
 	p1 = pop()
 	push(p1)
-	mag()
+	abs()
 	push(symbol(E))
 	push(p1)
 	arg()

@@ -412,7 +412,7 @@ test_simplify = ->
 		"x",
 
 		"simplify(sqrt(x^2))",
-		"mag(x)",
+		"abs(x)",
 
 
 	]

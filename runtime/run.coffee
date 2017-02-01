@@ -146,7 +146,7 @@ test_dependencies = ->
 
 	do_clearall()
 
-	testResult = findDependenciesInScript('x = mag((a+i*b)/(c+i*d))')
+	testResult = findDependenciesInScript('x = abs((a+i*b)/(c+i*d))')
 	if testResult[0] == "All local dependencies:  variable x depends on: a, b, c, d, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: a, b, c, d, ; " and
 		testResult[1] == "" and
 		testResult[2] == "x = function (a, b, c, d) { return ( Math.pow((Math.pow(a, 2) + Math.pow(b, 2)), (1/2)) / (Math.pow((Math.pow(c, 2) + Math.pow(d, 2)), (1/2))) ); }"

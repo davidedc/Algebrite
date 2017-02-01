@@ -226,7 +226,7 @@ yypower = ->
 	if (car(p1) == symbol(POWER) && b_isEven_and_c_isItsInverse)
 		if DEBUG_POWER then console.log "   power: car(p1) == symbol(POWER) && b_isEven_and_c_isItsInverse "
 		push(cadr(p1))
-		mag()
+		abs()
 		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
@@ -320,7 +320,7 @@ yypower = ->
 
 		if (isnum(p2))
 			push(p1)
-			mag()
+			abs()
 			push(p2)
 			power()
 			push_integer(-1)
@@ -359,7 +359,7 @@ yypower = ->
 
 			#
 			#push(p1)
-			#mag()
+			#abs()
 			#push(p2)
 			#power()
 			#push(symbol(E))

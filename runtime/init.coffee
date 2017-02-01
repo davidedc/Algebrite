@@ -146,7 +146,6 @@ defn = ->
 	std_symbol("legendre", LEGENDRE)
 	std_symbol("log", LOG)
 	std_symbol("lookup", LOOKUP)
-	std_symbol("mag", MAG)
 	std_symbol("mod", MOD)
 	std_symbol("multiply", MULTIPLY)
 	std_symbol("not", NOT)
