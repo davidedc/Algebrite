@@ -17,7 +17,6 @@ test_multiply = ->
 			"0.0*a",
 			"0.0",
 
-			# gives 0, wrong, TODO
 			"a*0.0",
 			"0.0",
 
