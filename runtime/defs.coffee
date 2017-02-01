@@ -412,6 +412,7 @@ p9 = null # will contain U
 
 zero = null # will contain U
 one = null # will contain U
+one_as_double = null
 imaginaryunit = null # will contain U
 
 out_buf = ""

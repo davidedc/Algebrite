@@ -12,10 +12,20 @@ Eval = ->
 	p1 = pop()
 	if !p1?
 		debugger
+
+	if !evaluatingAsFloats and isfloating(p1)
+		willEvaluateAsFloats = true
+		evaluatingAsFloats++
+
 	switch (p1.k)
 		when CONS
 			Eval_cons()
-		when NUM, DOUBLE, STR
+		when NUM
+			if evaluatingAsFloats
+				push_double(convert_rational_to_double(p1))
+			else
+				push(p1)
+		when DOUBLE, STR
 			push(p1)
 		when TENSOR
 			Eval_tensor()
@@ -23,6 +33,10 @@ Eval = ->
 			Eval_sym()
 		else
 			stop("atom?")
+
+	if willEvaluateAsFloats
+		evaluatingAsFloats--
+
 	restore()
 
 Eval_sym = ->
@@ -41,6 +55,9 @@ Eval_sym = ->
 		push(symbol(LAST))
 		list(2)
 		Eval()
+		return
+	else if (p1 == symbol(PI) and evaluatingAsFloats)
+		push_double(Math.PI)
 		return
 
 	# Evaluate symbol's binding

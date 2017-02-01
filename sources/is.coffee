@@ -313,7 +313,7 @@ isminusoneoversqrttwo = (p) ->
 		return 0
 
 isfloating = (p) ->
-	if (p.k == DOUBLE)
+	if p.k == DOUBLE or p == symbol(FLOATF)
 		return 1
 	while (iscons(p))
 		if (isfloating(car(p)))

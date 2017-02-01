@@ -126,7 +126,12 @@ yymag = ->
 	if (car(p1) == symbol(POWER) && equaln(cadr(p1), -1))
 		if DEBUG_MAG then console.log " mag: " + p1 + " is -1 to any power"
 		# -1 to any power
-		push_integer(1)
+		if evaluatingAsFloats
+			if DEBUG_MAG then console.log " mag: numeric, so result is 1.0"
+			push_double(1.0)
+		else
+			if DEBUG_MAG then console.log " mag: symbolic, so result is 1"
+			push_integer(1)
 		if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
 		restore()
 		return

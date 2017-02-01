@@ -285,6 +285,9 @@ defineSomeHandyConstants = ->
 	push_integer(1)
 	one = pop()		# must be untagged in gc
 
+	push_double(1.0)
+	one_as_double = pop()
+
 	# i is the square root of -1 i.e. -1 ^ 1/2
 	push_symbol(POWER)
 	if DEBUG then console.log print_list(stack[tos-1])

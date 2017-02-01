@@ -41,7 +41,7 @@ yypower = ->
 	#	1 ^ a		->	1
 	#	a ^ 0		->	1
 	if (equal(p1, one) || iszero(p2))
-		push(one)
+		if evaluatingAsFloats then push_double(1.0) else push(one)
 		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
 
@@ -53,7 +53,7 @@ yypower = ->
 
 	#   -1 ^ -1		->	-1
 	if (isminusone(p1) and isminusone(p2))
-		push(one)
+		if evaluatingAsFloats then push_double(1.0) else push(one)
 		negate()
 		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
