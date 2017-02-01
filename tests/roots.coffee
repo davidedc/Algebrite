@@ -409,10 +409,13 @@ test_roots = ->
 		"theRoots = roots(thePoly)",
 		"",
 
+		# root 1 ~= -961.79, root 2 ~= -895.12, root 3 ~= -463.09
+		# all three of them have a very small "error" imaginary part ~= 10^-13
 		"theRoots",
 		"(-2320/3-219895/(3*(-96123824+9*i*7^(1/2)*79^(1/2)*2297^(1/2)*13538519^(1/2))^(1/3))-1/3*(-96123824+9*i*7^(1/2)*79^(1/2)*2297^(1/2)*13538519^(1/2))^(1/3),-2320/3+219895/(6*(-96123824+9*i*7^(1/2)*79^(1/2)*2297^(1/2)*13538519^(1/2))^(1/3))+1/6*(-96123824+9*i*7^(1/2)*79^(1/2)*2297^(1/2)*13538519^(1/2))^(1/3)-219895*i*3^(1/2)/(6*(-96123824+9*i*7^(1/2)*79^(1/2)*2297^(1/2)*13538519^(1/2))^(1/3))+1/6*i*3^(1/2)*(-96123824+9*i*7^(1/2)*79^(1/2)*2297^(1/2)*13538519^(1/2))^(1/3),-2320/3+219895/(6*(-96123824+9*i*7^(1/2)*79^(1/2)*2297^(1/2)*13538519^(1/2))^(1/3))+1/6*(-96123824+9*i*7^(1/2)*79^(1/2)*2297^(1/2)*13538519^(1/2))^(1/3)+219895*i*3^(1/2)/(6*(-96123824+9*i*7^(1/2)*79^(1/2)*2297^(1/2)*13538519^(1/2))^(1/3))-1/6*i*3^(1/2)*(-96123824+9*i*7^(1/2)*79^(1/2)*2297^(1/2)*13538519^(1/2))^(1/3))",
 
-		"(abs(float(subst(theRoots[1],x,thePoly))) < float(5*10^(-10))) and (abs(float(subst(theRoots[2],x,thePoly))) < float(5*10^(-10))) and (abs(float(subst(theRoots[3],x,thePoly))) < float(5*10^(-10)))",
+		# the error here is particularly high because of the big coefficients
+		"(abs(float(subst(theRoots[1],x,thePoly))) < float(2*10^(-7))) and (abs(float(subst(theRoots[2],x,thePoly))) < float(2*10^(-7))) and (abs(float(subst(theRoots[3],x,thePoly))) < float(2*10^(-7)))",
 		"1",
 
 
@@ -532,7 +535,7 @@ test_roots = ->
 		"theRoots",
 		"(-(-4-13^(1/2))^(1/2),-(-4+13^(1/2))^(1/2),(-4-13^(1/2))^(1/2),(-4+13^(1/2))^(1/2))",
 
-		"(abs(float(subst(theRoots[1],x,thePoly))) == 0) and (abs(float(subst(theRoots[2],x,thePoly))) == 0) and (abs(float(subst(theRoots[3],x,thePoly))) == 0) and (abs(float(subst(theRoots[4],x,thePoly))) == 0)",
+		"(abs(float(subst(theRoots[1],x,thePoly))) < float(8*10^(-15))) and (abs(float(subst(theRoots[2],x,thePoly))) < float(8*10^(-15))) and (abs(float(subst(theRoots[3],x,thePoly))) < float(8*10^(-15))) and (abs(float(subst(theRoots[4],x,thePoly))) < float(8*10^(-15)))",
 		"1",
 
 

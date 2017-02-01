@@ -5,7 +5,7 @@ test_transpose = ->
 		"0",
 
 		"transpose(0.0)",
-		"0",
+		"0.0",
 
 		"transpose(((a,b),(c,d)))",
 		"((a,c),(b,d))",

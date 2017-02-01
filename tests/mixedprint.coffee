@@ -1,6 +1,9 @@
 test_mixedprint = ->
 	run_test [
 
+		"1.0",
+		"1.0",
+
 		"print(\"hello\")",
 		"\"hello\"",
 
