@@ -208,6 +208,15 @@ yymag = ->
 		return
 	###
 
+	if (istensor(p1))
+		absval_tensor()
+		restore()
+		return
+
+	if (isnegativeterm(p1) || (car(p1) == symbol(ADD) && isnegativeterm(cadr(p1))))
+		push(p1)
+		negate()
+		p1 = pop()
 
 	if DEBUG_MAG then console.log " mag: " + p1 + " is nothing decomposable"
 	push_symbol(MAG)
@@ -216,3 +225,16 @@ yymag = ->
 
 	if DEBUG_MAG then console.log " --> MAG of " + input + " : " + stack[tos-1]
 	restore()
+
+# also called the "norm" of a vector
+absval_tensor = ->
+	if (p1.tensor.ndim != 1)
+		stop("abs(tensor) with tensor rank > 1")
+	push(p1)
+	push(p1)
+	conjugate()
+	inner()
+	push_rational(1, 2)
+	power()
+	simplify()
+	Eval()
