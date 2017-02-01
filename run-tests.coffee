@@ -42,7 +42,6 @@ selftest  = ->
 	test_test()
 	test_tensor()
 	test_bake()
-	test_abs()
 	test_adj()
 	test_arg()
 	test_approxratio()
