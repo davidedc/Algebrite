@@ -495,7 +495,7 @@ pop_integer = ->
 # p is a U, flag is an int
 print_double = (p,flag) ->
 	accumulator = ""
-	buf = "" + doubleToReasonableString(p.d)
+	buf = doubleToReasonableString(p.d)
 	if (flag == 1 && buf == '-')
 		# !!!! passing a pointer willy-nilly
 		accumulator += print_str(buf + 1)
@@ -570,7 +570,7 @@ print_number = (p, signed) ->
 				accumulator += denominatorString
 
 		when DOUBLE
-			aAsString = "" + doubleToReasonableString(p.d)
+			aAsString = doubleToReasonableString(p.d)
 			if !signed
 				if aAsString[0] == "-"
 					aAsString = aAsString.substring(1)
