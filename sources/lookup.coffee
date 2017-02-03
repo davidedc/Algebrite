@@ -48,7 +48,7 @@
 #
 # In the following examples, for brevity, I just
 # use
-#   x = quote(1+1)
+#   x = quote(1+2)
 # instead of this:
 #   x = a + b
 #   a = 1
@@ -57,24 +57,24 @@
 # it's avaulated or not.
 #
 # So lookup allows this:
-#   x = quote(1+1)
-#   print(lookup(x)) # gives 1+1
+#   x = quote(1+2)
+#   print(lookup(x)) # gives 1+2
 #
 # Note that there would be potentially a way
 # to achieve a similar result, you could do:
-#   x = quote(quote(1+1))
+#   x = quote(quote(1+2))
 #   print(x)
 # but you can't always control x to contain
 # two quotes like that...
 # note how two "quotes" are needed because
 # if you just put one, then
-# x would indeed contain 1+1 instead of 2,
-# but then print would evaluate that to 2:
-#   x = quote(1+1) # now x contains 1+1, not 2
-#   print(x) # but x evaluated here to 2
+# x would indeed contain 1+2 instead of 3,
+# but then print would evaluate that to 3:
+#   x = quote(1+2) # now x contains 1+2, not 3
+#   print(x) # but x evaluated here to 3
 #
 # Other workarounds would not work:
-#   x = quote(1+1)
+#   x = quote(1+2)
 #   print(quote(x))
 # would not work because quote(x) literally means 'x'
 # so 'x' is printed instead of its content.
@@ -91,6 +91,26 @@
 # note that in the first and second case y is
 # independent from x, i.e. changing x doesn't change y
 # while in the last case it is.
+#
+# Another similar simple example is when doing something
+# like this:
+#    x = y
+#    y = z
+#    x
+#       => gives z
+#    lookup(x)
+#       => gives y
+#          i.e. lookup allows you to see the immediate
+#          content of x, rather than the evaluation which
+#          would end up in x -> y -> z
+# Note that if you invert the order of the assignments i.e.
+#    y = z
+#    x = y
+# Then at this point x immediately contains z, since the
+# assignment x = y is not quoted, hence y is evaluated to z
+# when assigned to x.
+#    lookup(x)
+#       => gives z
 
 Eval_lookup = ->
 	p1 = cadr(p1)
