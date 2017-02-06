@@ -173,7 +173,6 @@ LEADING = counter++
 LEGENDRE = counter++
 LOG = counter++
 LOOKUP = counter++
-MAG = counter++
 MOD = counter++
 MULTIPLY = counter++
 NOT = counter++
