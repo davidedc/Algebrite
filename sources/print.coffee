@@ -644,16 +644,20 @@ print_power = (base, exponent) ->
 			accumulator += print_str("^")
 
 		# print the exponent
-		if (iscons(exponent) || isfraction(exponent) || (isnum(exponent) && lessp(exponent, zero)))
-			if printMode == PRINTMODE_LATEX
+		if printMode == PRINTMODE_LATEX
+			# in latex mode, one can omit the curly braces
+			# wrapping the exponent if the exponent is only
+			# one character long
+			if print_expr(exponent).length > 1
 				accumulator += print_str("{")
-			else
-				accumulator += print_str('(')
-			accumulator += print_expr(exponent)
-			if printMode == PRINTMODE_LATEX
+				accumulator += print_expr(exponent)
 				accumulator += print_str("}")
 			else
-				accumulator += print_str(')')
+				accumulator += print_expr(exponent)
+		else if (iscons(exponent) || isfraction(exponent) || (isnum(exponent) && lessp(exponent, zero)))
+			accumulator += print_str('(')
+			accumulator += print_expr(exponent)
+			accumulator += print_str(')')
 		else
 			accumulator += print_factor(exponent)
 	return accumulator

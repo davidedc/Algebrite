@@ -37,4 +37,7 @@ test_printlatex = ->
 		"printlatex(inv(a+1))",
 		"{(1+a)}^{-1}",
 
+		"printlatex(12x^11)",
+		"12x^{11}",
+
 	]
