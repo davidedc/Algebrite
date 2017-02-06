@@ -2,7 +2,7 @@
   "name": "algebrite",
 
   "//": "also change the version in the Algebrite variable at the top of defs file", 
-  "version": "0.4.0",
+  "version": "0.4.1",
 
   "description": "Computer Algebra System in Coffeescript",
   "main": "dist/algebrite.js",
