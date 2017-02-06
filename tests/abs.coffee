@@ -28,6 +28,11 @@ test_abs = ->
 		"abs(x)",
 		"abs(x)",
 
+		# true only if x is real,
+		# counterexample: i, which makes 1 and -1
+		"abs(x)^2",
+		"x^2",
+
 		"abs(-x)",
 		"abs(x)",
 

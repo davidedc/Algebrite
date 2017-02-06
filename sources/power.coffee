@@ -128,7 +128,8 @@ yypower = ->
 		return
 
 	# if we only assume variables to be real, then |a|^2 = a^2
-	if (car(p1) == symbol(MAG) && iseveninteger(p2) and !iszero(get_binding(symbol(ASSUME_REAL_VARIABLES))))
+	# (if x is complex this doesn't hold e.g. i, which makes 1 and -1
+	if (car(p1) == symbol(ABS) && iseveninteger(p2) and !iszero(get_binding(symbol(ASSUME_REAL_VARIABLES))))
 		if DEBUG_POWER then console.log "   power: even power of absolute of real value "
 		push(cadr(p1))
 		push(p2)

@@ -83,6 +83,10 @@ test_power = ->
 		"sqrt(x^2)",
 		"abs(x)",
 
+		# always true, whether x is real or not
+ 		"sqrt(x^2)^2",
+ 		"x^2",
+
 		"3^(1/2)*i/9",
 		"1/9*i*3^(1/2)",
 
