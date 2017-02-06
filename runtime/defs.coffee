@@ -1,5 +1,8 @@
 bigInt = require('big-integer')
 
+# also change the version in the package.json file
+version = "0.4.0"
+
 SELFTEST = 1
 
 # size of the symbol table
@@ -7,6 +10,18 @@ NSYM = 1000
 
 DEBUG = false
 PRINTOUTRESULT = false
+
+# printing-related constants
+PRINTMODE_LATEX = "PRINTMODE_LATEX"
+PRINTMODE_2DASCII = "PRINTMODE_2DASCII"
+PRINTMODE_FULL = "PRINTMODE_FULL"
+PRINTMODE_PLAIN = "PRINTMODE_PLAIN"
+PRINTMODE_LIST = "PRINTMODE_LIST"
+
+# when the user uses the generic "print" statement
+# this setting kicks-in.
+environment_printmode = PRINTMODE_PLAIN
+printMode = PRINTMODE_PLAIN
 
 dontCreateNewRadicalsInDenominatorWhenEvalingMultiplication = true
 recursionLevelNestedRadicalsRemoval = 0
@@ -49,8 +64,8 @@ class U
 	k: 0
 	tag: 0
 
-	toString: -> collectPlainResultLine(this)
-	toLatexString: -> collectLatexResultLine(this)
+	toString: -> print_expr(this)
+	toLatexString: -> collectLatexStringFromReturnValue(this)
 
 	constructor: ->
 		@cons = {}
@@ -78,9 +93,9 @@ SYM = 5
 counter = 0
 ABS = counter++
 ADD = counter++
-PATTERN = counter++
 ADJ = counter++
 AND = counter++
+APPROXRATIO = counter++
 ARCCOS = counter++
 ARCCOSH = counter++
 ARCSIN = counter++
@@ -98,7 +113,8 @@ CHECK = counter++
 CHOOSE = counter++
 CIRCEXP = counter++
 CLEAR = counter++
-CLEARSUBSTRULES = counter++
+CLEARALL = counter++
+CLEARPATTERNS = counter++
 CLOCK = counter++
 COEFF = counter++
 COFACTOR = counter++
@@ -115,7 +131,6 @@ DERIVATIVE = counter++
 DET = counter++
 DIM = counter++
 DIRAC = counter++
-DISPLAY = counter++
 DIVISORS = counter++
 DO = counter++
 DOT = counter++
@@ -158,7 +173,6 @@ LEADING = counter++
 LEGENDRE = counter++
 LOG = counter++
 LOOKUP = counter++
-MAG = counter++
 MOD = counter++
 MULTIPLY = counter++
 NOT = counter++
@@ -168,14 +182,19 @@ NUMERATOR = counter++
 OPERATOR = counter++
 OR = counter++
 OUTER = counter++
+PATTERN = counter++
+PATTERNSINFO = counter++
 POLAR = counter++
 POWER = counter++
 PRIME = counter++
-PRINT = counter++
-PRINTLATEX = counter++
 PRINT_LEAVE_E_ALONE = counter++
 PRINT_LEAVE_X_ALONE = counter++
+PRINT = counter++
+PRINT2DASCII = counter++
+PRINTFULL = counter++
+PRINTLATEX = counter++
 PRINTLIST = counter++
+PRINTPLAIN = counter++
 PRODUCT = counter++
 QUOTE = counter++
 QUOTIENT = counter++
@@ -186,6 +205,7 @@ YYRECT = counter++
 ROOTS = counter++
 SETQ = counter++
 SGN = counter++
+SILENTPATTERN = counter++
 SIMPLIFY = counter++
 SIN = counter++
 SINH = counter++
@@ -194,6 +214,7 @@ SQRT = counter++
 STOP = counter++
 SUBST = counter++
 SUM = counter++
+SYMBOLSINFO = counter++
 TAN = counter++
 TANH = counter++
 TAYLOR = counter++
@@ -207,14 +228,22 @@ TRANSPOSE = counter++
 UNIT = counter++
 ZERO = counter++
 
+# ALL THE SYMBOLS ABOVE NIL ARE KEYWORDS,
+# WHICH MEANS THAT USER CANNOT REDEFINE THEM
 NIL = counter++	# nil goes here, after standard functions
+LAST = counter++
+
+LAST_PRINT = counter++
+LAST_2DASCII_PRINT = counter++
+LAST_FULL_PRINT = counter++
+LAST_LATEX_PRINT = counter++
+LAST_LIST_PRINT = counter++
+LAST_PLAIN_PRINT = counter++
 
 AUTOEXPAND = counter++
 BAKE = counter++
-LAST = counter++
-LAST_LATEX_PRINT = counter++
+ASSUME_REAL_VARIABLES = counter++
 TRACE = counter++
-TTY = counter++
 
 YYE = counter++
 
@@ -223,6 +252,8 @@ METAA = counter++
 METAB = counter++
 METAX = counter++
 SECRETX = counter++
+
+VERSION = counter++
 
 PI = counter++
 SYMBOL_A = counter++
@@ -265,7 +296,11 @@ BUF = 10000
 
 MAX_PROGRAM_SIZE = 100001
 MAXPRIMETAB = 10000
-
+MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES = 5
+MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE = 10
+ENABLE_CACHING = true
+cached_runs = null # the LRU cache will go here
+cached_findDependenciesInScript = null # the LRU cache will go here
 
 #define _USE_MATH_DEFINES // for MS C++
 
@@ -275,6 +310,10 @@ MAXDIM = 24
 # find all dependencies between variables
 # in a script
 symbolsDependencies = {}
+symbolsHavingReassignments = []
+symbolsInExpressionsWithoutAssignments = []
+patternHasBeenFound = false
+predefinedSymbolsInGlobalScope_doNotTrackInDependencies = ["rationalize", "abs", "i", "pi", "sin", "cos", "roots", "integral", "derivative", "defint", "sqrt", "eig", "cov"]
 
 # you can do some little simplifications
 # at parse time, such as calculating away
@@ -282,6 +321,11 @@ symbolsDependencies = {}
 # constants, removing 1s from products
 # etc.
 parse_time_simplifications = true
+
+chainOfUserSymbolsNotFunctionsBeingEvaluated = []
+
+stringsEmittedByUserPrintouts = ""
+
 
 class tensor
 	ndim: 0
@@ -310,6 +354,7 @@ class text_metric
 tos = 0 # top of stack
 expanding = 0
 evaluatingAsFloats = 0
+evaluatingPolar = 0
 fmt_x = 0
 fmt_index = 0
 fmt_level = 0
@@ -342,8 +387,14 @@ mtotal = 0
 trigmode = 0
 logbuf = ""
 program_buf = ""
-symtab = [] # will contain U
-binding = [] # will contain *U
+
+# will contain the variable names
+symtab = []
+# will contain the contents of the variable
+# in the corresponding position in symtab array
+binding = []
+isSymbolReclaimable = []
+
 arglist = [] # will contain U
 stack = [] # will contain *U
 frame = 0
@@ -360,14 +411,19 @@ p9 = null # will contain U
 
 zero = null # will contain U
 one = null # will contain U
+one_as_double = null
 imaginaryunit = null # will contain U
 
-symtab = [] # will contain U
 out_buf = ""
 out_count = 0
 test_flag = 0
+codeGen = false
 draw_stop_return = null # extern jmp_buf ?????
 userSimplificationsInListForm = []
+userSimplificationsInStringForm = []
+
+transpose_unicode = 7488
+dotprod_unicode = 183
 
 symbol = (x) -> (symtab[x])
 iscons = (p) -> (p.k == CONS)
@@ -433,8 +489,18 @@ MEQUAL = (p, n) ->
 	p.equals(n)
 
 
+reset_after_error = ->
+	tos = 0
+	esc_flag = 0
+	draw_flag = 0
+	frame = TOS
+	evaluatingAsFloats = 0
+	evaluatingPolar = 0
+
 
 $ = (exports ? this)
+
+$.version = version
 
 $.isadd = isadd
 $.ismultiply = ismultiply

@@ -31,7 +31,7 @@ push = (p) ->
 		debugger
 
 	#console.log "pushing "
-	#print1(p)
+	#console.log print_list(p)
 
 	if p == symbol(NIL)
 		nil_symbols++
@@ -54,6 +54,14 @@ pop = ->
 	if !stack[tos-1]?
 		debugger
 	elementToBeReturned = stack[--tos]
+	
+	# give a chance to the garbage
+	# collection to reclaim space
+	# This is JS-specific, it would
+	# actually make the C garbage
+	# collector useless.
+	stack[tos] = null
+	
 	return elementToBeReturned
 
 # n is an integer

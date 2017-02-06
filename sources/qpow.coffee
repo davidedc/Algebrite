@@ -18,28 +18,28 @@ qpowf = ->
 	p1 = pop(); # p1 is BASE
 
 	# if base is 1 or exponent is 0 then return 1
-
 	if (isplusone(p1) || iszero(p2))  # p1 is BASE  # p2 is EXPO
 		push_integer(1)
 		return
 
-	# if base is zero then return 0
+	# if (-1)^(1/2) -> leave it as is
+	if (isminusone(p1) and isoneovertwo(p2))  # p1 is BASE  # p2 is EXPO
+		push(imaginaryunit)
+		return
 
+	# if base is zero then return 0
 	if (iszero(p1))  # p1 is BASE
 		if (isnegativenumber(p2))  # p2 is EXPO
-			debugger
 			stop("divide by zero")
 		push(zero)
 		return
 
 	# if exponent is 1 then return base
-
 	if (isplusone(p2))  # p2 is EXPO
 		push(p1);  # p1 is BASE
 		return
 
 	# if exponent is integer then power
-
 	if (isinteger(p2))  # p2 is EXPO
 		push(p2);  # p2 is EXPO
 		expo = pop_integer()
@@ -70,27 +70,26 @@ qpowf = ->
 	# from here on out the exponent is NOT an integer
 
 	# if base is -1 then normalize polar angle
-
 	if (isminusone(p1))  # p1 is BASE
 		push(p2);  # p2 is EXPO
 		normalize_angle()
 		return
 
 	# if base is negative then (-N)^M -> N^M * (-1)^M
-
 	if (isnegativenumber(p1))  # p1 is BASE
 		push(p1);  # p1 is BASE
 		negate()
 		push(p2);  # p2 is EXPO
 		qpow()
+
 		push_integer(-1)
 		push(p2);  # p2 is EXPO
 		qpow()
+
 		multiply()
 		return
 
 	# if p1 (BASE) is not an integer then power numerator and denominator
-
 	if (!isinteger(p1))  # p1 is BASE
 		push(p1);  # p1 is BASE
 		mp_numerator()
@@ -107,7 +106,6 @@ qpowf = ->
 	# At this point p1 (BASE) is a positive integer.
 
 	# If p1 (BASE) is small then factor it.
-
 	if (is_small_integer(p1))  # p1 is BASE
 		push(p1);  # p1 is BASE
 		push(p2);  # p2 is EXPO
@@ -222,7 +220,6 @@ normalize_angle = ->
 	p3 = pop(); # p3 is R
 
 	# remainder becomes new angle
-
 	push_symbol(POWER)
 	push_integer(-1)
 	push(p3)  # p3 is R

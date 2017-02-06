@@ -15,12 +15,18 @@ strcmp = (str1, str2) ->
   if str1 == str2 then 0 else if str1 > str2 then 1 else -1
 
 
-# does the equivalent of printf %g
-# the parseFloat piece is needed to
-# remove insignificant trailing zeroes
-# (beyond the decimal point)
 doubleToReasonableString = (d) ->
-	return parseFloat(d.toPrecision(6))
+	# remove trailing zeroes beyond decimal point and
+	# gives at most 6 digits after the point
+	stringRepresentation = "" + parseFloat(d.toPrecision(6))
+
+	# we actually want to give a hint to user that
+	# it's a double, so add a trailing ".0" if there
+	# is no decimal point
+	if stringRepresentation.indexOf(".") == -1 
+		stringRepresentation += ".0"
+
+	return stringRepresentation
 
 # does nothing
 clear_term = ->

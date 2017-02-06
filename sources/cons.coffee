@@ -21,9 +21,9 @@ cons = ->
 
 	###
 	console.log "cons new cdr.k = " + p.cons.cdr.k + "\nor more in detail:"
-	print1 p.cons.cdr
+	console.log print_list p.cons.cdr
 	console.log "cons new car.k = " + p.cons.car.k + "\nor more in detail:"
-	print1 p.cons.car
+	console.log print_list p.cons.car
 	###
 
 	push(p)

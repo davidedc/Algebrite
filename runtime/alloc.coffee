@@ -50,9 +50,7 @@ alloc_tensor = (nelem) ->
 	#	debugger
 	allocatedId++
 
-	if p.tensor.nelem != p.tensor.elem.length
-		console.log "something wrong in tensor dimensions"
-		debugger
+	check_tensor_dimensions p
 
 	return p
 

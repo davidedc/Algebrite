@@ -5,10 +5,10 @@ test_erf = ->
 		"erf(a)",
 
 		"erf(0.0) + 1",		# add 1 to round off
-		"1",
+		"1.0",
 
 		"float(erf(0)) + 1",	# add 1 to round off
-		"1",
+		"1.0",
 	]
 
 ###

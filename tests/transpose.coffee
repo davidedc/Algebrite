@@ -5,7 +5,7 @@ test_transpose = ->
 		"0",
 
 		"transpose(0.0)",
-		"0",
+		"0.0",
 
 		"transpose(((a,b),(c,d)))",
 		"((a,c),(b,d))",
@@ -157,5 +157,17 @@ test_transpose = ->
 		"Iᵀᵀᵀ",
 		"I",
 
+		# Note that we are using the
+		# standard commutative multiplication here,
+		# not the dot product.
+		# So, one of the two arguments should
+		# be a scalar, but we don't know
+		# which one, so we have to transpose
+		# both. Note that we
+		# don't invert the order because
+		# we know it's a normal
+		# multiplication.
+		"transpose(A)*transpose(x)",
+		"transpose(A)*transpose(x)",
 
 	]

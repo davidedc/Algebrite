@@ -159,7 +159,7 @@ cmp_args = ->
 			else
 				t = 1
 		else
-			stop("relational operator: cannot determine due to non-numerical comparison")
+			stop("relational operator: cannot determine due to non-numerical comparison of " + p1)
 			t = 0
 
 	return t

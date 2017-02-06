@@ -1,5 +1,7 @@
 
 
+DEBUG_IS = false
+
 # p is a U
 iszero = (p) ->
 	i = 0
@@ -25,6 +27,17 @@ isnegativenumber = (p) ->
 				return 1
 		when DOUBLE
 			if (p.d < 0.0)
+				return 1
+	return 0
+
+# p is a U
+ispositivenumber = (p) ->
+	switch (p.k)
+		when NUM
+			if (MSIGN(p.q.a) == 1)
+				return 1
+		when DOUBLE
+			if (p.d > 0.0)
 				return 1
 	return 0
 
@@ -131,11 +144,21 @@ isnegativeterm = (p) ->
 	else
 		return 0
 
+hasNegativeRationalExponent = (p) ->
+	if (car(p) == symbol(POWER) \
+	&& isrational(car(cdr(cdr(p)))) \
+	&& isnegativenumber(car(cdr(p))))
+		if DEBUG_IS then console.log "hasNegativeRationalExponent: " + p.toString() + " has imaginary component"
+		return 1
+	else
+		if DEBUG_IS then console.log "hasNegativeRationalExponent: " + p.toString() + " has NO imaginary component"
+		return 0
+
 isimaginarynumberdouble = (p) ->
 	if ((car(p) == symbol(MULTIPLY) \
 	&& length(p) == 3 \
 	&& isdouble(cadr(p)) \
-	&& equal(caddr(p), imaginaryunit)) \
+	&& hasNegativeRationalExponent(caddr(p))) \
 	|| equal(p, imaginaryunit))
 		return 1
 	else 
@@ -146,9 +169,13 @@ isimaginarynumber = (p) ->
 	&& length(p) == 3 \
 	&& isnum(cadr(p)) \
 	&& equal(caddr(p), imaginaryunit)) \
-	|| equal(p, imaginaryunit))
+	|| equal(p, imaginaryunit) \
+	|| hasNegativeRationalExponent(caddr(p))
+	)
+		if DEBUG_IS then console.log "isimaginarynumber: " + p.toString() + " is imaginary number"
 		return 1
 	else 
+		if DEBUG_IS then console.log "isimaginarynumber: " + p.toString() + " isn't an imaginary number"
 		return 0
 
 iscomplexnumberdouble = (p) ->
@@ -162,13 +189,16 @@ iscomplexnumberdouble = (p) ->
 		return 0
 
 iscomplexnumber = (p) ->
+	if DEBUG_IS then debugger
 	if ((car(p) == symbol(ADD) \
 	&& length(p) == 3 \
 	&& isnum(cadr(p)) \
 	&& isimaginarynumber(caddr(p))) \
 	|| isimaginarynumber(p))
+		if DEBUG then console.log "iscomplexnumber: " + p.toString() + " is imaginary number"
 		return 1
 	else
+		if DEBUG then console.log "iscomplexnumber: " + p.toString() + " is imaginary number"
 		return 0
 
 iseveninteger = (p) ->
@@ -186,7 +216,10 @@ isnegative = (p) ->
 		return 0
 
 # returns 1 if there's a symbol somewhere
-
+# not used anywhere. Note that PI and POWER are symbols,
+# so for example 2^3 would be symbolic
+# while -1^(1/2) i.e. 'i' is not, so this can
+# be tricky to use.
 issymbolic = (p) ->
 	if (issymbol(p))
 		return 1
@@ -280,7 +313,7 @@ isminusoneoversqrttwo = (p) ->
 		return 0
 
 isfloating = (p) ->
-	if (p.k == DOUBLE)
+	if p.k == DOUBLE or p == symbol(FLOATF)
 		return 1
 	while (iscons(p))
 		if (isfloating(car(p)))

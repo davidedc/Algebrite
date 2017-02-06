@@ -11,6 +11,19 @@
 #static void parse_p2(void)
 #static void __normalize_radical_factors(int)
 
+Eval_multiply = ->
+	push(cadr(p1))
+	Eval()
+	p1 = cddr(p1)
+	while (iscons(p1))
+		push(car(p1))
+		Eval()
+		multiply()
+		p1 = cdr(p1)
+
+# this one doesn't eval the factors,
+# so you pass i*(-1)^(1/2), it wouldnt't
+# give -1, because i is not evalled
 multiply = ->
 	if (esc_flag)
 		stop("escape key stop")
@@ -36,7 +49,7 @@ yymultiply = ->
 	# is either operand zero?
 
 	if (iszero(p1) || iszero(p2))
-		push(zero)
+		if evaluatingAsFloats then push_double(0.0) else push(zero)
 		return
 
 	# is either operand a sum?
@@ -44,7 +57,7 @@ yymultiply = ->
 	#console.log("yymultiply: expanding: " + expanding)
 	if (expanding && isadd(p1))
 		p1 = cdr(p1)
-		push(zero)
+		if evaluatingAsFloats then push_double(0.0) else push(zero)
 		while (iscons(p1))
 			push(car(p1))
 			push(p2)
@@ -55,7 +68,7 @@ yymultiply = ->
 
 	if (expanding && isadd(p2))
 		p2 = cdr(p2)
-		push(zero)
+		if evaluatingAsFloats then push_double(0.0) else push(zero)
 		while (iscons(p2))
 			push(p1)
 			push(car(p2))
@@ -111,7 +124,7 @@ yymultiply = ->
 		push(car(p2))
 		p2 = cdr(p2)
 	else
-		push(one)
+		if evaluatingAsFloats then push_double(1.0) else push(one)
 
 	parse_p1()
 	parse_p2()
@@ -227,7 +240,7 @@ yymultiply = ->
 
 parse_p1 = ->
 	p3 = car(p1)
-	p5 = one
+	p5 = if evaluatingAsFloats then one_as_double else one
 	if (car(p3) == symbol(POWER))
 		p5 = caddr(p3)
 		p3 = cadr(p3)
@@ -242,7 +255,7 @@ parse_p1 = ->
 
 parse_p2 = ->
 	p4 = car(p2)
-	p6 = one
+	p6 = if evaluatingAsFloats then one_as_double else one
 	if (car(p4) == symbol(POWER))
 		p6 = caddr(p4)
 		p4 = cadr(p4)
@@ -322,7 +335,7 @@ multiply_all = (n) ->
 	if (n == 1)
 		return
 	if (n == 0)
-		push(one)
+		push if evaluatingAsFloats then one_as_double else one
 		return
 	h = tos - n
 	push(stack[h])
@@ -341,7 +354,7 @@ multiply_all_noexpand = (n) ->
 
 #-----------------------------------------------------------------------------
 #
-#	Symbolic division
+#	Symbolic division, or numeric division if doubles are found.
 #
 #	Input:		Dividend and divisor on stack
 #
@@ -371,7 +384,7 @@ negate = ->
 	if (isnum(stack[tos - 1]))
 		negate_number()
 	else
-		push_integer(-1)
+		if evaluatingAsFloats then push_double(-1.0) else push_integer(-1)
 		multiply()
 
 negate_expand = ->
@@ -483,7 +496,7 @@ __normalize_radical_factors = (h) ->
 
 		push_symbol(POWER)
 		push(p3); #p3 is BASE
-		push(one)
+		push if evaluatingAsFloats then one_as_double else one
 		push(p4); #p4 is EXPO
 		add()
 		list(3)
@@ -540,7 +553,7 @@ __normalize_radical_factors = (h) ->
 		subtract()
 
 		if dontCreateNewRadicalsInDenominatorWhenEvalingMultiplication
-			if (isinteger(p3) and !isinteger[stack[tos-1]] and isnegativenumber(stack[tos - 1]))
+			if (isinteger(p3) and !isinteger(stack[tos-1]) and isnegativenumber(stack[tos - 1]))
 				# bail out,
 				# we want to avoid going ahead with the subtraction of
 				# the exponents, because that would turn a perfectly good

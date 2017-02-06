@@ -3,7 +3,7 @@ test_quickfactor = ->
 	logout("testing quickfactor\n")
 	for i in [2...10001]
 		if i % 1000 == 0
-			alert i
+			console.log i
 		base = i
 		push_integer(base)
 		push_integer(1)
@@ -28,7 +28,7 @@ test_quickfactor = ->
 			print_lisp(p1)
 			print_lisp(p2)
 			errout()
-	alert "quickfactor is ok"
+	console.log "quickfactor is ok"
 	logout("ok\n")
 
 #endif

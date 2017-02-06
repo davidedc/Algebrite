@@ -135,7 +135,7 @@ add_numbers = ->
 	a = 1.0
 	b = 1.0
 
-	#if DEBUG then console.log("add_numbers adding numbers: " + print1(stack[tos - 1], "") + " and " + print1(stack[tos - 2], ""))
+	#if DEBUG then console.log("add_numbers adding numbers: " + print_list(stack[tos - 1]) + " and " + print_list(stack[tos - 2]))
 
 	if (isrational(stack[tos - 1]) && isrational(stack[tos - 2]))
 		qadd()
@@ -469,7 +469,7 @@ push_rational = (a,b) ->
 	push(p)
 
 pop_integer = ->
-	n = 0
+	n = 0x80000000
 
 	save()
 
@@ -480,27 +480,28 @@ pop_integer = ->
 		when NUM
 			if (isinteger(p1) && p1.q.a.isSmall)
 				n = p1.q.a.toJSNumber()
-			else
-				n = 0x80000000
 
 		when DOUBLE
-			n = Math.floor p1.q.a
-
-		else
-			n = 0x80000000
+			if DEBUG
+				console.log "popping integer but double is found"
+			if Math.floor(p1.d) == p1.d
+				if DEBUG
+					console.log "...altough it's an integer"
+				n = p1.d
 
 	restore()
 	return n
 
 # p is a U, flag is an int
 print_double = (p,flag) ->
-	buf = ""
-	buf = "" + doubleToReasonableString(p.d)
+	accumulator = ""
+	buf = doubleToReasonableString(p.d)
 	if (flag == 1 && buf == '-')
 		# !!!! passing a pointer willy-nilly
-		print_str(buf + 1)
+		accumulator += print_str(buf + 1)
 	else
-		print_str(buf)
+		accumulator += print_str(buf)
+	return accumulator
 
 # s is a string
 bignum_scan_integer = (s) ->
@@ -543,11 +544,8 @@ bignum_scan_float = (s) ->
 # prints the inverse of the base powered to the unsigned
 # exponent.
 # p is a U
-print_number = (p, signed, accumulator) ->
-	topLevelCall = false
-	if !accumulator?
-		topLevelCall = true
-		accumulator = ""
+print_number = (p, signed) ->
+	accumulator = ""
 
 	denominatorString = ""
 	buf = ""
@@ -558,25 +556,26 @@ print_number = (p, signed, accumulator) ->
 				if aAsString[0] == "-"
 					aAsString = aAsString.substring(1)
 
-			if (latexMode and isfraction(p))
+			if (printMode == PRINTMODE_LATEX and isfraction(p))
 				aAsString = "\\frac{"+aAsString+"}{"
 
 			accumulator += aAsString
-			stringToBePrinted += aAsString
+
 			if (isfraction(p))
-				if !latexMode then accumulator += ("/")
-				if !latexMode then stringToBePrinted += ("/")
+				if printMode != PRINTMODE_LATEX
+					accumulator += ("/")
 				denominatorString = p.q.b.toString()
-				if latexMode then denominatorString += "}"
+				if printMode == PRINTMODE_LATEX then denominatorString += "}"
+
 				accumulator += denominatorString
-				stringToBePrinted += denominatorString
+
 		when DOUBLE
-			aAsString = "" + doubleToReasonableString(p.d)
+			aAsString = doubleToReasonableString(p.d)
 			if !signed
 				if aAsString[0] == "-"
 					aAsString = aAsString.substring(1)
+
 			accumulator += aAsString
-			stringToBePrinted += aAsString
 
 	return accumulator
 

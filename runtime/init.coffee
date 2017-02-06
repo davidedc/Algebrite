@@ -1,26 +1,58 @@
 
 
 init = ->
+	#debugger
+	#console.log "DOING AN INIT ========================================================================"
 	i = 0
 	flag = 0
 
-	tos = 0
-	esc_flag = 0
-	draw_flag = 0
-	frame = TOS
+	reset_after_error()
+	chainOfUserSymbolsNotFunctionsBeingEvaluated = []
 
 	if (flag)
 		return		# already initted
 
 	flag = 1
 
+
+	# total clearout of symbol table
 	for i in [0...NSYM]
 		symtab[i] =  new U()
-
-	for i in [0...NSYM]
 		symtab[i].k = SYM
 		binding[i] = symtab[i]
+		isSymbolReclaimable[i] = false
 
+	defn()
+
+defn_str = [
+	"version=\"" + version + "\"",
+	"e=exp(1)",
+	"i=sqrt(-1)",
+	"autoexpand=1",
+	"assumeRealVariables=1",
+	"trange=(-pi,pi)",
+	"xrange=(-10,10)",
+	"yrange=(-10,10)",
+	"last=0",
+	"trace=0",
+	"printLeaveEAlone=1",
+	"printLeaveXAlone=0",
+	# cross definition
+	"cross(u,v)=(u[2]*v[3]-u[3]*v[2],u[3]*v[1]-u[1]*v[3],u[1]*v[2]-u[2]*v[1])",
+	# curl definition
+	"curl(v)=(d(v[3],y)-d(v[2],z),d(v[1],z)-d(v[3],x),d(v[2],x)-d(v[1],y))",
+	# div definition
+	"div(v)=d(v[1],x)+d(v[2],y)+d(v[3],z)",
+	# Note that we use the mathematics / Javascript / Mathematica
+	# convention that "log" is indeed the natural logarithm.
+	#
+	# In engineering, biology, astronomy, "log" can stand instead
+	# for the "common" logarithm i.e. base 10. Also note that Google
+	# calculations use log for the common logarithm.
+	"ln(x)=log(x)",
+]
+
+defn = ->
 	p0 = symbol(NIL)
 	p1 = symbol(NIL)
 	p2 = symbol(NIL)
@@ -34,9 +66,9 @@ init = ->
 
 	std_symbol("abs", ABS)
 	std_symbol("add", ADD)
-	std_symbol("pattern", PATTERN)
 	std_symbol("adj", ADJ)
 	std_symbol("and", AND)
+	std_symbol("approxratio", APPROXRATIO)
 	std_symbol("arccos", ARCCOS)
 	std_symbol("arccosh", ARCCOSH)
 	std_symbol("arcsin", ARCSIN)
@@ -54,7 +86,8 @@ init = ->
 	std_symbol("choose", CHOOSE)
 	std_symbol("circexp", CIRCEXP)
 	std_symbol("clear", CLEAR)
-	std_symbol("clearsubstrules", CLEARSUBSTRULES)
+	std_symbol("clearall", CLEARALL)
+	std_symbol("clearpatterns", CLEARPATTERNS)
 	std_symbol("clock", CLOCK)
 	std_symbol("coeff", COEFF)
 	std_symbol("cofactor", COFACTOR)
@@ -71,7 +104,6 @@ init = ->
 	std_symbol("derivative", DERIVATIVE)
 	std_symbol("dim", DIM)
 	std_symbol("dirac", DIRAC)
-	std_symbol("display", DISPLAY)
 	std_symbol("divisors", DIVISORS)
 	std_symbol("do", DO)
 	std_symbol("dot", DOT)
@@ -114,7 +146,6 @@ init = ->
 	std_symbol("legendre", LEGENDRE)
 	std_symbol("log", LOG)
 	std_symbol("lookup", LOOKUP)
-	std_symbol("mag", MAG)
 	std_symbol("mod", MOD)
 	std_symbol("multiply", MULTIPLY)
 	std_symbol("not", NOT)
@@ -124,14 +155,19 @@ init = ->
 	std_symbol("operator", OPERATOR)
 	std_symbol("or", OR)
 	std_symbol("outer", OUTER)
+	std_symbol("pattern", PATTERN)
+	std_symbol("patternsinfo", PATTERNSINFO)
 	std_symbol("polar", POLAR)
 	std_symbol("power", POWER)
 	std_symbol("prime", PRIME)
 	std_symbol("print", PRINT)
+	std_symbol("print2dascii", PRINT2DASCII)
+	std_symbol("printfull", PRINTFULL)
 	std_symbol("printlatex", PRINTLATEX)
+	std_symbol("printlist", PRINTLIST)
+	std_symbol("printplain", PRINTPLAIN)
 	std_symbol("printLeaveEAlone", PRINT_LEAVE_E_ALONE)
 	std_symbol("printLeaveXAlone", PRINT_LEAVE_X_ALONE)
-	std_symbol("printlist", PRINTLIST)
 	std_symbol("product", PRODUCT)
 	std_symbol("quote", QUOTE)
 	std_symbol("quotient", QUOTIENT)
@@ -142,6 +178,7 @@ init = ->
 	std_symbol("roots", ROOTS)
 	std_symbol("equals", SETQ)
 	std_symbol("sgn", SGN)
+	std_symbol("silentpattern", SILENTPATTERN)
 	std_symbol("simplify", SIMPLIFY)
 	std_symbol("sin", SIN)
 	std_symbol("sinh", SINH)
@@ -150,6 +187,7 @@ init = ->
 	std_symbol("stop", STOP)
 	std_symbol("subst", SUBST)
 	std_symbol("sum", SUM)
+	std_symbol("symbolsinfo", SYMBOLSINFO)
 	std_symbol("tan", TAN)
 	std_symbol("tanh", TANH)
 	std_symbol("taylor", TAYLOR)
@@ -165,14 +203,21 @@ init = ->
 
 	std_symbol("nil", NIL)
 
-	# each symbol needs a unique name because equal() compares printnames
-
 	std_symbol("autoexpand", AUTOEXPAND)
 	std_symbol("bake", BAKE)
+	std_symbol("assumeRealVariables", ASSUME_REAL_VARIABLES)
+
+
 	std_symbol("last", LAST)
+
+	std_symbol("lastprint", LAST_PRINT)
+	std_symbol("last2dasciiprint", LAST_2DASCII_PRINT)
+	std_symbol("lastfullprint", LAST_FULL_PRINT)
 	std_symbol("lastlatexprint", LAST_LATEX_PRINT)
+	std_symbol("lastlistprint", LAST_LIST_PRINT)
+	std_symbol("lastplainprint", LAST_PLAIN_PRINT)
+
 	std_symbol("trace", TRACE)
-	std_symbol("tty", TTY)
 
 	std_symbol("~", YYE)	# tilde so sort puts it after other symbols
 
@@ -181,6 +226,8 @@ init = ->
 	std_symbol("$METAB", METAB)
 	std_symbol("$METAX", METAX)
 	std_symbol("$SECRETX", SECRETX)
+
+	std_symbol("version", VERSION)
 
 	std_symbol("pi", PI)
 	std_symbol("a", SYMBOL_A)
@@ -209,52 +256,44 @@ init = ->
 	std_symbol("$C5", C5)
 	std_symbol("$C6", C6)
 
-	push_integer(0)
-	zero = pop()		# must be untagged in gc
+	defineSomeHandyConstants()
 
-	push_integer(1)
-	one = pop()		# must be untagged in gc
 
-	# i is the square root of -1 i.e. -1 ^ 1/2
-	push_symbol(POWER)
-	if DEBUG then print1(stack[tos-1])
-	push_integer(-1)
-	if DEBUG then print1(stack[tos-1])
-	push_rational(1, 2)
-	if DEBUG then print1(stack[tos-1])
-	list(3)
-	if DEBUG then print1(stack[tos-1])
-	imaginaryunit = pop()	# must be untagged in gc
+	# don't add all these functions to the
+	# symbolsDependencies, clone the original
+	originalCodeGen = codeGen
+	codeGen = false
 
-	defn()
-
-defn_str = ["e=exp(1)",
-	"i=sqrt(-1)",
-	"autoexpand=1",
-	"trange=(-pi,pi)",
-	"xrange=(-10,10)",
-	"yrange=(-10,10)",
-	"last=0",
-	"trace=0",
-	"printLeaveEAlone=1",
-	"printLeaveXAlone=0",
-	"tty=0",
-	# cross definition
-	"cross(u,v)=(u[2]*v[3]-u[3]*v[2],u[3]*v[1]-u[1]*v[3],u[1]*v[2]-u[2]*v[1])",
-	# curl definition
-	"curl(v)=(d(v[3],y)-d(v[2],z),d(v[1],z)-d(v[3],x),d(v[2],x)-d(v[1],y))",
-	# div definition
-	"div(v)=d(v[1],x)+d(v[2],y)+d(v[3],z)",
-	"ln(x)=log(x)",
-]
-
-defn = ->
 	for defn_i in [0...defn_str.length]
 		definitionOfInterest = defn_str[defn_i]
 		scan(definitionOfInterest)
 		if DEBUG
 			console.log "... evaling " + definitionOfInterest
 			console.log("top of stack:")
-			print1(stack[tos-1])
+			console.log print_list(stack[tos-1])
 		Eval()
 		pop()
+
+	# restore the symbol dependencies as they were before.
+	codeGen = originalCodeGen
+
+defineSomeHandyConstants = ->
+	push_integer(0)
+	zero = pop()		# must be untagged in gc
+
+	push_integer(1)
+	one = pop()		# must be untagged in gc
+
+	push_double(1.0)
+	one_as_double = pop()
+
+	# i is the square root of -1 i.e. -1 ^ 1/2
+	push_symbol(POWER)
+	if DEBUG then console.log print_list(stack[tos-1])
+	push_integer(-1)
+	if DEBUG then console.log print_list(stack[tos-1])
+	push_rational(1, 2)
+	if DEBUG then console.log print_list(stack[tos-1])
+	list(3)
+	if DEBUG then console.log print_list(stack[tos-1])
+	imaginaryunit = pop()	# must be untagged in gc

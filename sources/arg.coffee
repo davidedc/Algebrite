@@ -37,7 +37,7 @@ Notes
 
 	3. Negative direction adds -pi to angle.
 
-	   Example: z = (-1)^(1/3), mag(z) = 1/3 pi, mag(-z) = -2/3 pi
+	   Example: z = (-1)^(1/3), abs(z) = 1/3 pi, abs(-z) = -2/3 pi
 
 	4. jean-francois.debroux reports that when z=(a+i*b)/(c+i*d) then
 
@@ -47,7 +47,7 @@ Notes
 	   automatic.
 ###
 
-
+DEBUG_ARG = false
 
 Eval_arg = ->
 	push(cadr(p1))
@@ -72,12 +72,29 @@ arg = ->
 yyarg = ->
 	save()
 	p1 = pop()
-	if (isnegativenumber(p1))
+
+	# case of plain number
+	if (ispositivenumber(p1) or p1 == symbol(PI))
+		if isdouble(p1) or evaluatingAsFloats
+			push_double(0)
+		else
+			push_integer(0)
+	else if (isnegativenumber(p1))
 		if isdouble(p1) or evaluatingAsFloats
 			push_double(Math.PI)
 		else
 			push(symbol(PI))
 		negate()
+
+	# you'd think that something like
+	# arg(a) is always 0 when a is real but no,
+	# arg(a) is pi when a is negative so we have
+	# to leave unexpressed
+	else if (issymbol(p1))
+		push_symbol(ARG)
+		push(p1)
+		list(2)
+
 	else if (car(p1) == symbol(POWER) && equaln(cadr(p1), -1))
 		# -1 to a power
 		if evaluatingAsFloats
@@ -90,6 +107,16 @@ yyarg = ->
 		# exponential
 		push(caddr(p1))
 		imag()
+	# arg(a^(1/2)) is always equal to 1/2 * arg(a)
+	# this can obviously be made more generic TODO
+	else if (car(p1) == symbol(POWER) && isoneovertwo(caddr(p1)))
+		if DEBUG_ARG then console.log "arg of a sqrt: " + p1
+		if DEBUG_ARG then debugger
+		push(cadr(p1))
+		arg()
+		if DEBUG_ARG then console.log " = 1/2 * " + stack[tos-1]
+		push(caddr(p1))
+		multiply()
 	else if (car(p1) == symbol(MULTIPLY))
 		# product of factors
 		push_integer(0)
@@ -132,8 +159,18 @@ yyarg = ->
 				else
 					add();		# quadrant 4 -> 2
 	else
-		# pure real
-		push_integer(0)
+
+		if (!iszero(get_binding(symbol(ASSUME_REAL_VARIABLES))))
+			# if we assume all passed values are real
+			push_integer(0)
+		else
+			# if we don't assume all passed values are real, all
+			# we con do is to leave unexpressed
+			push_symbol(ARG)
+			push(p1)
+			list(2)
+
+
 	restore()
 
 

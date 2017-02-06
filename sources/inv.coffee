@@ -15,7 +15,8 @@
 #
 #	Note:
 #
-#	Uses Gaussian elimination for numerical matrices.
+#	THIS IS DIFFERENT FROM INVERSE OF AN EXPRESSION (inv)
+#   Uses Gaussian elimination for numerical matrices.
 #
 #-----------------------------------------------------------------------------
 

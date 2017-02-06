@@ -1,3 +1,24 @@
+###
+
+Prints in "2d", e.g. instead of 1/(x+1)^2 :
+
+     1
+----------
+        2
+ (1 + x)
+
+ Note that although this looks more natural, a) it's not parsable and
+ b) it can be occasionally be ambiguous, such as:
+
+   1
+ ----
+   2
+ x
+
+is 1/x^2 but it also looks a little like x^(1/2)
+
+###
+
 #-----------------------------------------------------------------------------
 #
 #	Examples:
@@ -42,17 +63,15 @@ display_flag = 0
 # this is not really the translated version,
 # the original is in window.cpp and is
 # rather more complex
-printchar_nowrap = (character, accumulator) ->
-	if !accumulator?
-		topLevelCall = true
-		accumulator = ""
+printchar_nowrap = (character) ->
+	accumulator = ""
 	accumulator += character
 	return accumulator
 
-printchar = (character, accumulator) ->
-	printchar_nowrap character, accumulator
+printchar = (character) ->
+	return printchar_nowrap character
 
-display = (p) ->
+print2dascii = (p) ->
 	h = 0
 	w = 0
 	y = 0
@@ -73,9 +92,10 @@ display = (p) ->
 		restore()
 		return
 
-	print_it()
+	beenPrinted = print_glyphs()
 
 	restore()
+	return beenPrinted
 
 emit_top_expr = (p) ->
 	if (car(p) == symbol(SETQ))
@@ -343,9 +363,9 @@ emit_fraction = (p, d) ->
 # p points to a multiply
 
 emit_numerators = (p) ->
-	int n
-
 	save()
+
+	n = 0
 
 	p1 = one
 
@@ -387,7 +407,6 @@ emit_numerators = (p) ->
 # p points to a multiply
 
 emit_denominators = (p) ->
-	int n
 
 	save()
 
@@ -834,10 +853,15 @@ cmpGlyphs = (a, b) ->
 
 	return 0
 
-print_it = ->
+print_glyphs = ->
 
 	i = 0
-	accumulatedPrint = ""
+	accumulator = ""
+	
+	# now sort the glyphs by their vertical positions,
+	# since we are going to build a string where obviously the
+	# "upper" line has to printed out first, followed by
+	# a new line, followed by the other lines.
 	#qsort(chartab, yindex, sizeof (struct glyph), __cmp)
 	subsetOfStack = chartab.slice(0,yindex)
 	subsetOfStack.sort(cmpGlyphs)
@@ -850,19 +874,19 @@ print_it = ->
 	for i in [0...yindex]
 
 		while (chartab[i].y > y)
-			accumulatedPrint = printchar('\n', accumulatedPrint)
+			accumulator += printchar('\n')
 			x = 0
 			y++
 
 		while (chartab[i].x > x)
-			accumulatedPrint = printchar_nowrap(' ', accumulatedPrint)
+			accumulator += printchar_nowrap(' ')
 			x++
 
-		accumulatedPrint = printchar_nowrap(chartab[i].c, accumulatedPrint)
+		accumulator += printchar_nowrap(chartab[i].c)
 
 		x++
 
-	if PRINTOUTRESULT then console.log accumulatedPrint
+	return accumulator
 
 buffer = ""
 
@@ -1084,52 +1108,4 @@ emit_tensor_inner = (p, j, k) ->
 	__emit_char(')')
 	return k
 
-#if SELFTEST
 
-# s = [
-
-# 	"format=1",
-# 	"",
-
-# 	"((a,b),(c,d))",
-# 	"a   b\n"
-# 	"\n"
-# 	"c   d",
-
-# 	"1/sqrt(-15)",
-
-# 	"       i\n"
-# 	"- -----------\n"
-# 	"    1/2  1/2\n"
-# 	"   3    5",
-
-# 	"x^(1/a)",
-
-# 	" 1/a\n"
-# 	"x",
-
-# 	"x^(a/b)",
-
-# 	" a/b\n"
-# 	"x",
-
-# 	"x^(a/2)",
-
-# 	" 1/2 a\n"
-# 	"x",
-
-# 	"x^(1/(a+b))",
-
-# 	" 1/(a + b)\n"
-# 	"x",
-# ]
-
-###
-void
-test_display(void)
-{
-	test(__FILE__, s, sizeof s / sizeof (char *))
-}
-
-#endif
-###

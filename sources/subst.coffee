@@ -33,9 +33,7 @@ subst = ->
 			subst()
 			p4.tensor.elem[i] = pop()
 
-			if p4.tensor.nelem != p4.tensor.elem.length
-				console.log "something wrong in tensor dimensions"
-				debugger
+			check_tensor_dimensions p4
 
 		push(p4)
 	else if (equal(p1, p2))

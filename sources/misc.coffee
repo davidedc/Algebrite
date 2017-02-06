@@ -25,10 +25,7 @@ push_identity_matrix = (n) ->
 	for i in [0...n]
 		stack[tos - 1].tensor.elem[i * n + i] = one
 
-	if stack[tos - 1].tensor.nelem != stack[tos - 1].tensor.elem.length
-		console.log "something wrong in tensor dimensions"
-		debugger
-
+	check_tensor_dimensions stack[tos - 1]
 
 push_cars = (p) ->
 	while (iscons(p))
@@ -39,17 +36,13 @@ peek = ->
 	save()
 	p1 = pop()
 	push(p1)
-	printline(p1)
 	restore()
 
-peek2 = ->
-	print_lisp(stack[tos - 2])
-	print_lisp(stack[tos - 1])
-
 # see cmp_expr definition, this
-# function alone just compares structures
-# can't be used alone to test
-# mathematical equalities...
+# function alone just does simple structure comparison
+# or compares numbers (either rationals or integers or doubles)
+# but can't be used alone to test
+# more complex mathematical equalities...
 equal = (p1,p2) ->
 	if (cmp_expr(p1, p2) == 0)
 		return 1

@@ -33,6 +33,9 @@ parse = (argu) ->
 		throw error
 	return data
 
+# exec handles the running ia JS of all the algebrite
+# functions. The function name is passed in "name" and
+# the corresponding function is pushed at the top of the stack
 exec = (name, argus...) ->
 	fn = get_binding(usr_symbol(name))
 	check_stack()
@@ -56,12 +59,6 @@ exec = (name, argus...) ->
 
 	return result
 
-
-reset_after_error = ->
-	tos = 0
-	esc_flag = 0
-	draw_flag = 0
-	frame = TOS
 
 fixed_top_level_eval = ->
 	save()
@@ -97,7 +94,7 @@ $.exec = exec
 $.parse = parse
 
 do ->
-	builtin_fns = ["abs", "add", "pattern", "adj", "and", "arccos", "arccosh", "arcsin", "arcsinh", "arctan", "arctanh", "arg", "atomize", "besselj", "bessely", "binding", "binomial", "ceiling", "check", "choose", "circexp", "clear", "clearsubstrules", "clock", "coeff", "cofactor", "condense", "conj", "contract", "cos", "cosh", "decomp", "defint", "deg", "denominator", "det", "derivative", "dim", "dirac", "display", "divisors", "do", "dot", "draw", "dsolve", "eigen", "eigenval", "eigenvec", "erf", "erfc", "eval", "exp", "expand", "expcos", "expsin", "factor", "factorial", "factorpoly", "filter", "float", "floor", "for", "Gamma", "gcd", "hermite", "hilbert", "imag", "component", "inner", "integral", "inv", "invg", "isinteger", "isprime", "laguerre", "lcm", "leading", "legendre", "log", "mag", "mod", "multiply", "not", "nroots", "number", "numerator", "operator", "or", "outer", "polar", "power", "prime", "print", "product", "quote", "quotient", "rank", "rationalize", "real", "rect", "roots", "equals", "shape", "sgn", "simplify", "sin", "sinh", "sqrt", "stop", "subst", "sum", "tan", "tanh", "taylor", "test", "testeq", "testge", "testgt", "testle", "testlt", "transpose", "unit", "zero"]
+	builtin_fns = ["abs", "add", "adj", "and", "approxratio", "arccos", "arccosh", "arcsin", "arcsinh", "arctan", "arctanh", "arg", "atomize", "besselj", "bessely", "binding", "binomial", "ceiling", "check", "choose", "circexp", "clear", "clearall", "clearpatterns", "clock", "coeff", "cofactor", "condense", "conj", "contract", "cos", "cosh", "decomp", "defint", "deg", "denominator", "det", "derivative", "dim", "dirac", "divisors", "do", "dot", "draw", "dsolve", "eigen", "eigenval", "eigenvec", "erf", "erfc", "eval", "exp", "expand", "expcos", "expsin", "factor", "factorial", "factorpoly", "filter", "float", "floor", "for", "Gamma", "gcd", "hermite", "hilbert", "imag", "component", "inner", "integral", "inv", "invg", "isinteger", "isprime", "laguerre", "lcm", "leading", "legendre", "log", "mod", "multiply", "not", "nroots", "number", "numerator", "operator", "or", "outer", "pattern", "patternsinfo", "polar", "power", "prime", "print", "print2dascii", "printfull", "printlatex", "printlist", "printplain", "product", "quote", "quotient", "rank", "rationalize", "real", "rect", "roots", "equals", "shape", "sgn", "silentpattern", "simplify", "sin", "sinh", "sqrt", "stop", "subst", "sum", "symbolsinfo", "tan", "tanh", "taylor", "test", "testeq", "testge", "testgt", "testle", "testlt", "transpose", "unit", "zero"]
 
 	for fn in builtin_fns
 		$[fn] = exec.bind(this, fn)

@@ -14,8 +14,8 @@ Eval_product = ->
 
 	# 1st arg (quoted)
 
-	p6 = cadr(p1)
-	if (!issymbol(p6))
+	indexVariable = cadr(p1)
+	if (!issymbol(indexVariable))
 		stop("product: 1st arg?")
 
 	# 2nd arg
@@ -40,17 +40,22 @@ Eval_product = ->
 
 	# remember contents of the index
 	# variable so we can put it back after the loop
-	p4 = get_binding(p6)
+	oldIndexVariableValue = get_binding(indexVariable)
 
 	push_integer(1)
 
 	for i in [j..k]
 		push_integer(i)
 		p5 = pop()
-		set_binding(p6, p5)
+		set_binding(indexVariable, p5)
 		push(p1)
 		Eval()
+		if DEBUG
+			console.log "product - factor 1: " + stack[tos-1].toString()
+			console.log "product - factor 2: " + stack[tos-2].toString()
 		multiply()
+		if DEBUG
+			console.log "product - result: " + stack[tos-1].toString()
 
 	# put back the index variable to original content
-	set_binding(p6, p4)
+	set_binding(indexVariable, oldIndexVariableValue)

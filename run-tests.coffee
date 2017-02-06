@@ -1,10 +1,12 @@
 # self test functions
 
 test_low_level = ->
-	run("clear"); # to initialize stack and memory
+	run("clearall"); # to initialize stack and memory
 
+	test_clearall()
 	test_inv()
 	test_printlatex()
+	test_mixedprint()
 	test_inner()
 	test_transpose()
 	test_signs_in_rationals()
@@ -17,14 +19,15 @@ test_low_level = ->
 	test_mgcd()
 	test_mpow()
 	test_mroot()
+	test_dependencies()
 	test_assignments()
-	# commenting out because it takes a looong time
-	# with the current logging. But it works now
-	# as I'm commenting it out.
-	#test_quickfactor()
+	test_caching()
+	test_strings()
 
 selftest  = ->
 	test_low_level()
+	test_pattern()
+	test_abs()	
 	test_sum()
 	test_product()
 	test_exp()
@@ -40,9 +43,9 @@ selftest  = ->
 	test_test()
 	test_tensor()
 	test_bake()
-	test_abs()
 	test_adj()
 	test_arg()
+	test_approxratio()
 	test_besselj()
 	test_bessely()
 	test_ceiling()
@@ -67,8 +70,7 @@ selftest  = ->
 	test_imag()
 	test_lcm()
 	test_log()
-	test_mag()
-	test_mod()
+	#test_mod()
 	test_nroots()
 	test_numerator()
 	test_outer()
@@ -103,8 +105,9 @@ selftest  = ->
 	test_eigen()
 	test_shape()
 	mini_test()
-	test_roots()
+	test_quickfactor()
 	test_integral()
+	test_roots()
 
 
 	# alert "passed tests: " + ok_tests + " / failed tests: " + ko_tests

@@ -34,9 +34,7 @@ Eval_tensor = ->
 	#
 	#---------------------------------------------------------------------
 
-	if p1.tensor.nelem != p1.tensor.elem.length
-		console.log "something wrong in tensor dimensions"
-		debugger
+	check_tensor_dimensions p1
 
 	nelem = p1.tensor.nelem
 
@@ -58,9 +56,7 @@ Eval_tensor = ->
 	a = p1.tensor.elem
 	b = p2.tensor.elem
 
-	if p2.tensor.nelem != p2.tensor.elem.length
-		console.log "something wrong in tensor dimensions"
-		debugger
+	check_tensor_dimensions p2
 
 	for i in [0...nelem]
 		#console.log "push/pop: pushing element a of " + i
@@ -69,12 +65,8 @@ Eval_tensor = ->
 		#console.log "push/pop: popping into element b of " + i
 		b[i] = pop()
 
-	if p1.tensor.nelem != p1.tensor.elem.length
-		console.log "something wrong in tensor dimensions"
-		debugger
-	if p2.tensor.nelem != p2.tensor.elem.length
-		console.log "something wrong in tensor dimensions"
-		debugger
+	check_tensor_dimensions p1
+	check_tensor_dimensions p2
 	#---------------------------------------------------------------------
 	#
 	#	push the result
@@ -222,6 +214,11 @@ scalar_times_tensor = ->
 	push(p3)
 
 	restore()
+
+check_tensor_dimensions = (p) ->
+	if p.tensor.nelem != p.tensor.elem.length
+		console.log "something wrong in tensor dimensions"
+		debugger
 
 is_square_matrix = (p) ->
 	if (istensor(p) && p.tensor.ndim == 2 && p.tensor.dim[0] == p.tensor.dim[1])
@@ -404,9 +401,7 @@ power_tensor = ->
 		for i in [0...n]
 			p1.tensor.elem[n * i + i] = one
 
-		if p1.tensor.nelem != p1.tensor.elem.length
-			console.log "something wrong in tensor dimensions"
-			debugger
+		check_tensor_dimensions p1
 
 		push(p1)
 		return
@@ -442,13 +437,8 @@ copy_tensor = ->
 	for i in [0...p1.tensor.nelem]
 		p2.tensor.elem[i] = p1.tensor.elem[i]
 
-	if p1.tensor.nelem != p1.tensor.elem.length
-		console.log "something wrong in tensor dimensions"
-		debugger
-
-	if p2.tensor.nelem != p2.tensor.elem.length
-		console.log "something wrong in tensor dimensions"
-		debugger
+	check_tensor_dimensions p1
+	check_tensor_dimensions p2
 
 	push(p2)
 
@@ -507,13 +497,8 @@ promote_tensor = ->
 		for j in [0...p2.tensor.nelem]
 			p3.tensor.elem[k++] = p2.tensor.elem[j]
 
-	if p2.tensor.nelem != p2.tensor.elem.length
-		console.log "something wrong in tensor dimensions"
-		debugger
-
-	if p3.tensor.nelem != p3.tensor.elem.length
-		console.log "something wrong in tensor dimensions"
-		debugger
+	check_tensor_dimensions p2
+	check_tensor_dimensions p3
 
 	push(p3)
 

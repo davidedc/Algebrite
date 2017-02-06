@@ -18,27 +18,61 @@ runUserDefinedSimplifications = ->
 	if userSimplificationsInListForm.length != 0 and !Find(cadr(p1), symbol(INTEGRAL))
 		originalexpanding = expanding
 		expanding = false
+		if DEBUG then console.log("runUserDefinedSimplifications passed: " + stack[tos-1].toString())
 		Eval()
+		if DEBUG then console.log("runUserDefinedSimplifications after eval no expanding: " + stack[tos-1].toString())
 		expanding = originalexpanding
 
-		additionalSimplifications = userSimplificationsInListForm.slice(0)
-		additionalSimplifications.push 0
 
-		success = true
-		#while success
-		p1 = pop()
-		push(p1)
-		push_symbol(NIL)
-		success = transform(additionalSimplifications, true)
+		p1 = stack[tos-1]
 
-		p1 = pop()
-		push p1
+		if DEBUG then console.log "patterns to be checked: "
+		for eachSimplification in userSimplificationsInListForm
+			if DEBUG then console.log "..." + eachSimplification
+
+		atLeastOneSuccessInRouldOfRulesApplications = true
+		numberOfRulesApplications = 0
+
+		
+		while atLeastOneSuccessInRouldOfRulesApplications and numberOfRulesApplications < MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES
+			atLeastOneSuccessInRouldOfRulesApplications = false
+			numberOfRulesApplications++
+			for eachSimplification in userSimplificationsInListForm
+				success = true
+				eachConsecutiveRuleApplication = 0
+				while success and eachConsecutiveRuleApplication < MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE
+					eachConsecutiveRuleApplication++
+					if DEBUG then console.log "simplify - tos: " + tos + " checking pattern: " + eachSimplification + " on: " + p1
+					push_symbol(NIL)
+					success = transform(eachSimplification, true)
+					if success
+						atLeastOneSuccessInRouldOfRulesApplications = true
+					p1 = stack[tos-1]
+					if DEBUG then console.log "p1 at this stage of simplification: " + p1
+				if eachConsecutiveRuleApplication == MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE
+					stop("maximum application of single transformation rule exceeded: " + eachSimplification)
+
+		if numberOfRulesApplications == MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES
+			stop("maximum application of all transformation rules exceeded ")
+
+		if DEBUG
+			console.log "METAX = " + get_binding(symbol(METAX))
+			console.log "METAA = " + get_binding(symbol(METAA))
+			console.log "METAB = " + get_binding(symbol(METAB))
+
 	# ------------------------
 
 simplifyForCodeGeneration = ->
 	save()
 	runUserDefinedSimplifications()
+	codeGen = true
+	# in "codeGen" mode we completely
+	# eval and simplify the function bodies
+	# because we really want to resolve all
+	# the variables indirections and apply
+	# all the simplifications we can.
 	simplify_main()
+	codeGen = false
 	restore()
 
 simplify = ->
@@ -48,6 +82,29 @@ simplify = ->
 
 simplify_main = ->
 	p1 = pop()
+
+	# when we do code generation, we proceed to
+	# fully evaluate and simplify the body of
+	# a function, so we resolve all variables
+	# indirections and we simplify everything
+	# we can given the current assignments.
+	if codeGen and car(p1) == symbol(FUNCTION)
+		fbody = cadr(p1)		
+		push fbody
+		# let's simplify the body so we give it a
+		# compact form
+		eval()
+		simplify()
+		p3 = pop()
+
+		# replace the evaled body
+		args = caddr(p1); # p5 is B
+
+		push_symbol(FUNCTION)
+		push p3
+		push args
+		list(3)
+		p1 = pop()
 
 	if (istensor(p1))
 		simplify_tensor()
@@ -87,6 +144,8 @@ simplify_main = ->
 			simplify()
 			return
 
+	simplify_rectToClock()
+
 	push(p1)
 
 simplify_tensor = ->
@@ -100,38 +159,12 @@ simplify_tensor = ->
 		simplify()
 		p2.tensor.elem[i] = pop()
 
-	if p2.tensor.nelem != p2.tensor.elem.length
-		console.log "something wrong in tensor dimensions"
-		debugger
+	check_tensor_dimensions p2
 
 	if (iszero(p2))
 		p2 = zero; # null tensor becomes scalar zero
 	push(p2)
 
-count = (p) ->
-	if (iscons(p))
-		n = 0
-		while (iscons(p))
-			n += count(car(p)) + 1
-			p = cdr(p)
-	else
-		n = 1
-	return n
-
-# this probably works out to be
-# more general than just counting symbols, it can
-# probably count instances of anything you pass as
-# first argument but didn't try it.
-countOccurrencesOfSymbol = (needle,p) ->
-	n = 0
-	if (iscons(p))
-		while (iscons(p))
-			n += countOccurrencesOfSymbol(needle,car(p))
-			p = cdr(p)
-	else
-		if equal(needle,p)
-			n = 1
-	return n
 
 # try rationalizing
 
@@ -173,7 +206,7 @@ f10 = ->
 
 	carp1 = car(p1)
 	miao = cdr(p1)
-	if ( carp1 == symbol(MULTIPLY) || carp1 == symbol(INNER))
+	if ( carp1 == symbol(MULTIPLY) || isinnerordot(p1))
 		# both operands a transpose?
 
 		if (car(car(cdr(p1))) == symbol(TRANSPOSE)) and (car(car(cdr(cdr(p1)))) == symbol(TRANSPOSE))
@@ -184,7 +217,7 @@ f10 = ->
 				push(a)
 				push(b)
 				multiply()
-			else if carp1 == symbol(INNER)
+			else if isinnerordot(p1)
 				push(b)
 				push(a)
 				inner()
@@ -264,8 +297,28 @@ f9 = ->
 	if (count(p2) < count(p1))
 		p1 = p2
 
+# things like 6*(cos(2/9*pi)+i*sin(2/9*pi))
+# where we have sin and cos, those might start to
+# look better in clock form i.e.  6*(-1)^(2/9) 
+simplify_rectToClock = ->
+	#debugger
+
+	if (Find(p1, symbol(SIN)) == 0 && Find(p1, symbol(COS)) == 0)
+		return
+
+	push(p1)
+	Eval()
+	clockform()
+
+	p2 = pop(); # put new (hopefully simplified expr) in p2
+	if DEBUG then console.log "before simplification clockform: " + p1 + " after: " + p2
+
+	if (count(p2) < count(p1))
+		p1 = p2
+
 simplify_polarRect = ->
 	push(p1)
+
 	polarRectAMinusOneBase()
 	Eval()
 

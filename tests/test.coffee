@@ -6,11 +6,23 @@ test_test = ->
 		"a-1<a",
 		"1",
 
+		"0==-0",
+		"1",
+
+		"0!=-0",
+		"0",
+
 		"1==1",
 		"1",
 
 		"1==2",
 		"0",
+
+		"1!=1",
+		"0",
+
+		"1!=2",
+		"1",
 
 		"1>=1",
 		"1",
@@ -47,6 +59,12 @@ test_test = ->
 
 		"2<1",
 		"0",
+
+		"-1<-2",
+		"0",
+
+		"-2<-1",
+		"1",
 
 		"test(0,A,B)",
 		"B",
@@ -103,6 +121,6 @@ test_test = ->
 		"1",
 
 		"x + x > x",
-		"Stop: relational operator: cannot determine due to non-numerical comparison",
+		"Stop: relational operator: cannot determine due to non-numerical comparison of x",
 	]
 

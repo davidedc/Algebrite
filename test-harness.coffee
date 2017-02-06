@@ -11,7 +11,7 @@ run_test = (s) ->
 
 	test_flag = 1
 
-	run("clear")
+	run("clearall")
 
 	run("e=quote(e)")
 

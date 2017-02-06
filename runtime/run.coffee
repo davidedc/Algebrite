@@ -43,272 +43,614 @@ stop = (s) ->
 # While in the second case the effort is similar to running the
 # code and simplifications in her head.
 test_dependencies = ->
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('1')
-	if testResult[0] == "All local dependencies: . All dependencies recursively: " and
+	if testResult[0] == "All local dependencies: . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively: " and
 		testResult[1] == "1" and
 		testResult[2] == ""
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f = x+1\n g = f\n h = g\n f = g')
-	if testResult[0] == "All local dependencies:  variable f depends on: x, g, ;  variable g depends on: f, ;  variable h depends on: g, ; . All dependencies recursively:  variable f depends on: x, ;  f --> g -->  ... then f again,  variable g depends on: x, ;  g --> f -->  ... then g again,  variable h depends on: x, ;  h --> g --> f -->  ... then g again, " and
+	if testResult[0] == "All local dependencies:  variable f depends on: x, g, ;  variable g depends on: f, ;  variable h depends on: g, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: x, ;  f --> g -->  ... then f again,  variable g depends on: x, ;  g --> f -->  ... then g again,  variable h depends on: x, ;  h --> g --> f -->  ... then g again, " and
 		testResult[1] == "" and
 		testResult[2] == "// f is part of a cyclic dependency, no code generated.\n// g is part of a cyclic dependency, no code generated.\n// h is part of a cyclic dependency, no code generated."
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
-	if findDependenciesInScript('f = x+1\n g = f + y\n h = g')[0] == "All local dependencies:  variable f depends on: x, ;  variable g depends on: f, y, ;  variable h depends on: g, ; . All dependencies recursively:  variable f depends on: x, ;  variable g depends on: x, y, ;  variable h depends on: x, y, ; "
+	if findDependenciesInScript('f = x+1\n g = f + y\n h = g')[0] == "All local dependencies:  variable f depends on: x, ;  variable g depends on: f, y, ;  variable h depends on: g, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: x, ;  variable g depends on: x, y, ;  variable h depends on: x, y, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
-	clear_symbols(); defn()
+	do_clearall()
 
-	if findDependenciesInScript('g = h(x,y)')[0] == "All local dependencies:  variable g depends on: h, x, y, ; . All dependencies recursively:  variable g depends on: h, x, y, ; "
+	if findDependenciesInScript('g = h(x,y)')[0] == "All local dependencies:  variable g depends on: h, x, y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable g depends on: h, x, y, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
-	clear_symbols(); defn()
+	do_clearall()
 
-	if findDependenciesInScript('f(x,y) = k')[0] == "All local dependencies:  variable f depends on: 'x, 'y, k, ; . All dependencies recursively:  variable f depends on: 'x, 'y, k, ; "
+	if findDependenciesInScript('f(x,y) = k')[0] == "All local dependencies:  variable f depends on: 'x, 'y, k, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: 'x, 'y, k, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
-	clear_symbols(); defn()
+	do_clearall()
 
-	if findDependenciesInScript('x = z\n f(x,y) = k')[0] == "All local dependencies:  variable x depends on: z, ;  variable f depends on: 'x, 'y, k, ; . All dependencies recursively:  variable x depends on: z, ;  variable f depends on: 'x, 'y, k, ; "
+	if findDependenciesInScript('x = z\n f(x,y) = k')[0] == "All local dependencies:  variable x depends on: z, ;  variable f depends on: 'x, 'y, k, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: z, ;  variable f depends on: 'x, 'y, k, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
-	clear_symbols(); defn()
+	do_clearall()
 
-	if findDependenciesInScript('x = z\n g = f(x,y)')[0] == "All local dependencies:  variable x depends on: z, ;  variable g depends on: f, x, y, ; . All dependencies recursively:  variable x depends on: z, ;  variable g depends on: f, z, y, ; "
+	if findDependenciesInScript('x = z\n g = f(x,y)')[0] == "All local dependencies:  variable x depends on: z, ;  variable g depends on: f, x, y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: z, ;  variable g depends on: f, z, y, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
-	clear_symbols(); defn()
+	do_clearall()
 
-	if findDependenciesInScript('x = 1\n x = y\n x = z')[0] == "All local dependencies:  variable x depends on: y, z, ; . All dependencies recursively:  variable x depends on: y, z, ; "
+	if findDependenciesInScript('x = 1\n x = y\n x = z')[0] == "All local dependencies:  variable x depends on: y, z, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: y, z, ; "
 		console.log "ok dependency test"
 	else
 		console.log "fail dependency test"
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('x = y*y')
-	if testResult[0] == "All local dependencies:  variable x depends on: y, ; . All dependencies recursively:  variable x depends on: y, ; " and
+	if testResult[0] == "All local dependencies:  variable x depends on: y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: y, ; " and
 		testResult[1] == "" and
 		testResult[2] == "x = function (y) { return ( Math.pow(y, 2) ); }"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('x = -sqrt(2)/2')
-	if testResult[0] == "All local dependencies:  variable x depends on: sqrt, ; . All dependencies recursively:  variable x depends on: sqrt, ; " and
+	if testResult[0] == "All local dependencies:  variable x depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: ; " and
 		testResult[1] == "" and
-		testResult[2] == "x = function (sqrt) { return ( -1/2*Math.pow(2, (1/2)) ); }"
+		testResult[2] == "x = -1/2*Math.pow(2, (1/2));"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('x = 2^(1/2-a)*2^a/10')
-	if testResult[0] == "All local dependencies:  variable x depends on: a, ; . All dependencies recursively:  variable x depends on: a, ; " and
+	if testResult[0] == "All local dependencies:  variable x depends on: a, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: a, ; " and
 		testResult[1] == "" and
-		testResult[2] == "x = function (a) { return ( 1/10*Math.pow(2, (1/2)) ); }"
+		testResult[2] == "x = 1/10*Math.pow(2, (1/2));"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('x = rationalize(t*y/(t+y)+2*t^2*y*(2*t+y)^(-2))')
-	if testResult[0] == "All local dependencies:  variable x depends on: t, y, ; . All dependencies recursively:  variable x depends on: t, y, ; " and
+	if testResult[0] == "All local dependencies:  variable x depends on: t, y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: t, y, ; " and
 		testResult[1] == "" and
 		testResult[2] == "x = function (t, y) { return ( t*y*(6*Math.pow(t, 2) + Math.pow(y, 2) + 6*t*y) / ((t + y)*Math.pow((2*t + y), 2)) ); }"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
-	testResult = findDependenciesInScript('x = mag((a+i*b)/(c+i*d))')
-	if testResult[0] == "All local dependencies:  variable x depends on: a, b, c, d, ; . All dependencies recursively:  variable x depends on: a, b, c, d, ; " and
+	testResult = findDependenciesInScript('x = abs((a+i*b)/(c+i*d))')
+	if testResult[0] == "All local dependencies:  variable x depends on: a, b, c, d, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: a, b, c, d, ; " and
 		testResult[1] == "" and
 		testResult[2] == "x = function (a, b, c, d) { return ( Math.pow((Math.pow(a, 2) + Math.pow(b, 2)), (1/2)) / (Math.pow((Math.pow(c, 2) + Math.pow(d, 2)), (1/2))) ); }"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('x = sin(1/10)^2 + cos(1/10)^2 + y')
-	if testResult[0] == "All local dependencies:  variable x depends on: y, ; . All dependencies recursively:  variable x depends on: y, ; " and
+	if testResult[0] == "All local dependencies:  variable x depends on: y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: y, ; " and
 		testResult[1] == "" and
 		testResult[2] == "x = function (y) { return ( 1 + y ); }"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('x = sin(1/10)^2 + cos(1/10)^2')
-	if testResult[0] == "All local dependencies:  variable x depends on: ; . All dependencies recursively:  variable x depends on: ; " and
+	if testResult[0] == "All local dependencies:  variable x depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: ; " and
 		testResult[1] == "" and
 		testResult[2] == "x = 1;"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f(x) = x * x')
-	if testResult[0] == "All local dependencies:  variable f depends on: 'x, x, ; . All dependencies recursively:  variable f depends on: 'x, x, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: 'x, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: 'x, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (x) { return ( x*x ); }"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f(x) = x * x + g(y)')
-	if testResult[0] == "All local dependencies:  variable f depends on: 'x, x, g, y, ; . All dependencies recursively:  variable f depends on: 'x, x, g, y, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: 'x, g, y, ; " and
 		testResult[1] == "" and
-		testResult[2] == "f = function (x, g, y) { return ( g(y) + Math.pow(x, 2) ); }"
+		testResult[2] == "f = function (g, y, x) { return ( g(y) + Math.pow(x, 2) ); }"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('y = 2\nf(x) = x * x + g(y)')
-	if testResult[0] == "All local dependencies:  variable y depends on: ;  variable f depends on: 'x, x, g, y, ; . All dependencies recursively:  variable y depends on: ;  variable f depends on: 'x, x, g, ; " and
+	if testResult[0] == "All local dependencies:  variable y depends on: ;  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable y depends on: ;  variable f depends on: 'x, g, ; " and
 		testResult[1] == "" and
-		testResult[2] == "y = 2;\nf = function (x, g) { return ( g(2) + Math.pow(x, 2) ); }"
+		testResult[2] == "y = 2;\nf = function (g, x) { return ( g(2) + Math.pow(x, 2) ); }"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('g(x) = x + 2\ny = 2\nf(x) = x * x + g(y)')
-	if testResult[0] == "All local dependencies:  variable g depends on: 'x, x, ;  variable y depends on: ;  variable f depends on: 'x, x, g, y, ; . All dependencies recursively:  variable g depends on: 'x, x, ;  variable y depends on: ;  variable f depends on: 'x, x, ; " and
+	if testResult[0] == "All local dependencies:  variable g depends on: 'x, ;  variable y depends on: ;  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable g depends on: 'x, ;  variable y depends on: ;  variable f depends on: 'x, ; " and
 		testResult[1] == "" and
 		testResult[2] == "g = function (x) { return ( 2 + x ); }\ny = 2;\nf = function (x) { return ( 4 + Math.pow(x, 2) ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('g(x) = x + 2\nf(x) = x * x + g(y)')
-	if testResult[0] == "All local dependencies:  variable g depends on: 'x, x, ;  variable f depends on: 'x, x, g, y, ; . All dependencies recursively:  variable g depends on: 'x, x, ;  variable f depends on: 'x, x, y, ; " and
+	if testResult[0] == "All local dependencies:  variable g depends on: 'x, ;  variable f depends on: 'x, g, y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable g depends on: 'x, ;  variable f depends on: 'x, y, ; " and
 		testResult[1] == "" and
-		testResult[2] == "g = function (x) { return ( 2 + x ); }\nf = function (x, y) { return ( 2 + y + Math.pow(x, 2) ); }"
+		testResult[2] == "g = function (x) { return ( 2 + x ); }\nf = function (y, x) { return ( 2 + y + Math.pow(x, 2) ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	###
 	testResult = findDependenciesInScript('g(x) = f(x)\nf(x)=g(x)')
-	if testResult[0] == "All local dependencies:  variable g depends on: 'x, f, x, ;  variable f depends on: 'x, g, x, ; . All dependencies recursively:  variable g depends on: 'x, x, ;  g --> f -->  ... then g again,  variable f depends on: 'x, x, ;  f --> g -->  ... then f again, " and
+	if testResult[0] == "All local dependencies:  variable g depends on: 'x, f, x, ;  variable f depends on: 'x, g, x, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable g depends on: 'x, ;  g --> f -->  ... then g again,  variable f depends on: 'x, x, ;  f --> g -->  ... then f again, " and
 		testResult[1] == "" and
 		testResult[2] == "// g is part of a cyclic dependency, no code generated.\n// f is part of a cyclic dependency, no code generated."
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 	###
 
 	testResult = findDependenciesInScript('f = roots(a*x^2 + b*x + c, x)')
-	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . All dependencies recursively:  variable f depends on: a, b, c, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: a, b, c, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (a, b, c) { return ( [-1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) + b / a),1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) - b / a)] ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f = roots(a*x^2 + b*x + c)')
-	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . All dependencies recursively:  variable f depends on: a, b, c, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: a, b, c, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (a, b, c) { return ( [-1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) + b / a),1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) - b / a)] ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f = roots(integral(a*x + b))')
-	if testResult[0] == "All local dependencies:  variable f depends on: a, b, ; . All dependencies recursively:  variable f depends on: a, b, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: a, b, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: a, b, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (a, b) { return ( [0,-2*b / a] ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f = roots(defint(a*x + y,y,0,1))')
-	if testResult[0] == "All local dependencies:  variable f depends on: a, ; . All dependencies recursively:  variable f depends on: a, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: a, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: a, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (a) { return ( -1 / (2*a) ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f = roots(defint(a*x + y + z,y,0,1, z, 0, 1))')
-	if testResult[0] == "All local dependencies:  variable f depends on: a, ; . All dependencies recursively:  variable f depends on: a, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: a, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: a, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (a) { return ( -1 / a ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f = defint(2*x - 3*y,x,0,2*y)')
-	if testResult[0] == "All local dependencies:  variable f depends on: y, ; . All dependencies recursively:  variable f depends on: y, ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: y, ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = function (y) { return ( -2*Math.pow(y, 2) ); }"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	clear_symbols(); defn()
+	do_clearall()
 
 	testResult = findDependenciesInScript('f = defint(12 - x^2 - (y^2)/2,x,0,2,y,0,3)')
-	if testResult[0] == "All local dependencies:  variable f depends on: ; . All dependencies recursively:  variable f depends on: ; " and
+	if testResult[0] == "All local dependencies:  variable f depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: ; " and
 		testResult[1] == "" and
 		testResult[2] == "f = 55;"
+			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
 
-	console.log "-- done dependency tests"
+	do_clearall()
 
-findDependenciesInScript = (stringToBeParsed) ->
+	# this example checks that functions are not meddled with,
+	# in particular that in the function body, the variables
+	# bound by the parameters remain "separate" from previous
+	# variables with the same name.
+	testResult = findDependenciesInScript('a = 2\nf(a) = a+1+b')
+	if testResult[0] == "All local dependencies:  variable a depends on: ;  variable f depends on: 'a, b, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: ;  variable f depends on: 'a, b, ; " and
+		testResult[1] == "" and
+		testResult[2] == "a = 2;\nf = function (a, b) { return ( 1 + a + b ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
+	# similar as test above but this time we are not
+	# defining a function, so things are a bit different.
+	testResult = findDependenciesInScript('a = 2\nf = a+1')
+	if testResult[0] == "All local dependencies:  variable a depends on: ;  variable f depends on: a, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: ;  variable f depends on: ; " and
+		testResult[1] == "" and
+		testResult[2] == "a = 2;\nf = 3;"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
+	# similar as test above but this time we do a
+	# trick with the quote to see whether we
+	# get confused with the indirection
+	testResult = findDependenciesInScript('a := b\nf = a+1')
+	if testResult[0] == "All local dependencies:  variable a depends on: b, ;  variable f depends on: a, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: b, ;  variable f depends on: b, ; " and
+		testResult[1] == "" and
+		testResult[2] == "a = function (b) { return ( b ); }\nf = function (b) { return ( 1 + b ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
+	# another tricky case of indirection through quote
+	testResult = findDependenciesInScript('a := b\nf(a) = a+1')
+	if testResult[0] == "All local dependencies:  variable a depends on: b, ;  variable f depends on: 'a, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: b, ;  variable f depends on: 'a, ; " and
+		testResult[1] == "" and
+		testResult[2] == "a = function (b) { return ( b ); }\nf = function (a) { return ( 1 + a ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
+	# reassignment
+	testResult = findDependenciesInScript('b = 1\nb=a+b+c')
+	if testResult[0] == "All local dependencies:  variable b depends on: a, c, ; . Symbols with reassignments: b, . Symbols in expressions without assignments: . All dependencies recursively:  variable b depends on: a, c, ; " and
+		testResult[1] == "" and
+		testResult[2] == "b = function (a, c) { return ( 1 + a + c ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
+	# reassignment
+	testResult = findDependenciesInScript('a = a+1')
+	if testResult[0] == "All local dependencies:  variable a depends on: ; . Symbols with reassignments: a, . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: ; " and
+		testResult[1] == "" and
+		testResult[2] == "" and
+		testResult[5] == "Error: Stop: recursive evaluation of symbols: a -> a"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
+	# reassignment
+	testResult = computeDependenciesFromAlgebra('pattern(a,b)\nc= d\na=a+1')
+	if testResult.affectsVariables.length is 3 and
+		testResult.affectsVariables.indexOf("c") != -1 and
+		testResult.affectsVariables.indexOf("a") != -1 and
+		testResult.affectsVariables.indexOf("PATTERN_DEPENDENCY") != -1 and
+		testResult.affectedBy.length is 3 and
+		testResult.affectedBy.indexOf("d") != -1 and
+		testResult.affectedBy.indexOf("a") != -1 and
+		testResult.affectedBy.indexOf("PATTERN_DEPENDENCY") != -1
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
+	testResult = computeDependenciesFromAlgebra('PCA(M) = eig(Mᵀ⋅M)')
+	if testResult.affectsVariables.length is 1 and
+		testResult.affectsVariables.indexOf("PCA") != -1 and
+		testResult.affectsVariables.indexOf("PATTERN_DEPENDENCY") == -1 and
+		testResult.affectedBy.length is 1 and
+		testResult.affectedBy.indexOf("PATTERN_DEPENDENCY") != -1
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
+	testResult = computeDependenciesFromAlgebra('pattern(a_ᵀ⋅a_, cov(a_))')
+	if testResult.affectsVariables.length is 1 and
+		testResult.affectsVariables.indexOf("PATTERN_DEPENDENCY") != -1 and
+		testResult.affectedBy.length is 1 and
+		testResult.affectedBy.indexOf("PATTERN_DEPENDENCY") != -1
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
+	testResult = findDependenciesInScript('a = b\nf = a+1')
+	if testResult[0] == "All local dependencies:  variable a depends on: b, ;  variable f depends on: a, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: b, ;  variable f depends on: b, ; " and
+		testResult[1] == "" and
+		testResult[2] == "a = function (b) { return ( b ); }\nf = function (b) { return ( 1 + b ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
+	testResult = findDependenciesInScript('PCA(M) = eig(cov(M))')
+	if testResult[0] == "All local dependencies:  variable PCA depends on: 'M, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable PCA depends on: 'M, ; " and
+		testResult[1] == "" and
+		testResult[2] == "PCA = function (M) { return ( eig(cov(M)) ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
+	computeResultsAndJavaScriptFromAlgebra('PCA(M) = eig(Mᵀ⋅M)')
+	testResult = run('symbolsinfo')
+	if testResult.indexOf('AVOID_BINDING_TO_EXTERNAL_SCOPE_VALUE') != -1 
+			console.log "fail dependency tests. found AVOID_BINDING_TO_EXTERNAL_SCOPE_VALUE"
+	else
+			console.log "ok dependency test"
+
+	do_clearall()
+
+	# this checks error handling in case of pattern and syntax error
+	# picked up during scanning.
+	computeResultsAndJavaScriptFromAlgebra('pattern(a_ᵀ⋅a_, cov(a_))')
+	computeResultsAndJavaScriptFromAlgebra('simplify(')
+	testResult = computeResultsAndJavaScriptFromAlgebra('PCA = Mᵀ·M')
+
+	if testResult.code == "PCA = function (M) { return ( cov(M) ); }" and
+		testResult.latexResult == "$$PCA(M) = cov(M)$$" and
+		testResult.result == "$$PCA(M) = cov(M)$$" and
+		testResult.dependencyInfo.affectedBy[0] == "M" and
+		testResult.dependencyInfo.affectedBy[1] == "PATTERN_DEPENDENCY" and
+		testResult.dependencyInfo.affectsVariables.length == 1 and
+		testResult.dependencyInfo.affectsVariables[0] == "PCA"
+				console.log "ok dependency test"
+		else
+				console.log "fail dependency tests. Error handling 1"
+				console.log testResult
+				return
+
+	do_clearall()
+
+	
+	console.log "checking hit/miss patterns ======================="
+	resetCache()
+	original_CACHE_HITSMISS_DEBUGS = CACHE_HITSMISS_DEBUGS
+	CACHE_HITSMISS_DEBUGS = true
+
+	# first two should miss because caches are completely empty
+	# note that each call produces two misses because one is from
+	# "findDependenciesInScript" itself and one is from "run" 
+	# after these two, all the others should hit a cache
+	computeResultsAndJavaScriptFromAlgebra('pattern(a_ᵀ⋅a_, cov(a_))')
+	computeResultsAndJavaScriptFromAlgebra('PCA = Mᵀ·M')
+
+	if totalAllCachesHits() != 0
+		console.log "test hecking hit/miss patterns fail, got: " + totalAllCachesHits() + " instead of 0"
+
+	clearAlgebraEnvironment()
+	console.log "\nclearAlgebraEnvironment()"
+	currentStateHash = getStateHash()
+	console.log "state hash after nclearAlgebraEnvironment: " + currentStateHash
+	console.log "\n"
+
+	computeResultsAndJavaScriptFromAlgebra('pattern(a_ᵀ⋅a_, cov(a_))')
+	computeResultsAndJavaScriptFromAlgebra('PCA = Mᵀ·M')
+
+	if totalAllCachesHits() != 2
+		console.log "test hecking hit/miss patterns fail, got: " + totalAllCachesHits() + " instead of 2"
+
+	clearAlgebraEnvironment()
+	console.log "\nclearAlgebraEnvironment()"
+	currentStateHash = getStateHash()
+	console.log "state hash after nclearAlgebraEnvironment: " + currentStateHash
+	console.log "\n"
+
+	computeResultsAndJavaScriptFromAlgebra('pattern(a_ᵀ⋅a_, cov(a_))')
+	computeResultsAndJavaScriptFromAlgebra('PCA = Mᵀ·M')
+	CACHE_HITSMISS_DEBUGS = original_CACHE_HITSMISS_DEBUGS
+
+	if totalAllCachesHits() != 4
+		console.log "test hecking hit/miss patterns fail, got: " + totalAllCachesHits() + " instead of 4"
+
+	clearAlgebraEnvironment()
+	console.log "\nclearAlgebraEnvironment()"
+	currentStateHash = getStateHash()
+	console.log "state hash after nclearAlgebraEnvironment: " + currentStateHash
+	console.log "\n"
+
+	computeResultsAndJavaScriptFromAlgebra('pattern(a_ᵀ⋅a_, cov(a_))')
+	# note that in case of syntax error, "last" is not updated.
+	# so if new symbols have been scanned yet, then they are not created
+	# and the cache should hit
+	# TODO ideally a scan resulting in an error should produce no new
+	# symbols in the symbol table at all
+	computeResultsAndJavaScriptFromAlgebra('simplify(')
+
+	currentStateHash = getStateHash()
+	console.log "state hash after syntax error: " + currentStateHash
+
+	computeResultsAndJavaScriptFromAlgebra('PCA = Mᵀ·M')
+	CACHE_HITSMISS_DEBUGS = original_CACHE_HITSMISS_DEBUGS
+
+	if totalAllCachesHits() != 6
+		console.log "test hecking hit/miss patterns fail, got: " + totalAllCachesHits() + " instead of 6"
+
+	if totalAllCachesMisses() != 5
+		console.log "test hecking hit/miss patterns fail, got: " + totalAllCachesMisses() + " instead of 5"
+
+
+	resetCache()
+	console.log "end of checking hit/miss patterns ======================="
+
+
+	do_clearall()
+
+	testResult = computeResultsAndJavaScriptFromAlgebra('x + x + x')
+
+	if testResult.code == "" and
+		testResult.latexResult == "$$3x$$" and
+		testResult.result == "$$3x$$" and
+		testResult.dependencyInfo.affectedBy.length == 2 and
+		testResult.dependencyInfo.affectedBy[0] == "x" and
+		testResult.dependencyInfo.affectedBy[1] == "PATTERN_DEPENDENCY" and
+		testResult.dependencyInfo.affectsVariables.length == 0
+				console.log "ok dependency test"
+		else
+				console.log "fail dependency tests"
+
+	do_clearall()
+
+	computeResultsAndJavaScriptFromAlgebra('x = y + 2')
+	testResult = computeResultsAndJavaScriptFromAlgebra('x + x + x')
+
+	if testResult.code == "" and
+		testResult.latexResult == "$$3y+6$$" and
+		testResult.result == "$$3y+6$$" and
+		testResult.dependencyInfo.affectedBy.length == 2 and
+		testResult.dependencyInfo.affectedBy[0] == "x" and
+		testResult.dependencyInfo.affectedBy[1] == "PATTERN_DEPENDENCY" and
+		testResult.dependencyInfo.affectsVariables.length == 0
+				console.log "ok dependency test"
+		else
+				console.log "fail dependency tests"
+
+	do_clearall()
+
+	console.log "-- done dependency tests"
+	do_clearall()
+
+
+# if we just want to compute the dependencies, we don't need to do
+# anything costly, we don't "run" the code and we don't simplify
+# the code. Just finding the plain dependencies
+# TODO change the name of this function, as it doesn't just find the
+# dependencies. It also runs it and generates the JS code.
+findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 
 	if DEBUG then console.log "stringToBeParsed: " + stringToBeParsed
+
+	timeStartFromAlgebra  = new Date().getTime()
+
+	if CACHE_DEBUGS or CACHE_HITSMISS_DEBUGS or TIMING_DEBUGS
+		console.log " --------- findDependenciesInScript input: " + stringToBeParsed + " at: " + (new Date())
+		currentStateHash = getStateHash()
+		console.log "state hash: " + currentStateHash
+
+
 	inited = true
+	codeGen = true
 	symbolsDependencies = {}
+	symbolsHavingReassignments = []
+	symbolsInExpressionsWithoutAssignments = []
+	patternHasBeenFound = false
 	indexOfPartRemainingToBeParsed = 0
 
 	allReturnedPlainStrings = ""
-	n = 0
-	while (1)
+	allReturnedLatexStrings = ""
 
+	n = 0
+
+	# we are going to store the dependencies _of the block as a whole_
+	# so all affected variables in the whole block are lumped
+	# together, and same for the variable that affect those, we
+	# lump them all together.
+	dependencyInfo =
+		affectsVariables: []
+		affectedBy: []
+
+
+	stringToBeRun = stringToBeParsed
+	if ENABLE_CACHING and stringToBeRun != "clearall"
+		currentStateHash = getStateHash()
+		cacheKey = currentStateHash + " stringToBeRun: " + stringToBeRun + " - " + dontGenerateCode
+		if CACHE_DEBUGS then console.log "cached_findDependenciesInScript key: " + cacheKey
+		possiblyCached = cached_findDependenciesInScript.get(cacheKey)
+		if possiblyCached?
+			if CACHE_HITSMISS_DEBUGS then console.log "cached_findDependenciesInScript hit on " + stringToBeRun
+			unfreeze(possiblyCached)
+			# return the output string
+			if TIMING_DEBUGS
+				totalTime = new Date().getTime() - timeStartFromAlgebra
+				console.log "findDependenciesInScript input: " + stringToBeRun + " time: " + totalTime + "ms, saved " + (possiblyCached[possiblyCached.length-5] - totalTime) + "ms due to cache hit"
+
+			return [
+				possiblyCached[possiblyCached.length - 7],
+				possiblyCached[possiblyCached.length - 6],
+				possiblyCached[possiblyCached.length - 5],
+				possiblyCached[possiblyCached.length - 4],
+				possiblyCached[possiblyCached.length - 3],
+				possiblyCached[possiblyCached.length - 2],
+				possiblyCached[possiblyCached.length - 1]
+				]
+
+		else
+			if CACHE_HITSMISS_DEBUGS then console.log "cached_findDependenciesInScript miss on: " + stringToBeRun
+			if TIMING_DEBUGS
+				cacheMissPenalty = (new Date().getTime() - timeStartFromAlgebra)
+
+
+	# parse the input. This collects the
+	# dependency information
+	while (1)
 		try
 			errorMessage = ""
 			check_stack()
@@ -319,11 +661,10 @@ findDependenciesInScript = (stringToBeParsed) ->
 			check_stack()
 		catch error
 			if PRINTOUTRESULT then console.log error
+			errorMessage = error + ""
 			#debugger
-			allReturnedPlainStrings += error.message
-			init()
+			reset_after_error()
 			break
-
 
 		if (n == 0)
 			break
@@ -338,101 +679,275 @@ findDependenciesInScript = (stringToBeParsed) ->
 	testableString += "All local dependencies: "
 	for key, value of symbolsDependencies
 		if DEBUG then console.log "variable " + key + " depends on: "
+		dependencyInfo.affectsVariables.push key
 		testableString +=  " variable " + key + " depends on: "
 		for i in value
 			if DEBUG then console.log "		" + i
+			if i[0] != "'"
+				dependencyInfo.affectedBy.push i
 			testableString +=  i + ", "
 		testableString += "; "
 	testableString += ". "
+
+	# print out the symbols with re-assignments:
+	if DEBUG then console.log "Symbols with reassignments ----------------"
+	testableString += "Symbols with reassignments: "
+	for key in symbolsHavingReassignments
+		if dependencyInfo.affectedBy.indexOf(key) == -1
+			dependencyInfo.affectedBy.push key
+			testableString +=  key + ", "
+	testableString += ". "
+
+	# print out the symbols that appear in expressions without assignments
+	if DEBUG then console.log "Symbols in expressions without assignments ----------------"
+	testableString += "Symbols in expressions without assignments: "
+	for key in symbolsInExpressionsWithoutAssignments
+		if dependencyInfo.affectedBy.indexOf(key) == -1
+			dependencyInfo.affectedBy.push key
+			testableString +=  key + ", "
+	testableString += ". "
+
+	# ALL Algebrite code is affected by any pattern changing
+	dependencyInfo.affectedBy.push "PATTERN_DEPENDENCY"
+
+	if patternHasBeenFound
+		dependencyInfo.affectsVariables.push "PATTERN_DEPENDENCY"
+		testableString += " - PATTERN_DEPENDENCY inserted - "
 
 	# print out all global dependencies as collected by this
 	# parsing pass
 	if DEBUG then console.log "All dependencies recursively ----------------"
 	testableString += "All dependencies recursively: "
 
-	scriptEvaluation = run(stringToBeParsed, true)
-
+	scriptEvaluation = ["",""]
 	generatedCode = ""
 	readableSummaryOfGeneratedCode = ""
-	for key of symbolsDependencies
 
-		codeGen = true
-		if DEBUG then console.log "	variable " + key + " is: " + get_binding(usr_symbol(key)).toString()
-		codeGen = false
-		if DEBUG then console.log "	variable " + key + " depends on: "
-		testableString +=  " variable " + key + " depends on: "
+	if errorMessage == "" and !dontGenerateCode
 
-		recursedDependencies = []
-		variablesWithCycles = []
-		cyclesDescriptions = []
-		recursiveDependencies key, recursedDependencies, [], variablesWithCycles, [], cyclesDescriptions
+		try
+			allReturnedPlainStrings = ""
+			allReturnedLatexStrings = ""
+			scriptEvaluation = run(stringToBeParsed, true)
+			allReturnedPlainStrings = ""
+			allReturnedLatexStrings = ""
+		catch error
+			if PRINTOUTRESULT then console.log error
+			errorMessage = error + ""
+			#debugger
+			init()
 
-		for i in variablesWithCycles
-			if DEBUG then console.log "		--> cycle through " + i
+		if errorMessage == ""
+			for key of symbolsDependencies
 
-		for i in recursedDependencies
-			if DEBUG then console.log "		" + i
-			testableString +=  i + ", "
-		testableString += "; "
 
-		for i in cyclesDescriptions
-			testableString += " " + i + ", "
+				codeGen = true
+				if DEBUG then console.log "	variable " + key + " is: " + get_binding(usr_symbol(key)).toString()
+				codeGen = false
+				if DEBUG then console.log "	variable " + key + " depends on: "
+				testableString +=  " variable " + key + " depends on: "
 
-		if DEBUG then console.log "	code generation:" + key + " is: " + get_binding(usr_symbol(key)).toString()
+				recursedDependencies = []
+				variablesWithCycles = []
+				cyclesDescriptions = []
 
-		# we really want to make an extra effort
-		# to generate simplified code, so
-		# run a "simplify" on the content of each
-		# variable that we are generating code for.
-		# Note that the variable
-		# will still point to un-simplified structures,
-		# we only simplify the generated code.
-		push get_binding(usr_symbol(key))
-		simplifyForCodeGeneration()
-		toBePrinted = pop()
+				recursiveDependencies key, recursedDependencies, [], variablesWithCycles, [], cyclesDescriptions
 
-		codeGen = true
-		generatedBody = toBePrinted.toString()
-		codeGen = false
-		bodyForReadableSummaryOfGeneratedCode = toBePrinted.toString()
+				for i in variablesWithCycles
+					if DEBUG then console.log "		--> cycle through " + i
 
-		if variablesWithCycles.indexOf(key) != -1
-			generatedCode += "// " + key + " is part of a cyclic dependency, no code generated."
-			readableSummaryOfGeneratedCode += "#" + key + " is part of a cyclic dependency, no code generated."
-		else
-			if recursedDependencies.length != 0
-				parameters = "("
 				for i in recursedDependencies
-					if i.indexOf("'") == -1
-						parameters += i + ", "
-				# eliminate the last ", " for printout clarity
-				parameters = parameters.replace /, $/gm , ""
-				parameters += ")"
-				generatedCode += key + " = function " + parameters + " { return ( " + generatedBody + " ); }"
-				readableSummaryOfGeneratedCode += key + parameters + " = " + bodyForReadableSummaryOfGeneratedCode
-			else
-				generatedCode += key + " = " + generatedBody + ";"
-				readableSummaryOfGeneratedCode += key + " = " + bodyForReadableSummaryOfGeneratedCode
+					if DEBUG then console.log "		" + i
+					testableString +=  i + ", "
+				testableString += "; "
 
-		generatedCode += "\n"
-		readableSummaryOfGeneratedCode += "\n"
+				for i in cyclesDescriptions
+					testableString += " " + i + ", "
 
-		if DEBUG then console.log "		" + generatedCode
+				if DEBUG then console.log "	code generation:" + key + " is: " + get_binding(usr_symbol(key)).toString()
+
+				# we really want to make an extra effort
+				# to generate simplified code, so
+				# run a "simplify" on the content of each
+				# variable that we are generating code for.
+				# Note that the variable
+				# will still point to un-simplified structures,
+				# we only simplify the generated code.
+				push get_binding(usr_symbol(key))
+
+				# Since we go and simplify all variables we meet,
+				# we have to replace each variable passed as a parameter
+				# with something entirely new, so that there is no chance
+				# that it might evoke previous values in the external scope
+				# as in this case:
+				#  a = 2
+				#  f(a) = a+1+b
+				# we don't want 'a' in the body of f to be simplified to 2
+				# There are two cases: 1) the variable actually was already in
+				# the symble table, in which case there is goong to be this new
+				# one prepended with AVOID_BINDING_TO_EXTERNAL_SCOPE_VALUE, and
+				# we'll have to remove up this variable later.
+				# OR 2) the variable wasn't already in the symbol table, in which
+				# case we directly create this one, which means that we'll have
+				# to rename it later to the correct name without the prepended
+				# part.
+
+				replacementsFrom = []
+				replacementsTo = []
+
+				for eachDependency in recursedDependencies
+					if eachDependency[0] == "'"
+						deQuotedDep = eachDependency.substring(1)
+						originalUserSymbol = usr_symbol(deQuotedDep)
+						newUserSymbol = usr_symbol("AVOID_BINDING_TO_EXTERNAL_SCOPE_VALUE"+deQuotedDep)
+						replacementsFrom.push originalUserSymbol
+						replacementsTo.push newUserSymbol
+						push(originalUserSymbol)
+						push(newUserSymbol)
+						subst()
+						if DEBUG then console.log "after substitution: " + stack[tos-1]
+
+				try
+					simplifyForCodeGeneration()
+				catch error
+					if PRINTOUTRESULT then console.log error
+					errorMessage = error + ""
+					#debugger
+					init()
+
+				for indexOfEachReplacement in [0...replacementsFrom.length]
+					#console.log "replacing back " + replacementsTo[indexOfEachReplacement] + " into: " + replacementsFrom[indexOfEachReplacement]
+					push(replacementsTo[indexOfEachReplacement])
+					push(replacementsFrom[indexOfEachReplacement])
+					subst()
+
+				clearRenamedVariablesToAvoidBindingToExternalScope()
+
+				if errorMessage == ""
+					toBePrinted = pop()
+
+					# we have to get all the variables used on the right side
+					# here. I.e. to print the arguments it's better to look at the
+					# actual method body after simplification.
+					userVariablesMentioned = []
+					collectUserSymbols(toBePrinted, userVariablesMentioned)
+
+					allReturnedPlainStrings = ""
+					allReturnedLatexStrings = ""
+					codeGen = true
+					generatedBody = toBePrinted.toString()
+					codeGen = false
+					bodyForReadableSummaryOfGeneratedCode = toBePrinted.toString()
+
+					if variablesWithCycles.indexOf(key) != -1
+						generatedCode += "// " + key + " is part of a cyclic dependency, no code generated."
+						readableSummaryOfGeneratedCode += "#" + key + " is part of a cyclic dependency, no code generated."
+					else
+
+						###
+						# using this paragraph instead of the following one
+						# creates methods signatures that
+						# are slightly less efficient
+						# i.e. variables compare even if they are
+						# simplified away.
+						# In theory these signatures are more stable, but
+						# in practice signatures vary quite a bit anyways
+						# depending on previous assignments for example,
+						# so it's unclear whether going for stability
+						# is sensible at all..
+						if recursedDependencies.length != 0
+							parameters = "("
+							for i in recursedDependencies
+								if i.indexOf("'") != 0
+									parameters += i + ", "
+								else
+									if recursedDependencies.indexOf(i.substring(1)) == -1
+										parameters += i.substring(1) + ", "
+						###
+
+
+						# remove all native functions from the
+						# parameters as well.
+						userVariablesMentioned = userVariablesMentioned.filter (x) ->
+							predefinedSymbolsInGlobalScope_doNotTrackInDependencies.indexOf(x + "") == -1
+
+
+						if userVariablesMentioned.length != 0
+							parameters = "("
+							for i in userVariablesMentioned
+								if i.printname != key
+									parameters += i.printname + ", "
+
+							# eliminate the last ", " for printout clarity
+							parameters = parameters.replace /, $/gm , ""
+							parameters += ")"
+							generatedCode += key + " = function " + parameters + " { return ( " + generatedBody + " ); }"
+							readableSummaryOfGeneratedCode += key + parameters + " = " + bodyForReadableSummaryOfGeneratedCode
+						else
+							generatedCode += key + " = " + generatedBody + ";"
+							readableSummaryOfGeneratedCode += key + " = " + bodyForReadableSummaryOfGeneratedCode
+
+					generatedCode += "\n"
+					readableSummaryOfGeneratedCode += "\n"
+
+					if DEBUG then console.log "		" + generatedCode
 
 	# eliminate the last new line
 	generatedCode = generatedCode.replace /\n$/gm , ""
 	readableSummaryOfGeneratedCode = readableSummaryOfGeneratedCode.replace /\n$/gm , ""
 
+
+	# cleanup
 	symbolsDependencies = {}
+	symbolsHavingReassignments = []
+	patternHasBeenFound = false
+	symbolsInExpressionsWithoutAssignments = []
+
 	if DEBUG then console.log "testable string: " + testableString
 
-	return [testableString, scriptEvaluation[0], generatedCode, readableSummaryOfGeneratedCode, scriptEvaluation[1]]
+	if TIMING_DEBUGS
+		console.log "findDependenciesInScript time for: " + stringToBeRun + " : "+ ((new Date().getTime()) - timeStartFromAlgebra) + "ms"
+
+	if ENABLE_CACHING and stringToBeRun != "clearall" and errorMessage == ""
+		frozen = freeze()
+		toBeFrozen = [
+			frozen[0],
+			frozen[1],
+			frozen[2],
+			frozen[3],
+			frozen[4],
+			frozen[5],
+			(new Date().getTime() - timeStartFromAlgebra),
+			testableString,
+			scriptEvaluation[0],
+			generatedCode,
+			readableSummaryOfGeneratedCode,
+			scriptEvaluation[1],
+			errorMessage,
+			dependencyInfo
+		]
+		if CACHE_DEBUGS then console.log "setting cached_findDependenciesInScript on key: " + cacheKey
+		cached_findDependenciesInScript.set(cacheKey, toBeFrozen)
+
+
+	return [testableString, scriptEvaluation[0], generatedCode, readableSummaryOfGeneratedCode, scriptEvaluation[1], errorMessage, dependencyInfo]
 
 recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded, variablesAlreadyFleshedOut, variablesWithCycles, chainBeingChecked, cyclesDescriptions) ->
 	variablesAlreadyFleshedOut.push variableToBeChecked
+
+	# recursive dependencies can only be descended if the variable is not bound to a parameter
+	if symbolsDependencies[chainBeingChecked[chainBeingChecked.length-1]]?
+		if symbolsDependencies[chainBeingChecked[chainBeingChecked.length-1]].indexOf("'"+variableToBeChecked) != -1
+			if DEBUG then console.log "can't keep following the chain of " + variableToBeChecked + " because it's actually a variable bound to a parameter"
+			if arrayWhereDependenciesWillBeAdded.indexOf("'"+variableToBeChecked) == -1 and arrayWhereDependenciesWillBeAdded.indexOf(variableToBeChecked) == -1
+				arrayWhereDependenciesWillBeAdded.push variableToBeChecked
+			return arrayWhereDependenciesWillBeAdded
+
 	chainBeingChecked.push variableToBeChecked
+
 	if !symbolsDependencies[variableToBeChecked]?
-		# end case: there are no more dependencies
+		# end case: the passed variable has no dependencies
+		# so there is nothing else to do
 		if arrayWhereDependenciesWillBeAdded.indexOf(variableToBeChecked) == -1
 			arrayWhereDependenciesWillBeAdded.push variableToBeChecked
 		return arrayWhereDependenciesWillBeAdded
@@ -476,9 +991,64 @@ recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded,
 
 # parses and runs one statement/expression at a time
 inited = false
+
+latexErrorSign = "\\rlap{\\large\\color{red}\\bigtriangleup}{\\ \\ \\tiny\\color{red}!}"
+turnErrorMessageToLatex = (theErrorMessage) ->
+	theErrorMessage = theErrorMessage.replace(/\n/g,"")
+	theErrorMessage = theErrorMessage.replace(/_/g, "} \\\\_ \\text{");
+	theErrorMessage = theErrorMessage.replace(new RegExp(String.fromCharCode(transpose_unicode), 'g'), "}{}^{T}\\text{");
+	theErrorMessage = theErrorMessage.replace(new RegExp(String.fromCharCode(dotprod_unicode), 'g'),"}\\cdot \\text{");
+	theErrorMessage = theErrorMessage.replace("Stop:","}  \\quad \\text{Stop:");
+	theErrorMessage = theErrorMessage.replace("->","}  \\rightarrow \\text{");
+	theErrorMessage = theErrorMessage.replace("?","}\\enspace " + latexErrorSign + " \\enspace  \\text{");
+	theErrorMessage = "$$\\text{" + theErrorMessage.replace(/\n/g,"") + "}$$"
+	#console.log "theErrorMessage: " + theErrorMessage
+	return theErrorMessage
+
+# there are around a dozen different unicodes that
+# represent some sort of middle dot, let's catch the most
+# common and turn them into what we can process
+normaliseDots = (stringToNormalise) ->
+	stringToNormalise = stringToNormalise.replace(new RegExp(String.fromCharCode(8901), 'g'), String.fromCharCode(dotprod_unicode));
+	stringToNormalise = stringToNormalise.replace(new RegExp(String.fromCharCode(8226), 'g'), String.fromCharCode(dotprod_unicode));
+	stringToNormalise = stringToNormalise.replace(new RegExp(String.fromCharCode(12539), 'g'), String.fromCharCode(dotprod_unicode));
+	stringToNormalise = stringToNormalise.replace(new RegExp(String.fromCharCode(55296), 'g'), String.fromCharCode(dotprod_unicode));
+	stringToNormalise = stringToNormalise.replace(new RegExp(String.fromCharCode(65381), 'g'), String.fromCharCode(dotprod_unicode));
+	return stringToNormalise
+
+
+CACHE_DEBUGS = false
+CACHE_HITSMISS_DEBUGS = false
+TIMING_DEBUGS = false
+
+cacheMissPenalty = 0
+
 run = (stringToBeRun, generateLatex = false) ->
 
-	stringToBeRun = stringToBeRun # + "\n"
+	timeStart = new Date().getTime()
+
+	#stringToBeRun = stringToBeRun + "\n"
+	stringToBeRun = normaliseDots stringToBeRun
+	#console.log "run running: " + stringToBeRun
+
+	if ENABLE_CACHING and stringToBeRun != "clearall"
+		currentStateHash = getStateHash()
+		cacheKey = currentStateHash + " stringToBeRun: " + stringToBeRun
+		if CACHE_DEBUGS then console.log "cached_runs key: " + cacheKey
+		possiblyCached = cached_runs.get(cacheKey)
+		#possiblyCached = null
+		if possiblyCached?
+			if CACHE_HITSMISS_DEBUGS then console.log "cached_runs hit on: " + stringToBeRun
+			unfreeze(possiblyCached)
+			# return the output string
+			if TIMING_DEBUGS
+				totalTime = new Date().getTime() - timeStart
+				console.log "run time: " + totalTime + "ms, saved " + (possiblyCached[possiblyCached.length-2] - totalTime) + "ms due to cache hit"
+			return possiblyCached[possiblyCached.length - 1]
+		else
+			if CACHE_HITSMISS_DEBUGS then console.log "cached_runs miss on: " + stringToBeRun
+			if TIMING_DEBUGS
+				cacheMissPenalty = (new Date().getTime() - timeStart)
 
 	if stringToBeRun == "selftest"
 		selftest()
@@ -496,10 +1066,11 @@ run = (stringToBeRun, generateLatex = false) ->
 	indexOfPartRemainingToBeParsed = 0
 
 	allReturnedPlainStrings = ""
-	if generateLatex
-		allReturnedLatexStrings = ""
+	allReturnedLatexStrings = ""
 
 	while (1)
+		# while we can keep scanning commands out of the
+		# passed input AND we can execute them...
 
 		try
 			errorMessage = ""
@@ -512,8 +1083,11 @@ run = (stringToBeRun, generateLatex = false) ->
 			#debugger
 			allReturnedPlainStrings += error.message
 			if generateLatex
-				allReturnedLatexStrings += "$$\\text{" + error.message + "}$$"
-			init()
+				#debugger
+				theErrorMessage = turnErrorMessageToLatex error.message
+				allReturnedLatexStrings += theErrorMessage
+			reset_after_error()
+
 			break
 
 
@@ -535,56 +1109,66 @@ run = (stringToBeRun, generateLatex = false) ->
 
 		push(p1)
 		#debugger
+		errorWhileExecution = false
 		try
+			stringsEmittedByUserPrintouts = ""
 			top_level_eval()
+			#console.log "emitted string after top_level_eval(): >" + stringsEmittedByUserPrintouts + "<"
+			#console.log "allReturnedPlainStrings string after top_level_eval(): >" + allReturnedPlainStrings + "<"
 
 			p2 = pop()
 			check_stack()
 
-			if (p2 == symbol(NIL))
-				continue
-
-			# print string w/o quotes
-
 			if (isstr(p2))
 				if DEBUG then console.log(p2.str)
 				if DEBUG then console.log("\n")
-				continue
 
-			# in tty mode
-			# also you could just have written 
-			# printline(p2)
-			collectedPlainResult = collectPlainResultLine(p2)
-			if generateLatex
-				collectedLatexResult = "$$" + collectLatexResultLine(p2) + "$$"
-				if DEBUG then console.log "collectedLatexResult: " + collectedLatexResult
+			# if the return value is nil there isn't much point
+			# in adding "nil" to the printout
+			if (p2 == symbol(NIL))
+				#collectedPlainResult = stringsEmittedByUserPrintouts
+				collectedPlainResult = stringsEmittedByUserPrintouts
+				if generateLatex
+					collectedLatexResult = "$$" + stringsEmittedByUserPrintouts + "$$"
+			else
+				#console.log "emitted string before collectPlainStringFromReturnValue: >" + stringsEmittedByUserPrintouts + "<"
+				#console.log "allReturnedPlainStrings string before collectPlainStringFromReturnValue: >" + allReturnedPlainStrings + "<"
+				collectedPlainResult = print_expr(p2)
+				collectedPlainResult += "\n"
+				#console.log "collectedPlainResult: >" + collectedPlainResult + "<"
+				if generateLatex
+					collectedLatexResult = "$$" + collectLatexStringFromReturnValue(p2) + "$$"
+					if DEBUG then console.log "collectedLatexResult: " + collectedLatexResult
 			
 			allReturnedPlainStrings += collectedPlainResult
 			if generateLatex then allReturnedLatexStrings += collectedLatexResult
+
 			if PRINTOUTRESULT
 				if DEBUG then console.log "printline"
 				if DEBUG then console.log collectedPlainResult
 			#alert collectedPlainResult
 			if PRINTOUTRESULT
 				if DEBUG then console.log "display:"
-				display(p2)
+				print2dascii(p2)
 
-			allReturnedPlainStrings += "\n"
 			if generateLatex then allReturnedLatexStrings += "\n"
 
 		catch error
+			errorWhileExecution = true
 			collectedPlainResult = error.message
-			if generateLatex then collectedLatexResult = "$$\\text{" + error.message + "}$$"
+			if generateLatex then collectedLatexResult = turnErrorMessageToLatex error.message
 
 			if PRINTOUTRESULT then console.log collectedPlainResult
 
 			allReturnedPlainStrings += collectedPlainResult
-			allReturnedPlainStrings += "\n"
+			if collectedPlainResult != ""
+				allReturnedPlainStrings += "\n"
 
 			if generateLatex
 				allReturnedLatexStrings += collectedLatexResult
 				allReturnedLatexStrings += "\n"
 
+			resetCache()
 			init()
 
 	if allReturnedPlainStrings[allReturnedPlainStrings.length-1] == "\n"
@@ -596,9 +1180,25 @@ run = (stringToBeRun, generateLatex = false) ->
 
 	if generateLatex
 		if DEBUG then console.log "allReturnedLatexStrings: " + allReturnedLatexStrings
-		return [allReturnedPlainStrings, allReturnedLatexStrings]
+		# TODO handle this case of caching
+		stringToBeReturned = [allReturnedPlainStrings, allReturnedLatexStrings]
 	else
-		return allReturnedPlainStrings
+		stringToBeReturned = allReturnedPlainStrings
+
+	if ENABLE_CACHING and stringToBeRun != "clearall" and !errorWhileExecution
+		frozen = freeze()
+		toBeFrozen = [frozen[0], frozen[1], frozen[2], frozen[3], frozen[4], frozen[5], (new Date().getTime() - timeStart), stringToBeReturned]
+		if CACHE_DEBUGS then console.log "setting cached_runs on key: " + cacheKey
+		cached_runs.set(cacheKey, toBeFrozen)
+
+	if TIMING_DEBUGS
+		timingDebugWrite = "run time on: " + stringToBeRun + " : " + (new Date().getTime() - timeStart) + "ms"
+		if ENABLE_CACHING  and stringToBeRun != "clearall" then timingDebugWrite += ", of which cache miss penalty: " + cacheMissPenalty + "ms"
+		console.log timingDebugWrite
+
+	allReturnedPlainStrings = ""
+	allReturnedLatexStrings = ""
+	return stringToBeReturned
 
 check_stack = ->
 	if (tos != 0)
@@ -607,13 +1207,17 @@ check_stack = ->
 	if (frame != TOS)
 		debugger
 		stop("frame error")
+	if chainOfUserSymbolsNotFunctionsBeingEvaluated.length != 0
+		debugger
+		stop("symbols evaluation still ongoing?")
+	if evaluatingAsFloats != 0
+		debugger
+		stop("numeric evaluation still ongoing?")
+	if evaluatingPolar != 0
+		debugger
+		stop("evaluation of polar still ongoing?")
 
 # cannot reference symbols yet
-
-# s is a string here
-echo_input = (s) ->
-	console.log(s)
-	console.log("\n")
 
 # returns nil on stack if no result to print
 
@@ -642,8 +1246,7 @@ top_level_eval = ->
 		restore()
 		return
 
-	# update "last"
-
+	# update "last" to contain the last result
 	set_binding(symbol(LAST), p2)
 
 	if (!iszero(get_binding(symbol(BAKE))))
@@ -652,13 +1255,9 @@ top_level_eval = ->
 		p2 = pop()
 
 	# If we evaluated the symbol "i" or "j" and the result was sqrt(-1)
-
 	# then don't do anything.
-
 	# Otherwise if "j" is an imaginary unit then subst.
-
 	# Otherwise if "i" is an imaginary unit then subst.
-
 	if ((p1 == symbol(SYMBOL_I) || p1 == symbol(SYMBOL_J)) && isimaginaryunit(p2))
 		doNothing = 0
 	else if (isimaginaryunit(get_binding(symbol(SYMBOL_J))))
@@ -696,27 +1295,109 @@ check_esc_flag = ->
 	if (esc_flag)
 		stop("esc key")
 
+# this is called when the whole notebook is re-run
+# so we get the chance of clearing the whole state from
+# scratch.
+# In practice, the state we need to clear that persists
+# across blocks are only the patterns, so
+# just eject those.
+clearAlgebraEnvironment = ->
+	#console.log "CLEARING clearAlgebraEnvironment ============================================================="
+	do_clearall()
+
+computeDependenciesFromAlgebra = (codeFromAlgebraBlock) ->
+	# return findDependenciesInScript(codeFromAlgebraBlock, true)[6]
+
+	# TODO this part below is duplicated from computeResultsAndJavaScriptFromAlgebra
+	#      ...should refactor.
+	originalcodeFromAlgebraBlock = codeFromAlgebraBlock
+	keepState = true
+
+	#console.log "codeFromAlgebraBlock: " + codeFromAlgebraBlock
+
+	codeFromAlgebraBlock = normaliseDots codeFromAlgebraBlock
+	stringToBeRun = codeFromAlgebraBlock
+
+	##userSimplificationsInListForm = []
+	userSimplificationsInProgramForm = ""
+
+	if !keepState?
+		for i in userSimplificationsInListForm
+			#console.log "silentpattern(" + car(i) + ","+cdr(i)+")"
+			userSimplificationsInProgramForm += "silentpattern(" + car(i) + ","+ car(cdr(i)) + "," + car(cdr(cdr(i))) + ")\n"
+
+	do_clearall()
+
+	codeFromAlgebraBlock = userSimplificationsInProgramForm + codeFromAlgebraBlock
+	if DEBUG then console.log "codeFromAlgebraBlock including patterns: " + codeFromAlgebraBlock
+
+	return findDependenciesInScript(codeFromAlgebraBlock, true)[6]
+
 computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
+
+
+	originalcodeFromAlgebraBlock = codeFromAlgebraBlock
+	keepState = true
+
+	timeStartFromAlgebra  = new Date().getTime()
+
+	if TIMING_DEBUGS
+		console.log " --------- computeResultsAndJavaScriptFromAlgebra input: " + codeFromAlgebraBlock + " at: " + (new Date())
+
 	# we start "clean" each time:
 	# clear all the symbols and then re-define
 	# the "starting" symbols.
 	
-	##userSimplificationsInListForm = []
-	clear_symbols()
-	defn()
+	#console.log "codeFromAlgebraBlock: " + codeFromAlgebraBlock
 
-	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode, latexResult] =
+	codeFromAlgebraBlock = normaliseDots codeFromAlgebraBlock
+
+
+
+	stringToBeRun = codeFromAlgebraBlock
+	##userSimplificationsInListForm = []
+	userSimplificationsInProgramForm = ""
+
+	if !keepState?
+		for i in userSimplificationsInListForm
+			#console.log "silentpattern(" + car(i) + ","+cdr(i)+")"
+			userSimplificationsInProgramForm += "silentpattern(" + car(i) + ","+ car(cdr(i)) + "," + car(cdr(cdr(i))) + ")\n"
+
+		do_clearall()
+
+	codeFromAlgebraBlock = userSimplificationsInProgramForm + codeFromAlgebraBlock
+	if DEBUG then console.log "codeFromAlgebraBlock including patterns: " + codeFromAlgebraBlock
+
+	#debugger
+	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode, latexResult, errorMessage, dependencyInfo] =
 		findDependenciesInScript(codeFromAlgebraBlock)
 
-	if readableSummaryOfCode != ""
+	if readableSummaryOfCode != "" or errorMessage != ""
 		result += "\n" + readableSummaryOfCode
+		if errorMessage != ""
+			result += "\n" + errorMessage
 		result = result.replace /\n/g,"\n\n"
 
 		latexResult += "\n" + "$$" + readableSummaryOfCode + "$$"
+		if errorMessage != ""
+			latexResult += turnErrorMessageToLatex  errorMessage
 		latexResult = latexResult.replace /\n/g,"\n\n"
+
+	# remove empty results altogether from latex output, which happens
+	# for example for assignments to variables or
+	# functions definitions
+	latexResult = latexResult.replace /\n*/,""
+	latexResult = latexResult.replace /\$\$\$\$\n*/g,""
 
 	code = code.replace /Math\./g,""
 	code = code.replace /\n/g,"\n\n"
+
+	#console.log "code: " + code
+	#console.log "result: " + result
+	#console.log "latexResult: " + latexResult
+
+	if TIMING_DEBUGS
+		console.log "computeResultsAndJavaScriptFromAlgebra time (total time from notebook and back) for: " + stringToBeRun + " : "+ ((new Date().getTime()) - timeStartFromAlgebra) + "ms"
 
 	#code: "// no code generated yet\n//try again later"
 	#code: "console.log('some passed code is run'); window.something = 1;"
@@ -725,7 +1406,18 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	# TODO temporarily pass latex in place of standard result too
 	result: latexResult
 	latexResult: latexResult
-	
+	dependencyInfo: dependencyInfo
+
+enableCaching = ->
+	ENABLE_CACHING = true
+
+disableCaching = ->
+	ENABLE_CACHING = false
+
 (exports ? this).run = run
 (exports ? this).findDependenciesInScript = findDependenciesInScript
+(exports ? this).computeDependenciesFromAlgebra = computeDependenciesFromAlgebra
 (exports ? this).computeResultsAndJavaScriptFromAlgebra = computeResultsAndJavaScriptFromAlgebra
+(exports ? this).clearAlgebraEnvironment = clearAlgebraEnvironment
+(exports ? this).enableCaching = enableCaching
+(exports ? this).disableCaching = disableCaching
