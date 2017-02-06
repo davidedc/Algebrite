@@ -69,7 +69,6 @@ selftest  = ->
 	test_imag()
 	test_lcm()
 	test_log()
-	test_mag()
 	#test_mod()
 	test_nroots()
 	test_numerator()
