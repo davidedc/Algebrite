@@ -1255,13 +1255,9 @@ top_level_eval = ->
 		p2 = pop()
 
 	# If we evaluated the symbol "i" or "j" and the result was sqrt(-1)
-
 	# then don't do anything.
-
 	# Otherwise if "j" is an imaginary unit then subst.
-
 	# Otherwise if "i" is an imaginary unit then subst.
-
 	if ((p1 == symbol(SYMBOL_I) || p1 == symbol(SYMBOL_J)) && isimaginaryunit(p2))
 		doNothing = 0
 	else if (isimaginaryunit(get_binding(symbol(SYMBOL_J))))
