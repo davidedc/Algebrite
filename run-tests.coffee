@@ -27,6 +27,7 @@ test_low_level = ->
 selftest  = ->
 	test_low_level()
 	test_pattern()
+	test_abs()	
 	test_sum()
 	test_product()
 	test_exp()
