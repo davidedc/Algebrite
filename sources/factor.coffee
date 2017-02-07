@@ -89,7 +89,7 @@ factor_small_number = ->
 
 	n = pop_integer()
 
-	if (n == 0x80000000)
+	if (isNaN(n))
 		stop("number too big to factor")
 
 	if (n < 0)

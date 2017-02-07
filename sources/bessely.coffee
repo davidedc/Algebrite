@@ -37,7 +37,7 @@ yybessely = ->
 	push(p2)
 	n = pop_integer()
 
-	if (isdouble(p1) && n != 0x80000000)
+	if (isdouble(p1) && !isNaN(n))
 		d = yn(n, p1.d)
 		push_double(d)
 		return

@@ -58,7 +58,7 @@ yybesselj = ->
 
 	# numerical result
 
-	if (isdouble(p1) && n != 0x80000000)
+	if (isdouble(p1) && !isNaN(n))
 		d = jn(n, p1.d)
 		push_double(d)
 		return
@@ -71,7 +71,7 @@ yybesselj = ->
 
 	# besselj(0,n) = 0
 
-	if (iszero(p1) && n != 0x80000000)
+	if (iszero(p1) && !isNaN(n))
 		push_integer(0)
 		return
 

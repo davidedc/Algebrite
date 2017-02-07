@@ -43,7 +43,7 @@ qpowf = ->
 	if (isinteger(p2))  # p2 is EXPO
 		push(p2);  # p2 is EXPO
 		expo = pop_integer()
-		if expo == 0x80000000
+		if isNaN(expo)
 			# expo greater than 32 bits
 			push_symbol(POWER)
 			push(p1);  # p1 is BASE

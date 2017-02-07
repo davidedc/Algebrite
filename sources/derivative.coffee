@@ -53,7 +53,7 @@ Eval_derivative = ->
 		if (isnum(p5)) # p5 is N
 			push(p5); # p5 is N
 			n = pop_integer()
-			if (n == 0x80000000)
+			if (isNaN(n))
 				stop("nth derivative: check n")
 		else
 			n = 1

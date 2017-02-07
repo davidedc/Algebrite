@@ -23,7 +23,7 @@ Eval_product = ->
 	push(caddr(p1))
 	Eval()
 	j = pop_integer()
-	if (j == 0x80000000)
+	if (isNaN(j))
 		stop("product: 2nd arg?")
 
 	# 3rd arg
@@ -31,7 +31,7 @@ Eval_product = ->
 	push(cadddr(p1))
 	Eval()
 	k = pop_integer()
-	if (k == 0x80000000)
+	if (isNaN(k))
 		stop("product: 3rd arg?")
 
 	# 4th arg

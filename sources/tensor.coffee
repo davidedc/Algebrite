@@ -383,7 +383,7 @@ power_tensor = ->
 
 	n = pop_integer()
 
-	if (n == 0x80000000)
+	if (isNaN(n))
 		push_symbol(POWER)
 		push(p1)
 		push(p2)

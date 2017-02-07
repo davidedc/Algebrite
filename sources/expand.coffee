@@ -191,7 +191,7 @@ remove_negative_exponents = ->
 			continue
 		push(caddr(p1))
 		k = pop_integer()
-		if (k == 0x80000000)
+		if (isNaN(k))
 			continue
 		if (k < j)
 			j = k

@@ -7,7 +7,7 @@ factorial = ->
 	p1 = pop()
 	push(p1)
 	n = pop_integer()
-	if (n < 0 || n == 0x80000000)
+	if (n < 0 || isNaN(n))
 		push_symbol(FACTORIAL)
 		push(p1)
 		list(2)
@@ -146,7 +146,7 @@ sfac_product_f = (s,a,b) ->
 		yyexpand(); # to simplify
 
 		n = pop_integer()
-		if (n == 0 || n == 0x80000000)
+		if (n == 0 || isNaN(n))
 			return
 		if (n < 0)
 			n = -n

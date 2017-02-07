@@ -469,7 +469,7 @@ push_rational = (a,b) ->
 	push(p)
 
 pop_integer = ->
-	n = 0x80000000
+	n = NaN
 
 	save()
 

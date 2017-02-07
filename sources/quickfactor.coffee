@@ -86,7 +86,7 @@ quickpower = ->
 	push(p3)
 	expo = pop_integer()
 
-	if (expo == 0x80000000)
+	if (isNaN(expo))
 		push_symbol(POWER)
 		push(p1);  # p1 is BASE
 		push(p3)

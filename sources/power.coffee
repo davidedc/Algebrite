@@ -238,7 +238,7 @@ yypower = ->
 	if (expanding && isadd(p1) && isnum(p2))
 		push(p2)
 		n = pop_integer()
-		if (n > 1 && n != 0x80000000)
+		if (n > 1 && !isNaN(n))
 			if DEBUG_POWER then console.log "   power: expanding && isadd(p1) && isnum(p2) "
 			power_sum(n)
 			if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]

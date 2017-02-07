@@ -62,7 +62,7 @@ yytangent = ->
 	# most "good" (i.e. compact) trigonometric results
 	# happen for a round number of degrees. There are some exceptions
 	# though, e.g. 22.5 degrees, which we don't capture here.
-	if (n < 0 || n == 0x80000000)
+	if (n < 0 || isNaN(n))
 		push(symbol(TAN))
 		push(p1)
 		list(2)

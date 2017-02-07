@@ -398,7 +398,7 @@ Eval_integral = ->
 		if (isnum(p5))
 			push(p5)
 			n = pop_integer()
-			if (n == 0x80000000)
+			if (isNaN(n))
 				stop("nth integral: check n")
 		else
 			n = 1

@@ -23,7 +23,7 @@ Eval_sum = ->
 	push(caddr(p1))
 	Eval()
 	j = pop_integer()
-	if (j == 0x80000000)
+	if (isNaN(j))
 		stop("sum: 2nd arg?")
 
 	# 3rd arg
@@ -31,7 +31,7 @@ Eval_sum = ->
 	push(cadddr(p1))
 	Eval()
 	k = pop_integer()
-	if (k == 0x80000000)
+	if (isNaN(k))
 		stop("sum: 3rd arg?")
 
 	# 4th arg

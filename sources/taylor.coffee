@@ -71,7 +71,7 @@ taylor = ->
 
 	push(p3)
 	k = pop_integer()
-	if (k == 0x80000000)
+	if (isNaN(k))
 		push_symbol(TAYLOR)
 		push(p1)
 		push(p2)

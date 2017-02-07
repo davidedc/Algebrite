@@ -35,7 +35,7 @@ yyhermite = ->
 	push(p2)
 	n = pop_integer()
 
-	if (n < 0 || n == 0x80000000)
+	if (n < 0 || isNaN(n))
 		push_symbol(HERMITE)
 		push(p1)
 		push(p2)

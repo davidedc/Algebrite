@@ -145,7 +145,7 @@ gen = (h,k) ->
 	push(p3)
 	expo = pop_integer()
 
-	if (expo != 0x80000000)
+	if (!isNaN(expo))
 		for i in [0..Math.abs(expo)]
 			push(p1)
 			push(p2)
