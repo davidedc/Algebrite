@@ -6,7 +6,7 @@
 
   bigInt = require('big-integer');
 
-  version = "0.4.2";
+  version = "0.4.3";
 
   SELFTEST = 1;
 
@@ -3481,7 +3481,7 @@
     p1 = pop();
     push(p2);
     n = pop_integer();
-    if (isdouble(p1) && n !== 0x80000000) {
+    if (isdouble(p1) && !isNaN(n)) {
       d = jn(n, p1.d);
       push_double(d);
       return;
@@ -3490,7 +3490,7 @@
       push_integer(1);
       return;
     }
-    if (iszero(p1) && n !== 0x80000000) {
+    if (iszero(p1) && !isNaN(n)) {
       push_integer(0);
       return;
     }
@@ -3612,7 +3612,7 @@
     p1 = pop();
     push(p2);
     n = pop_integer();
-    if (isdouble(p1) && n !== 0x80000000) {
+    if (isdouble(p1) && !isNaN(n)) {
       d = yn(n, p1.d);
       push_double(d);
       return;
@@ -4076,7 +4076,7 @@
 
   pop_integer = function() {
     var n;
-    n = 0x80000000;
+    n = NaN;
     save();
     p1 = pop();
     switch (p1.k) {
@@ -5020,7 +5020,7 @@
     }
     divide();
     n = pop_integer();
-    if (n < 0 || n === 0x80000000) {
+    if (n < 0 || isNaN(n)) {
       push(symbol(COS));
       push(p1);
       list(2);
@@ -5446,7 +5446,7 @@
       if (isnum(p5)) {
         push(p5);
         n = pop_integer();
-        if (n === 0x80000000) {
+        if (isNaN(n)) {
           stop("nth derivative: check n");
         }
       } else {
@@ -6395,7 +6395,7 @@
     p3 = stack[h + 1];
     push(p3);
     expo = pop_integer();
-    if (expo !== 0x80000000) {
+    if (!isNaN(expo)) {
       for (i = o = 0, ref = Math.abs(expo); 0 <= ref ? o <= ref : o >= ref; i = 0 <= ref ? ++o : --o) {
         push(p1);
         push(p2);
@@ -7587,7 +7587,7 @@
       }
       push(caddr(p1));
       k = pop_integer();
-      if (k === 0x80000000) {
+      if (isNaN(k)) {
         continue;
       }
       if (k < j) {
@@ -7973,7 +7973,7 @@
     i = 0;
     save();
     n = pop_integer();
-    if (n === 0x80000000) {
+    if (isNaN(n)) {
       stop("number too big to factor");
     }
     if (n < 0) {
@@ -8008,7 +8008,7 @@
     p1 = pop();
     push(p1);
     n = pop_integer();
-    if (n < 0 || n === 0x80000000) {
+    if (n < 0 || isNaN(n)) {
       push_symbol(FACTORIAL);
       push(p1);
       list(2);
@@ -8119,7 +8119,7 @@
       subtract();
       yyexpand();
       n = pop_integer();
-      if (n === 0 || n === 0x80000000) {
+      if (n === 0 || isNaN(n)) {
         return;
       }
       if (n < 0) {
@@ -8898,13 +8898,13 @@
     push(caddr(p1));
     Eval();
     j = pop_integer();
-    if (j === 0x80000000) {
+    if (isNaN(j)) {
       stop("for: 2nd arg?");
     }
     push(cadddr(p1));
     Eval();
     k = pop_integer();
-    if (k === 0x80000000) {
+    if (isNaN(k)) {
       stop("for: 3rd arg?");
     }
     p1 = cddddr(p1);
@@ -9285,7 +9285,7 @@
     p1 = pop();
     push(p2);
     n = pop_integer();
-    if (n < 0 || n === 0x80000000) {
+    if (n < 0 || isNaN(n)) {
       push_symbol(HERMITE);
       push(p1);
       push(p2);
@@ -9854,7 +9854,7 @@
       if (isnum(p5)) {
         push(p5);
         n = pop_integer();
-        if (n === 0x80000000) {
+        if (isNaN(n)) {
           stop("nth integral: check n");
         }
       } else {
@@ -10596,7 +10596,7 @@
     push_integer(2);
     multiply();
     n = pop_integer();
-    if (n === 0x80000000) {
+    if (isNaN(n)) {
       return 0;
     }
     if (n < 1) {
@@ -10642,7 +10642,7 @@
     push_integer(2);
     multiply();
     n = pop_integer();
-    if (n === 0x80000000) {
+    if (isNaN(n)) {
       return 0;
     }
     if (n < 0) {
@@ -10760,7 +10760,7 @@
     p1 = pop();
     push(p2);
     n = pop_integer();
-    if (n < 0 || n === 0x80000000) {
+    if (n < 0 || isNaN(n)) {
       push_symbol(LAGUERRE);
       push(p1);
       push(p2);
@@ -10963,7 +10963,7 @@
     n = pop_integer();
     push(p3);
     m = pop_integer();
-    if (n < 0 || n === 0x80000000 || m < 0 || m === 0x80000000) {
+    if (n < 0 || isNaN(n) || m < 0 || isNaN(m)) {
       push_symbol(LEGENDRE);
       push(p1);
       push(p2);
@@ -11469,7 +11469,7 @@
     if (isdouble(p1)) {
       push(p1);
       n = pop_integer();
-      if (n === 0x80000000) {
+      if (isNaN(n)) {
         stop("mod function: cannot convert float value to integer");
       }
       push_integer(n);
@@ -11478,7 +11478,7 @@
     if (isdouble(p2)) {
       push(p2);
       n = pop_integer();
-      if (n === 0x80000000) {
+      if (isNaN(n)) {
         stop("mod function: cannot convert float value to integer");
       }
       push_integer(n);
@@ -12889,7 +12889,7 @@
     if (expanding && isadd(p1) && isnum(p2)) {
       push(p2);
       n = pop_integer();
-      if (n > 1 && n !== 0x80000000) {
+      if (n > 1 && !isNaN(n)) {
         if (DEBUG_POWER) {
           console.log("   power: expanding && isadd(p1) && isnum(p2) ");
         }
@@ -15184,13 +15184,13 @@
     push(caddr(p1));
     Eval();
     j = pop_integer();
-    if (j === 0x80000000) {
+    if (isNaN(j)) {
       stop("product: 2nd arg?");
     }
     push(cadddr(p1));
     Eval();
     k = pop_integer();
-    if (k === 0x80000000) {
+    if (isNaN(k)) {
       stop("product: 3rd arg?");
     }
     p1 = caddddr(p1);
@@ -15318,7 +15318,7 @@
     if (isinteger(p2)) {
       push(p2);
       expo = pop_integer();
-      if (expo === 0x80000000) {
+      if (isNaN(expo)) {
         push_symbol(POWER);
         push(p1);
         push(p2);
@@ -15491,7 +15491,7 @@
     }
     push(p3);
     expo = pop_integer();
-    if (expo === 0x80000000) {
+    if (isNaN(expo)) {
       push_symbol(POWER);
       push(p1);
       push(p3);
@@ -19279,7 +19279,7 @@
     }
     divide();
     n = pop_integer();
-    if (n < 0 || n === 0x80000000) {
+    if (n < 0 || isNaN(n)) {
       push(symbol(SIN));
       push(p1);
       list(2);
@@ -19440,13 +19440,13 @@
     push(caddr(p1));
     Eval();
     j = pop_integer();
-    if (j === 0x80000000) {
+    if (isNaN(j)) {
       stop("sum: 2nd arg?");
     }
     push(cadddr(p1));
     Eval();
     k = pop_integer();
-    if (k === 0x80000000) {
+    if (isNaN(k)) {
       stop("sum: 3rd arg?");
     }
     p1 = caddddr(p1);
@@ -19509,7 +19509,7 @@
     }
     divide();
     n = pop_integer();
-    if (n < 0 || n === 0x80000000) {
+    if (n < 0 || isNaN(n)) {
       push(symbol(TAN));
       push(p1);
       list(2);
@@ -19640,7 +19640,7 @@
     p1 = pop();
     push(p3);
     k = pop_integer();
-    if (k === 0x80000000) {
+    if (isNaN(k)) {
       push_symbol(TAYLOR);
       push(p1);
       push(p2);
@@ -19957,7 +19957,7 @@
     }
     push(p2);
     n = pop_integer();
-    if (n === 0x80000000) {
+    if (isNaN(n)) {
       push_symbol(POWER);
       push(p1);
       push(p2);
@@ -20822,7 +20822,7 @@
       push(car(p2));
       Eval();
       i = pop_integer();
-      if (i < 1 || i === 0x80000000) {
+      if (i < 1 || isNaN(i)) {
         push(zero);
         return;
       }
