@@ -200,7 +200,7 @@ absval = ->
 	# ...while this is in theory a powerful mechanism, I've commented it
 	# out because I've refined this method enough to not need this.
 	# Evaling via zzfloat() is in principle more problematic because it could
-	# require further evlauations which could end up in further "abs" which
+	# require further evaluations which could end up in further "abs" which
 	# would end up in infinite loops. Better not use it if not necessary.
 
 	# we look directly at the float evaluation of the argument

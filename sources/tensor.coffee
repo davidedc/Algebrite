@@ -4,7 +4,7 @@
 
 Tags
 ----
-[[scripting]] [[JS]] [[internal]] [[treenode]] [[generalconcept]]
+scripting, JS, internal, treenode, general concept
 
 General description
 -------------------
