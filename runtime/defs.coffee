@@ -1,7 +1,7 @@
 bigInt = require('big-integer')
 
 # also change the version in the package.json file
-version = "0.4.3"
+version = "0.4.4"
 
 SELFTEST = 1
 
@@ -313,7 +313,7 @@ symbolsDependencies = {}
 symbolsHavingReassignments = []
 symbolsInExpressionsWithoutAssignments = []
 patternHasBeenFound = false
-predefinedSymbolsInGlobalScope_doNotTrackInDependencies = ["rationalize", "abs", "i", "pi", "sin", "cos", "roots", "integral", "derivative", "defint", "sqrt", "eig", "cov"]
+predefinedSymbolsInGlobalScope_doNotTrackInDependencies = ["rationalize", "abs", "i", "pi", "sin", "cos", "roots", "integral", "derivative", "defint", "sqrt", "eig", "cov", "deig", "dcov"]
 
 # you can do some little simplifications
 # at parse time, such as calculating away

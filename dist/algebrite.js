@@ -6,7 +6,7 @@
 
   bigInt = require('big-integer');
 
-  version = "0.4.3";
+  version = "0.4.4";
 
   SELFTEST = 1;
 
@@ -489,7 +489,7 @@
 
   patternHasBeenFound = false;
 
-  predefinedSymbolsInGlobalScope_doNotTrackInDependencies = ["rationalize", "abs", "i", "pi", "sin", "cos", "roots", "integral", "derivative", "defint", "sqrt", "eig", "cov"];
+  predefinedSymbolsInGlobalScope_doNotTrackInDependencies = ["rationalize", "abs", "i", "pi", "sin", "cos", "roots", "integral", "derivative", "defint", "sqrt", "eig", "cov", "deig", "dcov"];
 
   parse_time_simplifications = true;
 
@@ -1181,7 +1181,7 @@
     	 * ...while this is in theory a powerful mechanism, I've commented it
     	 * out because I've refined this method enough to not need this.
     	 * Evaling via zzfloat() is in principle more problematic because it could
-    	 * require further evlauations which could end up in further "abs" which
+    	 * require further evaluations which could end up in further "abs" which
     	 * would end up in infinite loops. Better not use it if not necessary.
     
     	 * we look directly at the float evaluation of the argument
@@ -3429,7 +3429,7 @@
   };
 
 
-  /*
+  /* besselj =====================================================================
    Bessel J function
   
   	1st arg		x
@@ -19691,7 +19691,7 @@
   
   Tags
   ----
-  [[scripting]] [[JS]] [[internal]] [[treenode]] [[generalconcept]]
+  scripting, JS, internal, treenode, general concept
   
   General description
   -------------------
