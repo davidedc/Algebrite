@@ -1,6 +1,20 @@
 test_power = ->
 	run_test [
 
+		# according to the notorious
+		# "PEMDAS" mnemonic, the power
+		# operator has the most precedence.
+		# Strangely, Mathematica parses
+		# a^1/2 as sqrt(a), not following PEMDAS,
+		# probably because of some fancy
+		# euristics, since, contrarily to the
+		# case above, it also parses
+		# a^b/2 as (a^b)/2.
+		# I think this more standard/uniform handling
+		# a-la-sympy is ok.
+		"a^1/2 + a^1/2",
+		"a",
+
 		"2^(1/2)",
 		"2^(1/2)",
 

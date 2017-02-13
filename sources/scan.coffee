@@ -23,6 +23,8 @@
 # with things like parens, non-commutative
 # dot (or inner) product, assignments and tests,
 # function calls etc.
+# Note that a^1/2 is, correctly, a/2, not, incorrectly, sqrt(a),
+# see comment in related test in power.coffee for more about this.
 
 
 
