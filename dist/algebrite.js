@@ -6,7 +6,7 @@
 
   bigInt = require('big-integer');
 
-  version = "0.4.4";
+  version = "0.4.5";
 
   SELFTEST = 1;
 
@@ -13476,7 +13476,7 @@
   };
 
   print_term = function(p) {
-    var accumulator;
+    var accumulator, previousFactorWasANumber;
     accumulator = "";
     if (car(p) === symbol(MULTIPLY) && any_denominators(p)) {
       accumulator += print_a_over_b(p);
@@ -13487,11 +13487,30 @@
       if (isminusone(car(p))) {
         p = cdr(p);
       }
+      previousFactorWasANumber = false;
+      if (isnum(car(p))) {
+        previousFactorWasANumber = true;
+      }
       accumulator += print_factor(car(p));
       p = cdr(p);
       while (iscons(p)) {
+        if (printMode === PRINTMODE_LATEX) {
+          if (previousFactorWasANumber) {
+            if (caar(p) === symbol(POWER)) {
+              if (isnum(car(cdr(car(p))))) {
+                if (!isfraction(car(cdr(cdr(car(p)))))) {
+                  accumulator += " \\cdot ";
+                }
+              }
+            }
+          }
+        }
         accumulator += print_multiply_sign();
         accumulator += print_factor(car(p));
+        previousFactorWasANumber = false;
+        if (isnum(car(p))) {
+          previousFactorWasANumber = true;
+        }
         p = cdr(p);
       }
     } else {
