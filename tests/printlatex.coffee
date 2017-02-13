@@ -40,4 +40,15 @@ test_printlatex = ->
 		"printlatex(12x^11)",
 		"12x^{11}",
 
+		# tricky when there are two consecutive
+		# numbers, can't just leave a space there.
+		"printlatex(5^2 * 3^y)",
+		"25 \\cdot 3^y",
+
+		"printlatex(5^2 * 3^(1/2))",
+		"25\\sqrt{3}",
+
+		"printlatex(5^2 * 3^(2/3))",
+		"25\\sqrt[3]{3^2}",
+
 	]

@@ -347,11 +347,42 @@ print_term = (p) ->
 			#			print_char('-')
 			p = cdr(p)
 
+
+		previousFactorWasANumber = false
+
+		# print the first factor ------------
+		if isnum(car(p))
+			previousFactorWasANumber = true
+
 		accumulator += print_factor(car(p))
 		p = cdr(p)
+
+		# print all the other factors -------
 		while (iscons(p))
+			# check if we end up having a case where two numbers
+			# are next to each other. In those cases, latex needs
+			# to insert a \cdot otherwise they end up
+			# right next to each other and read like one big number
+			if printMode == PRINTMODE_LATEX
+				if previousFactorWasANumber
+					# if what comes next is a power and the base
+					# is a number, then we are in the case
+					# of consecutive numbers.
+					# Note that sqrt() i.e when exponent is 1/2
+					# doesn't count because the radical gives
+					# a nice graphical separation already.
+					if caar(p) == symbol(POWER)
+						if isnum(car(cdr(car(p))))
+							# rule out square root
+							if !isfraction(car(cdr(cdr(car(p)))))
+								accumulator += " \\cdot "
 			accumulator += print_multiply_sign()
 			accumulator += print_factor(car(p))
+
+			previousFactorWasANumber = false
+			if isnum(car(p))
+				previousFactorWasANumber = true
+
 			p = cdr(p)
 	else
 		accumulator += print_factor(p)
@@ -683,6 +714,7 @@ print_index_function = (p) ->
 
 
 print_factor = (p, omitParens) ->
+	# debugger
 	accumulator = ""
 	if (isnum(p))
 		accumulator += print_number(p, false)
