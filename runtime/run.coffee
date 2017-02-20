@@ -577,10 +577,25 @@ test_dependencies = ->
 
 	testResult = computeResultsAndJavaScriptFromAlgebra('((0,1),(1,0))')
 
-	console.log "testResult.code " + testResult.code
 	if testResult.latexResult == "$$\\begin{bmatrix} 0 & 1 \\\\\\ 1 & 0 \\end{bmatrix}$$" and
 		testResult.result == "$$\\begin{bmatrix} 0 & 1 \\\\\\ 1 & 0 \\end{bmatrix}$$" and
 		testResult.dependencyInfo.affectsVariables.length == 0
+				console.log "ok dependency test"
+		else
+				console.log "fail dependency tests"
+
+	do_clearall()
+
+	testResult = computeResultsAndJavaScriptFromAlgebra('x = ((0,1),(1,0))')
+
+	console.log "testResult.latexResult " + testResult.latexResult
+	if testResult.code == "x = [[0,1],[1,0]];" and
+		testResult.latexResult == "$$x = \\begin{bmatrix} 0 & 1 \\\\\\ 1 & 0 \\end{bmatrix}$$" and
+		testResult.result == "$$x = \\begin{bmatrix} 0 & 1 \\\\\\ 1 & 0 \\end{bmatrix}$$" and
+		testResult.dependencyInfo.affectedBy.length == 1 and
+		testResult.dependencyInfo.affectedBy[0] == "PATTERN_DEPENDENCY" and
+		testResult.dependencyInfo.affectsVariables.length == 1 and
+		testResult.dependencyInfo.affectsVariables[0] == "x"
 				console.log "ok dependency test"
 		else
 				console.log "fail dependency tests"
@@ -849,7 +864,13 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 					codeGen = true
 					generatedBody = toBePrinted.toString()
 					codeGen = false
+
+					origPrintMode = printMode
+					printMode = PRINTMODE_LATEX
+
 					bodyForReadableSummaryOfGeneratedCode = toBePrinted.toString()
+
+					printMode = origPrintMode
 
 					if variablesWithCycles.indexOf(key) != -1
 						generatedCode += "// " + key + " is part of a cyclic dependency, no code generated."
