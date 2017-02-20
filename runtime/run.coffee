@@ -575,6 +575,18 @@ test_dependencies = ->
 
 	do_clearall()
 
+	testResult = computeResultsAndJavaScriptFromAlgebra('((0,1),(1,0))')
+
+	console.log "testResult.code " + testResult.code
+	if testResult.latexResult == "$$\\begin{bmatrix} 0 & 1 \\\\\\ 1 & 0 \\end{bmatrix}$$" and
+		testResult.result == "$$\\begin{bmatrix} 0 & 1 \\\\\\ 1 & 0 \\end{bmatrix}$$" and
+		testResult.dependencyInfo.affectsVariables.length == 0
+				console.log "ok dependency test"
+		else
+				console.log "fail dependency tests"
+
+	do_clearall()
+
 	console.log "-- done dependency tests"
 	do_clearall()
 
@@ -1312,6 +1324,7 @@ computeDependenciesFromAlgebra = (codeFromAlgebraBlock) ->
 	#      ...should refactor.
 	originalcodeFromAlgebraBlock = codeFromAlgebraBlock
 	keepState = true
+	called_from_Algebra_block = true
 
 	#console.log "codeFromAlgebraBlock: " + codeFromAlgebraBlock
 
@@ -1331,6 +1344,8 @@ computeDependenciesFromAlgebra = (codeFromAlgebraBlock) ->
 	codeFromAlgebraBlock = userSimplificationsInProgramForm + codeFromAlgebraBlock
 	if DEBUG then console.log "codeFromAlgebraBlock including patterns: " + codeFromAlgebraBlock
 
+	called_from_Algebra_block = false
+
 	return findDependenciesInScript(codeFromAlgebraBlock, true)[6]
 
 computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
@@ -1338,6 +1353,7 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 
 	originalcodeFromAlgebraBlock = codeFromAlgebraBlock
 	keepState = true
+	called_from_Algebra_block = true
 
 	timeStartFromAlgebra  = new Date().getTime()
 
@@ -1371,6 +1387,8 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	#debugger
 	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode, latexResult, errorMessage, dependencyInfo] =
 		findDependenciesInScript(codeFromAlgebraBlock)
+
+	called_from_Algebra_block = false
 
 	if readableSummaryOfCode != "" or errorMessage != ""
 		result += "\n" + readableSummaryOfCode

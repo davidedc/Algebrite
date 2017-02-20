@@ -501,7 +501,7 @@ print_tensor = (p) ->
 
 print_tensor_inner = (p, j, k) ->
 	accumulator = ""
-	i = 0
+
 	if codeGen then accumulator += print_str("[") else accumulator += print_str('(')
 	for i in [0...p.tensor.dim[j]]
 		if (j + 1 == p.tensor.ndim)
@@ -514,6 +514,55 @@ print_tensor_inner = (p, j, k) ->
 			accumulator += print_str(",")
 	if codeGen then accumulator += print_str("]") else accumulator += print_str(')')
 	return [k, accumulator]
+
+print_tensor_latex = (p) ->
+	accumulator = ""
+	accumulator += print_tensor_inner_latex(true, p, 0, 0)[1]
+	return accumulator
+
+# firstLevel is needed because printing a matrix
+# is not exactly an elegant recursive procedure
+# the vector on the first level prints the latex
+# "wrap", while the vectors that make up the
+# rows don't. so it's a bit asymmetric and this
+# flag helps
+print_tensor_inner_latex = (firstLevel, p, j, k) ->
+	accumulator = ""
+
+	# open the outer latex wrap
+	if firstLevel
+		accumulator += "\\begin{bmatrix} "
+
+	for i in [0...p.tensor.dim[j]]
+		if (j + 1 == p.tensor.ndim)
+			accumulator += print_expr(p.tensor.elem[k])
+			# separator between elements in each row
+			accumulator += print_str(" & ")
+			k++
+		else
+			[k, retString] = print_tensor_inner_latex(0, p, j + 1, k)
+			accumulator += retString
+		if (i + 1 >= p.tensor.dim[j])
+			# remove last element's separator
+			accumulator = accumulator.substring(0, accumulator.length - 3);
+			# addseparator between rows
+			if called_from_Algebra_block
+				accumulator += print_str(" \\\\\\ ")
+			else
+				accumulator += print_str(" \\\\ ")
+
+	# close the outer latex wrap
+	if firstLevel
+		# remove last row's new line
+		if called_from_Algebra_block
+			accumulator = accumulator.substring(0, accumulator.length - 6);
+		else
+			accumulator = accumulator.substring(0, accumulator.length - 4);
+
+		accumulator += "\\end{bmatrix}"
+
+	return [k, accumulator]
+
 
 print_base = (p) ->
 	accumulator = ""
@@ -727,7 +776,10 @@ print_factor = (p, omitParens) ->
 		return accumulator
 
 	if (istensor(p))
-		accumulator += print_tensor(p)
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_tensor_latex(p)
+		else
+			accumulator += print_tensor(p)
 		return accumulator
 
 	if (car(p) == symbol(MULTIPLY))

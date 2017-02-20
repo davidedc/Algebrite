@@ -326,6 +326,12 @@ chainOfUserSymbolsNotFunctionsBeingEvaluated = []
 
 stringsEmittedByUserPrintouts = ""
 
+# flag use to switch on/off some quirks "deep"
+# in the code due to call from Algebra block
+# e.g. number of slashes for newline in separating
+# row of matrices
+called_from_Algebra_block = false
+
 
 class tensor
 	ndim: 0
