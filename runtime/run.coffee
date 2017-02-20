@@ -588,12 +588,28 @@ test_dependencies = ->
 
 	testResult = computeResultsAndJavaScriptFromAlgebra('x = ((0,1),(1,0))')
 
-	console.log "testResult.latexResult " + testResult.latexResult
 	if testResult.code == "x = [[0,1],[1,0]];" and
 		testResult.latexResult == "$$x = \\begin{bmatrix} 0 & 1 \\\\\\ 1 & 0 \\end{bmatrix}$$" and
 		testResult.result == "$$x = \\begin{bmatrix} 0 & 1 \\\\\\ 1 & 0 \\end{bmatrix}$$" and
 		testResult.dependencyInfo.affectedBy.length == 1 and
 		testResult.dependencyInfo.affectedBy[0] == "PATTERN_DEPENDENCY" and
+		testResult.dependencyInfo.affectsVariables.length == 1 and
+		testResult.dependencyInfo.affectsVariables[0] == "x"
+				console.log "ok dependency test"
+		else
+				console.log "fail dependency tests"
+
+	do_clearall()
+
+	testResult = computeResultsAndJavaScriptFromAlgebra('x = a ⋅ b')
+
+	if testResult.code == "x = function (a, b) { return ( dot(a, b) ); }" and
+		testResult.latexResult == "$$x(a, b) = a \\cdot b$$" and
+		testResult.result == "$$x(a, b) = a \\cdot b$$" and
+		testResult.dependencyInfo.affectedBy.length == 3 and
+		testResult.dependencyInfo.affectedBy[0] == "a" and
+		testResult.dependencyInfo.affectedBy[1] == "b" and
+		testResult.dependencyInfo.affectedBy[2] == "PATTERN_DEPENDENCY" and
 		testResult.dependencyInfo.affectsVariables.length == 1 and
 		testResult.dependencyInfo.affectsVariables[0] == "x"
 				console.log "ok dependency test"

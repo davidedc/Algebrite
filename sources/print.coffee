@@ -428,6 +428,14 @@ print_DOT_latex = (p) ->
 	accumulator += print_expr(caddr(p))
 	return accumulator
 
+print_DOT_codegen = (p) ->
+	accumulator = "dot("
+	accumulator += print_expr(cadr(p))
+	accumulator += ", "
+	accumulator += print_expr(caddr(p))
+	accumulator += ")"
+	return accumulator
+
 print_SQRT_latex = (p) ->
 	accumulator = ""
 	accumulator += print_str("\\sqrt{")
@@ -881,6 +889,9 @@ print_factor = (p, omitParens) ->
 		return accumulator
 	else if (isinnerordot(p) && printMode == PRINTMODE_LATEX)
 		accumulator += print_DOT_latex(p)
+		return accumulator
+	else if (isinnerordot(p) && codeGen)
+		accumulator += print_DOT_codegen(p)
 		return accumulator
 
 
