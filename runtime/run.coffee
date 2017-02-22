@@ -575,8 +575,10 @@ test_dependencies = ->
 
 	do_clearall()
 
-	testResult = computeResultsAndJavaScriptFromAlgebra('((0,1),(1,0))')
+	testResult = computeResultsAndJavaScriptFromAlgebra('[[0,1],[1,0]]')
 
+	console.log "testResult.latexResult " + testResult.latexResult
+	console.log "testResult.result " + testResult.result
 	if testResult.latexResult == "$$\\begin{bmatrix} 0 & 1 \\\\\\ 1 & 0 \\end{bmatrix}$$" and
 		testResult.result == "$$\\begin{bmatrix} 0 & 1 \\\\\\ 1 & 0 \\end{bmatrix}$$" and
 		testResult.dependencyInfo.affectsVariables.length == 0
@@ -586,8 +588,10 @@ test_dependencies = ->
 
 	do_clearall()
 
-	testResult = computeResultsAndJavaScriptFromAlgebra('x = ((0,1),(1,0))')
+	testResult = computeResultsAndJavaScriptFromAlgebra('x = [[0,1],[1,0]]')
 
+	console.log "testResult.latexResult " + testResult.latexResult
+	console.log "testResult.result " + testResult.result
 	if testResult.code == "x = [[0,1],[1,0]];" and
 		testResult.latexResult == "$$x = \\begin{bmatrix} 0 & 1 \\\\\\ 1 & 0 \\end{bmatrix}$$" and
 		testResult.result == "$$x = \\begin{bmatrix} 0 & 1 \\\\\\ 1 & 0 \\end{bmatrix}$$" and

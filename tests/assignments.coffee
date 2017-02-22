@@ -60,6 +60,55 @@ test_assignments = ->
 		"lookup(f)",
 		"1+1",
 
+		# a function returning a function
+
+		"f(x) = x + 1",
+		"",
+
+		"g(x) = f",
+		"",
+
+		"g()(2)",
+		"3",
+
+		# passing functions as parameters
+
+		"f(x) = x + 1",
+		"",
+
+		"g(x) = x * x",
+		"",
+
+		"h(l, x) = l(x)",
+		"",
+
+		"h(f, 2)",
+		"3",
+
+		"h(g, 3)",
+		"9",
+
+
+		# passing function as parameter
+		# but doing nothing with it because
+		# the function in the body is already
+		# defined
+
+		"f(x) = x + 1",
+		"",
+
+		"g(x) = x * x",
+		"",
+
+		"h(l, x) = f(x)",
+		"",
+
+		"h(f, 2)",
+		"3",
+
+		"h(g, 3)",
+		"4",
+
 
 		# clean up -----------------
 
@@ -67,6 +116,9 @@ test_assignments = ->
 		"",
 
 		"g=quote(g)",
+		"",
+
+		"h=quote(h)",
 		"",
 
 		# ----------------------

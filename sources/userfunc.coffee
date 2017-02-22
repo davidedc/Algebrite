@@ -22,12 +22,20 @@ Eval_user_function = ->
 		Eval_derivative()
 		return
 
+	# normally car(p1) is a symbol with the function name
+	# but it could be something that has to be
+	# evaluated to get to the function definition instead
+	# (e.g. the function is an element of an array)
+	# so we do an eval to sort it all out. 
+	push(car(p1))
+	Eval()
+
 	# we expect to find either the body and
 	# formula arguments, OR, if the function
 	# has not been defined yet, then the
 	# function will just contain its own name, as
-	# all undefined variables.
-	bodyAndFormalArguments = get_binding(car(p1));
+	# all undefined variables do.
+	bodyAndFormalArguments = pop()
 
 	p3 = car(cdr(bodyAndFormalArguments))  # p3 is function body F
 	# p4 is the formal argument list
@@ -79,6 +87,7 @@ Eval_user_function = ->
 	if (iscons(p6)) # p6 is S
 		push(p6); # p6 is S
 		rewrite_args()
+		#console.log "rewritten body: " + stack[tos-1]
 	Eval()
 
 # Rewrite by expanding symbols that contain args
@@ -87,8 +96,16 @@ rewrite_args = ->
 	n = 0
 	save()
 
-	p2 = pop(); # subst. list
-	p1 = pop(); # expr
+	# subst. list which is a list
+	# where each consecutive pair
+	# is what needs to be substituted and with what
+	p2 = pop();
+	#console.log "subst. list " + p2
+
+	# expr to substitute in i.e. the
+	# function body
+	p1 = pop();
+	#console.log "expr: " + p1
 
 	if (istensor(p1))
 		n = rewrite_args_tensor()
@@ -97,7 +114,20 @@ rewrite_args = ->
 
 	if (iscons(p1))
 		h = tos
-		push(car(p1)); # Do not rewrite function name
+		if (car(p1) == car(p2))
+			# rewrite a function in
+			# the body with the one
+			# passed from the paramaters
+			push_symbol(EVAL)
+			push(car(cdr(p2)));
+			list(2)
+		else
+			# if there is no match
+			# then no substitution necessary
+			push(car(p1));
+
+		# continue recursively to
+		# rewrite the rest of the body
 		p1 = cdr(p1)
 		while (iscons(p1))
 			push(car(p1))
@@ -108,15 +138,24 @@ rewrite_args = ->
 		restore()
 		return n
 
-	# If not a symbol then done
+	# ground cases here
+	# (apart from function name which has
+	# already been substituted as it's in the head
+	# of the cons)
+	# -----------------
 
+	# If not a symbol then no
+	# substitution to be done
 	if (!issymbol(p1))
 		push(p1)
 		restore()
 		return 0
 
-	# Try for an argument substitution first
+	# Here we are in a symbol case
+	# so we need to substitute
 
+	# Check if there is a direct match
+	# of symbols right away
 	p3 = p2
 	while (iscons(p3))
 		if (p1 == car(p3))
@@ -125,8 +164,8 @@ rewrite_args = ->
 			return 1
 		p3 = cddr(p3)
 
-	# Get the symbol's binding, try again
-
+	# Get the symbol's content, if _that_
+	# matches then do the substitution
 	p3 = get_binding(p1)
 	push(p3)
 	if (p1 != p3)
