@@ -507,6 +507,9 @@ print_tensor = (p) ->
 	accumulator += print_tensor_inner(p, 0, 0)[1]
 	return accumulator
 
+# j scans the dimensions
+# k is an increment for all the printed elements
+#   since they are all together in sequence in one array
 print_tensor_inner = (p, j, k) ->
 	accumulator = ""
 
@@ -529,11 +532,11 @@ print_tensor_latex = (p) ->
 	return accumulator
 
 # firstLevel is needed because printing a matrix
-# is not exactly an elegant recursive procedure
+# is not exactly an elegant recursive procedure:
 # the vector on the first level prints the latex
 # "wrap", while the vectors that make up the
 # rows don't. so it's a bit asymmetric and this
-# flag helps
+# flag helps.
 # j scans the dimensions
 # k is an increment for all the printed elements
 #   since they are all together in sequence in one array

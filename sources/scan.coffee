@@ -339,6 +339,8 @@ scan_factor = ->
 
 	h = tos
 
+	#console.log "scan_factor token: " + token
+
 	if (token == '(')
 		scan_subexpr()
 	else if (token == T_SYMBOL)
@@ -434,6 +436,7 @@ scan_symbol = ->
 				push(usr_symbol(token_buf))
 	else
 		push(usr_symbol(token_buf))
+	#console.log "found symbol: " + token_buf
 
 	if scanningParameters.length == 0
 		if DEBUG then console.log "out of scanning parameters, processing " + token_buf
