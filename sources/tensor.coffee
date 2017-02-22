@@ -505,7 +505,7 @@ promote_tensor = ->
 	ndim = p1.tensor.ndim + p2.tensor.ndim
 
 	if (ndim > MAXDIM)
-		stop("tensor rank > 24")
+		stop("tensor rank > " + MAXDIM)
 
 	nelem = p1.tensor.nelem * p2.tensor.nelem
 
