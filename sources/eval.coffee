@@ -99,10 +99,28 @@ Eval_sym = ->
 		chainOfUserSymbolsNotFunctionsBeingEvaluated.pop()
 
 Eval_cons = ->
-	if (!issymbol(car(p1)))
+	
+	cons_head = car(p1)
+
+	# normally the cons_head is a symbol,
+	# but sometimes in the case of
+	# functions we don't have a symbol,
+	# we have to evaluate something to get to the
+	# symbol. For example if a function is inside
+	# a tensor, then we need to evaluate an index
+	# access first to get to the function.
+	# In those cases, we find an EVAL here,
+	# so we proceed to EVAL
+	if car(cons_head) == symbol(EVAL)
+		Eval_user_function()
+		return
+
+	# If we didn't fall in the EVAL case above
+	# then at this point we must have a symbol.
+	if (!issymbol(cons_head))
 		stop("cons?")
 
-	switch (symnum(car(p1)))
+	switch (symnum(cons_head))
 		when ABS then Eval_abs()
 		when ADD then Eval_add()
 		when ADJ then Eval_adj()

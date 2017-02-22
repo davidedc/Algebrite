@@ -30,17 +30,17 @@ defn_str = [
 	"i=sqrt(-1)",
 	"autoexpand=1",
 	"assumeRealVariables=1",
-	"trange=(-pi,pi)",
-	"xrange=(-10,10)",
-	"yrange=(-10,10)",
+	"trange=[-pi,pi]",
+	"xrange=[-10,10]",
+	"yrange=[-10,10]",
 	"last=0",
 	"trace=0",
 	"printLeaveEAlone=1",
 	"printLeaveXAlone=0",
 	# cross definition
-	"cross(u,v)=(u[2]*v[3]-u[3]*v[2],u[3]*v[1]-u[1]*v[3],u[1]*v[2]-u[2]*v[1])",
+	"cross(u,v)=[u[2]*v[3]-u[3]*v[2],u[3]*v[1]-u[1]*v[3],u[1]*v[2]-u[2]*v[1]]",
 	# curl definition
-	"curl(v)=(d(v[3],y)-d(v[2],z),d(v[1],z)-d(v[3],x),d(v[2],x)-d(v[1],y))",
+	"curl(v)=[d(v[3],y)-d(v[2],z),d(v[1],z)-d(v[3],x),d(v[2],x)-d(v[1],y)]",
 	# div definition
 	"div(v)=d(v[1],x)+d(v[2],y)+d(v[3],z)",
 	# Note that we use the mathematics / Javascript / Mathematica

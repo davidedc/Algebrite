@@ -513,22 +513,41 @@ print_tensor = (p) ->
 print_tensor_inner = (p, j, k) ->
 	accumulator = ""
 
-	if codeGen then accumulator += print_str("[") else accumulator += print_str('(')
-	for i in [0...p.tensor.dim[j]]
-		if (j + 1 == p.tensor.ndim)
-			accumulator += print_expr(p.tensor.elem[k])
-			k++
-		else
+	accumulator += print_str("[")
+
+	# only the last dimension prints the actual elements
+	# e.g. in a matrix, the first dimension contains
+	# vectors, not elements, and the second dimension
+	# actually contains the elements
+	
+	# if not the last dimension, we are just printing wrappers
+	# and recursing down i.e. we print the next dimension
+	if (j < p.tensor.ndim - 1)
+		for i in [0...p.tensor.dim[j]]
 			[k, retString] = print_tensor_inner(p, j + 1, k)
 			accumulator += retString
-		if (i + 1 < p.tensor.dim[j])
-			accumulator += print_str(",")
-	if codeGen then accumulator += print_str("]") else accumulator += print_str(')')
+			# add separator between elements dimensions
+			# "above" the inner-most dimension
+			if i != p.tensor.dim[j] - 1
+				accumulator += print_str(",")
+	# if we reached the last dimension, we print the actual
+	# elements
+	else
+		for i in [0...p.tensor.dim[j]]
+			accumulator += print_expr(p.tensor.elem[k])
+			# add separator between elements in the
+			# inner-most dimension
+			if i != p.tensor.dim[j] - 1
+				accumulator += print_str(",")
+			k++
+
+	accumulator += print_str("]")
 	return [k, accumulator]
 
 print_tensor_latex = (p) ->
 	accumulator = ""
-	accumulator += print_tensor_inner_latex(true, p, 0, 0)[1]
+	if p.tensor.ndim <= 2
+		accumulator += print_tensor_inner_latex(true, p, 0, 0)[1]
 	return accumulator
 
 # firstLevel is needed because printing a matrix
@@ -547,33 +566,37 @@ print_tensor_inner_latex = (firstLevel, p, j, k) ->
 	if firstLevel
 		accumulator += "\\begin{bmatrix} "
 
-	for i in [0...p.tensor.dim[j]]
-		if (j + 1 == p.tensor.ndim)
-			accumulator += print_expr(p.tensor.elem[k])
-			# separator between elements in each row
-			accumulator += print_str(" & ")
-			k++
-		else
+	# only the last dimension prints the actual elements
+	# e.g. in a matrix, the first dimension contains
+	# vectors, not elements, and the second dimension
+	# actually contains the elements
+	
+	# if not the last dimension, we are just printing wrappers
+	# and recursing down i.e. we print the next dimension
+	if (j < p.tensor.ndim - 1)
+		for i in [0...p.tensor.dim[j]]
 			[k, retString] = print_tensor_inner_latex(0, p, j + 1, k)
 			accumulator += retString
-		if (i + 1 >= p.tensor.dim[j])
-			# remove last element's separator
-			accumulator = accumulator.substring(0, accumulator.length - 3);
-			# addseparator between rows
-			if called_from_Algebra_block
-				accumulator += print_str(" \\\\\\ ")
-			else
-				accumulator += print_str(" \\\\ ")
+			if i != p.tensor.dim[j] - 1
+				# add separator between rows
+				if called_from_Algebra_block
+					accumulator += print_str(" \\\\\\ ")
+				else
+					accumulator += print_str(" \\\\ ")
+	# if we reached the last dimension, we print the actual
+	# elements
+	else
+		for i in [0...p.tensor.dim[j]]
+			accumulator += print_expr(p.tensor.elem[k])
+			# separator between elements in each row
+			if i != p.tensor.dim[j] - 1
+				accumulator += print_str(" & ")
+			k++
+
 
 	# close the outer latex wrap
 	if firstLevel
-		# remove last row's new line
-		if called_from_Algebra_block
-			accumulator = accumulator.substring(0, accumulator.length - 6);
-		else
-			accumulator = accumulator.substring(0, accumulator.length - 4);
-
-		accumulator += "\\end{bmatrix}"
+		accumulator += " \\end{bmatrix}"
 
 	return [k, accumulator]
 
@@ -893,12 +916,13 @@ print_factor = (p, omitParens) ->
 	else if (car(p) == symbol(DEFINT) && printMode == PRINTMODE_LATEX)
 		accumulator += print_DEFINT_latex(p)
 		return accumulator
-	else if (isinnerordot(p) && printMode == PRINTMODE_LATEX)
-		accumulator += print_DOT_latex(p)
-		return accumulator
-	else if (isinnerordot(p) && codeGen)
-		accumulator += print_DOT_codegen(p)
-		return accumulator
+	else if isinnerordot(p)
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_DOT_latex(p)
+			return accumulator
+		else if codeGen
+			accumulator += print_DOT_codegen(p)
+			return accumulator
 
 
 	if (iscons(p))

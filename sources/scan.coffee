@@ -334,6 +334,20 @@ scan_power = ->
 		scan_factor()
 		list(3)
 
+scan_index = (h) ->
+	#console.log "[ as index"
+	get_next_token()
+	push_symbol(INDEX)
+	swap()
+	scan_expression()
+	while (token == ',')
+		get_next_token()
+		scan_expression()
+	if (token != ']')
+		scan_error("] expected")
+	get_next_token()
+	list(tos - h)
+
 
 scan_factor = ->
 
@@ -346,7 +360,11 @@ scan_factor = ->
 	else if (token == T_SYMBOL)
 		scan_symbol()
 	else if (token == T_FUNCTION)
-		scan_function_call()
+		scan_function_call_with_function_name()
+	else if token == '['
+		#console.log "[ as tensor"
+		#debugger
+		scan_tensor()
 	else if (token == T_INTEGER)
 		bignum_scan_integer(token_buf)
 		get_next_token()
@@ -358,20 +376,25 @@ scan_factor = ->
 	else
 		scan_error("syntax error")
 
-	# index
 
-	if (token == '[')
-		get_next_token()
-		push_symbol(INDEX)
-		swap()
-		scan_expression()
-		while (token == ',')
-			get_next_token()
-			scan_expression()
-		if (token != ']')
-			scan_error("] expected")
-		get_next_token()
-		list(tos - h)
+	# after the main initial part of the factor that
+	# we just scanned above,
+	# we can get an arbitrary about of appendages
+	# of the form ...[...](...)...
+	# These are all, respectively,
+	#  - index references (as opposed to tensor definition) and
+	#  - function calls without an explicit function name
+	#    (instead of subexpressions or parameters of function
+	#    definitions or function calls with an explicit function
+	#    name), respectively
+	while token == '[' or token == '(' and newline_flag == 0
+		if token == '['
+			scan_index(h)
+		else if token == '('
+			#console.log "( as function call without function name "
+			scan_function_call_without_function_name()
+
+
 
 	while (token == '!')
 		get_next_token()
@@ -461,8 +484,8 @@ scan_string = ->
 	new_string(token_buf)
 	get_next_token()
 
-scan_function_call = ->
-	if DEBUG then console.log "-- scan_function_call start"
+scan_function_call_with_function_name = ->
+	if DEBUG then console.log "-- scan_function_call_with_function_name start"
 	n = 1 # the parameter number as we scan parameters
 	p = new U()
 	p = usr_symbol(token_buf)
@@ -520,7 +543,38 @@ scan_function_call = ->
 	if functionName == symbol(PATTERN).printname
 		patternHasBeenFound = true
 
-	if DEBUG then console.log "-- scan_function_call end"
+	if DEBUG then console.log "-- scan_function_call_with_function_name end"
+
+scan_function_call_without_function_name = ->
+	if DEBUG then console.log "-- scan_function_call_without_function_name start"
+
+	# the function will have to be looked up
+	# at runtime
+	push_symbol(EVAL)
+	swap()
+	list(2)
+
+	n = 1 # the parameter number as we scan parameters
+	get_next_token()	# left paren
+	scanningParameters.push true
+	if (token != ')')
+		scan_stmt()
+		n++
+		while (token == ',')
+			get_next_token()
+			scan_stmt()
+			n++
+
+	scanningParameters.pop()
+
+
+	if (token != ')')
+		scan_error(") expected")
+
+	get_next_token()
+	list(n)
+
+	if DEBUG then console.log "-- scan_function_call_without_function_name end: " + stack[tos-1]
 
 # scan subexpression
 
@@ -530,15 +584,31 @@ scan_subexpr = ->
 		scan_error("( expected")
 	get_next_token()
 	scan_stmt()
-	if (token == ',')
-		n = 1
-		while (token == ',')
-			get_next_token()
-			scan_stmt()
-			n++
-		build_tensor(n)
 	if (token != ')')
 		scan_error(") expected")
+	get_next_token()
+
+scan_tensor = ->
+	n = 0
+	if (token != '[')
+		scan_error("[ expected")
+
+	get_next_token()
+
+	#console.log "scanning the next statement"
+	scan_stmt()
+
+	n = 1
+	while (token == ',')
+		get_next_token()
+		scan_stmt()
+		n++
+
+	#console.log "building tensor with elements number: " + n
+	build_tensor(n)
+
+	if (token != ']')
+		scan_error("] expected")
 	get_next_token()
 
 scan_error = (errmsg) ->
