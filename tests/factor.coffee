@@ -56,7 +56,7 @@ test_factor_number = ->
 		"factor((a^2+6)*(a^2+60))",
 		"10968163501*10968163447",	# FIXME sort order
 
-		"f=(x+1)(x+2)(y+3)(y+4)",
+		"f=(x+1)*(x+2)*(y+3)*(y+4)",
 		"",
 
 		"factor(f,x,y)",
@@ -65,7 +65,7 @@ test_factor_number = ->
 		"factor(f,y,x)",
 		"(x+1)*(x+2)*(y+3)*(y+4)",
 
-		"f=(x+1)(x+1)(y+2)(y+2)",
+		"f=(x+1)*(x+1)*(y+2)*(y+2)",
 		"",
 
 		"factor(f,x,y)",

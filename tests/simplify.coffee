@@ -19,7 +19,7 @@ test_simplify = ->
 		"simplify((A-B)/(B-A))",
 		"-1",
 
-		"A=((A11,A12),(A21,A22))",
+		"A=[[A11,A12],[A21,A22]]",
 		"",
 
 		"simplify(det(A) inv(A) - adj(A))",

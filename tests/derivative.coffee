@@ -46,11 +46,11 @@ test_derivative = ->
 		"d(d(f(y),y),x)",
 		"0",
 
-		"d((x*y*z,y,x+z),(x,y,z))",
-		"((y*z,x*z,x*y),(0,1,0),(1,0,1))",
+		"d([x*y*z,y,x+z],[x,y,z])",
+		"[[y*z,x*z,x*y],[0,1,0],[1,0,1]]",
 
-		"d(x+z,(x,y,z))",
-		"(1,0,1)",
+		"d(x+z,[x,y,z])",
+		"[1,0,1]",
 
 		"d(cos(theta)^2,cos(theta))",
 		"2*cos(theta)",

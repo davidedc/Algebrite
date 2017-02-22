@@ -15,7 +15,7 @@ test_expand = ->
 		"p=5s+2",
 		"",
 
-		"q=(s+1)(s+2)^2",
+		"q=(s+1)*(s+2)^2",
 		"",
 
 		"expand(p/q)",
@@ -23,7 +23,7 @@ test_expand = ->
 
 		# ensure denominators are expanded (result seems preferable that way)
 
-		"q=(x-1)(x-2)^3",
+		"q=(x-1)*(x-2)^3",
 		"",
 
 		"expand(1/q)",
@@ -42,8 +42,8 @@ test_expand = ->
 		"g=1/(x+1)-1/(x+2)",
 		"",
 
-		"expand(((f,f),(f,f)))-((g,g),(g,g))",
-		"((0,0),(0,0))",
+		"expand([[f,f],[f,f]])-[[g,g],[g,g]]",
+		"[[0,0],[0,0]]",
 
 		# denominator normalized?
 

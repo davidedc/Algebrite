@@ -128,7 +128,7 @@ test_abs = ->
 		"abs(3 + 4 i)",
 		"5",
 
-		"abs((2,3,4))",
+		"abs([2,3,4])",
 		"29^(1/2)",
 
 		"abs(a*b)",
@@ -142,7 +142,7 @@ test_abs = ->
 
 		# Check that vector length is simplified
 
-		"P=(u*cos(v),u*sin(v),v)",
+		"P=[u*cos(v),u*sin(v),v]",
 		"",
 
 		"abs(cross(d(P,u),d(P,v)))",

@@ -22,6 +22,9 @@ test_scan = ->
 
 		# this bug fixed in version 30 (used to give one result, 14)
 
+		"(1+1)",
+		"2",
+
 		"2+2\n(3+3)",
 		"4\n6",
 

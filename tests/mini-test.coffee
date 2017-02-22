@@ -8,10 +8,10 @@ mini_test = ->
 		"clearall",
 		"",
 
-		"gdd=((-exp(2*Phi(r)),0,0,0),(0,exp(2*Lambda(r)),0,0),(0,0,r^2,0),(0,0,0,r^2*sin(theta)^2))",
+		"gdd=[[-exp(2*Phi(r)),0,0,0],[0,exp(2*Lambda(r)),0,0],[0,0,r^2,0],[0,0,0,r^2*sin(theta)^2]]",
 		"",
 
-		"X=(t,r,theta,phi)",
+		"X=[t,r,theta,phi]",
 		"",
 
 		"guu=inv(gdd)",
@@ -44,7 +44,7 @@ mini_test = ->
 		"GDD=RDD-1/2*gdd*R",
 		"",
 
-		"Gtt=1/r^2*exp(2 Phi(r)) d(r (1 - exp(-2 Lambda(r))),r)",
+		"Gtt=1/r^2*exp(2 Phi(r)) d(r*(1 - exp(-2 Lambda(r))),r)",
 		"",
 
 		"Grr=-1/r^2*exp(2*Lambda(r))*(1-exp(-2*Lambda(r)))+2/r*d(Phi(r),r)",
@@ -56,11 +56,11 @@ mini_test = ->
 		"Gphiphi=sin(theta)^2*Gthetatheta",
 		"",
 
-		"T=((Gtt,0,0,0),(0,Grr,0,0),(0,0,Gthetatheta,0),(0,0,0,Gphiphi))",
+		"T=[[Gtt,0,0,0],[0,Grr,0,0],[0,0,Gthetatheta,0],[0,0,0,Gphiphi]]",
 		"",
 
 		"GDD-T",
-		"((0,0,0,0),(0,0,0,0),(0,0,0,0),(0,0,0,0))",
+		"[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]",
 
 		# surface integral example from the manual
 
@@ -70,10 +70,10 @@ mini_test = ->
 		"z=1-x^2-y^2",
 		"",
 
-		"F=(x*y^2*z,-2*x^3,y*z^2)",
+		"F=[x*y^2*z,-2*x^3,y*z^2]",
 		"",
 
-		"S=(x,y,z)",
+		"S=[x,y,z]",
 		"",
 
 		"s=dot(F,cross(d(S,x),d(S,y)))",
@@ -183,10 +183,10 @@ mini_test = ->
 		"z=9-x^2-y^2",
 		"",
 
-		"F=(3y,4z,-6x)",
+		"F=[3y,4z,-6x]",
 		"",
 
-		"S=(x,y,z)",
+		"S=[x,y,z]",
 		"",
 
 		"f=dot(curl(F),cross(d(S,x),d(S,y)))",

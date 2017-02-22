@@ -3,11 +3,11 @@ test_outer = ->
 		"outer(a,b)",
 		"a*b",
 
-		"outer(a,(b1,b2))",
-		"(a*b1,a*b2)",
+		"outer(a,[b1,b2])",
+		"[a*b1,a*b2]",
 
-		"outer((a1,a2),b)",
-		"(a1*b,a2*b)",
+		"outer([a1,a2],b)",
+		"[a1*b,a2*b]",
 
 		"H33=hilbert(3)",
 		"",

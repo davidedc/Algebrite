@@ -8,7 +8,7 @@ test_defint = ->
 		"z=2",
 		"",
 
-		"P=(x,y,z)",
+		"P=[x,y,z]",
 		"",
 
 		"a=abs(cross(d(P,x),d(P,y)))",
@@ -22,7 +22,7 @@ test_defint = ->
 		"z=x^2+2y",
 		"",
 
-		"P=(x,y,z)",
+		"P=[x,y,z]",
 		"",
 
 		"a=abs(cross(d(P,x),d(P,y)))",
@@ -42,7 +42,7 @@ test_defint = ->
 		"z=v",
 		"",
 
-		"S=(x,y,z)",
+		"S=[x,y,z]",
 		"",
 
 		"a=abs(cross(d(S,u),d(S,v)))",

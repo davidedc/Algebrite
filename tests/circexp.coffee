@@ -19,8 +19,8 @@ test_circexp = ->
 		"circexp(tanh(x))",
 		"-1/(1+exp(2*x))+exp(2*x)/(1+exp(2*x))",
 
-		"circexp((cos(x),sin(x)))",
-		"(1/2*exp(-i*x)+1/2*exp(i*x),1/2*i*exp(-i*x)-1/2*i*exp(i*x))",
+		"circexp([cos(x),sin(x)])",
+		"[1/2*exp(-i*x)+1/2*exp(i*x),1/2*i*exp(-i*x)-1/2*i*exp(i*x)]",
 
 		"circexp(cos(x)*sin(x))-expcos(x)*expsin(x)",
 		"0",

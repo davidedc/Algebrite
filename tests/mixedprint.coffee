@@ -42,7 +42,7 @@ test_mixedprint = ->
 		"clearall",
 		"",
 
-		"print2dascii(((a,b),(c,d)))",
+		"print2dascii([[a,b],[c,d]])",
 		"a   b\n\nc   d",
 
 		"print2dascii(1/sqrt(-15))",

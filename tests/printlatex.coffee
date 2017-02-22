@@ -51,10 +51,16 @@ test_printlatex = ->
 		"printlatex(5^2 * 3^(2/3))",
 		"25\\sqrt[3]{3^2}",
 
-		"printlatex(((0,1),(1,0)))",
+		"printlatex([[0,1],[1,0]])",
 		"\\begin{bmatrix} 0 & 1 \\\\ 1 & 0 \\end{bmatrix}",
 
-		"printlatex((0,1))",
-		"\\begin{bmatrix} 0 & 1\\end{bmatrix}",
+		"printlatex([0,1])",
+		"\\begin{bmatrix} 0 & 1 \\end{bmatrix}",
+
+		"printlatex([[0,1,2],[3,4,5]])",
+		"\\begin{bmatrix} 0 & 1 & 2 \\\\ 3 & 4 & 5 \\end{bmatrix}",
+
+		"printlatex([[0],[1]])",
+		"\\begin{bmatrix} 0 \\\\ 1 \\end{bmatrix}",
 
 	]

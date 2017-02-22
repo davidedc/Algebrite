@@ -352,7 +352,7 @@ test_factorpoly = ->
 		"bake=1",
 		"",
 
-		"y=(x+1)(x+2)",
+		"y=(x+1)*(x+2)",
 		"",
 
 		"factor(y,z)",
