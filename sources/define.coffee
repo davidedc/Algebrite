@@ -51,7 +51,7 @@ define_user_function = ->
 		p5 = pop();  # p5 is B
 
 	# note how, unless explicitly forced by an eval,
-	# (handled by if just above)
+	# (handled by the if just above)
 	# we don't eval/simplify
 	# the body.
 	# Why? because it's the easiest way

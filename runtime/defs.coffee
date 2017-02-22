@@ -334,10 +334,10 @@ called_from_Algebra_block = false
 
 
 class tensor
-	ndim: 0
-	dim: null
-	nelem: 0
-	elem: null #U *elem[1]
+	ndim: 0		# number of dimensions
+	dim: null	# dimension length, for each dimension
+	nelem: 0	# total number of elements
+	elem: null	# an array containing all the data
 
 	constructor: ->
 		@dim = (0 for [0..MAXDIM])

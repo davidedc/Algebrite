@@ -599,7 +599,6 @@ get_next_token = ->
 
 get_token = ->
 	# skip spaces
-
 	while (isspace(scanned[scan_str]))
 		if (scanned[scan_str] == '\n' || scanned[scan_str] == '\r')
 			token = T_NEWLINE

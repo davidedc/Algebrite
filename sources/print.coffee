@@ -534,6 +534,9 @@ print_tensor_latex = (p) ->
 # "wrap", while the vectors that make up the
 # rows don't. so it's a bit asymmetric and this
 # flag helps
+# j scans the dimensions
+# k is an increment for all the printed elements
+#   since they are all together in sequence in one array
 print_tensor_inner_latex = (firstLevel, p, j, k) ->
 	accumulator = ""
 
