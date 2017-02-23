@@ -313,7 +313,24 @@ symbolsDependencies = {}
 symbolsHavingReassignments = []
 symbolsInExpressionsWithoutAssignments = []
 patternHasBeenFound = false
-predefinedSymbolsInGlobalScope_doNotTrackInDependencies = ["rationalize", "abs", "i", "pi", "sin", "cos", "roots", "integral", "derivative", "defint", "sqrt", "eig", "cov", "deig", "dcov"]
+
+predefinedSymbolsInGlobalScope_doNotTrackInDependencies = [
+	"rationalize"
+	"abs"
+	"i"
+	"pi"
+	"sin"
+	"cos"
+	"roots"
+	"integral"
+	"derivative"
+	"defint"
+	"sqrt"
+	"eig"
+	"cov"
+	"deig"
+	"dcov"
+]
 
 # you can do some little simplifications
 # at parse time, such as calculating away

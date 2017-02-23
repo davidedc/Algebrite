@@ -455,6 +455,13 @@ print_TRANSPOSE_latex = (p) ->
 	accumulator += print_str("^T")
 	return accumulator
 
+print_TRANSPOSE_codegen = (p) ->
+	accumulator = ""
+	accumulator += print_str("transpose(")
+	accumulator += print_expr(cadr(p))
+	accumulator += print_str(')')
+	return accumulator
+
 print_INV_latex = (p) ->
 	accumulator = ""
 	accumulator += print_str("{")
@@ -465,6 +472,13 @@ print_INV_latex = (p) ->
 		accumulator += print_str(')')
 	accumulator += print_str("}")
 	accumulator += print_str("^{-1}")
+	return accumulator
+
+print_INV_codegen = (p) ->
+	accumulator = ""
+	accumulator += print_str("inv(")
+	accumulator += print_expr(cadr(p))
+	accumulator += print_str(')')
 	return accumulator
 
 print_DEFINT_latex = (p) ->
@@ -904,12 +918,20 @@ print_factor = (p, omitParens) ->
 		#debugger
 		accumulator += print_SQRT_latex(p)
 		return accumulator
-	else if (car(p) == symbol(TRANSPOSE) && printMode == PRINTMODE_LATEX)
-		accumulator += print_TRANSPOSE_latex(p)
-		return accumulator
-	else if (car(p) == symbol(INV) && printMode == PRINTMODE_LATEX)
-		accumulator += print_INV_latex(p)
-		return accumulator
+	else if car(p) == symbol(TRANSPOSE)
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_TRANSPOSE_latex(p)
+			return accumulator
+		else if codeGen
+			accumulator += print_TRANSPOSE_codegen(p)
+			return accumulator
+	else if car(p) == symbol(INV)
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_INV_latex(p)
+			return accumulator
+		else if codeGen
+			accumulator += print_INV_codegen(p)
+			return accumulator
 	else if (car(p) == symbol(BINOMIAL) && printMode == PRINTMODE_LATEX)
 		accumulator += print_BINOMIAL_latex(p)
 		return accumulator
