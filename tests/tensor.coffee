@@ -14,11 +14,11 @@ test_tensor = ->
 
 		# in general, the trick to count
 		# rank (i.e. dimensions) is to count the
-		# number of nested parentheses
+		# number of nested brackets
 		# and the trick to determine the shape
 		# is to count the commas proceeding
 		# from the outermost to the
-		# inner-most parentheses.
+		# inner-most brackets.
 
 		"rank(a)",
 		"0",

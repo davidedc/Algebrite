@@ -248,7 +248,7 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 				#  f(a) = a+1+b
 				# we don't want 'a' in the body of f to be simplified to 2
 				# There are two cases: 1) the variable actually was already in
-				# the symble table, in which case there is goong to be this new
+				# the symbol table, in which case there is going to be this new
 				# one prepended with AVOID_BINDING_TO_EXTERNAL_SCOPE_VALUE, and
 				# we'll have to remove up this variable later.
 				# OR 2) the variable wasn't already in the symbol table, in which
