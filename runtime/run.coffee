@@ -776,6 +776,7 @@ clearAlgebraEnvironment = ->
 	do_clearall()
 
 computeDependenciesFromAlgebra = (codeFromAlgebraBlock) ->
+	if DEBUG then console.log "computeDependenciesFromAlgebra!!!"
 	# return findDependenciesInScript(codeFromAlgebraBlock, true)[6]
 
 	# TODO this part below is duplicated from computeResultsAndJavaScriptFromAlgebra
@@ -787,20 +788,24 @@ computeDependenciesFromAlgebra = (codeFromAlgebraBlock) ->
 	#console.log "codeFromAlgebraBlock: " + codeFromAlgebraBlock
 
 	codeFromAlgebraBlock = normaliseDots codeFromAlgebraBlock
-	stringToBeRun = codeFromAlgebraBlock
 
-	##userSimplificationsInListForm = []
-	userSimplificationsInProgramForm = ""
-
-	if !keepState?
+	if !keepState
+		userSimplificationsInListForm = []
+		userSimplificationsInProgramForm = ""
 		for i in userSimplificationsInListForm
 			#console.log "silentpattern(" + car(i) + ","+cdr(i)+")"
 			userSimplificationsInProgramForm += "silentpattern(" + car(i) + ","+ car(cdr(i)) + "," + car(cdr(cdr(i))) + ")\n"
 
-	do_clearall()
+		do_clearall()
+		codeFromAlgebraBlock = userSimplificationsInProgramForm + codeFromAlgebraBlock
+		if DEBUG then console.log "codeFromAlgebraBlock including patterns: " + codeFromAlgebraBlock
 
-	codeFromAlgebraBlock = userSimplificationsInProgramForm + codeFromAlgebraBlock
-	if DEBUG then console.log "codeFromAlgebraBlock including patterns: " + codeFromAlgebraBlock
+	if DEBUG
+		console.log "computeDependenciesFromAlgebra: patterns in the list --------------- "
+		for i in userSimplificationsInListForm
+			console.log car(i) + ","+cdr(i)+")"
+		console.log "...end of list --------------- "
+
 
 	called_from_Algebra_block = false
 
@@ -829,18 +834,23 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 
 
 	stringToBeRun = codeFromAlgebraBlock
-	##userSimplificationsInListForm = []
-	userSimplificationsInProgramForm = ""
 
-	if !keepState?
+	if DEBUG
+		console.log "computeResultsAndJavaScriptFromAlgebra: patterns in the list --------------- "
+		for i in userSimplificationsInListForm
+			console.log car(i) + ","+cdr(i)+")"
+		console.log "...end of list --------------- "
+
+	if !keepState
+		userSimplificationsInListForm = []
+		userSimplificationsInProgramForm = ""
 		for i in userSimplificationsInListForm
 			#console.log "silentpattern(" + car(i) + ","+cdr(i)+")"
 			userSimplificationsInProgramForm += "silentpattern(" + car(i) + ","+ car(cdr(i)) + "," + car(cdr(cdr(i))) + ")\n"
 
 		do_clearall()
-
-	codeFromAlgebraBlock = userSimplificationsInProgramForm + codeFromAlgebraBlock
-	if DEBUG then console.log "codeFromAlgebraBlock including patterns: " + codeFromAlgebraBlock
+		codeFromAlgebraBlock = userSimplificationsInProgramForm + codeFromAlgebraBlock
+		if DEBUG then console.log "codeFromAlgebraBlock including patterns: " + codeFromAlgebraBlock
 
 	#debugger
 	[testableStringIsIgnoredHere,result,code,readableSummaryOfCode, latexResult, errorMessage, dependencyInfo] =

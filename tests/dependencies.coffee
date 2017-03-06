@@ -578,5 +578,34 @@ test_dependencies = ->
 
 	do_clearall()
 
-	console.log "-- done dependency tests"
+	# Here we test an actual sequence of invokations form the
+	# notebook.
+
+	code1 = 'pattern(a_ᵀ⋅a_, cov(a_))'
+	code2 = 'PCA = Mᵀ·M'
+
+	# invokation sequence, we check that the
+	# full evaluation of the last piece of code
+	# gives the correct result.
+	computeDependenciesFromAlgebra code1
+	computeDependenciesFromAlgebra code2
+	computeResultsAndJavaScriptFromAlgebra code1
+	computeDependenciesFromAlgebra code1
+	computeDependenciesFromAlgebra code2
+	res = computeResultsAndJavaScriptFromAlgebra code2
+
+	if res.code == 'PCA = function (M) { return ( cov(M) ); }' and
+		res.latexResult == '$$PCA(M) = cov(M)$$' and
+		res.dependencyInfo.affectsVariables.length == 1 and
+		res.dependencyInfo.affectsVariables[0] == 'PCA' and
+		res.dependencyInfo.affectedBy.length == 2 and
+		res.dependencyInfo.affectedBy[0] == 'M' and
+		res.dependencyInfo.affectedBy[1] == 'PATTERN_DEPENDENCY'
+				console.log "ok dependency test"
+		else
+				console.log "fail dependency tests"
+
+
+
 	do_clearall()
+	console.log "-- done dependency tests"
