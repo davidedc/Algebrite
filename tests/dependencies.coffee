@@ -608,4 +608,31 @@ test_dependencies = ->
 
 
 	do_clearall()
+
+	# overwriting a pattern, as seen from the notebook
+
+	code1 = 'pattern(a_ + a_, 42 * a_)'
+	code2 = 'pattern(a_ + a_, 21 * a_)'
+	code3 = 'f = x + x'
+
+	computeResultsAndJavaScriptFromAlgebra code1
+	computeResultsAndJavaScriptFromAlgebra code2
+	res = computeResultsAndJavaScriptFromAlgebra code3
+
+	if res.code == 'f = function (x) { return ( 21*x ); }' and
+		res.latexResult == '$$f(x) = 21x$$' and
+		res.dependencyInfo.affectsVariables.length == 1 and
+		res.dependencyInfo.affectsVariables[0] == 'f' and
+		res.dependencyInfo.affectedBy.length == 2 and
+		res.dependencyInfo.affectedBy[0] == 'x' and
+		res.dependencyInfo.affectedBy[1] == 'PATTERN_DEPENDENCY'
+				console.log "ok dependency test"
+		else
+				console.log "fail dependency tests"
+
+
+
+	do_clearall()
+
+
 	console.log "-- done dependency tests"

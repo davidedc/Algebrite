@@ -38,12 +38,17 @@ Eval_pattern = ->
 	stringKey = "template: " + print_list(firstArgument)
 	stringKey += " tests: " + print_list(thirdArgument)
 	if DEBUG then console.log "pattern stringkey: " + stringKey
-	if stringKey not in userSimplificationsInStringForm
+
+	patternPosition = userSimplificationsInStringForm.indexOf stringKey
+	# if pattern is not there yet, add it, otherwise replace it
+	if patternPosition == -1
 		#console.log "adding pattern because it doesn't exist: " + cdr(p1)
 		userSimplificationsInStringForm.push(stringKey)
 		userSimplificationsInListForm.push(cdr(p1))
 	else
-		if DEBUG then console.log "skipping pattern because it already exists: " + cdr(p1)
+		if DEBUG then console.log "pattern already exists, replacing. " + cdr(p1)
+		userSimplificationsInStringForm[patternPosition] = stringKey
+		userSimplificationsInListForm[patternPosition] = cdr(p1)
 
 	# return the pattern node itself so we can
 	# give some printout feedback

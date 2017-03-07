@@ -254,7 +254,7 @@ test_pattern = ->
 		"aFunction(a_)->anotherFunctionBBBB(a_)",
 
 		"simplify(aFunction(aFunction(someOtherArg)))",
-		"anotherFunction(anotherFunction(someOtherArg))",
+		"anotherFunctionBBBB(anotherFunctionBBBB(someOtherArg))",
 
 		"clearpatterns()",
 		"",
@@ -268,7 +268,7 @@ test_pattern = ->
 		"aFunction(a_)->anotherFunction(a_)",
 
 		"simplify(aFunction(aFunction(someOtherArg)))",
-		"anotherFunctionBBBB(anotherFunctionBBBB(someOtherArg))",
+		"anotherFunction(anotherFunction(someOtherArg))",
 
 		"clearpatterns()",
 		"",
@@ -330,6 +330,20 @@ test_pattern = ->
 		# as well.
 		"simplify(f(1,2))",
 		"Stop: maximum application of single transformation rule exceeded: f(a_,b_)(f(b_,a_))",
+
+		"clearpatterns()",
+		"",
+
+		# overwriting a pattern ---------------------------------------------
+
+		"pattern(a_ + a_ ,42 * a_)",
+		"a_+a_->42*a_",
+
+		"pattern(a_ + a_ ,21 * a_)",
+		"a_+a_->21*a_",
+
+		"simplify(x+x)",
+		"21*x",
 
 		"clearpatterns()",
 		"",
