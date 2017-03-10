@@ -655,6 +655,7 @@ print_power = (base, exponent) ->
 	accumulator = ""
 
 	#debugger
+	if DEBUG then console.log "power base: " + base + " " + " exponent: " + exponent
 
 	# quick check is this is actually a square root.
 	if isoneovertwo(exponent)
