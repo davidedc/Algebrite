@@ -644,6 +644,19 @@ print_power = (base, exponent) ->
 
 	#debugger
 
+	# quick check is this is actually a square root.
+	if isoneovertwo(exponent)
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_str("\\sqrt{")
+			accumulator += print_expr(base)
+			accumulator += print_str("}")
+			return accumulator
+		else if codeGen
+			accumulator += print_str("Math.sqrt(")
+			accumulator += print_expr(base)
+			accumulator += print_str(')')
+			return accumulator
+
 	if codeGen
 		accumulator += print_str("Math.pow(")
 		accumulator += print_base_of_denom base

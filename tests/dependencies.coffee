@@ -75,7 +75,7 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('x = -sqrt(2)/2')
 	if testResult[0] == "All local dependencies:  variable x depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: ; " and
 		testResult[1] == "" and
-		testResult[2] == "x = -1/2*Math.pow(2, (1/2));"
+		testResult[2] == "x = -1/2*Math.sqrt(2);"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
@@ -85,7 +85,7 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('x = 2^(1/2-a)*2^a/10')
 	if testResult[0] == "All local dependencies:  variable x depends on: a, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: a, ; " and
 		testResult[1] == "" and
-		testResult[2] == "x = 1/10*Math.pow(2, (1/2));"
+		testResult[2] == "x = 1/10*Math.sqrt(2);"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
@@ -105,10 +105,10 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('x = abs((a+i*b)/(c+i*d))')
 	if testResult[0] == "All local dependencies:  variable x depends on: a, b, c, d, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: a, b, c, d, ; " and
 		testResult[1] == "" and
-		testResult[2] == "x = function (a, b, c, d) { return ( Math.pow((Math.pow(a, 2) + Math.pow(b, 2)), (1/2)) / (Math.pow((Math.pow(c, 2) + Math.pow(d, 2)), (1/2))) ); }"
+		testResult[2] == "x = function (a, b, c, d) { return ( Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2)) / (Math.sqrt(Math.pow(c, 2) + Math.pow(d, 2))) ); }"
 			console.log "ok dependency test"
 	else
-			console.log "fail dependency test. expected: " + testResult
+			console.log "fail dependency test. expected: " + testResult[2] + " obtained: " + testResult
 
 	do_clearall()
 
@@ -197,20 +197,20 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('f = roots(a*x^2 + b*x + c, x)')
 	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: a, b, c, ; " and
 		testResult[1] == "" and
-		testResult[2] == "f = function (a, b, c) { return ( [-1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) + b / a),1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) - b / a)] ); }"
+		testResult[2] == "f = function (a, b, c) { return ( [-1/2*(Math.sqrt(Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a) + b / a),1/2*(Math.sqrt(Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a) - b / a)] ); }"
 			console.log "ok dependency test"
 	else
-			console.log "fail dependency test. expected: " + testResult
+			console.log "fail dependency test. expected: " + testResult[2] + " obtained: " + testResult
 
 	do_clearall()
 
 	testResult = findDependenciesInScript('f = roots(a*x^2 + b*x + c)')
 	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: a, b, c, ; " and
 		testResult[1] == "" and
-		testResult[2] == "f = function (a, b, c) { return ( [-1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) + b / a),1/2*(Math.pow((Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a), (1/2)) - b / a)] ); }"
+		testResult[2] == "f = function (a, b, c) { return ( [-1/2*(Math.sqrt(Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a) + b / a),1/2*(Math.sqrt(Math.pow(b, 2) / (Math.pow(a, 2)) - 4*c / a) - b / a)] ); }"
 			console.log "ok dependency test"
 	else
-			console.log "fail dependency test. expected: " + testResult
+			console.log "fail dependency test. expected: " + testResult[2] + " obtained: " + testResult
 
 	do_clearall()
 

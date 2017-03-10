@@ -1,6 +1,11 @@
 test_printlatex = ->
 	run_test [
 
+		# note that these two are different:
+		#    pi^(1/2) != pi^1/2
+		"printlatex(pi^(1/2))",
+		"\\sqrt{\\pi}",
+
 		"printlatex(1/x+x^3+1+1)",
 		"2+\\frac{1}{x}+x^3",
 
