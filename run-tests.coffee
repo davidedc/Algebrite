@@ -23,6 +23,7 @@ test_low_level = ->
 	test_assignments()
 	test_caching()
 	test_strings()
+	test_test()
 	test_check()
 
 selftest  = ->
@@ -41,7 +42,6 @@ selftest  = ->
 	test_scan()
 	test_power()
 	test_factor_number(); # long
-	test_test()
 	test_tensor()
 	test_bake()
 	test_adj()
