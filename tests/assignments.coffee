@@ -1,6 +1,10 @@
 test_assignments = ->
 	run_test [
 
+		# it used to return exp(1)
+		"e",
+		"e",
+
 		# degenerate assignments give an error ----
 
 		"0=0",

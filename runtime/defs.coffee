@@ -317,6 +317,7 @@ patternHasBeenFound = false
 predefinedSymbolsInGlobalScope_doNotTrackInDependencies = [
 	"rationalize"
 	"abs"
+	"e"
 	"i"
 	"pi"
 	"sin"

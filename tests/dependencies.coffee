@@ -72,6 +72,22 @@ test_dependencies = ->
 
 	do_clearall()
 
+	testResult = findDependenciesInScript('x = e*e')
+	if testResult[0] == "All local dependencies:  variable x depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: ; " and
+		testResult[1] == "" and
+		testResult[2] == "x = Math.exp(2);"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	testResult = findDependenciesInScript('x = e')
+	if testResult[0] == "All local dependencies:  variable x depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: ; " and
+		testResult[1] == "" and
+		testResult[2] == "x = Math.E;"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
 	testResult = findDependenciesInScript('x = -sqrt(2)/2')
 	if testResult[0] == "All local dependencies:  variable x depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: ; " and
 		testResult[1] == "" and

@@ -662,15 +662,14 @@ print_power = (base, exponent) ->
 				accumulator += print_str(')')
 				return accumulator
 
-	if codeGen
-		accumulator += print_str("Math.pow(")
-		accumulator += print_base_of_denom base
-		accumulator += print_str(", ")
-		accumulator += print_expo_of_denom exponent
-		accumulator += print_str(')')
-		return accumulator
 
 	if ((equaln(get_binding(symbol(PRINT_LEAVE_E_ALONE)), 1)) and base == symbol(E))
+		if codeGen
+			accumulator += print_str("Math.exp(")
+			accumulator += print_expo_of_denom exponent
+			accumulator += print_str(')')
+			return accumulator
+
 		if printMode == PRINTMODE_LATEX
 			accumulator += print_str("e^{")
 			accumulator += print_expr(exponent)
@@ -679,6 +678,14 @@ print_power = (base, exponent) ->
 			accumulator += print_str("exp(")
 			accumulator += print_expr(exponent)
 			accumulator += print_str(')')
+		return accumulator
+
+	if codeGen
+		accumulator += print_str("Math.pow(")
+		accumulator += print_base_of_denom base
+		accumulator += print_str(", ")
+		accumulator += print_expo_of_denom exponent
+		accumulator += print_str(')')
 		return accumulator
 
 	
@@ -986,10 +993,10 @@ print_factor = (p, omitParens) ->
 	if (p == symbol(DERIVATIVE))
 		accumulator += print_char('d')
 	else if (p == symbol(E))
-		if printMode == PRINTMODE_LATEX
-			accumulator += print_str("e")
+		if codeGen
+			accumulator += print_str("Math.E")
 		else
-			accumulator += print_str("exp(1)")
+			accumulator += print_str("e")
 	else if (p == symbol(PI))
 		if printMode == PRINTMODE_LATEX
 			accumulator += print_str("\\pi")
