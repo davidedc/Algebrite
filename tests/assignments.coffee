@@ -1,6 +1,19 @@
 test_assignments = ->
 	run_test [
 
+		# degenerate assignments give an error ----
+
+		"0=0",
+		"Stop: symbol assignment: error in symbol",
+
+		"1=2",
+		"Stop: symbol assignment: error in symbol",
+
+		"3=a",
+		"Stop: symbol assignment: error in symbol",
+
+		# ------------------------------------------
+
 		"f(x) = x + 1",
 		"",
 
@@ -160,10 +173,13 @@ test_assignments = ->
 		"b",
 
 		# ----------------------
-		# note how this case actually doesn't generate a recursion
-		# as in Algebrite it's not a problem when a variable
-		# just contain itself, actually that's the default of
-		# unassigned variables.
+		# note how these assignments actually don't generate
+		# a recursion as in Algebrite it's not a problem when
+		# a variable just contain itself, actually that's the
+		# default for unassigned variables.
+
+		"a=a",
+		"",
 
 		"a := a",
 		"",
