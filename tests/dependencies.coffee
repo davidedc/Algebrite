@@ -138,6 +138,16 @@ test_dependencies = ->
 
 	do_clearall()
 
+	testResult = findDependenciesInScript('x = y + cos(1) + sin(1)')
+	if testResult[0] == "All local dependencies:  variable x depends on: y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: y, ; " and
+		testResult[1] == "" and
+		testResult[2] == "x = function (y) { return ( y + Math.cos(1) + Math.sin(1) ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
 	testResult = findDependenciesInScript('x = sin(1/10)^2 + cos(1/10)^2')
 	if testResult[0] == "All local dependencies:  variable x depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: ; " and
 		testResult[1] == "" and

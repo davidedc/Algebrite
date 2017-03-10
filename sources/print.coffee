@@ -436,6 +436,18 @@ print_DOT_codegen = (p) ->
 	accumulator += ")"
 	return accumulator
 
+print_SIN_codegen = (p) ->
+	accumulator = "Math.sin("
+	accumulator += print_expr(cadr(p))
+	accumulator += ")"
+	return accumulator
+
+print_COS_codegen = (p) ->
+	accumulator = "Math.cos("
+	accumulator += print_expr(cadr(p))
+	accumulator += ")"
+	return accumulator
+
 print_SQRT_latex = (p) ->
 	accumulator = ""
 	accumulator += print_str("\\sqrt{")
@@ -969,6 +981,14 @@ print_factor = (p, omitParens) ->
 			return accumulator
 		else if codeGen
 			accumulator += print_DOT_codegen(p)
+			return accumulator
+	else if car(p) == symbol(SIN)
+		if codeGen
+			accumulator += print_SIN_codegen(p)
+			return accumulator
+	else if car(p) == symbol(COS)
+		if codeGen
+			accumulator += print_COS_codegen(p)
 			return accumulator
 
 
