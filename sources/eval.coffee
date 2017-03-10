@@ -265,16 +265,30 @@ Eval_cons = ->
 Eval_binding = ->
 	push(get_binding(cadr(p1)))
 
-# checks a predicate, i.e. check(A = B)
+### check =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+p
+
+General description
+-------------------
+Checks the predicate p, e.g. check(a = b)
+Note how "check" can turn what normally would be an assignment into a test,
+so in the case above "a" is not assigned anything.
+
+###
 
 # check definition
 Eval_check = ->
 	push(cadr(p1))
 	Eval_predicate()
 	p1 = pop()
-	if (iszero(p1))
-		stop("check(arg): arg is zero")
-	push(symbol(NIL)) # no result is printed
+	push(p1)
 
 Eval_det = ->
 	push(cadr(p1))
