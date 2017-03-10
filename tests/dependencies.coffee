@@ -75,7 +75,7 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('x = -sqrt(2)/2')
 	if testResult[0] == "All local dependencies:  variable x depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: ; " and
 		testResult[1] == "" and
-		testResult[2] == "x = -1/2*Math.sqrt(2);"
+		testResult[2] == "x = -1/2*Math.SQRT2;"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
@@ -85,7 +85,7 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('x = 2^(1/2-a)*2^a/10')
 	if testResult[0] == "All local dependencies:  variable x depends on: a, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable x depends on: a, ; " and
 		testResult[1] == "" and
-		testResult[2] == "x = 1/10*Math.sqrt(2);"
+		testResult[2] == "x = 1/10*Math.SQRT2;"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
