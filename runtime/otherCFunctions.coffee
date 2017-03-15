@@ -16,6 +16,12 @@ strcmp = (str1, str2) ->
 
 
 doubleToReasonableString = (d) ->
+
+	# when generating code, print out
+	# with the maximum possible precision
+	if codeGen
+		return d + ""
+
 	# remove trailing zeroes beyond decimal point and
 	# gives at most 6 digits after the point
 	stringRepresentation = "" + parseFloat(d.toPrecision(6))

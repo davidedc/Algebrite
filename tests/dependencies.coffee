@@ -11,6 +11,26 @@ test_dependencies = ->
 
 	do_clearall()
 
+	testResult = findDependenciesInScript('a = float(1/3)')
+	if testResult[0] == "All local dependencies:  variable a depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: ; " and
+		testResult[1] == "" and
+		testResult[2] == "a = 0.3333333333333333;"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
+	testResult = findDependenciesInScript('a = float(10^50)')
+	if testResult[0] == "All local dependencies:  variable a depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: ; " and
+		testResult[1] == "" and
+		testResult[2] == "a = 1e+50;"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
 	testResult = findDependenciesInScript('f = x+1\n g = f\n h = g\n f = g')
 	if testResult[0] == "All local dependencies:  variable f depends on: x, g, ;  variable g depends on: f, ;  variable h depends on: g, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: x, ;  f --> g -->  ... then f again,  variable g depends on: x, ;  g --> f -->  ... then g again,  variable h depends on: x, ;  h --> g --> f -->  ... then g again, " and
 		testResult[1] == "" and
