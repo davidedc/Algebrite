@@ -24,6 +24,38 @@ init = ->
 
 	defn()
 
+### cross =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept, script_defined
+
+Parameters
+----------
+u,v
+
+General description
+-------------------
+Returns the cross product of vectors u and v.
+
+###
+
+### curl =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept, script_defined
+
+Parameters
+----------
+u
+
+General description
+-------------------
+Returns the curl of vector u.
+
+###
+
 defn_str = [
 	"version=\"" + version + "\"",
 	"e=exp(1)",

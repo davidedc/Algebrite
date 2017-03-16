@@ -1,5 +1,19 @@
-# Change circular functions to exponentials
+### circexp =====================================================================
 
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+x
+
+General description
+-------------------
+
+Returns expression x with circular and hyperbolic functions converted to exponential forms. Sometimes this will simplify an expression.
+
+###
 
 
 Eval_circexp = ->

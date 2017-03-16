@@ -1,15 +1,19 @@
-#-----------------------------------------------------------------------------
-#
-#	Bessel Y function
-#
-#	Input:		tos-2		x	(can be a symbol or expr)
-#
-#			tos-1		n
-#
-#	Output:		Result on stack
-#
-#-----------------------------------------------------------------------------
+### bessely =====================================================================
 
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+x,n
+
+General description
+-------------------
+
+Bessel function of second kind.
+
+###
 
 
 Eval_bessely = ->

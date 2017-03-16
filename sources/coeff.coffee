@@ -1,4 +1,18 @@
-# get the coefficient of x^n in polynomial p(x)
+### coeff =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+p,x,n
+
+General description
+-------------------
+Returns the coefficient of x^n in polynomial p. The x argument can be omitted for polynomials in x.
+
+###
 
 
 

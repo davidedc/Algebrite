@@ -1,60 +1,74 @@
-# the inner (or dot) operator gives products of vectors,
-# matrices, and tensors.
-#
-# Note that for Algebrite, the elements of a vector/matrix
-# can only be scalars. This allows for example to flesh out
-# matrix multiplication using the usual multiplication.
-# So for example block-representations are not allowed.
-#
-# There is an aweful lot of confusion between sw packages on
-# what dot and inner do.
-#
-# First off, the "dot" operator is different from the
-# mathematical notion of dot product, which can be
-# slightly confusing.
-#
-# The mathematical notion of dot product is here:
-#   http://mathworld.wolfram.com/DotProduct.html
-#
-# However, "dot" does that and a bunch of other things,
-# i.e. in Algebrite
-# dot/inner does what the dot of Mathematica does, i.e.:
-#
-# scalar product of vectors:
-#
-#   inner((a, b, c), (x, y, z))
-#   > a x + b y + c z
-#
-# products of matrices and vectors:
-#
-#   inner(((a, b), (c,d)), (x, y))
-#   > (a x + b y,c x + d y)
-#
-#   inner((x, y), ((a, b), (c,d)))
-#   > (a x + c y,b x + d y)
-#
-#   inner((x, y), ((a, b), (c,d)), (r, s))
-#   > a r x + b s x + c r y + d s y
-#
-# matrix product:
-#
-#   inner(((a,b),(c,d)),((r,s),(t,u)))
-#   > ((a r + b t,a s + b u),(c r + d t,c s + d u))
-#
-# the "dot/inner" operator is associative and
-# distributive but not commutative.
-#
-# In Mathematica, Inner is a generalisation of Dot where
-# the user can specify the multiplication and the addition
-# operators.
-# But here in Algebrite they do the same thing.
-#
-# https://reference.wolfram.com/language/ref/Dot.html
-# https://reference.wolfram.com/language/ref/Inner.html
-#
-# http://uk.mathworks.com/help/matlab/ref/dot.html
-# http://uk.mathworks.com/help/matlab/ref/mtimes.html
+### dot =====================================================================
 
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+a,b,...
+
+General description
+-------------------
+
+The inner (or dot) operator gives products of vectors,
+matrices, and tensors.
+
+Note that for Algebrite, the elements of a vector/matrix
+can only be scalars. This allows for example to flesh out
+matrix multiplication using the usual multiplication.
+So for example block-representations are not allowed.
+
+There is an aweful lot of confusion between sw packages on
+what dot and inner do.
+
+First off, the "dot" operator is different from the
+mathematical notion of dot product, which can be
+slightly confusing.
+
+The mathematical notion of dot product is here:
+  http://mathworld.wolfram.com/DotProduct.html
+
+However, "dot" does that and a bunch of other things,
+i.e. in Algebrite
+dot/inner does what the dot of Mathematica does, i.e.:
+
+scalar product of vectors:
+
+  inner((a, b, c), (x, y, z))
+  > a x + b y + c z
+
+products of matrices and vectors:
+
+  inner(((a, b), (c,d)), (x, y))
+  > (a x + b y,c x + d y)
+
+  inner((x, y), ((a, b), (c,d)))
+  > (a x + c y,b x + d y)
+
+  inner((x, y), ((a, b), (c,d)), (r, s))
+  > a r x + b s x + c r y + d s y
+
+matrix product:
+
+  inner(((a,b),(c,d)),((r,s),(t,u)))
+  > ((a r + b t,a s + b u),(c r + d t,c s + d u))
+
+the "dot/inner" operator is associative and
+distributive but not commutative.
+
+In Mathematica, Inner is a generalisation of Dot where
+the user can specify the multiplication and the addition
+operators.
+But here in Algebrite they do the same thing.
+
+ https://reference.wolfram.com/language/ref/Dot.html
+ https://reference.wolfram.com/language/ref/Inner.html
+
+ http://uk.mathworks.com/help/matlab/ref/dot.html
+ http://uk.mathworks.com/help/matlab/ref/mtimes.html
+
+###
 
 
 

@@ -14,15 +14,15 @@ generates
 
 Simplify each term to get
 
-   k       1 - k + n       1
-------- + ----------- - -------
- 1 + n       1 + n       1 + n
+    k       1 - k + n       1
+ ------- + ----------- - -------
+  1 + n       1 + n       1 + n
 
 Then simplify the sum to get
 
-   n
--------
- 1 + n
+    n
+ -------
+  1 + n
 
 ###
 

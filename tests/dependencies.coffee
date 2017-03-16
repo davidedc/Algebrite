@@ -11,6 +11,7 @@ test_dependencies = ->
 
 	do_clearall()
 
+	# check that floats in code are expressed with maximum precision -------------------
 	testResult = findDependenciesInScript('a = float(1/3)')
 	if testResult[0] == "All local dependencies:  variable a depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: ; " and
 		testResult[1] == "" and

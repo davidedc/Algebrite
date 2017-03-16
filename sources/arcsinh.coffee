@@ -1,4 +1,18 @@
+### arcsinh =====================================================================
 
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+x
+
+General description
+-------------------
+Returns the inverse hyperbolic sine of x.
+
+###
 
 Eval_arcsinh = ->
 	push(cadr(p1))

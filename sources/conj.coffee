@@ -1,5 +1,18 @@
-# Complex conjugate
+### conj =====================================================================
 
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+z
+
+General description
+-------------------
+Returns the complex conjugate of z.
+
+###
 
 
 Eval_conj = ->

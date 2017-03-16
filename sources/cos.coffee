@@ -1,5 +1,18 @@
-# Cosine function of numerical and symbolic arguments
+### cos =====================================================================
 
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+x
+
+General description
+-------------------
+Returns the cosine of x.
+
+###
 
 
 Eval_cos = ->

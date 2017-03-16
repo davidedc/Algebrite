@@ -1,4 +1,18 @@
+### arctanh =====================================================================
 
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+x
+
+General description
+-------------------
+Returns the inverse hyperbolic tangent of x.
+
+###
 
 Eval_arctanh = ->
 	push(cadr(p1))

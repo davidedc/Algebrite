@@ -13,6 +13,22 @@
 # The function could be actually defined, or not yet,
 # so we'll deal with both cases.
 
+### d =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+f,x
+
+General description
+-------------------
+Returns the partial derivative of f with respect to x. x can be a vector e.g. [x,y].
+
+###
+
 Eval_user_function = ->
 
 	# Use "derivative" instead of "d" if there is no user function "d"

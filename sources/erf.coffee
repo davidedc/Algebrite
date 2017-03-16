@@ -1,11 +1,23 @@
-#-----------------------------------------------------------------------------
-#
-#	Author : philippe.billet@noos.fr
-#
-#	Error function erf(x)
-#	erf(-x)=erf(x)
-#  
-#-----------------------------------------------------------------------------
+### erf =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Authors
+-------
+philippe.billet@noos.fr
+
+Parameters
+----------
+x
+
+General description
+-------------------
+Error function erf(x).
+erf(-x)=erf(x)
+
+###
 
 
 

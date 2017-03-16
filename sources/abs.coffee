@@ -1,3 +1,21 @@
+#(docs are generated from top-level comments, keep an eye on the formatting!)
+
+### abs =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+x
+
+General description
+-------------------
+Returns the absolute value of a real number, the magnitude of a complex number, or the vector length.
+
+###
+
 ###
  Absolute value of a number,or magnitude of complex z, or norm of a vector
 

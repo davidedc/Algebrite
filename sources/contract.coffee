@@ -1,4 +1,20 @@
-# Contract across tensor indices
+### contract =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+a,i,j
+
+General description
+-------------------
+Contract across tensor indices i.e. returns "a" summed over indices i and j.
+If i and j are omitted then 1 and 2 are used.
+contract(m) is equivalent to the trace of matrix m.
+
+###
 
 
 

@@ -1,3 +1,17 @@
+### clearall =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+
+General description
+-------------------
+
+Completely wipes all variables from the environment.
+
+
+###
 
 
 Eval_clearall = ->
@@ -27,6 +41,24 @@ clearRenamedVariablesToAvoidBindingToExternalScope = ->
 			symtab[i].printname = ""
 			binding[i] = symtab[i]
 			isSymbolReclaimable[i] = true
+
+### clear =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+x
+
+General description
+-------------------
+
+Completely wipes a variable from the environment (while doing x = quote(x) just unassigns it).
+
+###
+
 
 Eval_clear = ->
 	p2 = cdr(p1)

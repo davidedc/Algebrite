@@ -2,10 +2,10 @@
 
 Prints in "2d", e.g. instead of 1/(x+1)^2 :
 
-     1
-----------
-        2
- (1 + x)
+      1
+ ----------
+         2
+  (1 + x)
 
  Note that although this looks more natural, a) it's not parsable and
  b) it can be occasionally be ambiguous, such as:

@@ -1,3 +1,19 @@
+### arg =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+z
+
+General description
+-------------------
+Returns the angle of complex z.
+
+###
+
 ###
  Argument (angle) of complex z
 

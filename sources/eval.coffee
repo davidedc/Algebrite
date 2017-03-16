@@ -295,7 +295,23 @@ Eval_det = ->
 	Eval()
 	det()
 
-# dim definition
+
+### dim =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+m,n
+
+General description
+-------------------
+Returns the cardinality of the nth index of tensor "m".
+
+###
+
 Eval_dim = ->
 	#int n
 	push(cadr(p1))
@@ -319,7 +335,22 @@ Eval_divisors = ->
 	Eval()
 	divisors()
 
-# do definition
+### do =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+a,b,...
+
+General description
+-------------------
+Evaluates each argument from left to right. Returns the result of the last argument.
+
+###
+
 Eval_do = ->
 	push(car(p1))
 	p1 = cdr(p1)

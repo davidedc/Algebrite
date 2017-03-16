@@ -1,4 +1,22 @@
-# definite integral
+### defint =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+f,x,a,b[,y,c,d...]
+
+General description
+-------------------
+Returns the definite integral of f with respect to x evaluated from "a" to b.
+The argument list can be extended for multiple integrals (or "iterated
+integrals"), for example a double integral (which can represent for
+example a volume under a surface), or a triple integral, etc. For
+example, defint(f,x,a,b,y,c,d).
+
+###
 
 
 

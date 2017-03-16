@@ -1,3 +1,18 @@
+### deg =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+p,x
+
+General description
+-------------------
+Returns the degree of polynomial p(x).
+
+###
 
 
 Eval_degree = ->

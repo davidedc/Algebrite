@@ -1,4 +1,18 @@
+### arccosh =====================================================================
 
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+x
+
+General description
+-------------------
+Returns the inverse hyperbolic cosine of x.
+
+###
 
 Eval_arccosh = ->
 	push(cadr(p1))

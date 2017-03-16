@@ -1,8 +1,24 @@
-#	          exp(x) + exp(-x)
-#	cosh(x) = ----------------
-#	                 2
+### cosh =====================================================================
 
+Tags
+----
+scripting, JS, internal, treenode, general concept
 
+Parameters
+----------
+x
+
+General description
+-------------------
+Returns the hyperbolic cosine of x
+
+```
+	          exp(x) + exp(-x)
+	cosh(x) = ----------------
+	                 2
+```
+
+###
 
 Eval_cosh = ->
 	push(cadr(p1))

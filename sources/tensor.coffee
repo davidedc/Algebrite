@@ -1,6 +1,6 @@
 #(docs are generated from top-level comments, keep an eye on the formatting!)
 
-### Tensor =====================================================================
+### tensor =====================================================================
 
 Tags
 ----

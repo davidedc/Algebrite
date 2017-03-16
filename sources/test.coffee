@@ -92,6 +92,22 @@ Eval_not = ->
 	else
 		push_integer(0)
 
+### and =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+a,b,...
+
+General description
+-------------------
+Logical-and of predicate expressions.
+
+###
+
 # and definition
 Eval_and = ->
 	p1 = cdr(p1)

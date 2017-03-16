@@ -1,36 +1,82 @@
-#-----------------------------------------------------------------------------
-#
-#	Compute eigenvalues and eigenvectors
-#
-#	Input:		stack[tos - 1]		symmetric matrix
-#
-#	Output:		D			diagnonal matrix
-#
-#			Q			eigenvector matrix
-#
-#	D and Q have the property that
-#
-#		A == dot(transpose(Q),D,Q)
-#
-#	where A is the original matrix.
-#
-#	The eigenvalues are on the diagonal of D.
-#
-#	The eigenvectors are row vectors in Q.
-#
-#	The eigenvalue relation
-#
-#		A X = lambda X
-#
-#	can be checked as follows:
-#
-#		lambda = D[1,1]
-#
-#		X = Q[1]
-#
-#		dot(A,X) - lambda X
-#
-#-----------------------------------------------------------------------------
+### eigen =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+m
+
+General description
+-------------------
+Compute eigenvalues and eigenvectors. Matrix m must be both numerical and symmetric.
+The eigenval function returns a matrix with the eigenvalues along the diagonal.
+The eigenvec function returns a matrix with the eigenvectors arranged as row vectors.
+The eigen function does not return anything but stores the eigenvalue matrix in D
+and the eigenvector matrix in Q.
+
+Input:		stack[tos - 1]		symmetric matrix
+
+Output:		D			diagnonal matrix
+			Q			eigenvector matrix
+
+D and Q have the property that
+
+	A == dot(transpose(Q),D,Q)
+
+where A is the original matrix.
+
+The eigenvalues are on the diagonal of D.
+The eigenvectors are row vectors in Q.
+
+The eigenvalue relation:
+
+	A X = lambda X
+
+can be checked as follows:
+
+	lambda = D[1,1]
+	X = Q[1]
+	dot(A,X) - lambda X
+
+Example 1. Check the relation AX = lambda X where lambda is an eigenvalue and X is the associated eigenvector.
+
+Enter:
+
+     A = hilbert(3)
+
+     eigen(A)
+
+     lambda = D[1,1]
+
+     X = Q[1]
+
+     dot(A,X) - lambda X
+
+Result:
+
+     -1.16435e-14
+ 
+     -6.46705e-15
+ 
+     -4.55191e-15
+
+Example 2: Check the relation A = QTDQ.
+
+Enter:
+
+  A - dot(transpose(Q),D,Q)
+
+Result: 
+
+  6.27365e-12    -1.58236e-11   1.81902e-11
+ 
+  -1.58236e-11   -1.95365e-11   2.56514e-12
+ 
+  1.81902e-11    2.56514e-12    1.32627e-11
+
+###
 
 
 
@@ -55,6 +101,22 @@ Eval_eigen = ->
 
 	push(symbol(NIL))
 
+### eigenval =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+m
+
+General description
+-------------------
+Compute eigenvalues of m. See "eigen" for more info.
+
+###
+
 Eval_eigenval = ->
 	if (EIG_check_arg() == 0)
 		push_symbol(EIGENVAL)
@@ -65,6 +127,22 @@ Eval_eigenval = ->
 	eigen(EIGENVAL)
 
 	push(p2)
+
+### eigenvec =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+m
+
+General description
+-------------------
+Compute eigenvectors of m. See "eigen" for more info.
+
+###
 
 Eval_eigenvec = ->
 	if (EIG_check_arg() == 0)

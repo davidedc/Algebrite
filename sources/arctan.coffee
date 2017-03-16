@@ -1,4 +1,18 @@
+### arctan =====================================================================
 
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+x
+
+General description
+-------------------
+Returns the inverse tangent of x.
+
+###
 
 Eval_arctan = ->
 	push(cadr(p1))

@@ -1,4 +1,18 @@
+### arcsin =====================================================================
 
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+x
+
+General description
+-------------------
+Returns the inverse sine of x.
+
+###
 
 Eval_arcsin = ->
 	push(cadr(p1))

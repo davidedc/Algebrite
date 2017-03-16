@@ -1,5 +1,18 @@
-# Adjunct of a matrix
+### adj =====================================================================
 
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+m
+
+General description
+-------------------
+Returns the adjunct of matrix m. The inverse of m is equal to adj(m) divided by det(m).
+
+###
 
 
 Eval_adj = ->

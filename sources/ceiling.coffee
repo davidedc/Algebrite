@@ -1,3 +1,19 @@
+### ceiling =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+x
+
+General description
+-------------------
+
+Returns the smallest integer not less than x.
+
+###
 
 
 Eval_ceiling = ->

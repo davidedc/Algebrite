@@ -1,3 +1,18 @@
+### arccos =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+x
+
+General description
+-------------------
+Returns the inverse cosine of x.
+
+###
 
 
 Eval_arccos = ->

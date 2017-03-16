@@ -1,5 +1,20 @@
-# Cofactor of a matrix component.
+### cofactor =====================================================================
 
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+m,i,j
+
+General description
+-------------------
+Cofactor of a matrix component.
+Let c be the cofactor matrix of matrix m, i.e. tranpose(c) = adj(m).
+This function returns c[i,j].
+
+###
 
 
 Eval_cofactor = ->

@@ -1,3 +1,18 @@
+### denominator =====================================================================
+
+Tags
+----
+scripting, JS, internal, treenode, general concept
+
+Parameters
+----------
+x
+
+General description
+-------------------
+Returns the denominator of expression x.
+
+###
 
 
 Eval_denominator = ->
