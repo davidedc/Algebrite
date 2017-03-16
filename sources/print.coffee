@@ -115,7 +115,7 @@ collectLatexStringFromReturnValue = (p) ->
 	codeGen = false
 	returnedString = print_expr(p)
 	# some variables might contain underscores, escape those
-	returnedString = returnedString.replace(/_/g, "\\\\_");
+	returnedString = returnedString.replace(/_/g, "\\_");
 	printMode = origPrintMode
 	codeGen = originalCodeGen
 	if DEBUG then console.log "emttedString from collectLatexStringFromReturnValue: " + stringsEmittedByUserPrintouts
