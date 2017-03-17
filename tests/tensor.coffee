@@ -1,6 +1,9 @@
 test_tensor = ->
 	run_test [
 
+		"[[a]]",
+		"[[a]]",
+
 		# ---------------------------------
 		# basic parsing, promotion and printout
 		# ---------------------------------

@@ -65,6 +65,9 @@ test_printlatex = ->
 		"printlatex([[0,1,2],[3,4,5]])",
 		"\\begin{bmatrix} 0 & 1 & 2 \\\\ 3 & 4 & 5 \\end{bmatrix}",
 
+		"printlatex([[a]])",
+		"\\begin{bmatrix} a \\end{bmatrix}",
+
 		"printlatex([[0],[1]])",
 		"\\begin{bmatrix} 0 \\\\ 1 \\end{bmatrix}",
 
