@@ -605,10 +605,7 @@ print_tensor_inner_latex = (firstLevel, p, j, k) ->
 			accumulator += retString
 			if i != p.tensor.dim[j] - 1
 				# add separator between rows
-				if called_from_Algebra_block
-					accumulator += print_str(" \\\\\\ ")
-				else
-					accumulator += print_str(" \\\\ ")
+				accumulator += print_str(" \\\\ ")
 	# if we reached the last dimension, we print the actual
 	# elements
 	else

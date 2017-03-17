@@ -345,10 +345,9 @@ chainOfUserSymbolsNotFunctionsBeingEvaluated = []
 
 stringsEmittedByUserPrintouts = ""
 
-# flag use to switch on/off some quirks "deep"
-# in the code due to call from Algebra block
-# e.g. number of slashes for newline in separating
-# row of matrices
+# flag use to potentially switch on/off some quirks "deep"
+# in the code due to call from Algebra block.
+# Currently not used.
 called_from_Algebra_block = false
 
 

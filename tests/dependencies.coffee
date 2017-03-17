@@ -582,8 +582,8 @@ test_dependencies = ->
 
 	console.log "testResult.latexResult " + testResult.latexResult
 	console.log "testResult.result " + testResult.result
-	if testResult.latexResult == "$$\\begin{bmatrix} 0 & 1 \\\\\\ 1 & 0 \\end{bmatrix}$$" and
-		testResult.result == "$$\\begin{bmatrix} 0 & 1 \\\\\\ 1 & 0 \\end{bmatrix}$$" and
+	if testResult.latexResult == "$$\\begin{bmatrix} 0 & 1 \\\\ 1 & 0 \\end{bmatrix}$$" and
+		testResult.result == "$$\\begin{bmatrix} 0 & 1 \\\\ 1 & 0 \\end{bmatrix}$$" and
 		testResult.dependencyInfo.affectsVariables.length == 0
 				console.log "ok dependency test"
 		else
@@ -596,8 +596,8 @@ test_dependencies = ->
 	console.log "testResult.latexResult " + testResult.latexResult
 	console.log "testResult.result " + testResult.result
 	if testResult.code == "x = [[0,1],[1,0]];" and
-		testResult.latexResult == "$$x = \\begin{bmatrix} 0 & 1 \\\\\\ 1 & 0 \\end{bmatrix}$$" and
-		testResult.result == "$$x = \\begin{bmatrix} 0 & 1 \\\\\\ 1 & 0 \\end{bmatrix}$$" and
+		testResult.latexResult == "$$x = \\begin{bmatrix} 0 & 1 \\\\ 1 & 0 \\end{bmatrix}$$" and
+		testResult.result == "$$x = \\begin{bmatrix} 0 & 1 \\\\ 1 & 0 \\end{bmatrix}$$" and
 		testResult.dependencyInfo.affectedBy.length == 1 and
 		testResult.dependencyInfo.affectedBy[0] == "PATTERN_DEPENDENCY" and
 		testResult.dependencyInfo.affectsVariables.length == 1 and
