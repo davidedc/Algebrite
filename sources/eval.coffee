@@ -592,15 +592,24 @@ Eval_subst = ->
 	subst()
 	Eval() # normalize
 
+# always returns a matrix with rank 2
+# i.e. two dimensions,
+# the passed parameter is the size
 Eval_unit = ->
 	i = 0
 	n = 0
 	push(cadr(p1))
 	Eval()
 	n = pop_integer()
-	if (n < 2)
+
+	if isNaN(n)
 		push(p1)
 		return
+
+	if (n < 1)
+		push(p1)
+		return
+
 	p1 = alloc_tensor(n * n)
 	p1.tensor.ndim = 2
 	p1.tensor.dim[0] = n
