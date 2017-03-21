@@ -448,6 +448,30 @@ print_COS_codegen = (p) ->
 	accumulator += ")"
 	return accumulator
 
+print_TAN_codegen = (p) ->
+	accumulator = "Math.tan("
+	accumulator += print_expr(cadr(p))
+	accumulator += ")"
+	return accumulator
+
+print_ARCSIN_codegen = (p) ->
+	accumulator = "Math.asin("
+	accumulator += print_expr(cadr(p))
+	accumulator += ")"
+	return accumulator
+
+print_ARCCOS_codegen = (p) ->
+	accumulator = "Math.acos("
+	accumulator += print_expr(cadr(p))
+	accumulator += ")"
+	return accumulator
+
+print_ARCTAN_codegen = (p) ->
+	accumulator = "Math.atan("
+	accumulator += print_expr(cadr(p))
+	accumulator += ")"
+	return accumulator
+
 print_SQRT_latex = (p) ->
 	accumulator = ""
 	accumulator += print_str("\\sqrt{")
@@ -998,6 +1022,22 @@ print_factor = (p, omitParens) ->
 	else if car(p) == symbol(COS)
 		if codeGen
 			accumulator += print_COS_codegen(p)
+			return accumulator
+	else if car(p) == symbol(TAN)
+		if codeGen
+			accumulator += print_TAN_codegen(p)
+			return accumulator
+	else if car(p) == symbol(ARCSIN)
+		if codeGen
+			accumulator += print_ARCSIN_codegen(p)
+			return accumulator
+	else if car(p) == symbol(ARCCOS)
+		if codeGen
+			accumulator += print_ARCCOS_codegen(p)
+			return accumulator
+	else if car(p) == symbol(ARCTAN)
+		if codeGen
+			accumulator += print_ARCTAN_codegen(p)
 			return accumulator
 
 
