@@ -179,6 +179,16 @@ test_dependencies = ->
 
 	do_clearall()
 
+	testResult = findDependenciesInScript('a = unit(b) + c')
+	if testResult[0] == "All local dependencies:  variable a depends on: b, c, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: b, c, ; " and
+		testResult[1] == "" and
+		testResult[2] == "a = function (c, b) { return ( c + identity(b) ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
 	testResult = findDependenciesInScript('f(x) = x * x')
 	if testResult[0] == "All local dependencies:  variable f depends on: 'x, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: 'x, ; " and
 		testResult[1] == "" and

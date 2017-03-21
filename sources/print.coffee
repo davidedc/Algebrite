@@ -474,6 +474,13 @@ print_TRANSPOSE_codegen = (p) ->
 	accumulator += print_str(')')
 	return accumulator
 
+print_UNIT_codegen = (p) ->
+	accumulator = ""
+	accumulator += print_str("identity(")
+	accumulator += print_expr(cadr(p))
+	accumulator += print_str(')')
+	return accumulator
+
 print_INV_latex = (p) ->
 	accumulator = ""
 	accumulator += print_str("{")
@@ -959,6 +966,10 @@ print_factor = (p, omitParens) ->
 			return accumulator
 		else if codeGen
 			accumulator += print_TRANSPOSE_codegen(p)
+			return accumulator
+	else if car(p) == symbol(UNIT)
+		if codeGen
+			accumulator += print_UNIT_codegen(p)
 			return accumulator
 	else if car(p) == symbol(INV)
 		if printMode == PRINTMODE_LATEX

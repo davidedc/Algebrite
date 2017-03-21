@@ -332,6 +332,7 @@ predefinedSymbolsInGlobalScope_doNotTrackInDependencies = [
 	"deig"
 	"dcov"
 	"float"
+	"unit"
 ]
 
 # you can do some little simplifications
