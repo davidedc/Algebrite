@@ -497,7 +497,6 @@ print_double = (p,flag) ->
 	accumulator = ""
 	buf = doubleToReasonableString(p.d)
 	if (flag == 1 && buf == '-')
-		# !!!! passing a pointer willy-nilly
 		accumulator += print_str(buf + 1)
 	else
 		accumulator += print_str(buf)
