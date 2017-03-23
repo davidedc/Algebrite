@@ -240,6 +240,14 @@ isintegerfactor = (p) ->
 	else
 		return 0
 
+isnumberoneoversomething = (p) ->
+	if isfraction(p) \
+	&& Math.abs(p.q.a.value) == 1
+		return 1
+	else
+		return 0
+
+
 isoneover = (p) ->
 	if (car(p) == symbol(POWER) \
 	&& isminusone(caddr(p)))

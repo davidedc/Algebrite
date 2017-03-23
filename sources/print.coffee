@@ -354,7 +354,31 @@ print_term = (p) ->
 		if isnum(car(p))
 			previousFactorWasANumber = true
 
-		accumulator += print_factor(car(p))
+		# this numberOneOverSomething thing is so that
+		# we show things of the form
+		#   numericFractionOfForm1/something * somethingElse
+		# as
+		#   somethingElse / something
+		# so for example 1/2 * sqrt(2) is rendered as
+		#   sqrt(2)/2
+		# rather than the first form, which looks confusing.
+		# NOTE that you might want to avoid this
+		# when printing polynomials, as it could be nicer
+		# to show the numeric coefficients well separated from
+		# the variable, but we'll see when we'll
+		# come to it if it's an issue.
+		numberOneOverSomething = false
+		if printMode == PRINTMODE_LATEX and iscons(cdr(p)) and isnumberoneoversomething(car(p))
+			numberOneOverSomething = true
+			denom = car(p).q.b.toString()
+
+
+		if numberOneOverSomething
+			origAccumulator = accumulator
+			accumulator = ""
+		else
+			accumulator += print_factor(car(p))
+
 		p = cdr(p)
 
 		# print all the other factors -------
@@ -384,6 +408,10 @@ print_term = (p) ->
 				previousFactorWasANumber = true
 
 			p = cdr(p)
+
+		if numberOneOverSomething
+			accumulator = origAccumulator + "\\frac{" + accumulator + "}{" + denom + "}"
+
 	else
 		accumulator += print_factor(p)
 	return accumulator

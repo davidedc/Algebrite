@@ -17,7 +17,7 @@ test_mixedprint = ->
 		"-1/2*2^(1/2)",
 
 		"printlatex",
-		"-\\frac{1}{2}\\sqrt{2}",
+		"-\\frac{\\sqrt{2}}{2}",
 
 		"printlist",
 		"(multiply -1/2 (power 2 1/2))",

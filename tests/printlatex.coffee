@@ -1,6 +1,24 @@
 test_printlatex = ->
 	run_test [
 
+		"printlatex(pi/2)",
+		"\\frac{\\pi}{2}",
+
+		"printlatex(-pi/2)",
+		"-\\frac{\\pi}{2}",
+
+		"printlatex(pi/(-2))",
+		"-\\frac{\\pi}{2}",
+
+		"printlatex(-pi/(-2))",
+		"\\frac{\\pi}{2}",
+
+		"printlatex((1/2)*pi)",
+		"\\frac{\\pi}{2}",
+
+		"printlatex((1/(-2))*pi)",
+		"-\\frac{\\pi}{2}",
+
 		# note that these two are different:
 		#    pi^(1/2) != pi^1/2
 		"printlatex(pi^(1/2))",
