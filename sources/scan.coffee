@@ -508,7 +508,7 @@ scan_function_call_with_function_name = ->
 	push(p)
 	get_next_token()	# function name
 	functionName = token_buf
-	if functionName == "roots" or functionName == "defint" or functionName == "sum"
+	if functionName == "roots" or functionName == "defint" or functionName == "sum" or functionName == "product"
 		functionInvokationsScanningStack.push token_buf
 	lastFoundSymbol = token_buf
 	if !isSymbolLeftOfAssignment
@@ -528,6 +528,10 @@ scan_function_call_with_function_name = ->
 			# sums' disappearing variable, is alsways the second one
 			if n == 2 and functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("sum") != -1
 				symbolsRightOfAssignment = symbolsRightOfAssignment.filter (x) -> !(new RegExp("sum_" + (functionInvokationsScanningStack.length - 1) + "_" + token_buf)).test(x)
+				skipRootVariableToBeSolved = true
+			# product' disappearing variable, is alsways the second one
+			if n == 2 and functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("product") != -1
+				symbolsRightOfAssignment = symbolsRightOfAssignment.filter (x) -> !(new RegExp("product_" + (functionInvokationsScanningStack.length - 1) + "_" + token_buf)).test(x)
 				skipRootVariableToBeSolved = true
 			# defint's disappearing variables can be in positions 2,5,8...
 			if functionInvokationsScanningStack[functionInvokationsScanningStack.length - 1].indexOf("defint") != -1 and
@@ -554,13 +558,15 @@ scan_function_call_with_function_name = ->
 				symbolsRightOfAssignment[i] = symbolsRightOfAssignment[i].replace(new RegExp("defint_" + (functionInvokationsScanningStack.length - 1) + "_"),"")
 			if functionName == "sum"
 				symbolsRightOfAssignment[i] = symbolsRightOfAssignment[i].replace(new RegExp("sum_" + (functionInvokationsScanningStack.length - 1) + "_"),"")
+			if functionName == "product"
+				symbolsRightOfAssignment[i] = symbolsRightOfAssignment[i].replace(new RegExp("product_" + (functionInvokationsScanningStack.length - 1) + "_"),"")
 
 	if (token != ')')
 		scan_error(") expected")
 
 	get_next_token()
 	list(n)
-	if functionName == "roots" or functionName == "defint" or functionName == "sum"
+	if functionName == "roots" or functionName == "defint" or functionName == "sum" or functionName == "product"
 		functionInvokationsScanningStack.pop()
 	if functionName == symbol(PATTERN).printname
 		patternHasBeenFound = true

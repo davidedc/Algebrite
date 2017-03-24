@@ -703,6 +703,27 @@ print_SUM_codegen = (p) ->
 
 	return accumulator
 
+print_PRODUCT_codegen = (p) ->
+
+	body =  cadr(p)
+	variable = caddr(p)
+	lowerlimit = cadddr(p)
+	upperlimit = caddddr(p)
+
+	accumulator =
+		"(function(){" +
+		" var " + variable + "; " +
+		" var holderProduct = 1; " +
+		" var lowerlimit = " + print_expr(lowerlimit) + "; " +
+		" var upperlimit = " + print_expr(upperlimit) + "; " +
+		" for (" + variable + " = lowerlimit; " + variable + " < upperlimit; " + variable + "++) { " +
+		"   holderProduct *= " + print_expr(body) + ";" +
+		" } "+
+		" return holderProduct;" +
+		"})()"
+
+	return accumulator
+
 
 print_base = (p) ->
 	accumulator = ""
@@ -1091,6 +1112,10 @@ print_factor = (p, omitParens) ->
 	else if car(p) == symbol(SUM)
 		if codeGen
 			accumulator += print_SUM_codegen(p)
+			return accumulator
+	else if car(p) == symbol(PRODUCT)
+		if codeGen
+			accumulator += print_PRODUCT_codegen(p)
 			return accumulator
 
 

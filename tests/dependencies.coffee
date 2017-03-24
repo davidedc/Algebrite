@@ -271,6 +271,16 @@ test_dependencies = ->
 
 	do_clearall()
 
+	testResult = findDependenciesInScript('piApprox = 2*product(4*k^2/(4*k^2-1),k,1,iterations)')
+	if testResult[0] == "All local dependencies:  variable piApprox depends on: iterations, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable piApprox depends on: iterations, ; " and
+		testResult[1] == "" and
+		testResult[2] == "piApprox = function (iterations) { return ( 2*(function(){ var k;  var holderProduct = 1;  var lowerlimit = 1;  var upperlimit = iterations;  for (k = lowerlimit; k < upperlimit; k++) {    holderProduct *= 4*Math.pow(k, 2) / (4*Math.pow(k, 2) - 1); }  return holderProduct;})() ); }"
+			console.log "ok dependency test"
+	else
+			console.log "fail dependency test. expected: " + testResult
+
+	do_clearall()
+
 	testResult = findDependenciesInScript('f = roots(a*x^2 + b*x + c, x)')
 	if testResult[0] == "All local dependencies:  variable f depends on: a, b, c, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: a, b, c, ; " and
 		testResult[1] == "" and
