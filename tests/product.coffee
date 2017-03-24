@@ -11,7 +11,7 @@ test_product = ->
 		# not very efficient because evaluation of
 		# a(n) is not memoized, so there
 		# is quadratic cost as n increases.
-		"float(2*product(k,1,9,2/a(k)))",
+		"float(2*product(2/a(k),k,1,9))",
 		"3.14159",
 
 

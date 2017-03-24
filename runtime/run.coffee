@@ -341,6 +341,11 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 						userVariablesMentioned = userVariablesMentioned.filter (x) ->
 							predefinedSymbolsInGlobalScope_doNotTrackInDependencies.indexOf(x + "") == -1
 
+						# remove the variable that are not in the dependency list
+						# i.e. only allow the variables that are in the dependency list
+						userVariablesMentioned = userVariablesMentioned.filter (x) ->
+							recursedDependencies.indexOf(x + "") != -1 or
+							recursedDependencies.indexOf("\'" + x + "") != -1
 
 						if userVariablesMentioned.length != 0
 							parameters = "("

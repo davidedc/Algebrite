@@ -682,6 +682,27 @@ print_tensor_inner_latex = (firstLevel, p, j, k) ->
 
 	return [k, accumulator]
 
+print_SUM_codegen = (p) ->
+
+	body =  cadr(p)
+	variable = caddr(p)
+	lowerlimit = cadddr(p)
+	upperlimit = caddddr(p)
+
+	accumulator =
+		"(function(){" +
+		" var " + variable + "; " +
+		" var holderSum = 0; " +
+		" var lowerlimit = " + print_expr(lowerlimit) + "; " +
+		" var upperlimit = " + print_expr(upperlimit) + "; " +
+		" for (" + variable + " = lowerlimit; " + variable + " < upperlimit; " + variable + "++) { " +
+		"   holderSum += " + print_expr(body) + ";" +
+		" } "+
+		" return holderSum;" +
+		"})()"
+
+	return accumulator
+
 
 print_base = (p) ->
 	accumulator = ""
@@ -1066,6 +1087,10 @@ print_factor = (p, omitParens) ->
 	else if car(p) == symbol(ARCTAN)
 		if codeGen
 			accumulator += print_ARCTAN_codegen(p)
+			return accumulator
+	else if car(p) == symbol(SUM)
+		if codeGen
+			accumulator += print_SUM_codegen(p)
 			return accumulator
 
 

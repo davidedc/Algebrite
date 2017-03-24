@@ -12,31 +12,29 @@ Eval_product = ->
 	j = 0
 	k = 0
 
-	# 1st arg (quoted)
+	# 1st arg
+	body = cadr(p1)
 
-	indexVariable = cadr(p1)
-	if (!issymbol(indexVariable))
-		stop("product: 1st arg?")
+	# 2nd arg (index)
+	indexVariable = caddr(p1)
+	if (!issymbol(p6))
+		stop("sum: 1st arg?")
 
-	# 2nd arg
-
-	push(caddr(p1))
+	# 3rd arg (lower limit)
+	push(cadddr(p1))
 	Eval()
 	j = pop_integer()
 	if (isNaN(j))
-		stop("product: 2nd arg?")
+		push p1
+		return
 
-	# 3rd arg
-
-	push(cadddr(p1))
+	# 4th arg (upper limit)
+	push(caddddr(p1))
 	Eval()
 	k = pop_integer()
 	if (isNaN(k))
-		stop("product: 3rd arg?")
-
-	# 4th arg
-
-	p1 = caddddr(p1)
+		push p1
+		return
 
 	# remember contents of the index
 	# variable so we can put it back after the loop
@@ -48,7 +46,7 @@ Eval_product = ->
 		push_integer(i)
 		p5 = pop()
 		set_binding(indexVariable, p5)
-		push(p1)
+		push(body)
 		Eval()
 		if DEBUG
 			console.log "product - factor 1: " + stack[tos-1].toString()
