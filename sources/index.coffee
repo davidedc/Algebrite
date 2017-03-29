@@ -3,6 +3,7 @@
 # n is the total number of things on the stack. The first thing on the stack
 # is the object to be indexed, followed by the indices themselves.
 
+# called by Eval_index
 index_function = (n) ->
 	i = 0
 	k = 0
@@ -15,13 +16,6 @@ index_function = (n) ->
 	s = tos - n
 	p1 = stack[s]
 
-	# index of scalar ok
-
-	if (!istensor(p1))
-		tos -= n
-		push(p1)
-		restore()
-		return
 
 	ndim = p1.tensor.ndim
 

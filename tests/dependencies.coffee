@@ -648,6 +648,33 @@ test_dependencies = ->
 
 	do_clearall()
 
+	# a simple array lookup like this is turned into
+	# a function, which is slighly silly but
+	# it's orthogonal, this works also if instead of
+	# b we have an arbitrary non-trivial function
+	# on b, maybe even symbolic e.g. the round
+	# of the root of by = 6, i.e. round(root(by-6,y))
+	testResult = computeResultsAndJavaScriptFromAlgebra('x = a[b]')
+
+	console.log "testResult.latexResult " + testResult.latexResult
+	console.log "testResult.result " + testResult.result
+	console.log "testResult.code " + testResult.code
+	console.log "testResult.dependencyInfo.affectedBy " + testResult.dependencyInfo.affectedBy
+	if testResult.code == "x = function (a, b) { return ( a[b] ); }" and
+		testResult.latexResult == "$$x(a, b) = a[b]$$" and
+		testResult.result == "$$x(a, b) = a[b]$$" and
+		testResult.dependencyInfo.affectedBy.length == 3 and
+		testResult.dependencyInfo.affectedBy[0] == "a" and
+		testResult.dependencyInfo.affectedBy[1] == "b" and
+		testResult.dependencyInfo.affectedBy[2] == "PATTERN_DEPENDENCY" and
+		testResult.dependencyInfo.affectsVariables.length == 1 and
+		testResult.dependencyInfo.affectsVariables[0] == "x"
+				console.log "ok dependency test"
+		else
+				console.log "fail dependency tests "
+
+	do_clearall()
+
 	testResult = computeResultsAndJavaScriptFromAlgebra('x = a ⋅ b')
 
 	if testResult.code == "x = function (a, b) { return ( dot(a, b) ); }" and

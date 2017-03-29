@@ -43,8 +43,37 @@ test_index = ->
 		"A[1,1]",
 		"0",
 
-		# index of scalar ok
+		# index of scalar should throw an error
 
 		"1[2]",
-		"1",
+		"Stop: trying to access a scalar as a tensor",
+
+		# clean up -----------------
+
+		"clearall",
+		"",
+
+		# index of a non-allocated tensor
+		# or index with a symbol instead of
+		# a number
+
+		"a[0]",
+		"a[0]",
+
+		"a[0,2]",
+		"a[0,2]",
+
+
+		"a[b]",
+		"a[b]",
+
+		"a[b,c]",
+		"a[b,c]",
+
+		"a = [1,2,3]",
+		"",
+
+		"a[b]",
+		"a[b]",
+
 	]

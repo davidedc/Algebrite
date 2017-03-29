@@ -425,10 +425,38 @@ Eval_hilbert = ->
 
 Eval_index = ->
 	h = tos
+	orig = p1
+	
+	# look into the head of the list,
+	# when evaluated it should be a tensor
+	p1 = cdr(p1)
+	push car(p1)
+	Eval()
+	theTensor = stack[tos-1]
+
+	if isnum(theTensor)
+		stop("trying to access a scalar as a tensor")
+
+	if !istensor(theTensor)
+		# the tensor is not allocated yet, so
+		# leaving the expression unevalled
+		tos = h
+		push orig
+		return
+
+	# we examined the head of the list which
+	# was the tensor, now look into
+	# the indexes
 	p1 = cdr(p1)
 	while (iscons(p1))
 		push(car(p1))
 		Eval()
+		if !isinteger(stack[tos-1])
+			# index with something other than
+			# an integer
+			tos = h
+			push orig
+			return
 		p1 = cdr(p1)
 	index_function(tos - h)
 
