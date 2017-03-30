@@ -682,6 +682,18 @@ print_tensor_inner_latex = (firstLevel, p, j, k) ->
 
 	return [k, accumulator]
 
+print_SUM_latex = (p) ->
+	accumulator = "\\sum_{"
+	accumulator += print_expr(caddr(p))
+	accumulator += "="
+	accumulator += print_expr(cadddr(p))
+	accumulator += "}^{"
+	accumulator += print_expr(caddddr(p))
+	accumulator += "}{"
+	accumulator += print_expr(cadr(p))
+	accumulator += "}"
+	return accumulator
+
 print_SUM_codegen = (p) ->
 
 	body =  cadr(p)
@@ -701,6 +713,18 @@ print_SUM_codegen = (p) ->
 		" return holderSum;" +
 		"})()"
 
+	return accumulator
+
+print_PRODUCT_latex = (p) ->
+	accumulator = "\\prod_{"
+	accumulator += print_expr(caddr(p))
+	accumulator += "="
+	accumulator += print_expr(cadddr(p))
+	accumulator += "}^{"
+	accumulator += print_expr(caddddr(p))
+	accumulator += "}{"
+	accumulator += print_expr(cadr(p))
+	accumulator += "}"
 	return accumulator
 
 print_PRODUCT_codegen = (p) ->
@@ -1110,11 +1134,17 @@ print_factor = (p, omitParens) ->
 			accumulator += print_ARCTAN_codegen(p)
 			return accumulator
 	else if car(p) == symbol(SUM)
-		if codeGen
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_SUM_latex(p)
+			return accumulator
+		else if codeGen
 			accumulator += print_SUM_codegen(p)
 			return accumulator
 	else if car(p) == symbol(PRODUCT)
-		if codeGen
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_PRODUCT_latex(p)
+			return accumulator
+		else if codeGen
 			accumulator += print_PRODUCT_codegen(p)
 			return accumulator
 

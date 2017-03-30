@@ -89,4 +89,10 @@ test_printlatex = ->
 		"printlatex([[0],[1]])",
 		"\\begin{bmatrix} 0 \\\\ 1 \\end{bmatrix}",
 
+		"printlatex(quote(sum((-1)^k * (1/(2*k + 1)),k,0,100)*4))",
+		"\\sum_{k=0}^{100}{\\frac{(-1)^k}{(2k+1)}}4",
+
+		"printlatex(quote(2*product(4*k^2/(4*k^2-1),k,1,100)))",
+		"2\\prod_{k=1}^{100}{\\frac{4k^2}{(4k^2-1)}}",
+
 	]

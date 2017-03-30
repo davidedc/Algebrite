@@ -264,7 +264,8 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('piApprox = sum((-1)^k * (1/(2*k + 1)),k,0,iterations)*4')
 	if testResult[0] == "All local dependencies:  variable piApprox depends on: iterations, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable piApprox depends on: iterations, ; " and
 		testResult[1] == "" and
-		testResult[2] == "piApprox = function (iterations) { return ( 4*(function(){ var k;  var holderSum = 0;  var lowerlimit = 0;  var upperlimit = iterations;  for (k = lowerlimit; k < upperlimit; k++) {    holderSum += Math.pow((-1), k) / (2*k + 1); }  return holderSum;})() ); }"
+		testResult[2] == "piApprox = function (iterations) { return ( 4*(function(){ var k;  var holderSum = 0;  var lowerlimit = 0;  var upperlimit = iterations;  for (k = lowerlimit; k < upperlimit; k++) {    holderSum += Math.pow((-1), k) / (2*k + 1); }  return holderSum;})() ); }" and
+		testResult[3] == "piApprox(iterations) = 4\\sum_{k=0}^{iterations}{\\frac{(-1)^k}{(2k+1)}}"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
@@ -274,7 +275,8 @@ test_dependencies = ->
 	testResult = findDependenciesInScript('piApprox = 2*product(4*k^2/(4*k^2-1),k,1,iterations)')
 	if testResult[0] == "All local dependencies:  variable piApprox depends on: iterations, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable piApprox depends on: iterations, ; " and
 		testResult[1] == "" and
-		testResult[2] == "piApprox = function (iterations) { return ( 2*(function(){ var k;  var holderProduct = 1;  var lowerlimit = 1;  var upperlimit = iterations;  for (k = lowerlimit; k < upperlimit; k++) {    holderProduct *= 4*Math.pow(k, 2) / (4*Math.pow(k, 2) - 1); }  return holderProduct;})() ); }"
+		testResult[2] == "piApprox = function (iterations) { return ( 2*(function(){ var k;  var holderProduct = 1;  var lowerlimit = 1;  var upperlimit = iterations;  for (k = lowerlimit; k < upperlimit; k++) {    holderProduct *= 4*Math.pow(k, 2) / (4*Math.pow(k, 2) - 1); }  return holderProduct;})() ); }" and
+		testResult[3] == "piApprox(iterations) = 2\\prod_{k=1}^{iterations}{\\frac{4k^2}{(4k^2-1)}}"
 			console.log "ok dependency test"
 	else
 			console.log "fail dependency test. expected: " + testResult
