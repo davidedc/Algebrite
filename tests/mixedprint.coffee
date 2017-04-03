@@ -33,10 +33,7 @@ test_mixedprint = ->
 
 		# checks that no extra newlines are
 		# inserted
-		"x=0\ny=2\nfor(k,1,9,x=sqrt(2+x),y=2*y/x)\nfloat(y)",
-		"3.14159",
-
-		"x=0\ny=2\nfor(k,1,2,x=sqrt(2+x),y=2*y/x,printfull(y))",
+		"x=0\ny=2\nfor(do(x=sqrt(2+x),y=2*y/x,printfull(y)),k,1,2)",
 		"2*2^(1/2)4*2^(1/2)/((2+2^(1/2))^(1/2))",
 
 		"clearall",

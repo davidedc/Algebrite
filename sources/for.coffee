@@ -3,11 +3,15 @@
 ###
 x=0
 y=2
-for(k,1,9,x=sqrt(2+x),y=2*y/x)
+for(do(x=sqrt(2+x),y=2*y/x),k,1,9)
 float(y)
 
 X: k
 B: 1...9
+
+1st parameter is the body
+2nd parameter is the variable to loop with
+3rd and 4th are the limits
 
 
 ###
@@ -22,49 +26,40 @@ Eval_for = ->
 	j = 0
 	k = 0
 
-	# 1st arg (quoted)
-
-	p6 = cadr(p1)
-	if (!issymbol(p6))
-		stop("for: 1st arg?")
-
-	# 2nd arg
-
-	push(caddr(p1))
-	Eval()
-	j = pop_integer()
-	if (isNaN(j))
-		stop("for: 2nd arg?")
-
-	# 3rd arg
+	loopingVariable = caddr(p1)
+	if (!issymbol(loopingVariable))
+		stop("for: 2nd arg should be the variable to loop over")
 
 	push(cadddr(p1))
 	Eval()
+	j = pop_integer()
+	if (isNaN(j))
+		push p1
+		return
+
+	push(caddddr(p1))
+	Eval()
 	k = pop_integer()
 	if (isNaN(k))
-		stop("for: 3rd arg?")
+		debugger
+		push p1
+		return
 
-	# remaining args
-
-	p1 = cddddr(p1)
 
 	# remember contents of the index
 	# variable so we can put it back after the loop
-	p4 = get_binding(p6)
+	p4 = get_binding(loopingVariable)
 
 	for i in [j..k]
 		push_integer(i)
 		p5 = pop()
-		set_binding(p6, p5)
-		p2 = p1
-		while (iscons(p2))
-			push(car(p2))
-			Eval()
-			pop()
-			p2 = cdr(p2)
+		set_binding(loopingVariable, p5)
+		push(cadr(p1))
+		Eval()
+		pop()
 
 	# put back the index variable to original content
-	set_binding(p6, p4)
+	set_binding(loopingVariable, p4)
 
 	# return value
 

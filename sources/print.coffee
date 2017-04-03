@@ -715,6 +715,43 @@ print_SUM_codegen = (p) ->
 
 	return accumulator
 
+print_FOR_codegen = (p) ->
+	body =  cadr(p)
+	variable = caddr(p)
+	lowerlimit = cadddr(p)
+	upperlimit = caddddr(p)
+
+	accumulator =
+		"(function(){" +
+		" var " + variable + "; " +
+		" var lowerlimit = " + print_expr(lowerlimit) + "; " +
+		" var upperlimit = " + print_expr(upperlimit) + "; " +
+		" for (" + variable + " = lowerlimit; " + variable + " < upperlimit; " + variable + "++) { " +
+		"   " + print_expr(body) +
+		" } "+
+		"})()"
+
+	return accumulator
+
+print_DO_codegen = (p) ->
+	accumulator = ""
+
+	p = cdr(p)
+	while iscons(p)
+		accumulator += print_expr(car(p))
+		p = cdr(p)
+
+	return accumulator
+
+print_SETQ_codegen = (p) ->
+	accumulator = ""
+	accumulator += print_expr(cadr(p))
+	accumulator += " = "
+	accumulator += print_expr(caddr(p))
+	accumulator += "; "
+	return accumulator
+	
+
 print_PRODUCT_latex = (p) ->
 	accumulator = "\\prod_{"
 	accumulator += print_expr(caddr(p))
@@ -1146,6 +1183,23 @@ print_factor = (p, omitParens) ->
 			return accumulator
 		else if codeGen
 			accumulator += print_PRODUCT_codegen(p)
+			return accumulator
+	else if car(p) == symbol(FOR)
+		if codeGen
+			accumulator += print_FOR_codegen(p)
+			return accumulator
+	else if car(p) == symbol(DO)
+		if codeGen
+			accumulator += print_DO_codegen(p)
+			return accumulator
+	else if car(p) == symbol(SETQ)
+		if codeGen
+			accumulator += print_SETQ_codegen(p)
+			return accumulator
+		else
+			accumulator += print_expr cadr p
+			accumulator += print_str("=")
+			accumulator += print_expr caddr p
 			return accumulator
 
 

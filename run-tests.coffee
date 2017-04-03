@@ -32,6 +32,7 @@ selftest  = ->
 	test_abs()	
 	test_sum()
 	test_product()
+	test_for()
 	test_exp()
 	test_expand()
 	test_factorpoly()
