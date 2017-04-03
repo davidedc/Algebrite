@@ -37,7 +37,11 @@ bake = ->
 	else if (s == 0 && t == 0 && x == 0 && y == 0 && z == 1)
 		p2 = symbol(SYMBOL_Z)
 		bake_poly()
-	else if (iscons(p1))
+	# don't bake the contents of some constructs such as "for"
+	# because we don't want to evaluate the body of
+	# such constructs "statically", i.e. without fully running
+	# the loops.
+	else if (iscons(p1)) and car(p1) != symbol(FOR)
 		h = tos
 		push(car(p1))
 		p1 = cdr(p1)
