@@ -487,6 +487,26 @@ caddadr = (p) -> car(cdr(cdr(car(cdr(p)))))
 cdddaddr = (p) -> cdr(cdr(cdr(car(cdr(cdr(p))))))
 caddaddr = (p) -> car(cdr(cdr(car(cdr(cdr(p))))))
 
+# not used yet
+listLength = (p) ->
+	startCount = -1
+
+	while iscons(p)
+		p = cdr(p)
+		startCount++
+
+	return startCount
+
+# not used yet
+nthCadr = (p,n) ->
+	startCount = 0
+
+	while startCount <= n
+		p = cdr(p)
+		startCount++
+
+	return car(p)
+
 isadd = (p) -> (car(p) == symbol(ADD))
 ismultiply = (p) -> (car(p) == symbol(MULTIPLY))
 ispower = (p) -> (car(p) == symbol(POWER))
