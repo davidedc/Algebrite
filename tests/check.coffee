@@ -8,7 +8,7 @@ test_check = ->
 		# assigned anything
 
 		"check(a=b)",
-		"0",
+		"testeq(a,b)",
 
 		"a",
 		"a",
