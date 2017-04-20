@@ -715,6 +715,36 @@ print_SUM_codegen = (p) ->
 
 	return accumulator
 
+print_TEST_latex = (p) ->
+	debugger
+	accumulator = "\\left\\{ \\begin{array}{ll}"
+
+	p = cdr(p)
+	while (iscons(p))
+
+		# odd number of parameters means that the
+		# last argument becomes the default case
+		# i.e. the one without a test.
+		if (cdr(p) == symbol(NIL))
+			accumulator += "{"
+			accumulator += print_expr(car(p))
+			accumulator += "} & otherwise "
+			accumulator += " \\\\\\\\"
+			break
+
+		accumulator += "{"
+		accumulator += print_expr(cadr(p))
+		accumulator += "} & if & "
+		accumulator += print_expr(car(p))
+		accumulator += " \\\\\\\\"
+
+		# test unsuccessful, continue to the
+		# next pair of test,value
+		p = cddr(p)
+	accumulator = accumulator.substring(0, accumulator.length - 4);
+	accumulator += "\\end{array} \\right."
+
+
 print_TESTLT_latex = (p) ->
 	accumulator = "{"
 	accumulator += print_expr(cadr(p))
@@ -1222,6 +1252,10 @@ print_factor = (p, omitParens) ->
 		else if codeGen
 			accumulator += print_SUM_codegen(p)
 			return accumulator
+	#else if car(p) == symbol(QUOTE)
+	#	if printMode == PRINTMODE_LATEX
+	#		print_expr(cadr(p))
+	#		return accumulator
 	else if car(p) == symbol(PRODUCT)
 		if printMode == PRINTMODE_LATEX
 			accumulator += print_PRODUCT_latex(p)
@@ -1236,6 +1270,10 @@ print_factor = (p, omitParens) ->
 	else if car(p) == symbol(DO)
 		if codeGen
 			accumulator += print_DO_codegen(p)
+			return accumulator
+	else if car(p) == symbol(TEST)
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_TEST_latex(p)
 			return accumulator
 	else if car(p) == symbol(TESTLT)
 		if printMode == PRINTMODE_LATEX

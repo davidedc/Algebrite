@@ -110,4 +110,7 @@ test_printlatex = ->
 		"printlatex(quote(a>=b))",
 		"{a} \\geq {b}",
 
+		"printlatex(quote(f(x)=test(x<3,-x-4,3<=x,x*x+7,120/x+5)))",
+		"f(x)=\\left\\{ \\begin{array}{ll}{-x-4} & if & {x} < {3} \\\\\\\\{xx+7} & if & {3} \\leq {x} \\\\\\\\{\\frac{120}{x}+5} & otherwise  \\end{array} \\right.",
+
 	]

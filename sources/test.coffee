@@ -5,18 +5,29 @@
 Eval_test = ->
 	p1 = cdr(p1)
 	while (iscons(p1))
+
+		# odd number of parameters means that the
+		# last argument becomes the default case
+		# i.e. the one without a test.
 		if (cdr(p1) == symbol(NIL))
 			push(car(p1)); # default case
 			Eval()
 			return
+		
+		# load the next test and eval it
 		push(car(p1))
 		Eval_predicate()
 		p2 = pop()
 		if (!iszero(p2))
+			# test succesful, we found out output
 			push(cadr(p1))
 			Eval()
 			return
+
+		# test unsuccessful, continue to the
+		# next pair of test,value
 		p1 = cddr(p1)
+
 	push_integer(0)
 
 # we test A==B by first subtracting and checking if we symbolically
