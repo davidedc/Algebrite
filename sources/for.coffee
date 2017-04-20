@@ -41,7 +41,6 @@ Eval_for = ->
 	Eval()
 	k = pop_integer()
 	if (isNaN(k))
-		debugger
 		push p1
 		return
 
