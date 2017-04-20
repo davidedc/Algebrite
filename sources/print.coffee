@@ -716,7 +716,6 @@ print_SUM_codegen = (p) ->
 	return accumulator
 
 print_TEST_latex = (p) ->
-	debugger
 	accumulator = "\\left\\{ \\begin{array}{ll}"
 
 	p = cdr(p)
@@ -743,6 +742,39 @@ print_TEST_latex = (p) ->
 		p = cddr(p)
 	accumulator = accumulator.substring(0, accumulator.length - 4);
 	accumulator += "\\end{array} \\right."
+
+print_TEST_codegen = (p) ->
+
+	accumulator = "(function(){"
+
+	p = cdr(p)
+	howManyIfs = 0
+	while (iscons(p))
+
+		# odd number of parameters means that the
+		# last argument becomes the default case
+		# i.e. the one without a test.
+		if (cdr(p) == symbol(NIL))
+			accumulator += "else {"
+			accumulator += "return (" + print_expr(car(p)) + ");"
+			accumulator += "}"
+			break
+
+		if howManyIfs
+			accumulator += " else "
+
+		accumulator += "if (" + print_expr(car(p)) + "){"
+		accumulator += "return (" + print_expr(cadr(p)) + ");"
+		accumulator += "}"
+
+		# test unsuccessful, continue to the
+		# next pair of test,value
+		howManyIfs++
+		p = cddr(p)
+
+	accumulator += "})()"
+
+	return accumulator
 
 
 print_TESTLT_latex = (p) ->
@@ -1272,26 +1304,44 @@ print_factor = (p, omitParens) ->
 			accumulator += print_DO_codegen(p)
 			return accumulator
 	else if car(p) == symbol(TEST)
+		if codeGen
+			accumulator += print_TEST_codegen(p)
+			return accumulator
 		if printMode == PRINTMODE_LATEX
 			accumulator += print_TEST_latex(p)
 			return accumulator
 	else if car(p) == symbol(TESTLT)
+		if codeGen
+			accumulator += "(("+print_expr(cadr(p))+") < ("+print_expr(caddr(p))+"))"
+			return accumulator
 		if printMode == PRINTMODE_LATEX
 			accumulator += print_TESTLT_latex(p)
 			return accumulator
 	else if car(p) == symbol(TESTLE)
+		if codeGen
+			accumulator += "(("+print_expr(cadr(p))+") <= ("+print_expr(caddr(p))+"))"
+			return accumulator
 		if printMode == PRINTMODE_LATEX
 			accumulator += print_TESTLE_latex(p)
 			return accumulator
 	else if car(p) == symbol(TESTGT)
+		if codeGen
+			accumulator += "(("+print_expr(cadr(p))+") > ("+print_expr(caddr(p))+"))"
+			return accumulator
 		if printMode == PRINTMODE_LATEX
 			accumulator += print_TESTGT_latex(p)
 			return accumulator
 	else if car(p) == symbol(TESTGE)
+		if codeGen
+			accumulator += "(("+print_expr(cadr(p))+") >= ("+print_expr(caddr(p))+"))"
+			return accumulator
 		if printMode == PRINTMODE_LATEX
 			accumulator += print_TESTGE_latex(p)
 			return accumulator
 	else if car(p) == symbol(TESTEQ)
+		if codeGen
+			accumulator += "(("+print_expr(cadr(p))+") === ("+print_expr(caddr(p))+"))"
+			return accumulator
 		if printMode == PRINTMODE_LATEX
 			accumulator += print_TESTEQ_latex(p)
 			return accumulator

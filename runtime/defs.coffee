@@ -334,6 +334,7 @@ predefinedSymbolsInGlobalScope_doNotTrackInDependencies = [
 	"float"
 	"product"
 	"sum"
+	"test"
 	"unit"
 ]
 

@@ -3,6 +3,7 @@
 
 
 Eval_test = ->
+	orig = p1
 	p1 = cdr(p1)
 	while (iscons(p1))
 
@@ -18,17 +19,27 @@ Eval_test = ->
 		push(car(p1))
 		Eval_predicate()
 		p2 = pop()
-		if (!iszero(p2))
+		if isone(p2)
 			# test succesful, we found out output
 			push(cadr(p1))
 			Eval()
+			return
+		else if !iszero(p2)
+			# we couldn't determine the result
+			# of a test. This means we can't conclude
+			# anything about the result of the
+			# overall test, so we must bail
+			# with the unevalled test
+			push orig
 			return
 
 		# test unsuccessful, continue to the
 		# next pair of test,value
 		p1 = cddr(p1)
 
-	push_integer(0)
+	# no test matched and there was no
+	# catch-all case, so we return zero.
+	push_integer 0
 
 # we test A==B by first subtracting and checking if we symbolically
 # get zero. If not, we evaluate to float and check if we get a zero.

@@ -750,5 +750,23 @@ test_dependencies = ->
 
 	do_clearall()
 
+	# tests
+
+	res = computeResultsAndJavaScriptFromAlgebra "f=test(x<1,-x-4,3<=x,x*x+7,120/x+5)"
+
+	if res.code == 'f = function (x) { return ( (function(){if (((x) < (1))){return (-x - 4);} else if (((3) <= (x))){return (x*x + 7);}else {return (120 / x + 5);}})() ); }' and
+		res.latexResult == '$$f(x) = \\left\\{ \\begin{array}{ll}{-x-4} & if & {x} < {1} \\\\\\\\{xx+7} & if & {3} \\leq {x} \\\\\\\\{\\frac{120}{x}+5} & otherwise  \\end{array} \\right.$$' and
+		res.dependencyInfo.affectsVariables.length == 1 and
+		res.dependencyInfo.affectsVariables[0] == 'f' and
+		res.dependencyInfo.affectedBy.length == 2 and
+		res.dependencyInfo.affectedBy[0] == 'x' and
+		res.dependencyInfo.affectedBy[1] == 'PATTERN_DEPENDENCY'
+				console.log "ok dependency test"
+		else
+				console.log "fail dependency tests"
+
+
+
+	do_clearall()
 
 	console.log "-- done dependency tests"
