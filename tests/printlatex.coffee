@@ -95,4 +95,19 @@ test_printlatex = ->
 		"printlatex(quote(2*product(4*k^2/(4*k^2-1),k,1,100)))",
 		"2\\prod_{k=1}^{100}{\\frac{4k^2}{(4k^2-1)}}",
 
+		"printlatex(quote(a==b))",
+		"{a} = {b}",
+
+		"printlatex(quote(a<b))",
+		"{a} < {b}",
+
+		"printlatex(quote(a<=b))",
+		"{a} \\leq {b}",
+
+		"printlatex(quote(a>b))",
+		"{a} > {b}",
+
+		"printlatex(quote(a>=b))",
+		"{a} \\geq {b}",
+
 	]

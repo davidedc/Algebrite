@@ -715,6 +715,51 @@ print_SUM_codegen = (p) ->
 
 	return accumulator
 
+print_TESTLT_latex = (p) ->
+	accumulator = "{"
+	accumulator += print_expr(cadr(p))
+	accumulator += "}"
+	accumulator += " < "
+	accumulator += "{"
+	accumulator += print_expr(caddr(p))
+	accumulator += "}"
+
+print_TESTLE_latex = (p) ->
+	accumulator = "{"
+	accumulator += print_expr(cadr(p))
+	accumulator += "}"
+	accumulator += " \\leq "
+	accumulator += "{"
+	accumulator += print_expr(caddr(p))
+	accumulator += "}"
+
+print_TESTGT_latex = (p) ->
+	accumulator = "{"
+	accumulator += print_expr(cadr(p))
+	accumulator += "}"
+	accumulator += " > "
+	accumulator += "{"
+	accumulator += print_expr(caddr(p))
+	accumulator += "}"
+
+print_TESTGE_latex = (p) ->
+	accumulator = "{"
+	accumulator += print_expr(cadr(p))
+	accumulator += "}"
+	accumulator += " \\geq "
+	accumulator += "{"
+	accumulator += print_expr(caddr(p))
+	accumulator += "}"
+
+print_TESTEQ_latex = (p) ->
+	accumulator = "{"
+	accumulator += print_expr(cadr(p))
+	accumulator += "}"
+	accumulator += " = "
+	accumulator += "{"
+	accumulator += print_expr(caddr(p))
+	accumulator += "}"
+
 print_FOR_codegen = (p) ->
 	body =  cadr(p)
 	variable = caddr(p)
@@ -1191,6 +1236,26 @@ print_factor = (p, omitParens) ->
 	else if car(p) == symbol(DO)
 		if codeGen
 			accumulator += print_DO_codegen(p)
+			return accumulator
+	else if car(p) == symbol(TESTLT)
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_TESTLT_latex(p)
+			return accumulator
+	else if car(p) == symbol(TESTLE)
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_TESTLE_latex(p)
+			return accumulator
+	else if car(p) == symbol(TESTGT)
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_TESTGT_latex(p)
+			return accumulator
+	else if car(p) == symbol(TESTGE)
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_TESTGE_latex(p)
+			return accumulator
+	else if car(p) == symbol(TESTEQ)
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_TESTEQ_latex(p)
 			return accumulator
 	else if car(p) == symbol(SETQ)
 		if codeGen
