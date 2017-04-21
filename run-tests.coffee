@@ -26,6 +26,10 @@ test_low_level = ->
 	test_test()
 	test_check()
 
+# use the window.selftest version
+# for running the tests from the
+# browser console ("run npm build-for-browser")
+#window.selftest  = ->
 selftest  = ->
 	test_low_level()
 	test_pattern()
@@ -115,5 +119,7 @@ selftest  = ->
 	# alert "passed tests: " + ok_tests + " / failed tests: " + ko_tests
 	return
 
-
+# remove this selftest()
+# for running the tests from the
+# browser console ("run npm build-for-browser")
 selftest()
