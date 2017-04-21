@@ -82,6 +82,13 @@ isinteger = (p) ->
 	else
 		return 0
 
+isintegerorintegerfloat = (p) ->
+	if p.k == DOUBLE
+		if (p.d == Math.round(p.d))
+			return 1
+		return 0
+	return isinteger(p)
+
 isnonnegativeinteger = (p) ->
 	if (isrational(p) && MEQUAL(p.q.b, 1) && MSIGN(p.q.a) == 1)
 		return 1

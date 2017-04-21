@@ -451,7 +451,7 @@ Eval_index = ->
 	while (iscons(p1))
 		push(car(p1))
 		Eval()
-		if !isinteger(stack[tos-1])
+		if !isintegerorintegerfloat(stack[tos-1])
 			# index with something other than
 			# an integer
 			moveTos h

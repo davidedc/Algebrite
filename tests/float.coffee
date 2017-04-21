@@ -58,5 +58,16 @@ test_float = ->
 		"abs(float((-1)^(-0.666667+0.0291367/pi)))",
 		"1.0",
 
+		# using float with an array
+		"a = [2,3,4]",
+		"",
+
+		"float(a[1])",
+		"2.0",
+
+		"a=quote(a)",
+		"",
+
+
 	]
 
