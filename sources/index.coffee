@@ -34,7 +34,7 @@ index_function = (n) ->
 		k = k * p1.tensor.dim[i] + t - 1
 
 	if (ndim == m)
-		tos -= n
+		moveTos tos - n
 		push(p1.tensor.elem[k])
 		restore()
 		return
@@ -60,7 +60,7 @@ index_function = (n) ->
 	check_tensor_dimensions p1
 	check_tensor_dimensions p2
 
-	tos -= n
+	moveTos tos - n
 	push(p2)
 	restore()
 
@@ -152,7 +152,7 @@ set_component = (n) ->
 
 		check_tensor_dimensions p1
 
-		tos -= n
+		moveTos tos - n
 		push(p1); # p1 is LVALUE
 		restore()
 		return
@@ -178,7 +178,7 @@ set_component = (n) ->
 	check_tensor_dimensions p1
 	check_tensor_dimensions p2
 
-	tos -= n
+	moveTos tos - n
 
 	push(p1); # p1 is LVALUE
 

@@ -50,7 +50,7 @@ quickfactor = ->
 
 	p1 = pop()
 
-	tos = h
+	moveTos h
 
 	push(p1)
 

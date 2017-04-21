@@ -148,7 +148,7 @@ __legendre2 = (n, m) ->
 		push(p1)
 		derivative()
 
-# tos = tos * (-1)^m * (1-x^2)^(m/2)
+# moveTos tos * (-1)^m * (1-x^2)^(m/2)
 
 __legendre3 = (m) ->
 	if (m == 0)

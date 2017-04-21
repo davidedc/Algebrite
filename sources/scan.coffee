@@ -687,7 +687,7 @@ build_tensor = (n) ->
 
 	check_tensor_dimensions p2
 
-	tos -= n
+	moveTos tos - n
 
 	push(p2)
 

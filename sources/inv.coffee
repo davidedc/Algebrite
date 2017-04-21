@@ -157,7 +157,7 @@ yyinvg = ->
 	for i in [0...(n * n)]
 		p1.tensor.elem[i] = stack[h + i]
 
-	tos -= 2 * n * n
+	moveTos tos - 2 * n * n
 
 	push(p1)
 

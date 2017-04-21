@@ -75,7 +75,7 @@ add_terms = (n) ->
 
 		n = combine_terms(h, n)
 
-	tos = h + n
+	moveTos h + n
 
 	switch (n)
 		when 0
@@ -325,7 +325,7 @@ add_all = (k) ->
 		push_terms(stack[s+i])
 	add_terms(tos - h)
 	p1 = pop()
-	tos -= k
+	moveTos tos - k
 	push(p1)
 	restore()
 

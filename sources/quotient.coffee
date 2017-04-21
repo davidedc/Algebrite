@@ -99,7 +99,7 @@ divpoly = ->
 		m--
 		x--
 
-	tos = h
+	moveTos h
 
 	push(p5)
 

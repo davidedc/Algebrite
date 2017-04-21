@@ -13,7 +13,7 @@ stop = (s) ->
 		message = errorMessage
 
 		errorMessage = ''
-		tos = 0
+		moveTos 0
 
 		throw new Error(message)
 		

@@ -144,7 +144,7 @@ determinant = (n) ->
 
 	stack[h] = stack[tos - 1]
 
-	tos = h + 1
+	moveTos h + 1
 
 #-----------------------------------------------------------------------------
 #
@@ -188,7 +188,7 @@ yydetg = ->
 
 	lu_decomp(n)
 
-	tos -= n * n
+	moveTos tos - n * n
 
 	push(p1)
 

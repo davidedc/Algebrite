@@ -196,7 +196,7 @@ remove_negative_exponents = ->
 		if (k < j)
 			j = k
 
-	tos = h
+	moveTos h
 
 	if (j == 0)
 		return
@@ -313,7 +313,7 @@ expand_get_C = ->
 			push(p9)
 			filter()
 			p4.tensor.elem[n * i + j] = pop()
-	tos -= n
+	moveTos tos - n
 
 # The following table shows the push order for simple roots, repeated roots,
 # and inrreducible factors.
@@ -501,7 +501,7 @@ expand_get_A = ->
 	p8.tensor.dim[0] = n
 	for i in [0...n]
 		p8.tensor.elem[i] = stack[h + i]
-	tos = h
+	moveTos h
 	p2 = p8
 
 expand_get_AF = ->

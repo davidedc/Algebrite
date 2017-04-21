@@ -103,7 +103,7 @@ bake_poly = ->
 		swap()
 		cons()
 	p1 = pop()
-	tos -= k
+	moveTos tos - k
 	push(p1)
 
 # p1 points to coefficient of p2 ^ k

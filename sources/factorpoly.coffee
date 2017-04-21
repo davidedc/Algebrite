@@ -263,7 +263,7 @@ yyfactorpoly = ->
 					multiply_noexpand()
 					p7 = pop()
 					stack[h] = p7
-					tos = h + 1
+					moveTos h + 1
 					restore()
 					return
 
@@ -345,7 +345,7 @@ yyfactorpoly = ->
 
 	stack[h] = p7
 
-	tos = h + 1
+	moveTos h + 1
 
 	restore()
 
@@ -449,7 +449,7 @@ get_factor_from_real_root = ->
 				console.log(")=" + p6)
 
 			if (iszero(p6))
-				tos = h
+				moveTos h
 				if DEBUG then console.log "get_factor_from_real_root returning 1"
 				return 1
 
@@ -472,11 +472,11 @@ get_factor_from_real_root = ->
 				console.log(")=" + p6)
 
 			if (iszero(p6))
-				tos = h
+				moveTos h
 				if DEBUG then console.log "get_factor_from_real_root returning 1"
 				return 1
 
-	tos = h
+	moveTos h
 
 	if DEBUG then console.log "get_factor_from_real_root returning 0"
 	return 0
@@ -515,7 +515,7 @@ get_factor_from_complex_root = (remainingPoly) ->
 	Evalpoly()
 	if DEBUG then console.log("complex root finding result: " + p6)
 	if (iszero(p6))
-		tos = h
+		moveTos h
 		if DEBUG then console.log "get_factor_from_complex_root returning 1"
 		return 1
 
@@ -534,7 +534,7 @@ get_factor_from_complex_root = (remainingPoly) ->
 	Evalpoly()
 	if DEBUG then console.log("complex root finding result: " + p6)
 	if (iszero(p6))
-		tos = h
+		moveTos h
 		if DEBUG then console.log "get_factor_from_complex_root returning 1"
 		return 1
 
@@ -562,11 +562,11 @@ get_factor_from_complex_root = (remainingPoly) ->
 
 			#console.log("complex root finding result: " + p6)
 			if (iszero(p6))
-				tos = h
+				moveTos h
 				if DEBUG then console.log "found complex root: " + p6
 				return 1
 
-	tos = h
+	moveTos h
 
 	if DEBUG then console.log "get_factor_from_complex_root returning 0"
 	return 0

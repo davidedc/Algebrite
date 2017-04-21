@@ -101,7 +101,7 @@ sfac_product = ->
 
 	p1 = pop()
 
-	tos -= n
+	moveTos tos - n
 
 	push(p1)
 

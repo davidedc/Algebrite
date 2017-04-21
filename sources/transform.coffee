@@ -223,7 +223,7 @@ transform = (s, generalTransform) ->
 
 
 
-	tos = transform_h
+	moveTos transform_h
 
 
 	if transformationSuccessful

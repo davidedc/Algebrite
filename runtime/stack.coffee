@@ -44,7 +44,25 @@ push = (p) ->
 
 # returns a U
 
-#popsNum = 0
+moveTos = (stackPos) ->
+	if tos <= stackPos
+		# we are moving the stack pointer
+		# "up" the stack (as if we were doing a push)
+		tos = stackPos
+		return
+	# we are moving the stack pointer
+	# "down" the stack i.e. as if we were
+	# doing a pop, we can zero-
+	# out all the elements that we pass
+	# so we can reclaim the memory
+	while tos > stackPos
+		stack[tos] = null
+		tos--
+	return
+
+top = ->
+	stack[tos-1]
+
 pop = ->
 	#popsNum++
 	#console.log "pop #" + popsNum

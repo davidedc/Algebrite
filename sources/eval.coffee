@@ -440,7 +440,7 @@ Eval_index = ->
 	if !istensor(theTensor)
 		# the tensor is not allocated yet, so
 		# leaving the expression unevalled
-		tos = h
+		moveTos h
 		push orig
 		return
 
@@ -454,7 +454,7 @@ Eval_index = ->
 		if !isinteger(stack[tos-1])
 			# index with something other than
 			# an integer
-			tos = h
+			moveTos h
 			push orig
 			return
 		p1 = cdr(p1)
@@ -658,16 +658,15 @@ Eval_noexpand = ->
 
 Eval_predicate = ->
 	save()
-	p1 = pop()
+	p1 = top()
 	if (car(p1) == symbol(SETQ))
 		# replace the assignment in the
 		# head with an equality test
+		pop()
 		push_symbol(TESTEQ)
 		push cadr(p1)
 		push caddr(p1)
 		list 3
-	else
-		push(p1)
 
 	Eval()
 	restore()

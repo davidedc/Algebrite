@@ -343,7 +343,7 @@ multiply_all = (n) ->
 		push(stack[h + i])
 		multiply()
 	stack[h] = pop()
-	tos = h + 1
+	moveTos h + 1
 
 # n an integer
 multiply_all_noexpand = (n) ->

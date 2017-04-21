@@ -30,7 +30,7 @@ divisors = ->
 	p1.tensor.dim[0] = n
 	for i in [0...n]
 		p1.tensor.elem[i] = stack[h + i]
-	tos = h
+	moveTos h
 	push(p1)
 	restore()
 
@@ -95,7 +95,7 @@ divisors_onstack = ->
 	for i in [0...n]
 		stack[h + i] = stack[k + i]
 
-	tos = h + n
+	moveTos h + n
 
 	restore()
 

@@ -157,12 +157,12 @@ roots = ->
 		if DEBUG then console.log("yes, " + stack[tos-1].toString() + " is a case of simple roots")
 		lastCoeff = stack[tos-k]
 		leadingCoeff = stack[tos-1]
-		tos -= k
+		moveTos tos - k
 		pop()
 		pop()
 		getSimpleRoots(k, leadingCoeff, lastCoeff)
 	else
-		tos -= k
+		moveTos tos - k
 		roots2()
 
 	n = tos - h
@@ -178,7 +178,7 @@ roots = ->
 	p1.tensor.dim[0] = n
 	for i in [0...n]
 		p1.tensor.elem[i] = stack[h + i]
-	tos = h
+	moveTos h
 	push(p1)
 	restore()
 	performing_roots = false
@@ -247,11 +247,11 @@ roots2 = ->
 	k = normalisedCoeff()
 
 	if !hasImaginaryCoeff(k)
-		tos -= k
+		moveTos tos - k
 		factorpoly()
 		p1 = pop()
 	else
-		tos -= k
+		moveTos tos - k
 		pop()
 		pop()
 
@@ -1826,7 +1826,7 @@ mini_solve = (n) ->
 			restore()
 			return
 
-	tos -= n
+	moveTos tos - n
 
 	restore()
 

@@ -87,7 +87,7 @@ Eval_nroots = ->
 
 	# pop the coefficients
 
-	tos = h
+	moveTos h
 
 	# n is the number of coefficients, n = deg(p) + 1
 
@@ -117,7 +117,7 @@ Eval_nroots = ->
 		p1.tensor.dim[0] = n
 		for i in [0...n]
 			p1.tensor.elem[i] = stack[h + i]
-		tos = h
+		moveTos h
 		push(p1)
 
 # divide the polynomial by its leading coefficient
