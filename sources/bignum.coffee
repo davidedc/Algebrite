@@ -1,14 +1,10 @@
 
 
-MP_MIN_SIZE = 2
-MP_MAX_FREE  = 1000
 
 #double convert_rational_to_double(U *)
 #double convert_bignum_to_double(unsigned int *)
 #int ge(unsigned int *, unsigned int *, int)
 
-mtotal = 0
-free_stack = []
 
 
 mint = (a) ->
@@ -44,6 +40,10 @@ makePositive = (a) ->
 
 # n is an int
 ###
+mtotal = 0
+MP_MIN_SIZE = 2
+MP_MAX_FREE  = 1000
+
 mnew = (n) ->
 	if (n < MP_MIN_SIZE)
 		n = MP_MIN_SIZE
@@ -61,6 +61,8 @@ mnew = (n) ->
 # p is the index of array of ints
 # !!! array wasn't passed here
 ###
+free_stack = []
+
 mfree = (array, p) ->
 	p -= 3
 	mtotal -= array[p]
