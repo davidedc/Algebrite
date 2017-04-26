@@ -201,6 +201,7 @@ QUOTIENT = counter++
 RANK = counter++
 RATIONALIZE = counter++
 REAL = counter++
+ROUND = counter++
 YYRECT = counter++
 ROOTS = counter++
 SETQ = counter++

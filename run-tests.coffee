@@ -85,6 +85,7 @@ selftest  = ->
 	test_rationalize()
 	test_real()
 	test_rect()
+	test_round()
 	test_sgn()
 	test_taylor()
 	test_zero()

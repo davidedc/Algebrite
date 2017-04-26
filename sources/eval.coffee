@@ -233,6 +233,7 @@ Eval_cons = ->
 		when RANK then Eval_rank()
 		when RATIONALIZE then Eval_rationalize()
 		when REAL then Eval_real()
+		when ROUND then Eval_round()
 		when YYRECT then Eval_rect()
 		when ROOTS then Eval_roots()
 		when SETQ then Eval_setq()

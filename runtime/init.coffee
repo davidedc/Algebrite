@@ -208,6 +208,7 @@ defn = ->
 	std_symbol("real", REAL)
 	std_symbol("rect", YYRECT)
 	std_symbol("roots", ROOTS)
+	std_symbol("round", ROUND)
 	std_symbol("equals", SETQ)
 	std_symbol("sgn", SGN)
 	std_symbol("silentpattern", SILENTPATTERN)
