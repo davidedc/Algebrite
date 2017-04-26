@@ -765,6 +765,23 @@ test_dependencies = ->
 				console.log "fail dependency tests"
 
 
+	do_clearall()
+
+	# tests
+
+	res = computeResultsAndJavaScriptFromAlgebra "f=floor(x) + ceiling(x) + round(x)"
+
+	if res.code == 'f = function (x) { return ( ceiling(x) + floor(x) + round(x) ); }' and
+		res.latexResult == '$$f(x) =  \\lceil {x} \\rceil + \\lfloor {x} \\rfloor +round(x)$$' and
+		res.dependencyInfo.affectsVariables.length == 1 and
+		res.dependencyInfo.affectsVariables[0] == 'f' and
+		res.dependencyInfo.affectedBy.length == 2 and
+		res.dependencyInfo.affectedBy[0] == 'x' and
+		res.dependencyInfo.affectedBy[1] == 'PATTERN_DEPENDENCY'
+				console.log "ok dependency test"
+		else
+				console.log "fail dependency tests"
+
 
 	do_clearall()
 

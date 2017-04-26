@@ -1345,6 +1345,25 @@ print_factor = (p, omitParens) ->
 		if printMode == PRINTMODE_LATEX
 			accumulator += print_TESTEQ_latex(p)
 			return accumulator
+	else if car(p) == symbol(FLOOR)
+		if codeGen
+			accumulator += "Math.floor("+print_expr(cadr(p))+")"
+			return accumulator
+		if printMode == PRINTMODE_LATEX
+			accumulator += " \\lfloor {" + print_expr(cadr(p)) + "} \\rfloor "
+			return accumulator
+	else if car(p) == symbol(CEILING)
+		debugger
+		if codeGen
+			accumulator += "Math.ceiling("+print_expr(cadr(p))+")"
+			return accumulator
+		if printMode == PRINTMODE_LATEX
+			accumulator += " \\lceil {" + print_expr(cadr(p)) + "} \\rceil "
+			return accumulator
+	else if car(p) == symbol(ROUND)
+		if codeGen
+			accumulator += "Math.round("+print_expr(cadr(p))+")"
+			return accumulator
 	else if car(p) == symbol(SETQ)
 		if codeGen
 			accumulator += print_SETQ_codegen(p)
