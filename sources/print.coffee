@@ -464,10 +464,22 @@ print_DOT_codegen = (p) ->
 	accumulator += ")"
 	return accumulator
 
+print_SIN_latex = (p) ->
+	accumulator = print_str("\\sin\\left(")
+	accumulator += print_expr(cadr(p))
+	accumulator += print_str("\\right)")
+	return accumulator
+
 print_SIN_codegen = (p) ->
 	accumulator = "Math.sin("
 	accumulator += print_expr(cadr(p))
 	accumulator += ")"
+	return accumulator
+
+print_COS_latex = (p) ->
+	accumulator = print_str("\\cos\\left(")
+	accumulator += print_expr(cadr(p))
+	accumulator += print_str("\\right)")
 	return accumulator
 
 print_COS_codegen = (p) ->
@@ -476,10 +488,22 @@ print_COS_codegen = (p) ->
 	accumulator += ")"
 	return accumulator
 
+print_TAN_latex = (p) ->
+	accumulator = print_str("\\tan\\left(")
+	accumulator += print_expr(cadr(p))
+	accumulator += print_str("\\right)")
+	return accumulator
+
 print_TAN_codegen = (p) ->
 	accumulator = "Math.tan("
 	accumulator += print_expr(cadr(p))
 	accumulator += ")"
+	return accumulator
+
+print_ARCSIN_latex = (p) ->
+	accumulator = print_str("\\arcsin\\left(")
+	accumulator += print_expr(cadr(p))
+	accumulator += print_str("\\right)")
 	return accumulator
 
 print_ARCSIN_codegen = (p) ->
@@ -488,10 +512,22 @@ print_ARCSIN_codegen = (p) ->
 	accumulator += ")"
 	return accumulator
 
+print_ARCCOS_latex = (p) ->
+	accumulator = print_str("\\arccos\\left(")
+	accumulator += print_expr(cadr(p))
+	accumulator += print_str("\\right)")
+	return accumulator
+
 print_ARCCOS_codegen = (p) ->
 	accumulator = "Math.acos("
 	accumulator += print_expr(cadr(p))
 	accumulator += ")"
+	return accumulator
+
+print_ARCTAN_latex = (p) ->
+	accumulator = print_str("\\arctan\\left(")
+	accumulator += print_expr(cadr(p))
+	accumulator += print_str("\\right)")
 	return accumulator
 
 print_ARCTAN_codegen = (p) ->
@@ -1056,17 +1092,17 @@ print_power = (base, exponent) ->
 		# determining if it needs to be
 		# wrapped in parentheses or not
 		if (isadd(base) || isnegativenumber(base))
-			accumulator += print_str('(')
+			accumulator += (if printMode == PRINTMODE_LATEX then print_str('\\left(') else print_str('('))
 			accumulator += print_expr(base)
-			accumulator += print_str(')')
+			accumulator += (if printMode == PRINTMODE_LATEX then print_str('\\right)') else print_str(')'))
 		else if ( car(base) == symbol(MULTIPLY) || car(base) == symbol(POWER))
 			if printMode != PRINTMODE_LATEX then accumulator += print_str('(')
 			accumulator += print_factor(base, true)
 			if printMode != PRINTMODE_LATEX then accumulator += print_str(')')
 		else if (isnum(base) && (lessp(base, zero) || isfraction(base)))
-			accumulator += print_str('(')
+			accumulator += (if printMode == PRINTMODE_LATEX then print_str('\\left(') else print_str('('))
 			accumulator += print_factor(base)
-			accumulator += print_str(')')
+			accumulator += (if printMode == PRINTMODE_LATEX then print_str('\\right)') else print_str(')'))
 		else
 			accumulator += print_factor(base)
 
@@ -1153,9 +1189,9 @@ print_factor = (p, omitParens) ->
 					accumulator += print_str(')')
 		return accumulator
 	else if (isadd(p))
-		if !omitParens then accumulator += print_str('(')
+		if !omitParens then accumulator += (if printMode == PRINTMODE_LATEX then print_str('\\left(') else print_str('('))
 		accumulator += print_expr(p)
-		if !omitParens then accumulator += print_str(')')
+		if !omitParens then accumulator += (if printMode == PRINTMODE_LATEX then print_str('\\right)') else print_str(')'))
 		return accumulator
 
 	if (car(p) == symbol(POWER))
@@ -1254,26 +1290,44 @@ print_factor = (p, omitParens) ->
 			accumulator += print_DOT_codegen(p)
 			return accumulator
 	else if car(p) == symbol(SIN)
-		if codeGen
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_SIN_latex(p)
+			return accumulator
+		else if codeGen
 			accumulator += print_SIN_codegen(p)
 			return accumulator
 	else if car(p) == symbol(COS)
-		if codeGen
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_COS_latex(p)
+			return accumulator
+		else if codeGen
 			accumulator += print_COS_codegen(p)
 			return accumulator
 	else if car(p) == symbol(TAN)
-		if codeGen
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_TAN_latex(p)
+			return accumulator
+		else if codeGen
 			accumulator += print_TAN_codegen(p)
 			return accumulator
 	else if car(p) == symbol(ARCSIN)
-		if codeGen
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_ARCSIN_latex(p)
+			return accumulator
+		else if codeGen
 			accumulator += print_ARCSIN_codegen(p)
 			return accumulator
 	else if car(p) == symbol(ARCCOS)
-		if codeGen
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_ARCCOS_latex(p)
+			return accumulator
+		else if codeGen
 			accumulator += print_ARCCOS_codegen(p)
 			return accumulator
 	else if car(p) == symbol(ARCTAN)
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_ARCTAN_latex(p)
+			return accumulator
 		if codeGen
 			accumulator += print_ARCTAN_codegen(p)
 			return accumulator
