@@ -418,9 +418,9 @@ print_term = (p) ->
 
 print_subexpr = (p) ->
 	accumulator = ""
-	accumulator += print_char('(')
+	accumulator += if printMode == PRINTMODE_LATEX then print_str('\\left(') else print_char('(')
 	accumulator += print_expr(p)
-	accumulator += print_char(')')
+	accumulator += if printMode == PRINTMODE_LATEX then print_str('\\right)') else print_char(')')
 	return accumulator
 
 print_factorial_function = (p) ->
@@ -1459,9 +1459,9 @@ print_factor = (p, omitParens) ->
 		#	print_str(((struct symbol *) cadr(p))->name)
 		#	return
 		#}
-		accumulator += print_factor(car(p))
+		accumulator += (if printMode==PRINTMODE_LATEX then print_str('\\mathrm{' + print_factor(car(p)) + '}') else print_factor(car(p)))
 		p = cdr(p)
-		if !omitParens then accumulator += print_str('(')
+		if !omitParens then accumulator += (if printMode==PRINTMODE_LATEX then print_str('\\left(') else print_str('('))
 		if (iscons(p))
 			accumulator += print_expr(car(p))
 			p = cdr(p)
@@ -1469,7 +1469,7 @@ print_factor = (p, omitParens) ->
 				accumulator += print_str(",")
 				accumulator += print_expr(car(p))
 				p = cdr(p)
-		if !omitParens then accumulator += print_str(')')
+		if !omitParens then accumulator += (if printMode==PRINTMODE_LATEX then print_str('\\right)') else print_str(')'))
 		return accumulator
 
 	if (p == symbol(DERIVATIVE))
