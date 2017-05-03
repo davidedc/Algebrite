@@ -464,6 +464,12 @@ print_DOT_codegen = (p) ->
 	accumulator += ")"
 	return accumulator
 
+print_LOG_latex = (p) ->
+	accumulator = print_str("\\log \\left(")
+	accumulator += print_expr(cadr(p))
+	accumulator += print_str("\\right)")
+	return accumulator
+
 print_SIN_latex = (p) ->
 	accumulator = print_str("\\sin\\left(")
 	accumulator += print_expr(cadr(p))
@@ -586,6 +592,18 @@ print_INV_codegen = (p) ->
 	accumulator += print_str("inv(")
 	accumulator += print_expr(cadr(p))
 	accumulator += print_str(')')
+	return accumulator
+
+print_INTEGRAL_latex = (p) ->
+	accumulator = ""
+	functionBody = car(cdr(p))
+
+	accumulator = "\\int "
+	accumulator += functionBody
+	accumulator += " \\, \\mathrm{d}"
+	# This works when second arg to integral is provided, but breaks when it isn't
+	accumulator += print_expr(caddr(p))
+
 	return accumulator
 
 print_DEFINT_latex = (p) ->
@@ -1279,6 +1297,9 @@ print_factor = (p, omitParens) ->
 	else if (car(p) == symbol(BINOMIAL) && printMode == PRINTMODE_LATEX)
 		accumulator += print_BINOMIAL_latex(p)
 		return accumulator
+	else if (car(p) == symbol(INTEGRAL) && printMode == PRINTMODE_LATEX)
+		accumulator += print_INTEGRAL_latex(p)
+		return accumulator
 	else if (car(p) == symbol(DEFINT) && printMode == PRINTMODE_LATEX)
 		accumulator += print_DEFINT_latex(p)
 		return accumulator
@@ -1288,6 +1309,10 @@ print_factor = (p, omitParens) ->
 			return accumulator
 		else if codeGen
 			accumulator += print_DOT_codegen(p)
+			return accumulator
+	else if car(p) == symbol(LOG)
+		if printMode == PRINTMODE_LATEX
+			accumulator += print_LOG_latex(p)
 			return accumulator
 	else if car(p) == symbol(SIN)
 		if printMode == PRINTMODE_LATEX
