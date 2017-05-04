@@ -598,11 +598,28 @@ print_INTEGRAL_latex = (p) ->
 	accumulator = ""
 	functionBody = car(cdr(p))
 
-	accumulator = "\\int "
-	accumulator += functionBody
-	accumulator += " \\, \\mathrm{d}"
-	# This works when second arg to integral is provided, but breaks when it isn't
-	accumulator += print_expr(caddr(p))
+	p = cdr(p)
+	originalIntegral = p
+	numberOfIntegrals = 0
+
+	while iscons(cdr(p))
+		numberOfIntegrals++
+		accumulator += print_str("\\int ")
+		accumulator += print_str(" \\! ")
+		p = cdr(p)
+
+	accumulator += print_expr(functionBody)
+	accumulator += print_str(" \\,")
+	
+	p = originalIntegral
+
+	for i in [1..numberOfIntegrals]
+		theVariable = cdr(p)
+		accumulator += print_str(" \\mathrm{d} ")
+		accumulator += print_expr(car(theVariable))
+		if i < numberOfIntegrals
+			accumulator += print_str(" \\, ")
+		p = cdr(p)
 
 	return accumulator
 
@@ -1176,6 +1193,7 @@ print_factor = (p, omitParens) ->
 	accumulator = ""
 	if (isnum(p))
 		accumulator += print_number(p, false)
+		# accumulator += (if printMode==PRINTMODE_LATEX then print_str('('+p+')') else print_number(p,false))
 		return accumulator
 
 	if (isstr(p))
