@@ -921,6 +921,14 @@ print_DO_codegen = (p) ->
 
 	return accumulator
 
+print_CHOOSE_latex = (p) ->
+	accumulator = "\\binom{"
+	accumulator += print_expr(cadr(p))
+	accumulator += "}{"
+	accumulator += print_expr(caddr(p))
+	accumulator += "}"
+	return accumulator
+
 print_SETQ_codegen = (p) ->
 	accumulator = ""
 	accumulator += print_expr(cadr(p))
@@ -1461,6 +1469,9 @@ print_factor = (p, omitParens) ->
 		if codeGen
 			accumulator += "Math.round("+print_expr(cadr(p))+")"
 			return accumulator
+	else if (car(p) == symbol(CHOOSE) && printMode == PRINTMODE_LATEX)
+		accumulator += print_CHOOSE_latex(p)
+		return accumulator
 	else if car(p) == symbol(SETQ)
 		if codeGen
 			accumulator += print_SETQ_codegen(p)
