@@ -1,5 +1,6 @@
 test_clearall = ->
-	run_test [			
+	run_test [
+
 		"a = 1",
 		"",
 			
