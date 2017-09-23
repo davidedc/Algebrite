@@ -6,7 +6,7 @@
 
   bigInt = require('big-integer');
 
-  version = "1.0.3";
+  version = "1.1.1";
 
   SELFTEST = 1;
 
