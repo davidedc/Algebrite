@@ -370,6 +370,8 @@ scan_factor = ->
 
 	#console.log "scan_factor token: " + token
 
+	firstFactorIsNumber = false
+
 	if (token == '(')
 		scan_subexpr()
 	else if (token == T_SYMBOL)
@@ -381,9 +383,11 @@ scan_factor = ->
 		#debugger
 		scan_tensor()
 	else if (token == T_INTEGER)
+		firstFactorIsNumber = true
 		bignum_scan_integer(token_buf)
 		get_next_token()
 	else if (token == T_DOUBLE)
+		firstFactorIsNumber = true
 		bignum_scan_float(token_buf)
 		get_next_token()
 	else if (token == T_STRING)
@@ -396,13 +400,13 @@ scan_factor = ->
 	# we just scanned above,
 	# we can get an arbitrary about of appendages
 	# of the form ...[...](...)...
-	# These are all, respectively,
+	# If the main part is not a number, then these are all, respectively,
 	#  - index references (as opposed to tensor definition) and
 	#  - function calls without an explicit function name
 	#    (instead of subexpressions or parameters of function
 	#    definitions or function calls with an explicit function
 	#    name), respectively
-	while token == '[' or token == '(' and newline_flag == 0
+	while token == '[' or token == '(' and newline_flag == 0 and !firstFactorIsNumber
 		if token == '['
 			scan_index(h)
 		else if token == '('
