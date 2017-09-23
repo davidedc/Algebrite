@@ -5,7 +5,7 @@
 
   bigInt = require('big-integer');
 
-  version = "1.1.1";
+  version = "1.1.2";
 
   SELFTEST = 1;
 
@@ -19078,8 +19078,9 @@
   };
 
   scan_factor = function() {
-    var h;
+    var firstFactorIsNumber, h;
     h = tos;
+    firstFactorIsNumber = false;
     if (token === '(') {
       scan_subexpr();
     } else if (token === T_SYMBOL) {
@@ -19089,9 +19090,11 @@
     } else if (token === '[') {
       scan_tensor();
     } else if (token === T_INTEGER) {
+      firstFactorIsNumber = true;
       bignum_scan_integer(token_buf);
       get_next_token();
     } else if (token === T_DOUBLE) {
+      firstFactorIsNumber = true;
       bignum_scan_float(token_buf);
       get_next_token();
     } else if (token === T_STRING) {
@@ -19099,7 +19102,7 @@
     } else {
       scan_error("syntax error");
     }
-    while (token === '[' || token === '(' && newline_flag === 0) {
+    while (token === '[' || token === '(' && newline_flag === 0 && !firstFactorIsNumber) {
       if (token === '[') {
         scan_index(h);
       } else if (token === '(') {
