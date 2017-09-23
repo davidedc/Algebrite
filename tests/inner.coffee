@@ -37,6 +37,10 @@ test_inner = ->
 		"inner([1,2],[3,4])",
 		"11",
 
+		# non-invertible matrix
+		"inner([[2,2],[2,2]],[[0],[1]])",
+		"[[2],[2]]",
+
 		"inner(inner([1,2],[[3,4],[5,6]]),[7,8])",
 		"219",
 
@@ -154,6 +158,22 @@ test_inner = ->
 
 		"c·(b+a)ᵀ·inv((a+b)ᵀ)·d",
 		"inner(c,d)",
+			
+		"c·inv((b+a)ᵀ)·(a+b)ᵀ·d",
+		"inner(c,d)",
+			
+		"c·(b+a)ᵀ·inv((a+b)ᵀ)·inv(c)",
+		"I",
+
+		"c·inv((b+a)ᵀ)·(a+b)ᵀ·inv(c)",
+		"I",
+			
+		"inv(c)·(b+a)ᵀ·inv((a+b)ᵀ)·c",
+		"I",
+
+		"inv(c)·inv((b+a)ᵀ)·(a+b)ᵀ·c",
+		"I",
+			
 			
 		"c·d·(b+a)ᵀ·inv((a+b)ᵀ)",
 		"inner(c,d)",

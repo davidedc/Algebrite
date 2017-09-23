@@ -133,24 +133,33 @@ Eval_inner = ->
 	
 	refinedOperands = []
 	if operands.length > 1
-		# removing all consecutive couples of inverses
+		# removing all consecutive pairs of inverses
+		# so we can answer that inv(a)·a results in the
+		# identity matrix. We want to catch symbolic inverses
+		# not numeric inverses, those will just take care
+		# of themselves when multiplied
 		shift = 0
 		for i in [0...operands.length]
-
 			#console.log "comparing if " + operands[i+shift] + " and " + operands[i+shift+1] + " are inverses of each other"
 			if (i+shift+1) <= (operands.length - 1)
-				push operands[i+shift]
-				Eval()
-				inv()
-				push operands[i+shift+1]
-				Eval()
-				subtract()
-				difference = pop()
-				#console.log "result: " + difference
-				if (iszero(difference))
-					shift+=1
+				#console.log "isnumerictensor " + operands[i+shift] + " : " + isnumerictensor(operands[i+shift])
+				#console.log "isnumerictensor " + operands[i+shift+1] + " : " + isnumerictensor(operands[i+shift+1])
+				if !(isnumerictensor(operands[i+shift]) or isnumerictensor(operands[i+shift+1]))
+					push operands[i+shift]
+					Eval()
+					inv()
+					push operands[i+shift+1]
+					Eval()
+					subtract()
+					difference = pop()
+					#console.log "result: " + difference
+					if (iszero(difference))
+						shift+=1
+					else
+						refinedOperands.push operands[i+shift]
 				else
 					refinedOperands.push operands[i+shift]
+
 			else
 				break
 
@@ -252,18 +261,19 @@ inner = ->
 		inner_f()
 	else
 
-		# simple check if the two elements are one the
-		# inv of the other. If they are, the answer is
+		# simple check if the two consecutive elements are one the
+		# (symbolic) inv of the other. If they are, the answer is
 		# the identity matrix
-		push p1
-		push p2
-		inv()
-		subtract()
-		subtractionResult = pop()
-		if (iszero(subtractionResult))
-			push_symbol(SYMBOL_IDENTITY_MATRIX)
-			restore()
-			return
+		if !(isnumerictensor(p1) or isnumerictensor(p2))
+			push p1
+			push p2
+			inv()
+			subtract()
+			subtractionResult = pop()
+			if (iszero(subtractionResult))
+				push_symbol(SYMBOL_IDENTITY_MATRIX)
+				restore()
+				return
 
 
 		# if either operand is a sum then distribute

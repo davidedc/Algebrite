@@ -85,15 +85,8 @@ inv = ->
 		restore()
 		return
 
-	n = p1.tensor.nelem
 
-	a = p1.tensor.elem
-
-	for i in [0...n]
-		if (!isnum(a[i]))
-			break
-
-	if (i == n)
+	if isnumerictensor p1
 		yyinvg()
 	else
 		push(p1)
