@@ -4,6 +4,39 @@ test_mixedprint = ->
 		"1.0",
 		"1.0",
 
+		"1111 * 1111.0",
+		"1234321.0",
+
+		"1111.0 * 1111",
+		"1234321.0",
+
+		"1111.0 * 1111.0",
+		"1234321.0",
+
+		"11111111 * 11111111.0",
+		"123456787654321.0",
+
+		"11111111.0 * 11111111",
+		"123456787654321.0",
+
+		"11111111.0 * 11111111.0",
+		"123456787654321.0",
+
+		# unfortunately using Numbers
+		# at some point we hit the precision
+		"111111111 * 111111111.0",
+		"12345678987654320.0",
+
+		# unfortunately using Numbers
+		# at some point we hit the precision
+		"111111111.0 * 111111111",
+		"12345678987654320.0",
+
+		# unfortunately using Numbers
+		# at some point we hit the precision
+		"111111111.0 * 111111111.0",
+		"12345678987654320.0",
+
 		"print(\"hello\")",
 		"\"hello\"",
 

@@ -24,7 +24,9 @@ doubleToReasonableString = (d) ->
 
 	# remove trailing zeroes beyond decimal point and
 	# gives at most 6 digits after the point
-	stringRepresentation = "" + parseFloat(d.toPrecision(6))
+	# see "Remove insignificant trailing zeros from a number?"
+	# here: https://stackoverflow.com/a/19623253
+	stringRepresentation = "" + parseFloat(d.toFixed(6))
 
 	# we actually want to give a hint to user that
 	# it's a double, so add a trailing ".0" if there
