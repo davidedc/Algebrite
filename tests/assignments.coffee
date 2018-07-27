@@ -27,7 +27,21 @@ test_assignments = ->
 		# we can say that the user probably meant to use
 		# the multiplication
 		"(f-f)(a)",
-		"Stop: expected function invocation, multiplication found instead. Use '*' symbol explicitly for multiplication.",
+		"Stop: expected function invocation, found multiplication instead. Use '*' symbol explicitly for multiplication.",
+
+		# tensor instead of function
+		"([1,2])(a)",
+		"Stop: expected function invocation, found tensor product instead. Use 'dot/inner' explicitly.",
+
+		"[1,2](a)",
+		"Stop: expected function invocation, found tensor product instead. Use 'dot/inner' explicitly.",
+
+		# string instead of function
+		"(\"hey\")(a)",
+		"Stop: expected function, found string instead.",
+
+		"\"hey\"(a)",
+		"Stop: expected function, found string instead.",
 
 		# this is parsed as a function call, (f(a)) is evaluated and
 		# returns something that is not fully evaluated, so we have to

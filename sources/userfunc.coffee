@@ -53,8 +53,12 @@ Eval_user_function = ->
 	# all undefined variables do.
 	bodyAndFormalArguments = pop()
 
-	if isnum(bodyAndFormalArguments) or istensor(bodyAndFormalArguments) or isstr(bodyAndFormalArguments)
-		stop("expected function invocation, multiplication found instead. Use '*' symbol explicitly for multiplication.")
+	if isnum(bodyAndFormalArguments)
+		stop("expected function invocation, found multiplication instead. Use '*' symbol explicitly for multiplication.")
+	else if istensor(bodyAndFormalArguments)
+		stop("expected function invocation, found tensor product instead. Use 'dot/inner' explicitly.")
+	else if isstr(bodyAndFormalArguments)
+		stop("expected function, found string instead.")
 
 	p3 = car(cdr(bodyAndFormalArguments))  # p3 is function body F
 	# p4 is the formal argument list
