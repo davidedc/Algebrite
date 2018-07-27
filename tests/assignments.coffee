@@ -41,6 +41,14 @@ test_assignments = ->
 		"(f-1)(a)",
 		"(-1+f)(a)",
 
+		# similar to the case above
+		"(x-2)(x-1)",
+		"(-2+x)(x-1)",
+
+		# similar to the case above, just with a space
+		"(x-2) (x-1)",
+		"(-2+x)(x-1)",
+
 		# ------------------------------------------
 
 		# ------------------------------------------
