@@ -18,6 +18,33 @@ test_assignments = ->
 
 		# ------------------------------------------
 
+		# f is not defined, so everything left as is
+		"f(a)",
+		"f(a)",
+
+		# this is parsed as a function call, the (f-f) is evaluated and
+		# returns zero, which is not a valid function, so here
+		# we can say that the user probably meant to use
+		# the multiplication
+		"(f-f)(a)",
+		"Stop: expected function invocation, multiplication found instead. Use '*' symbol explicitly for multiplication.",
+
+		# this is parsed as a function call, (f(a)) is evaluated and
+		# returns something that is not fully evaluated, so we have to
+		# leave it all as it was
+		"(f(a))(b)",
+		"f(a)(b)",
+
+		# this is parsed as a function call, the (f-1) is evaluated and
+		# returns something that is not fully evaluated, so again
+		# little that we can do
+		"(f-1)(a)",
+		"(-1+f)(a)",
+
+		# ------------------------------------------
+
+		# ------------------------------------------
+
 		"f(x) = x + 1",
 		"",
 
@@ -78,6 +105,32 @@ test_assignments = ->
 		"1+1",
 
 		# a function returning a function
+
+		"f(x) = x + 1",
+		"",
+
+		"g() = f",
+		"",
+
+		"g()(2)",
+		"3",
+
+		# a function returning a function
+		# variant in which g has an (unneeded) parameter
+
+		"f(x) = x + 1",
+		"",
+
+		"g(y) = f",
+		"",
+
+		"g()(2)",
+		"3",
+
+
+		# a function returning a function
+		# variant in which g has an (unneeded) parameter
+		# with the same name of the parameter that f uses
 
 		"f(x) = x + 1",
 		"",

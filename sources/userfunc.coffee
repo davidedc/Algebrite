@@ -53,12 +53,15 @@ Eval_user_function = ->
 	# all undefined variables do.
 	bodyAndFormalArguments = pop()
 
+	if isnum(bodyAndFormalArguments) or istensor(bodyAndFormalArguments) or isstr(bodyAndFormalArguments)
+		stop("expected function invocation, multiplication found instead. Use '*' symbol explicitly for multiplication.")
+
 	p3 = car(cdr(bodyAndFormalArguments))  # p3 is function body F
 	# p4 is the formal argument list
 	# that is also contained here in the FUNCTION node 
 	p4 = car(cdr(cdr(bodyAndFormalArguments)))
 
-	p5 = cdr(p1); # p5 is B
+	p5 = cdr(p1); # p5 is the calling argument list
 
 	# example:
 	#  f(x) = x+2
@@ -66,18 +69,21 @@ Eval_user_function = ->
 	#  p3.toString() = "x + 2"
 	#  p4 = x
 	#  p5 = 2
-
-	# Undefined function?
-	if (bodyAndFormalArguments == car(p1)) # p3 is F
-		h = tos
-		push(bodyAndFormalArguments); # p3 is F
-		p1 = p5; # p5 is B
-		while (iscons(p1))
-			push(car(p1))
-			Eval()
-			p1 = cdr(p1)
-		list(tos - h)
-		return
+	
+	# first check is whether we don't obtain a function
+	if (car(bodyAndFormalArguments) != symbol(FUNCTION)) or
+	 # next check is whether evaluation did nothing, so the function is undefined
+	 (bodyAndFormalArguments == car(p1)) # p3 is F
+	 	# leave everything as it was and return
+	 	h = tos
+	 	push(bodyAndFormalArguments); # p3 is F
+	 	p1 = p5; # p5 is B
+	 	while (iscons(p1))
+	 		push(car(p1))
+	 		Eval()
+	 		p1 = cdr(p1)
+	 	list(tos - h)
+	 	return
 
 	# Create the argument substitution list p6(S)
 
