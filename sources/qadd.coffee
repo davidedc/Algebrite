@@ -9,46 +9,60 @@
 
 
 qadd = ->
-	# a, ab, b, ba, c are all bigNum
+	# a, qadd_ab, b, qadd_ba, c are all bigNum
+	# we are adding the fractions qadd_frac1 + qadd_frac2 i.e.
+	# qadd_frac1.q.a/qadd_frac1.q.b + qadd_frac2.q.a/qadd_frac2.q.b
 
-	save()
+	qadd_frac2 = pop()
+	qadd_frac1 = pop()
 
-	p2 = pop()
-	p1 = pop()
+	#console.log "qadd qadd_frac1: " + qadd_frac1 + " numerator small: " + qadd_frac1.q.a.isSmall + " denom small: " + qadd_frac1.q.b.isSmall
+	#console.log "qadd qadd_frac2: " + qadd_frac2 + " numerator small: " + qadd_frac2.q.a.isSmall + " denom small: " + qadd_frac2.q.b.isSmall
 
-	ab = mmul(p1.q.a, p2.q.b)
-	ba = mmul(p1.q.b, p2.q.a)
 
-	a = madd(ab, ba)
+	qadd_ab = mmul(qadd_frac1.q.a, qadd_frac2.q.b)
+	#console.log "calculated ab " + qadd_ab + " small: " + qadd_ab.isSmall
+	qadd_ba = mmul(qadd_frac1.q.b, qadd_frac2.q.a)
+	#console.log "calculated ba " + qadd_ba + " small: " + qadd_ba.isSmall
 
-	#mfree(ab)
-	#mfree(ba)
+	qadd_numerator = madd(qadd_ab, qadd_ba)
+
+	#mfree(qadd_ab)
+	#mfree(qadd_ba)
 
 	# zero?
 
-	if (MZERO(a))
-		#mfree(a)
+	if (MZERO(qadd_numerator))
+		#console.log "qadd IS ZERO"
+		#mfree(qadd_numerator)
 		push(zero)
-		restore()
 		return
 
-	b = mmul(p1.q.b, p2.q.b)
+	qadd_denominator = mmul(qadd_frac1.q.b, qadd_frac2.q.b)
 
-	c = mgcd(a, b)
+	#console.log "gcd("+qadd_numerator+","+qadd_denominator+") num small: " + qadd_numerator.isSmall + " denom is small: " + qadd_denominator.isSmall
+	gcdBetweenNumeratorAndDenominator = mgcd(qadd_numerator, qadd_denominator)
+	#console.log "gcd("+qadd_numerator+","+qadd_denominator+"): " + gcdBetweenNumeratorAndDenominator
 
-	c = makeSignSameAs(c,b)
+	gcdBetweenNumeratorAndDenominator = makeSignSameAs(gcdBetweenNumeratorAndDenominator,qadd_denominator)
 
-	p1 = new U()
+	#console.log "qadd qadd_denominator: " + qadd_denominator
+	#console.log "qadd gcdBetweenNumeratorAndDenominator: " + gcdBetweenNumeratorAndDenominator
 
-	p1.k = NUM
+	resultSum = new U()
 
-	p1.q.a = mdiv(a, c)
-	p1.q.b = mdiv(b, c)
+	resultSum.k = NUM
 
-	#mfree(a)
-	#mfree(b)
-	#mfree(c)
+	resultSum.q.a = mdiv(qadd_numerator, gcdBetweenNumeratorAndDenominator)
+	resultSum.q.b = mdiv(qadd_denominator, gcdBetweenNumeratorAndDenominator)
 
-	push(p1)
+	#console.log "qadd resultSum.q.a: " + resultSum.q.a
+	#console.log "qadd resultSum.q.b: " + resultSum.q.b
 
-	restore()
+	#mfree(qadd_numerator)
+	#mfree(qadd_denominator)
+	#mfree(gcdBetweenNumeratorAndDenominator)
+
+	push(resultSum)
+	#console.log "qadd result: " + resultSum
+
