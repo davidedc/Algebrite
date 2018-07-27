@@ -79,12 +79,14 @@ usr_symbol = (s) ->
 	# re-use that location.
 	i = 0
 	for i in [0...NSYM]
+		if (s == symtab[i].printname)
+			# found the symbol
+			return symtab[i]
 		if (symtab[i].printname == "")
 			# found an entry in the symbol table
-			# with no printname
+			# with no printname, exit the loop
+			# and re-use this location
 			break
-		if (s == symtab[i].printname)
-			return symtab[i]
 	if (i == NSYM)
 		stop("symbol table overflow")
 
