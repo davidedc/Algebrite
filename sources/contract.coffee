@@ -83,7 +83,9 @@ yycontract = ->
 		if (i != l && i != m)
 			nelem *= p1.tensor.dim[i]
 
+	#console.log "nelem:" + nelem
 	p2 = alloc_tensor(nelem)
+	#console.log "p2:" + p2
 
 	p2.tensor.ndim = ndim - 2
 
@@ -92,8 +94,12 @@ yycontract = ->
 		if (i != l && i != m)
 			p2.tensor.dim[j++] = p1.tensor.dim[i]
 
+
 	a = p1.tensor.elem
 	b = p2.tensor.elem
+
+	#console.log "a: " + a
+	#console.log "b: " + b
 
 	for i in [0...ndim]
 		ai[i] = 0
@@ -108,8 +114,11 @@ yycontract = ->
 			for k in [0...ndim]
 				h = (h * an[k]) + ai[k]
 			push(a[h])
+			#console.log "a[h]: " + a[h]
 			add()
+			#console.log "tos: " + stack[tos-1]
 		b[i] = pop()
+		#console.log "b[i]: " + b[i]
 		for j in [(ndim - 1)..0]
 			if (j == l || j == m)
 				continue
@@ -122,3 +131,4 @@ yycontract = ->
 	else
 		push(p2)
 
+	#console.log "returning: " + stack[tos-1]
