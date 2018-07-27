@@ -21,11 +21,17 @@ test_eigen = ->
 		"eigenvec([[1,1,1,1],[1,2,3,4],[1,3,6,10],[1,4,10,20]])",
 		"[[0.308686,-0.72309,0.594551,-0.168412],[0.787275,-0.163234,-0.532107,0.265358],[0.530366,0.640332,0.391832,-0.393897],[0.060187,0.201173,0.458082,0.863752]]",
 
-		"eigen(hilbert(50))",
+		"eigen(hilbert(20))",
 		"",
 
-		"1+trace(hilbert(50))-trace(dot(transpose(Q),D,Q))",
-		"1",
+		# "contract" is the trace, but "trace" is a debugging flag in
+		# Algebrite/Eigenmath
+		# this one takes quite some time to finish because of the
+		# "dot(transpose(Q),D,Q))" calculation. Note that since
+		# D and Q are matrices of doubles, the whole result is a double.
+		# also note that the result gives "-0.0", that's why I put the abs there
+		"abs(contract(hilbert(20))-contract(dot(transpose(Q),D,Q)))",
+		"0.0",
 
 		"D=quote(D)",
 		"",
