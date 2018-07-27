@@ -510,7 +510,6 @@ scan_function_call_with_function_name = ->
 	p = usr_symbol(token_buf)
 
 	push(p)
-	get_next_token()	# function name
 	functionName = token_buf
 	if functionName == "roots" or functionName == "defint" or functionName == "sum" or functionName == "product" or functionName == "for"
 		functionInvokationsScanningStack.push token_buf
@@ -518,6 +517,7 @@ scan_function_call_with_function_name = ->
 	if !isSymbolLeftOfAssignment
 		addSymbolRightOfAssignment token_buf
 
+	get_next_token()	# open parens
 	get_next_token()	# 1st parameter
 	scanningParameters.push true
 	if (token != ')')
@@ -587,7 +587,9 @@ scan_function_call_without_function_name = ->
 	if DEBUG then console.log "-- scan_function_call_without_function_name start"
 
 	# the function will have to be looked up
-	# at runtime
+	# at runtime (i.e. we need to evaulate something to find it
+	# e.g. it might be inside a tensor, so we'd need to evaluate
+	# a tensor element access in that case)
 	push_symbol(EVAL)
 	swap()
 	list(2)
