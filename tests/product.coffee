@@ -14,12 +14,25 @@ test_product = ->
 		"float(2*product(2/a(k),k,1,9))",
 		"3.141588",
 
-		"a = quote(a)",
-		"",
 
 		# Wallis' product
 		"2*product(float(4*k^2/(4*k^2-1)),k,1,100)",
 		"3.133787",
+
+		# ---------------------------
+		"f(a,b)=product(k,k,a,b)",
+		"",
+
+		"f(1,2)",
+		"2",
+
+		# --- cleanup
+
+		"a = quote(a)",
+		"",
+
+		"f = quote(f)",
+		"",
 
 
 	]
