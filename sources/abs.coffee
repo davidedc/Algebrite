@@ -192,12 +192,14 @@ absval = ->
 	if (car(p1) == symbol(MULTIPLY))
 		if DEBUG_ABS then console.log " abs: " + p1 + " is a product"
 		# product
-		push_integer(1)
+		anyFactorsYet = false
 		p1 = cdr(p1)
 		while (iscons(p1))
 			push(car(p1))
-			abs()
-			multiply()
+			absval()
+			if anyFactorsYet
+				multiply()
+			anyFactorsYet = true
 			p1 = cdr(p1)
 		if DEBUG_ABS then console.log " --> ABS of " + input + " : " + stack[tos-1]
 		restore()
