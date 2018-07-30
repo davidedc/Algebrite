@@ -12,14 +12,20 @@ numerator = ->
 
 	p1 = pop()
 
+
 	if (car(p1) == symbol(ADD))
 		push(p1)
+		#console.trace "rationalising "
 		rationalize()
 		p1 = pop()
+		#console.log "rationalised: " + p1
 
-	if (car(p1) == symbol(MULTIPLY))
+	if (car(p1) == symbol(MULTIPLY) and !isplusone(car(cdr(p1))))
 		h = tos
 		p1 = cdr(p1)
+		#console.log "p1 inside multiply: " + p1
+		#console.log "first term: " + car(p1)
+
 		while (iscons(p1))
 			push(car(p1))
 			numerator()

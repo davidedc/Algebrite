@@ -26,13 +26,14 @@ denominator = ->
 	save()
 
 	p1 = pop()
+	#console.trace "denominator of: " + p1
 
 	if (car(p1) == symbol(ADD))
 		push(p1)
 		rationalize()
 		p1 = pop()
 
-	if (car(p1) == symbol(MULTIPLY))
+	if (car(p1) == symbol(MULTIPLY) and !isplusone(car(cdr(p1))))
 		h = tos
 		p1 = cdr(p1)
 		while (iscons(p1))
