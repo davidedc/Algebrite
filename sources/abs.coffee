@@ -70,14 +70,25 @@ absValFloat = ->
 abs = ->
 	save()
 	p1 = pop()
+
 	push(p1)
+	if DEBUG_ABS then console.trace ">>>>  ABS of " + p1
 	numerator()
+	if DEBUG_ABS then console.log "ABS numerator " + stack[tos-1]
 	absval()
+	if DEBUG_ABS then console.log "ABSVAL numerator: " + stack[tos-1]
+
 	push(p1)
 	denominator()
+	if DEBUG_ABS then console.log "ABS denominator: " + stack[tos-1]
 	absval()
+	if DEBUG_ABS then console.log "ABSVAL denominator: " + stack[tos-1]
+
 	divide()
+	if DEBUG_ABS then console.log "ABSVAL divided: " + stack[tos-1]
+
 	restore()
+	if DEBUG_ABS then console.log "<<<<<<<  ABS"
 
 absval = ->
 	save()
