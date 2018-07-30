@@ -77,7 +77,7 @@ quickpower = ->
 
 	# fractional part of p2 (EXPO)
 
-	if (!iszero(p4))
+	if (!isZeroAtomOrTensor(p4))
 		push_symbol(POWER)
 		push(p1);  # p1 is BASE
 		push(p4)

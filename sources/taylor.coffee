@@ -97,7 +97,7 @@ taylor = ->
 		derivative()
 		p1 = pop()
 
-		if (iszero(p1))
+		if (isZeroAtomOrTensor(p1))
 			break
 
 		push(p5);	# c = c * (x - a)

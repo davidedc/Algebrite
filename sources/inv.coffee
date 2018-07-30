@@ -86,7 +86,7 @@ inv = ->
 		return
 
 
-	if isnumerictensor p1
+	if isNumericAtomOrTensor p1
 		yyinvg()
 	else
 		push(p1)
@@ -94,7 +94,7 @@ inv = ->
 		push(p1)
 		det()
 		p2 = pop()
-		if (iszero(p2))
+		if (isZeroAtomOrTensor(p2))
 			stop("inverse of singular matrix")
 		push(p2)
 		divide()

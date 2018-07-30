@@ -24,7 +24,7 @@ shape = ->
 	p1 = pop()
 
 	if (!istensor(p1))
-		if (!iszero(p1))
+		if (!isZeroAtomOrTensor(p1))
 			stop("transpose: tensor expected, 1st arg is not a tensor")
 		push(zero)
 		restore()

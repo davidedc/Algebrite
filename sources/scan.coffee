@@ -292,7 +292,7 @@ simplify_1_in_products = (tos,h) ->
 
 # calculate away consecutive constants
 multiply_consecutive_constants = (tos,h)->
-	if (tos > h + 1 && isnum(stack[tos - 2]) && isnum(stack[tos - 1]))
+	if (tos > h + 1 && isNumericAtom(stack[tos - 2]) && isNumericAtom(stack[tos - 1]))
 		multiply()
 
 

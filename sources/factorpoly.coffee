@@ -80,7 +80,7 @@ yyfactorpoly = ->
 	remainingPoly = null
 	while (factpoly_expo > 0)
 
-		if (iszero(stack[polycoeff+0]))
+		if (isZeroAtomOrTensor(stack[polycoeff+0]))
 			push_integer(1)
 			p4 = pop()
 			push_integer(0)
@@ -138,7 +138,7 @@ yyfactorpoly = ->
 				# polynomial part still left to factor.
 				yydivpoly()
 
-				while (factpoly_expo and iszero(stack[polycoeff+factpoly_expo]))
+				while (factpoly_expo and isZeroAtomOrTensor(stack[polycoeff+factpoly_expo]))
 					factpoly_expo--
 
 				push(zero)
@@ -448,7 +448,7 @@ get_factor_from_real_root = ->
 				console.log(", POLY(" + p3)
 				console.log(")=" + p6)
 
-			if (iszero(p6))
+			if (isZeroAtomOrTensor(p6))
 				moveTos h
 				if DEBUG then console.log "get_factor_from_real_root returning 1"
 				return 1
@@ -471,7 +471,7 @@ get_factor_from_real_root = ->
 				console.log(", POLY(" + p3)
 				console.log(")=" + p6)
 
-			if (iszero(p6))
+			if (isZeroAtomOrTensor(p6))
 				moveTos h
 				if DEBUG then console.log "get_factor_from_real_root returning 1"
 				return 1
@@ -514,7 +514,7 @@ get_factor_from_complex_root = (remainingPoly) ->
 	push(p3)
 	Evalpoly()
 	if DEBUG then console.log("complex root finding result: " + p6)
-	if (iszero(p6))
+	if (isZeroAtomOrTensor(p6))
 		moveTos h
 		if DEBUG then console.log "get_factor_from_complex_root returning 1"
 		return 1
@@ -533,7 +533,7 @@ get_factor_from_complex_root = (remainingPoly) ->
 	push(p3)
 	Evalpoly()
 	if DEBUG then console.log("complex root finding result: " + p6)
-	if (iszero(p6))
+	if (isZeroAtomOrTensor(p6))
 		moveTos h
 		if DEBUG then console.log "get_factor_from_complex_root returning 1"
 		return 1
@@ -561,7 +561,7 @@ get_factor_from_complex_root = (remainingPoly) ->
 			Evalpoly()
 
 			#console.log("complex root finding result: " + p6)
-			if (iszero(p6))
+			if (isZeroAtomOrTensor(p6))
 				moveTos h
 				if DEBUG then console.log "found complex root: " + p6
 				return 1

@@ -462,25 +462,26 @@ symbol = (x) -> (symtab[x])
 iscons = (p) -> (p.k == CONS)
 isrational = (p) -> (p.k == NUM)
 isdouble = (p) -> (p.k == DOUBLE)
-isnum = (p) -> (isrational(p) || isdouble(p))
+isNumericAtom = (p) -> (isrational(p) || isdouble(p))
 isstr = (p) -> (p.k == STR)
 istensor = (p) -> (if !p? then debugger else p.k == TENSOR)
 
+
 # because of recursion, we consider a scalar to be
 # a tensor, so a numeric scalar will return true
-isnumerictensor = (p) ->
-	if isnum(p) or p == symbol(SYMBOL_IDENTITY_MATRIX)
+isNumericAtomOrTensor = (p) ->
+	if isNumericAtom(p) or p == symbol(SYMBOL_IDENTITY_MATRIX)
 		return 1
 
-	if !istensor(p) and !isnum(p)
-		#console.log "p not even a tensor: " + p
+	if !istensor(p) and !isNumericAtom(p)
+		#console.log "p not an atom nor a tensor: " + p
 		return 0
 
 	n = p.tensor.nelem
 	a = p.tensor.elem
 
 	for i in [0...n]
-		if !isnumerictensor(a[i])
+		if !isNumericAtomOrTensor(a[i])
 			#console.log "non-numeric element: " + a[i]
 			return 0
 	return 1
@@ -613,7 +614,7 @@ $.symbol         = symbol
 $.iscons         = iscons  
 $.isrational     = isrational      
 $.isdouble       = isdouble    
-$.isnum          = isnum 
+$.isNumericAtom          = isNumericAtom 
 $.isstr          = isstr 
 $.istensor       = istensor    
 $.issymbol       = issymbol    

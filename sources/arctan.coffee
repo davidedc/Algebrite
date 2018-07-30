@@ -40,7 +40,7 @@ arctan = ->
 		restore()
 		return
 
-	if (iszero(p1))
+	if (isZeroAtomOrTensor(p1))
 		push(zero)
 		restore()
 		return

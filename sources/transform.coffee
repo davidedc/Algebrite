@@ -96,7 +96,7 @@ transform = (s, generalTransform) ->
 		# might want to mandate it to be matched at the top
 		# of the tree. For the time
 		# being let's just skip matching on simple numbers.
-		if !isnum(p3)
+		if !isNumericAtom(p3)
 
 			theTransform = s
 			if DEBUG then console.log "applying transform: " + theTransform
@@ -282,7 +282,7 @@ f_equals_a = (h, generalTransform) ->
 				push(car(p1))
 				Eval()
 				p2 = pop()
-				if (iszero(p2))
+				if (isZeroAtomOrTensor(p2))
 					break
 				p1 = cdr(p1)
 
@@ -307,7 +307,7 @@ f_equals_a = (h, generalTransform) ->
 				console.log "  comparing " + stack[tos-1] + " to: " + stack[tos-2]
 			subtract()
 			p1 = pop()
-			if (iszero(p1))
+			if (isZeroAtomOrTensor(p1))
 				if DEBUG
 					console.log "binding METAA to " + get_binding(symbol(METAA))
 					console.log "binding METAB to " + get_binding(symbol(METAB))

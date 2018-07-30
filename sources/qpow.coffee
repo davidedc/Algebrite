@@ -18,7 +18,7 @@ qpowf = ->
 	p1 = pop(); # p1 is BASE
 
 	# if base is 1 or exponent is 0 then return 1
-	if (isplusone(p1) || iszero(p2))  # p1 is BASE  # p2 is EXPO
+	if (isplusone(p1) || isZeroAtomOrTensor(p2))  # p1 is BASE  # p2 is EXPO
 		push_integer(1)
 		return
 
@@ -28,7 +28,7 @@ qpowf = ->
 		return
 
 	# if base is zero then return 0
-	if (iszero(p1))  # p1 is BASE
+	if (isZeroAtomOrTensor(p1))  # p1 is BASE
 		if (isnegativenumber(p2))  # p2 is EXPO
 			stop("divide by zero")
 		push(zero)

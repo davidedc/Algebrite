@@ -66,7 +66,7 @@ fixed_top_level_eval = ->
 	trigmode = 0
 
 	p1 = symbol(AUTOEXPAND)
-	if (iszero(get_binding(p1)))
+	if (isZeroAtomOrTensor(get_binding(p1)))
 		expanding = 0
 	else
 		expanding = 1
@@ -81,7 +81,7 @@ fixed_top_level_eval = ->
 		restore()
 		return
 
-	if (!iszero(get_binding(symbol(BAKE))))
+	if (!isZeroAtomOrTensor(get_binding(symbol(BAKE))))
 		push(p2)
 		bake()
 		p2 = pop()

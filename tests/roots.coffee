@@ -192,7 +192,7 @@ test_roots = ->
 		"roots(thePoly)",
 		"[1/3*(10/3-226/(9*(781/54+i*97^(1/2)*1933^(1/2)/(2*3^(1/2)))^(1/3))-(781/54+i*97^(1/2)*1933^(1/2)/(2*3^(1/2)))^(1/3)),1/3*(10/3+113/(9*(781/54+i*97^(1/2)*1933^(1/2)/(2*3^(1/2)))^(1/3))+1/2*(781/54+i*97^(1/2)*1933^(1/2)/(2*3^(1/2)))^(1/3)-113*i*3^(1/2)/(9*(781/54+i*97^(1/2)*1933^(1/2)/(2*3^(1/2)))^(1/3))+1/2*i*3^(1/2)*(781/54+i*97^(1/2)*1933^(1/2)/(2*3^(1/2)))^(1/3)),1/3*(10/3+113/(9*(781/54+i*97^(1/2)*1933^(1/2)/(2*3^(1/2)))^(1/3))+1/2*(781/54+i*97^(1/2)*1933^(1/2)/(2*3^(1/2)))^(1/3)+113*i*3^(1/2)/(9*(781/54+i*97^(1/2)*1933^(1/2)/(2*3^(1/2)))^(1/3))-1/2*i*3^(1/2)*(781/54+i*97^(1/2)*1933^(1/2)/(2*3^(1/2)))^(1/3))]",
 			
-		"and((subst(float(last[1]),x,thePoly) == 0),(subst(float(last[2]),x,thePoly) == 0),(subst(float(last[3]),x,thePoly)) == 0)",
+		"and((abs(float(subst(float(last[1]),x,thePoly))) < float(10^(-13))),(abs(float(subst(float(last[2]),x,thePoly))) < float(10^(-13))), (abs(float(subst(float(last[3]),x,thePoly))) < float(10^(-13))))",
 		"1",
 			
 
@@ -206,7 +206,7 @@ test_roots = ->
 		"roots(thePoly)",
 		"[-2+2^(1/3)+2^(2/3)-i*2^(1/3)*3^(1/2)+i*2^(2/3)*3^(1/2),-2+2^(1/3)+2^(2/3)+i*2^(1/3)*3^(1/2)-i*2^(2/3)*3^(1/2),-2*(1+2^(1/3)+2^(2/3))]",
 			
-		"and((subst(float(last[1]),x,thePoly) == 0),(subst(float(last[2]),x,thePoly) == 0),(subst(float(last[3]),x,thePoly) == 0))",
+		"and((abs(float(subst(float(last[1]),x,thePoly))) < float(2*10^(-14))),(abs(float(subst(float(last[2]),x,thePoly))) < float(2*10^(-14))), (abs(float(subst(float(last[3]),x,thePoly))) < float(2*10^(-14))))",
 		"1",
 
 
@@ -223,7 +223,7 @@ test_roots = ->
 		"roots(thePoly)",
 		"[(-6+1/6*(-135+27*89^(1/2))^(2/3)-6*i*3^(1/2)-1/6*i*3^(1/2)*(-135+27*89^(1/2))^(2/3))/((-135+27*89^(1/2))^(1/3)),(-6+1/6*(-135+27*89^(1/2))^(2/3)+6*i*3^(1/2)+1/6*i*3^(1/2)*(-135+27*89^(1/2))^(2/3))/((-135+27*89^(1/2))^(1/3)),(12-1/3*(-135+27*89^(1/2))^(2/3))/((-135+27*89^(1/2))^(1/3))]",
 			
-		"and((subst(float(last[1]),x,thePoly) < float(10^(-13))),(subst(float(last[2]),x,thePoly) < float(10^(-13))),(subst(float(last[3]),x,thePoly) < float(10^(-14))))",
+		"and((abs(float(subst(float(last[1]),x,thePoly))) < float(2*10^(-14))),(abs(float(subst(float(last[2]),x,thePoly))) < float(2*10^(-14))), (abs(float(subst(float(last[3]),x,thePoly))) < float(2*10^(-14))))",
 		"1",
 			
 		"roots(1*x^3 + 0*x^2 - 18*x + 35)",
@@ -239,7 +239,7 @@ test_roots = ->
 		"roots(thePoly)",
 		"[(3+1/3*(-81+54*2^(1/2))^(2/3)-3*i*3^(1/2)+1/3*i*3^(1/2)*(-81+54*2^(1/2))^(2/3))/(2*(-81+54*2^(1/2))^(1/3)),(3+1/3*(-81+54*2^(1/2))^(2/3)+3*i*3^(1/2)-1/3*i*3^(1/2)*(-81+54*2^(1/2))^(2/3))/(2*(-81+54*2^(1/2))^(1/3)),(-3-1/3*(-81+54*2^(1/2))^(2/3))/((-81+54*2^(1/2))^(1/3))]",
 			
-		"and((subst(float(last[1]),x,thePoly) < float(10^(-14))),(subst(float(last[2]),x,thePoly) < float(10^(-14))),(subst(float(last[3]),x,thePoly) < float(10^(-14))))",
+		"and((abs(float(subst(float(last[1]),x,thePoly))) < float(2*10^(-14))),(abs(float(subst(float(last[2]),x,thePoly))) < float(2*10^(-14))), (abs(float(subst(float(last[3]),x,thePoly))) < float(2*10^(-14))))",
 		"1",
 			
 		"roots(2*x^3 - 30*x^2 + 162*x - 350)",
@@ -258,7 +258,7 @@ test_roots = ->
 		"roots(thePoly)",
 		"[1/3*(-2-73^(1/3)),1/3*(-2+1/2*73^(1/3)-1/2*i*3^(1/2)*73^(1/3)),1/3*(-2+1/2*73^(1/3)+1/2*i*3^(1/2)*73^(1/3))]",
 			
-		"and((subst(float(last[1]),x,thePoly) < float(10^(-14))),(subst(float(last[2]),x,thePoly) < float(10^(-14))),(subst(float(last[3]),x,thePoly) < float(10^(-14))))",
+		"and((abs(float(subst(float(last[1]),x,thePoly))) < float(2*10^(-14))),(abs(float(subst(float(last[2]),x,thePoly))) < float(2*10^(-14))), (abs(float(subst(float(last[3]),x,thePoly))) < float(2*10^(-14))))",
 		"1",
 
 		"clearall",
@@ -271,7 +271,7 @@ test_roots = ->
 		"roots(thePoly)",
 		"[1/3*(-7-47/((671/2+1/2*34949^(1/2))^(1/3))-(671/2+1/2*34949^(1/2))^(1/3)),1/3*(-7+47/(2*(671/2+1/2*34949^(1/2))^(1/3))+1/2*(671/2+1/2*34949^(1/2))^(1/3)-47*i*3^(1/2)/(2*(671/2+1/2*34949^(1/2))^(1/3))+1/2*i*3^(1/2)*(671/2+1/2*34949^(1/2))^(1/3)),1/3*(-7+47/(2*(671/2+1/2*34949^(1/2))^(1/3))+1/2*(671/2+1/2*34949^(1/2))^(1/3)+47*i*3^(1/2)/(2*(671/2+1/2*34949^(1/2))^(1/3))-1/2*i*3^(1/2)*(671/2+1/2*34949^(1/2))^(1/3))]",
 			
-		"and((subst(float(last[1]),x,thePoly) < float(10^(-12))),(subst(float(last[2]),x,thePoly) < float(10^(-13))),(subst(float(last[3]),x,thePoly) < float(10^(-13))))",
+		"and((abs(float(subst(float(last[1]),x,thePoly))) < float(10^(-12))),(abs(float(subst(float(last[2]),x,thePoly))) < float(10^(-12))), (abs(float(subst(float(last[3]),x,thePoly))) < float(10^(-12))))",
 		"1",
 
 		"clearall",
@@ -288,7 +288,7 @@ test_roots = ->
 		#  "[1/3*(2-(-1)^(1/3)*37^(1/3)),1/3*(2-1/2*37^(1/3)+1/2*i*3^(1/2)*37^(1/3)),1/3*(2+37^(1/3)))",
 		"[2/3-1/3*(-1)^(1/3)*37^(1/3),1/3*(2-1/2*37^(1/3)+1/2*i*3^(1/2)*37^(1/3)),1/3*(2+37^(1/3))]",
 		
-		"and((subst(float(last[1]),x,thePoly) < float(10^(-14))),(subst(float(last[2]),x,thePoly) < float(10^(-14))),(subst(float(last[3]),x,thePoly) < float(10^(-14))))",
+		"and((abs(float(subst(float(last[1]),x,thePoly))) < float(2*10^(-14))),(abs(float(subst(float(last[2]),x,thePoly))) < float(2*10^(-14))), (abs(float(subst(float(last[3]),x,thePoly))) < float(2*10^(-14))))",
 		"1",
 
 		"roots(8*x^3 - 36*x^2 + 54*x - 27)",

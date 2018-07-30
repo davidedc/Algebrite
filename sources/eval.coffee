@@ -278,17 +278,29 @@ p
 
 General description
 -------------------
-Checks the predicate p, e.g. check(a = b)
-Note how "check" can turn what normally would be an assignment into a test,
-so in the case above "a" is not assigned anything.
+Returns whether the predicate p is true/false or unknown:
+0 if false, 1 if true or remains unevaluated if unknown.
+Note that if "check" is passed an assignment, it turns it into a test,
+i.e. check(a = b) is turned into check(a==b) 
+so "a" is not assigned anything.
+Like in many programming languages, "check" also gives truthyness/falsyness
+for numeric values. In which case, "true" is returned for non-zero values.
+Potential improvements: "check" can't evaluate strings yet.
 
 ###
 
 Eval_check = ->
-	push(cadr(p1))
-	Eval_predicate()
-	p1 = pop()
-	push(p1)
+	# check the argument
+	checkResult = isZeroLikeOrNonZeroLikeOrUndetermined cadr(p1)
+
+	if !checkResult?
+		# returned null: unknown result
+		# leave the whole check unevalled
+		push p1
+	else
+		# returned 1 or 0
+		push_integer(checkResult)
+
 
 Eval_det = ->
 	push(cadr(p1))
@@ -434,7 +446,7 @@ Eval_index = ->
 	Eval()
 	theTensor = stack[tos-1]
 
-	if isnum(theTensor)
+	if isNumericAtom(theTensor)
 		stop("trying to access a scalar as a tensor")
 
 	if !istensor(theTensor)

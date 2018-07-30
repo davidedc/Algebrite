@@ -30,7 +30,7 @@ rect = ->
 	# otherwise we have to leave unevalled
 	if issymbol(p1)
 		if DEBUG_RECT then console.log " rect: simple symbol: " + input
-		if !iszero(get_binding(symbol(ASSUME_REAL_VARIABLES)))
+		if !isZeroAtomOrTensor(get_binding(symbol(ASSUME_REAL_VARIABLES)))
 			push(p1)
 		else
 			push_symbol(YYRECT)
@@ -47,7 +47,7 @@ rect = ->
 	# note that these matches can be quite sloppy, one can find expressions
 	# which shouldn't match but do
 	# 
-	else if !iszero(get_binding(symbol(ASSUME_REAL_VARIABLES))) and
+	else if !isZeroAtomOrTensor(get_binding(symbol(ASSUME_REAL_VARIABLES))) and
 	  !findPossibleExponentialForm(p1) and # no exp form?
 	  !findPossibleClockForm(p1) and # no clock form?
 	  !(Find(p1, symbol(SIN)) and Find(p1, symbol(COS)) and Find(p1, imaginaryunit)) # no polar form?
@@ -55,7 +55,7 @@ rect = ->
 		push(p1)
 
 	# ib
-	else if (car(p1) == symbol(MULTIPLY) and isimaginaryunit(cadr(p1)) and !iszero(get_binding(symbol(ASSUME_REAL_VARIABLES))))
+	else if (car(p1) == symbol(MULTIPLY) and isimaginaryunit(cadr(p1)) and !isZeroAtomOrTensor(get_binding(symbol(ASSUME_REAL_VARIABLES))))
 		push(p1)
 
 	# sum

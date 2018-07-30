@@ -88,13 +88,13 @@ cmp_expr = (p1, p2) ->
 	if (p2 == symbol(NIL))
 		return 1
 
-	if (isnum(p1) && isnum(p2))
+	if (isNumericAtom(p1) && isNumericAtom(p2))
 		return sign(compare_numbers(p1, p2))
 
-	if (isnum(p1))
+	if (isNumericAtom(p1))
 		return -1
 
-	if (isnum(p2))
+	if (isNumericAtom(p2))
 		return 1
 
 	if (isstr(p1) && isstr(p2))

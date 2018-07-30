@@ -83,12 +83,12 @@ isSimpleRoot = (k) ->
 		isSimpleRootPolynomial = true
 		h = tos
 
-		if iszero(stack[tos-k])
+		if isZeroAtomOrTensor(stack[tos-k])
 			isSimpleRootPolynomial = false
 
 		for i in [(k-1)...1] by -1
 			#console.log "hasImaginaryCoeff - coeff.:" + stack[tos-i].toString()
-			if !iszero(stack[tos-i])
+			if !isZeroAtomOrTensor(stack[tos-i])
 				isSimpleRootPolynomial = false
 				break
 	else
@@ -559,7 +559,7 @@ mini_solve = (n) ->
 			absValFloat()
 			R_DELTA0_toBeCheckedIfZero = pop()
 			if DEBUG then console.log "cubic: D0 as float: " + R_DELTA0_toBeCheckedIfZero.toString()
-			#if iszero(R_DELTA0_toBeCheckedIfZero)
+			#if isZeroAtomOrTensor(R_DELTA0_toBeCheckedIfZero)
 			#	console.log " *********************************** D0 IS ZERO"
 
 
@@ -599,8 +599,8 @@ mini_solve = (n) ->
 			R_Q = pop()
 
 
-			if iszero(R_determinant)
-				if iszero(R_DELTA0_toBeCheckedIfZero)
+			if isZeroAtomOrTensor(R_determinant)
+				if isZeroAtomOrTensor(R_DELTA0_toBeCheckedIfZero)
 					if DEBUG then console.log " cubic: DETERMINANT IS ZERO and delta0 is zero"
 					push(R_m_b_over_3a) # just same solution three times
 					restore()
@@ -688,7 +688,7 @@ mini_solve = (n) ->
 				R_C_simplified_toCheckIfZero = pop()
 				if DEBUG then console.log "cubic: C as absval and float: " + R_C_simplified_toCheckIfZero.toString()
 
-				if iszero(R_C_simplified_toCheckIfZero)
+				if isZeroAtomOrTensor(R_C_simplified_toCheckIfZero)
 					if DEBUG then console.log " cubic: C IS ZERO flipping the sign"
 					flipSignOFQSoCIsNotZero = true
 				else
@@ -784,7 +784,7 @@ mini_solve = (n) ->
 			if DEBUG then console.log ">>>>>>>>>>>>>>>> actually using quartic formula <<<<<<<<<<<<<<< "
 			p7 = pop() # E
 
-			if iszero(p4) and iszero(p6) and !iszero(p5) and !iszero(p7)
+			if isZeroAtomOrTensor(p4) and isZeroAtomOrTensor(p6) and !isZeroAtomOrTensor(p5) and !isZeroAtomOrTensor(p7)
 				if DEBUG then console.log("biquadratic case")
 				push(p3)
 				push(symbol(SECRETX))
@@ -1085,7 +1085,7 @@ mini_solve = (n) ->
 			if DEBUG then console.log("q: " + R_q.toString())
 
 			if DEBUG then console.log("tos 1 " + tos)
-			if !iszero(p4)
+			if !isZeroAtomOrTensor(p4)
 				if DEBUG then console.log("tos 2 " + tos)
 
 				push_integer(8)
@@ -1313,7 +1313,7 @@ mini_solve = (n) ->
 					absValFloat()
 					toBeCheckedIFZero = pop()
 					console.log("abs value is: " +  eachSolution)
-					if !iszero(toBeCheckedIFZero)
+					if !isZeroAtomOrTensor(toBeCheckedIFZero)
 						R_u = eachSolution
 						break
 
@@ -1468,7 +1468,7 @@ mini_solve = (n) ->
 					absValFloat()
 					toBeCheckedIFZero = pop()
 					if DEBUG then console.log("abs value is: " +  eachSolution)
-					if !iszero(toBeCheckedIFZero)
+					if !isZeroAtomOrTensor(toBeCheckedIFZero)
 						R_m = eachSolution
 						break
 
@@ -1680,7 +1680,7 @@ mini_solve = (n) ->
 
 					R_Q_simplified_toCheckIfZero = pop()
 					if DEBUG then console.log "Q simplified and abs" + R_Q_simplified_toCheckIfZero.toString()
-					if iszero(R_Q_simplified_toCheckIfZero) and (!iszero(R_determinant_simplified_toCheckIfZero) and iszero(R_DELTA0_simplified_toCheckIfZero))
+					if isZeroAtomOrTensor(R_Q_simplified_toCheckIfZero) and (!isZeroAtomOrTensor(R_determinant_simplified_toCheckIfZero) and isZeroAtomOrTensor(R_DELTA0_simplified_toCheckIfZero))
 						if DEBUG then console.log " *********************************** Q IS ZERO and it matters, flipping the sign"
 						flipSignOFRadicalSoQIsNotZero = true
 					else
@@ -1728,7 +1728,7 @@ mini_solve = (n) ->
 
 				R_S_simplified_toCheckIfZero = pop()
 				if DEBUG then console.log "S " + R_S_simplified_toCheckIfZero.toString()
-				if iszero(R_S_simplified_toCheckIfZero)
+				if isZeroAtomOrTensor(R_S_simplified_toCheckIfZero)
 					if DEBUG then console.log " *********************************** S IS ZERO chosing another cubic root"
 					choiceOfRadicalInQSoSIsNotZero++
 				else

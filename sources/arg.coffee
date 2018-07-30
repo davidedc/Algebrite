@@ -153,7 +153,7 @@ yyarg = ->
 		push(p1)
 		imag()
 		p3 = pop()
-		if (iszero(p2))
+		if (isZeroAtomOrTensor(p2))
 			if evaluatingAsFloats
 				push_double(Math.PI)
 			else
@@ -176,7 +176,7 @@ yyarg = ->
 					add();		# quadrant 4 -> 2
 	else
 
-		if (!iszero(get_binding(symbol(ASSUME_REAL_VARIABLES))))
+		if (!isZeroAtomOrTensor(get_binding(symbol(ASSUME_REAL_VARIABLES))))
 			# if we assume all passed values are real
 			push_integer(0)
 		else

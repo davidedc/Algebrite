@@ -446,7 +446,7 @@ power_tensor = ->
 	for i in [1...n]
 		push(p1)
 		inner()
-		if (iszero(stack[tos - 1]))
+		if (isZeroAtomOrTensor(stack[tos - 1]))
 			break
 
 copy_tensor = ->

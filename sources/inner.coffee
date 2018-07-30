@@ -142,9 +142,9 @@ Eval_inner = ->
 		for i in [0...operands.length]
 			#console.log "comparing if " + operands[i+shift] + " and " + operands[i+shift+1] + " are inverses of each other"
 			if (i+shift+1) <= (operands.length - 1)
-				#console.log "isnumerictensor " + operands[i+shift] + " : " + isnumerictensor(operands[i+shift])
-				#console.log "isnumerictensor " + operands[i+shift+1] + " : " + isnumerictensor(operands[i+shift+1])
-				if !(isnumerictensor(operands[i+shift]) or isnumerictensor(operands[i+shift+1]))
+				#console.log "isNumericAtomOrTensor " + operands[i+shift] + " : " + isNumericAtomOrTensor(operands[i+shift])
+				#console.log "isNumericAtomOrTensor " + operands[i+shift+1] + " : " + isNumericAtomOrTensor(operands[i+shift+1])
+				if !(isNumericAtomOrTensor(operands[i+shift]) or isNumericAtomOrTensor(operands[i+shift+1]))
 					push operands[i+shift]
 					Eval()
 					inv()
@@ -153,7 +153,7 @@ Eval_inner = ->
 					subtract()
 					difference = pop()
 					#console.log "result: " + difference
-					if (iszero(difference))
+					if (isZeroAtomOrTensor(difference))
 						shift+=1
 					else
 						refinedOperands.push operands[i+shift]
@@ -264,13 +264,13 @@ inner = ->
 		# simple check if the two consecutive elements are one the
 		# (symbolic) inv of the other. If they are, the answer is
 		# the identity matrix
-		if !(isnumerictensor(p1) or isnumerictensor(p2))
+		if !(isNumericAtomOrTensor(p1) or isNumericAtomOrTensor(p2))
 			push p1
 			push p2
 			inv()
 			subtract()
 			subtractionResult = pop()
-			if (iszero(subtractionResult))
+			if (isZeroAtomOrTensor(subtractionResult))
 				push_symbol(SYMBOL_IDENTITY_MATRIX)
 				restore()
 				return
@@ -310,16 +310,16 @@ inner = ->
 		# two arguments can only be a scalar/tensor/unknown
 		# and the tensor - tensor case was caught
 		# upper in the code
-		if (istensor(p1) and isnum(p2))
+		if (istensor(p1) and isNumericAtom(p2))
 			# one case covered by this branch:
 			#   tensor - scalar
 			tensor_times_scalar()
-		else if (isnum(p1) and istensor(p2))
+		else if (isNumericAtom(p1) and istensor(p2))
 			# one case covered by this branch:
 			#   scalar - tensor
 			scalar_times_tensor()
 		else
-			if (isnum(p1) or isnum(p2))
+			if (isNumericAtom(p1) or isNumericAtom(p2))
 				# three cases covered by this branch:
 				#   unknown - scalar
 				#   scalar - unknown
@@ -395,7 +395,7 @@ inner_f = ->
 	# new method copied from ginac http://www.ginac.de/
 	for i in [0...ak]
 		for j in [0...n]
-			if (iszero(a[i * n + j]))
+			if (isZeroAtomOrTensor(a[i * n + j]))
 				continue
 			for k in [0...bk]
 				push(a[i * n + j])

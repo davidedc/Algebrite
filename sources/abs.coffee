@@ -99,7 +99,7 @@ absval = ->
 
 
 	# handle all the "number" cases first -----------------------------------------
-	if (iszero(p1))
+	if (isZeroAtomOrTensor(p1))
 		if DEBUG_ABS then console.log " abs: " + p1 + " just zero"
 		push(zero)
 		if DEBUG_ABS then console.log " --> ABS of " + input + " : " + stack[tos-1]

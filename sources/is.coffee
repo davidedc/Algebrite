@@ -3,10 +3,10 @@
 DEBUG_IS = false
 
 # p is a U
-iszero = (p) ->
 # this routine is a simple check on whether we have
 # a basic zero in our hands. It doesn't perform any
 # calculations or simplifications.
+isZeroAtomOrTensor = (p) ->
 	i = 0
 	switch (p.k)
 		when NUM
@@ -17,10 +17,104 @@ iszero = (p) ->
 				return 1
 		when TENSOR
 			for i in [0...p.tensor.nelem]
-				if (!iszero(p.tensor.elem[i]))
+				if (!isZeroAtomOrTensor(p.tensor.elem[i]))
 					return 0
 			return 1
 	return 0
+
+# This is a key routine to try to determine whether
+# the argument looks like zero/false, or non-zero/true,
+# or undetermined.
+# This is useful in two instances:
+#  * to determine if a predicate is true/false
+#  * to determine if particular quantity is zero
+# Note that if one wants to check if we have a simple
+# zero atom or tensor in our hands, then the isZeroAtomOrTensor
+# routine is sufficient.
+isZeroLikeOrNonZeroLikeOrUndetermined = (valueOrPredicate) ->
+	# push the argument
+	push(valueOrPredicate)
+
+	# just like Eval but turns assignments into
+	# equality checks
+	Eval_predicate()
+	evalledArgument = pop()
+
+	# OK first check if we already have
+	# a simple zero (or simple zero tensor)
+	if isZeroAtomOrTensor evalledArgument
+		return 0
+
+	# also check if we have a simple numeric value, or a tensor
+	# full of simple numeric values (i.e. straight doubles or fractions).
+	# In such cases, since we
+	# just excluded they are zero, then we take it as
+	# a "true"
+	if isNumericAtomOrTensor evalledArgument
+		return 1
+
+	# if we are here we are in the case of value that
+	# is not a zero and not a simple numeric value.
+	# e.g. stuff like
+	# 'sqrt(2)', or 'sin(45)' or '1+i', or 'a'
+	# so in such cases let's try to do a float()
+	# so we might get down to a simple numeric value
+	# in some of those cases
+
+	push evalledArgument
+	zzfloat()
+	evalledArgument = pop()
+
+	# anything that could be calculated down to a simple
+	# numeric value is now indeed either a 
+	# double OR a double with an imaginary component
+	# e.g. 2.0 or 2.4 + i*5.6
+	# (Everything else are things that don't have a numeric
+	# value e.g. 'a+b')
+	
+	# So, let's take care of the case where we have
+	# a simple numeric value with NO imaginary component,
+	# things like sqrt(2) or sin(PI)
+	# by doing the simple numeric
+	# values checks again
+
+	if isZeroAtomOrTensor evalledArgument
+		return 0
+
+	if isNumericAtomOrTensor evalledArgument
+		return 1
+
+	# here we still have cases of simple numeric values
+	# WITH an imaginary component e.g. '1+i',
+	# or things that don't have a numeric value e.g. 'a'
+
+	# so now let's take care of the imaginary numbers:
+	# since we JUST have to spot "zeros" we can just
+	# calculate the absolute value and re-do all the checks
+	# we just did
+
+	if Find(evalledArgument, imaginaryunit)
+		push evalledArgument
+		absValFloat()
+
+		Eval_predicate()
+		evalledArgument = pop()
+
+		# re-do the simple-number checks...
+
+		if isZeroAtomOrTensor evalledArgument
+			return 0
+
+		if isNumericAtomOrTensor evalledArgument
+			return 1
+
+	# here we have stuff that is not reconducible to any
+	# numeric value (or tensor with numeric values) e.g.
+	# 'a+b', so it just means that we just don't know the
+	# truth value, so we have
+	# to leave the whole thing unevalled
+	return null
+
 
 # p is a U
 isnegativenumber = (p) ->
@@ -177,7 +271,7 @@ isimaginarynumberdouble = (p) ->
 isimaginarynumber = (p) ->
 	if ((car(p) == symbol(MULTIPLY) \
 	&& length(p) == 3 \
-	&& isnum(cadr(p)) \
+	&& isNumericAtom(cadr(p)) \
 	&& equal(caddr(p), imaginaryunit)) \
 	|| equal(p, imaginaryunit) \
 	|| hasNegativeRationalExponent(caddr(p))
@@ -202,7 +296,7 @@ iscomplexnumber = (p) ->
 	if DEBUG_IS then debugger
 	if ((car(p) == symbol(ADD) \
 	&& length(p) == 3 \
-	&& isnum(cadr(p)) \
+	&& isNumericAtom(cadr(p)) \
 	&& isimaginarynumber(caddr(p))) \
 	|| isimaginarynumber(p))
 		if DEBUG then console.log "iscomplexnumber: " + p.toString() + " is imaginary number"
@@ -250,7 +344,7 @@ isintegerfactor = (p) ->
 	else
 		return 0
 
-isnumberoneoversomething = (p) ->
+isNumberOneOverSomething = (p) ->
 	if isfraction(p) \
 	&& Math.abs(p.q.a.value) == 1
 		return 1
@@ -376,7 +470,7 @@ isquarterturn = (p) ->
 
 		return 2
 
-	if (!isnum(cadr(p)))
+	if (!isNumericAtom(cadr(p)))
 		return 0
 
 	if (!equal(caddr(p), imaginaryunit))
@@ -432,7 +526,7 @@ isnpi = (p) ->
 	if (p == symbol(PI))
 		return 2
 	if (car(p) == symbol(MULTIPLY) \
-	&& isnum(cadr(p)) \
+	&& isNumericAtom(cadr(p)) \
 	&& caddr(p) == symbol(PI) \
 	&& length(p) == 3)
 		doNothing = 0
@@ -452,7 +546,7 @@ isnpi = (p) ->
 
 
 
-$.iszero                   = iszero
+$.isZeroAtomOrTensor                   = isZeroAtomOrTensor
 $.isnegativenumber         = isnegativenumber          
 $.isplusone                = isplusone   
 $.isminusone               = isminusone    

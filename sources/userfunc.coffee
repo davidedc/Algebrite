@@ -53,7 +53,7 @@ Eval_user_function = ->
 	# all undefined variables do.
 	bodyAndFormalArguments = pop()
 
-	if isnum(bodyAndFormalArguments)
+	if isNumericAtom(bodyAndFormalArguments)
 		stop("expected function invocation, found multiplication instead. Use '*' symbol explicitly for multiplication.")
 	else if istensor(bodyAndFormalArguments)
 		stop("expected function invocation, found tensor product instead. Use 'dot/inner' explicitly.")

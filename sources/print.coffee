@@ -324,9 +324,9 @@ print_expr = (p) ->
 
 sign_of_term = (p) ->
 	accumulator = ""
-	if (car(p) == symbol(MULTIPLY) && isnum(cadr(p)) && lessp(cadr(p), zero))
+	if (car(p) == symbol(MULTIPLY) && isNumericAtom(cadr(p)) && lessp(cadr(p), zero))
 		accumulator += '-'
-	else if (isnum(p) && lessp(p, zero))
+	else if (isNumericAtom(p) && lessp(p, zero))
 		accumulator += '-'
 	else
 		accumulator += '+'
@@ -351,7 +351,7 @@ print_term = (p) ->
 		previousFactorWasANumber = false
 
 		# print the first factor ------------
-		if isnum(car(p))
+		if isNumericAtom(car(p))
 			previousFactorWasANumber = true
 
 		# this numberOneOverSomething thing is so that
@@ -368,7 +368,7 @@ print_term = (p) ->
 		# the variable, but we'll see when we'll
 		# come to it if it's an issue.
 		numberOneOverSomething = false
-		if printMode == PRINTMODE_LATEX and iscons(cdr(p)) and isnumberoneoversomething(car(p))
+		if printMode == PRINTMODE_LATEX and iscons(cdr(p)) and isNumberOneOverSomething(car(p))
 			numberOneOverSomething = true
 			denom = car(p).q.b.toString()
 
@@ -396,7 +396,7 @@ print_term = (p) ->
 					# doesn't count because the radical gives
 					# a nice graphical separation already.
 					if caar(p) == symbol(POWER)
-						if isnum(car(cdr(car(p))))
+						if isNumericAtom(car(cdr(car(p))))
 							# rule out square root
 							if !isfraction(car(cdr(cdr(car(p)))))
 								accumulator += " \\cdot "
@@ -404,7 +404,7 @@ print_term = (p) ->
 			accumulator += print_factor(car(p))
 
 			previousFactorWasANumber = false
-			if isnum(car(p))
+			if isNumericAtom(car(p))
 				previousFactorWasANumber = true
 
 			p = cdr(p)
@@ -899,7 +899,7 @@ print_base = (p) ->
 		accumulator += print_str('(')
 		accumulator += print_expr(cadr(p))
 		accumulator += print_str(')')
-	else if (isnum(cadr(p)) && (lessp(cadr(p), zero) || isfraction(cadr(p))))
+	else if (isNumericAtom(cadr(p)) && (lessp(cadr(p), zero) || isfraction(cadr(p))))
 		accumulator += print_str('(')
 		accumulator += print_factor(cadr(p))
 		accumulator += print_str(')')
@@ -909,7 +909,7 @@ print_base = (p) ->
 
 print_exponent = (p) ->
 	accumulator = ""
-	if (iscons(caddr(p)) || isfraction(caddr(p)) || (isnum(caddr(p)) && lessp(caddr(p), zero)))
+	if (iscons(caddr(p)) || isfraction(caddr(p)) || (isNumericAtom(caddr(p)) && lessp(caddr(p), zero)))
 		accumulator += print_str('(')
 		accumulator += print_expr(caddr(p))
 		accumulator += print_str(')')
@@ -1063,7 +1063,7 @@ print_power = (base, exponent) ->
 			if printMode != PRINTMODE_LATEX then accumulator += print_str('(')
 			accumulator += print_factor(base, true)
 			if printMode != PRINTMODE_LATEX then accumulator += print_str(')')
-		else if (isnum(base) && (lessp(base, zero) || isfraction(base)))
+		else if (isNumericAtom(base) && (lessp(base, zero) || isfraction(base)))
 			accumulator += print_str('(')
 			accumulator += print_factor(base)
 			accumulator += print_str(')')
@@ -1089,7 +1089,7 @@ print_power = (base, exponent) ->
 				accumulator += print_str("}")
 			else
 				accumulator += print_expr(exponent)
-		else if (iscons(exponent) || isfraction(exponent) || (isnum(exponent) && lessp(exponent, zero)))
+		else if (iscons(exponent) || isfraction(exponent) || (isNumericAtom(exponent) && lessp(exponent, zero)))
 			accumulator += print_str('(')
 			accumulator += print_expr(exponent)
 			accumulator += print_str(')')
@@ -1120,7 +1120,7 @@ print_index_function = (p) ->
 print_factor = (p, omitParens) ->
 	# debugger
 	accumulator = ""
-	if (isnum(p))
+	if (isNumericAtom(p))
 		accumulator += print_number(p, false)
 		return accumulator
 

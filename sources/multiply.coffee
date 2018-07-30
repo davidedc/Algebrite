@@ -27,7 +27,7 @@ Eval_multiply = ->
 multiply = ->
 	if (esc_flag)
 		stop("escape key stop")
-	if (isnum(stack[tos - 2]) && isnum(stack[tos - 1]))
+	if (isNumericAtom(stack[tos - 2]) && isNumericAtom(stack[tos - 1]))
 		multiply_numbers()
 	else
 		save()
@@ -48,7 +48,7 @@ yymultiply = ->
 
 	# is either operand zero?
 
-	if (iszero(p1) || iszero(p2))
+	if (isZeroAtomOrTensor(p1) || isZeroAtomOrTensor(p2))
 		if evaluatingAsFloats then push_double(0.0) else push(zero)
 		return
 
@@ -111,16 +111,16 @@ yymultiply = ->
 
 	# handle numerical coefficients
 
-	if (isnum(car(p1)) && isnum(car(p2)))
+	if (isNumericAtom(car(p1)) && isNumericAtom(car(p2)))
 		push(car(p1))
 		push(car(p2))
 		multiply_numbers()
 		p1 = cdr(p1)
 		p2 = cdr(p2)
-	else if (isnum(car(p1)))
+	else if (isNumericAtom(car(p1)))
 		push(car(p1))
 		p1 = cdr(p1)
-	else if (isnum(car(p2)))
+	else if (isNumericAtom(car(p2)))
 		push(car(p2))
 		p2 = cdr(p2)
 	else
@@ -268,14 +268,14 @@ combine_factors = (h) ->
 	add()
 	power()
 	p7 = pop()
-	if (isnum(p7))
+	if (isNumericAtom(p7))
 		push(stack[h])
 		push(p7)
 		multiply_numbers()
 		stack[h] = pop()
 	else if (car(p7) == symbol(MULTIPLY))
 		# power can return number * factor (i.e. -1 * i)
-		if (isnum(cadr(p7)) && cdddr(p7) == symbol(NIL))
+		if (isNumericAtom(cadr(p7)) && cdddr(p7) == symbol(NIL))
 			push(stack[h])
 			push(cadr(p7))
 			multiply_numbers()
@@ -363,7 +363,7 @@ multiply_all_noexpand = (n) ->
 #-----------------------------------------------------------------------------
 
 divide = ->
-	if (isnum(stack[tos - 2]) && isnum(stack[tos - 1]))
+	if (isNumericAtom(stack[tos - 2]) && isNumericAtom(stack[tos - 1]))
 		divide_numbers()
 	else
 		inverse()
@@ -371,7 +371,7 @@ divide = ->
 
 # this is different from inverse of a matrix (inv)!
 inverse = ->
-	if (isnum(stack[tos - 1]))
+	if (isNumericAtom(stack[tos - 1]))
 		invert_number()
 	else
 		push_integer(-1)
@@ -381,7 +381,7 @@ reciprocate = ->
 	inverse()
 
 negate = ->
-	if (isnum(stack[tos - 1]))
+	if (isNumericAtom(stack[tos - 1]))
 		negate_number()
 	else
 		if evaluatingAsFloats then push_double(-1.0) else push_integer(-1)
@@ -591,7 +591,7 @@ __normalize_radical_factors = (h) ->
 __is_radical_number = (p) ->
 	# don't use i
 
-	if (car(p) == symbol(POWER) && isnum(cadr(p)) && isnum(caddr(p)) && !isminusone(cadr(p)))
+	if (car(p) == symbol(POWER) && isNumericAtom(cadr(p)) && isNumericAtom(caddr(p)) && !isminusone(cadr(p)))
 		return 1
 	else
 		return 0

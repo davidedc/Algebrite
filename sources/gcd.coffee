@@ -80,7 +80,7 @@ gcd_main = ->
 
 	# are both exponents numerical?
 
-	if (isnum(p3) && isnum(p4))
+	if (isNumericAtom(p3) && isNumericAtom(p4))
 		push(p1)
 		if (lessp(p3, p4))
 			push(p3)
@@ -97,18 +97,18 @@ gcd_main = ->
 
 	p5 = pop()
 
-	if (isnum(p5))
+	if (isNumericAtom(p5))
 
 		push(p1)
 
 		# choose the smallest exponent
 
-		if (car(p3) == symbol(MULTIPLY) && isnum(cadr(p3)))
+		if (car(p3) == symbol(MULTIPLY) && isNumericAtom(cadr(p3)))
 			p5 = cadr(p3)
 		else
 			p5 = one
 
-		if (car(p4) == symbol(MULTIPLY) && isnum(cadr(p4)))
+		if (car(p4) == symbol(MULTIPLY) && isNumericAtom(cadr(p4)))
 			p6 = cadr(p4)
 		else
 			p6 = one
@@ -127,7 +127,7 @@ gcd_main = ->
 
 	p5 = pop()
 
-	if (!isnum(p5))
+	if (!isNumericAtom(p5))
 		push(one)
 		return
 

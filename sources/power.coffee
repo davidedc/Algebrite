@@ -40,7 +40,7 @@ yypower = ->
 
 	#	1 ^ a		->	1
 	#	a ^ 0		->	1
-	if (equal(p1, one) || iszero(p2))
+	if (equal(p1, one) || isZeroAtomOrTensor(p2))
 		if evaluatingAsFloats then push_double(1.0) else push(one)
 		if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 		return
@@ -112,9 +112,9 @@ yypower = ->
 		return
 
 	# both base and exponent are either rational or double?
-	if (isnum(p1) && isnum(p2))
+	if (isNumericAtom(p1) && isNumericAtom(p2))
 		if DEBUG_POWER then console.log "   power: both base and exponent are either rational or double "
-		if DEBUG_POWER then console.log("POWER - isnum(p1) && isnum(p2)")
+		if DEBUG_POWER then console.log("POWER - isNumericAtom(p1) && isNumericAtom(p2)")
 		push(p1)
 		push(p2)
 		dpow()
@@ -129,7 +129,7 @@ yypower = ->
 
 	# if we only assume variables to be real, then |a|^2 = a^2
 	# (if x is complex this doesn't hold e.g. i, which makes 1 and -1
-	if (car(p1) == symbol(ABS) && iseveninteger(p2) and !iszero(get_binding(symbol(ASSUME_REAL_VARIABLES))))
+	if (car(p1) == symbol(ABS) && iseveninteger(p2) and !isZeroAtomOrTensor(get_binding(symbol(ASSUME_REAL_VARIABLES))))
 		if DEBUG_POWER then console.log "   power: even power of absolute of real value "
 		push(cadr(p1))
 		push(p2)
@@ -199,7 +199,7 @@ yypower = ->
 
 	# simple numeric check to see if a is a number > 0
 	is_a_moreThanZero = false
-	if isnum(cadr(p1))
+	if isNumericAtom(cadr(p1))
 		is_a_moreThanZero = sign(compare_numbers(cadr(p1), zero))
 
 	if (car(p1) == symbol(POWER) && (
@@ -235,11 +235,11 @@ yypower = ->
 	#	when expanding,
 	#	(a + b) ^ n	->	(a + b) * (a + b) ...
 
-	if (expanding && isadd(p1) && isnum(p2))
+	if (expanding && isadd(p1) && isNumericAtom(p2))
 		push(p2)
 		n = pop_integer()
 		if (n > 1 && !isNaN(n))
-			if DEBUG_POWER then console.log "   power: expanding && isadd(p1) && isnum(p2) "
+			if DEBUG_POWER then console.log "   power: expanding && isadd(p1) && isNumericAtom(p2) "
 			power_sum(n)
 			if DEBUG_POWER then console.log "   power of " + inputBase + " ^ " + inputExp + ": " + stack[tos-1]
 			return
@@ -319,7 +319,7 @@ yypower = ->
 
 		# noninteger or floating power?
 
-		if (isnum(p2))
+		if (isNumericAtom(p2))
 			push(p1)
 			abs()
 			push(p2)

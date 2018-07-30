@@ -161,7 +161,7 @@ simplify_tensor = ->
 
 	check_tensor_dimensions p2
 
-	if (iszero(p2))
+	if (isZeroAtomOrTensor(p2))
 		p2 = zero; # null tensor becomes scalar zero
 	push(p2)
 
@@ -236,7 +236,7 @@ f10 = ->
 # try expanding denominators
 
 f4 = ->
-	if (iszero(p1))
+	if (isZeroAtomOrTensor(p1))
 		return
 	push(p1)
 	rationalize()

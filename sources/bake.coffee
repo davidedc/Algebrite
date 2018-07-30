@@ -113,7 +113,7 @@ bake_poly_term = (k) ->
 	h = 0
 	n = 0
 
-	if (iszero(p1))
+	if (isZeroAtomOrTensor(p1))
 		return
 
 	# constant term?

@@ -26,7 +26,7 @@ yysinh = ->
 			d = 0.0
 		push_double(d)
 		return
-	if (iszero(p1))
+	if (isZeroAtomOrTensor(p1))
 		push(zero)
 		return
 	push_symbol(SINH)

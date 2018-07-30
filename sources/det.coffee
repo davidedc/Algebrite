@@ -52,7 +52,7 @@ det = ->
 	a = p1.tensor.elem
 
 	for i in [0...n]
-		if (!isnum(a[i]))
+		if (!isNumericAtom(a[i]))
 			break
 
 	if (i == n)

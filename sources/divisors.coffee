@@ -48,7 +48,7 @@ divisors_onstack = ->
 
 	# push all of the term's factors
 
-	if (isnum(p1))
+	if (isNumericAtom(p1))
 		push(p1)
 		factor_small_number()
 	else if (car(p1) == symbol(ADD))
@@ -60,7 +60,7 @@ divisors_onstack = ->
 		#printf("<<<\n")
 	else if (car(p1) == symbol(MULTIPLY))
 		p1 = cdr(p1)
-		if (isnum(car(p1)))
+		if (isNumericAtom(car(p1)))
 			push(car(p1))
 			factor_small_number()
 			p1 = cdr(p1)
@@ -195,12 +195,12 @@ __factor_add = ->
 
 	# push factored gcd
 
-	if (isnum(p2))
+	if (isNumericAtom(p2))
 		push(p2)
 		factor_small_number()
 	else if (car(p2) == symbol(MULTIPLY))
 		p3 = cdr(p2)
-		if (isnum(car(p3)))
+		if (isNumericAtom(car(p3)))
 			push(car(p3))
 			factor_small_number()
 		else

@@ -74,13 +74,13 @@ yybesselj = ->
 
 	# bessej(0,0) = 1
 
-	if (iszero(p1) && iszero(p2))
+	if (isZeroAtomOrTensor(p1) && isZeroAtomOrTensor(p2))
 		push_integer(1)
 		return
 
 	# besselj(0,n) = 0
 
-	if (iszero(p1) && !isNaN(n))
+	if (isZeroAtomOrTensor(p1) && !isNaN(n))
 		push_integer(0)
 		return
 

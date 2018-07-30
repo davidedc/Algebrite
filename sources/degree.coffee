@@ -57,10 +57,10 @@ degree = ->
 
 yydegree = (p) ->
 	if (equal(p, p2))
-		if (iszero(p3))
+		if (isZeroAtomOrTensor(p3))
 			p3 = one
 	else if (car(p) == symbol(POWER))
-		if (equal(cadr(p), p2) && isnum(caddr(p)) && lessp(p3, caddr(p)))
+		if (equal(cadr(p), p2) && isNumericAtom(caddr(p)) && lessp(p3, caddr(p)))
 			p3 = caddr(p)
 	else if (iscons(p))
 		p = cdr(p)

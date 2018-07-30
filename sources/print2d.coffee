@@ -281,7 +281,7 @@ emit_fraction = (p, d) ->
 	else
 		n = 1
 	p1 = cdr(p)
-	if (isnum(car(p1)))
+	if (isNumericAtom(car(p1)))
 		p1 = cdr(p1)
 	while (iscons(p1))
 		p2 = car(p1)
@@ -311,7 +311,7 @@ emit_fraction = (p, d) ->
 
 	# skip over numerical coefficient, already handled
 
-	if (isnum(car(p1)))
+	if (isNumericAtom(car(p1)))
 		p1 = cdr(p1)
 
 	while (iscons(p1))
@@ -460,7 +460,7 @@ emit_factor = (p) ->
 		emit_function(p)
 		return
 
-	if (isnum(p))
+	if (isNumericAtom(p))
 		if (level == 0)
 			emit_numerical_fraction(p)
 		else
@@ -521,7 +521,7 @@ isfactor = (p) ->
 		return 0
 	if (isnegativenumber(p))
 		return 0
-	if (isnum(p))
+	if (isNumericAtom(p))
 		return 1
 	return 0
 

@@ -113,7 +113,7 @@ expand = ->
 
 	# if the remainder is zero then we're done
 
-	if (iszero(p3))
+	if (isZeroAtomOrTensor(p3))
 		push(p7)
 		restore()
 		return

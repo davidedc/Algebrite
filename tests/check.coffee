@@ -8,10 +8,13 @@ test_check = ->
 		# assigned anything
 
 		"check(a=b)",
-		"testeq(a,b)",
+		"check(a=b)",
 
 		"a",
 		"a",
+
+		"check(a)",
+		"check(a)",
 
 		"check(a=a)",
 		"1",
@@ -43,9 +46,42 @@ test_check = ->
 		"check(and(1,1))",
 		"1",
 
-		# if not a predicate, just return
-		# what passed
+		# if passed a value, check if non-zero
 		"check(pi)",
-		"pi",
+		"1",
+
+		"check(2)",
+		"1",
+
+		"check(-2)",
+		"1",
+
+		"check(sqrt(2))",
+		"1",
+
+		"check(sqrt(-1))",
+		"1",
+
+		"check(sqrt(pi/4)-sqrt(i))",
+		"1",
+
+		"check(1+i)",
+		"1",
+
+
+		"check([0,0])",
+		"0",
+
+		"check([1,2])",
+		"1",
+
+		"check([1+i,2])",
+		"1",
+
+		"check([a,2])",
+		"check([a,2])",
+
+		"check(1-i)",
+		"1",
 
 	]

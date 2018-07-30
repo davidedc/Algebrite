@@ -33,7 +33,7 @@ Eval_derivative = ->
 	if (p2 == symbol(NIL))
 		guess()
 		push(symbol(NIL))
-	else if (isnum(p2))
+	else if (isNumericAtom(p2))
 		guess()
 		push(p2)
 	else
@@ -50,7 +50,7 @@ Eval_derivative = ->
 
 		# p5 (N) might be a symbol instead of a number
 
-		if (isnum(p5)) # p5 is N
+		if (isNumericAtom(p5)) # p5 is N
 			push(p5); # p5 is N
 			n = pop_integer()
 			if (isNaN(n))
@@ -89,14 +89,14 @@ Eval_derivative = ->
 		# symbol	number		X = N, N = arg1, continue
 		# symbol	symbol		X = N, N = arg1, continue
 
-		if (isnum(p5)) # p5 is N
+		if (isNumericAtom(p5)) # p5 is N
 			p1 = cdr(p1)
 			push(car(p1))
 			Eval()
 			p5 = pop(); # p5 is N
 			if (p5 == symbol(NIL)) # p5 is N
 				break;		# arglist exhausted
-			if (isnum(p5)) # p5 is N
+			if (isNumericAtom(p5)) # p5 is N
 				doNothing = 1		# N = arg1
 			else
 				p4 = p5; # p5 is N	 # p4 is X	# X = arg1
@@ -117,7 +117,7 @@ derivative = ->
 	save()
 	p2 = pop()
 	p1 = pop()
-	if (isnum(p2))
+	if (isNumericAtom(p2))
 		stop("undefined function")
 	if (istensor(p1))
 		if (istensor(p2))
@@ -249,14 +249,14 @@ d_scalar_scalar_1 = ->
 		return
 
 	if (car(p1) == symbol(BESSELJ))
-		if (iszero(caddr(p1)))
+		if (isZeroAtomOrTensor(caddr(p1)))
 			dbesselj0()
 		else
 			dbesseljn()
 		return
 
 	if (car(p1) == symbol(BESSELY))
-		if (iszero(caddr(p1)))
+		if (isZeroAtomOrTensor(caddr(p1)))
 			dbessely0()
 		else
 			dbesselyn()

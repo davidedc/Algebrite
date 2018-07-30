@@ -54,7 +54,7 @@ yycontract = ->
 	p1 = pop()
 
 	if (!istensor(p1))
-		if (!iszero(p1))
+		if (!isZeroAtomOrTensor(p1))
 			stop("contract: tensor expected, 1st arg is not a tensor")
 		push(zero)
 		return

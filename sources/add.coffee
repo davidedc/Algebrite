@@ -107,7 +107,7 @@ cmp_terms = (p1, p2) ->
 	i = 0
 	# numbers can be combined
 
-	if (isnum(p1) && isnum(p2))
+	if (isNumericAtom(p1) && isNumericAtom(p2))
 		flag = 1
 		#if DEBUG then console.log "cmp_terms #" + cmp_terms_count + " returns 0"
 		return 0
@@ -134,14 +134,14 @@ cmp_terms = (p1, p2) ->
 
 	if (car(p1) == symbol(MULTIPLY))
 		p1 = cdr(p1)
-		if (isnum(car(p1)))
+		if (isNumericAtom(car(p1)))
 			p1 = cdr(p1)
 			if (cdr(p1) == symbol(NIL))
 				p1 = car(p1)
 
 	if (car(p2) == symbol(MULTIPLY))
 		p2 = cdr(p2)
-		if (isnum(car(p2)))
+		if (isNumericAtom(car(p2)))
 			p2 = cdr(p2)
 			if (cdr(p2) == symbol(NIL))
 				p2 = car(p2)
@@ -200,12 +200,12 @@ combine_terms = (s, n) ->
 			i++
 			continue
 
-		if (isnum(p3) && isnum(p4))
+		if (isNumericAtom(p3) && isNumericAtom(p4))
 			push(p3)
 			push(p4)
 			add_numbers()
 			p1 = pop()
-			if (iszero(p1))
+			if (isZeroAtomOrTensor(p1))
 				for j in [i...(n - 2)]
 					stack[s+j] = stack[s+j + 2]
 				n -= 2
@@ -219,7 +219,7 @@ combine_terms = (s, n) ->
 			i++
 			continue
 
-		if (isnum(p3) || isnum(p4))
+		if (isNumericAtom(p3) || isNumericAtom(p4))
 
 			i++
 			continue
@@ -236,7 +236,7 @@ combine_terms = (s, n) ->
 		if (car(p3) == symbol(MULTIPLY))
 			p3 = cdr(p3)
 			t = 1; # p3 is now denormal
-			if (isnum(car(p3)))
+			if (isNumericAtom(car(p3)))
 				p1 = car(p3)
 				p3 = cdr(p3)
 				if (cdr(p3) == symbol(NIL))
@@ -245,7 +245,7 @@ combine_terms = (s, n) ->
 
 		if (car(p4) == symbol(MULTIPLY))
 			p4 = cdr(p4)
-			if (isnum(car(p4)))
+			if (isNumericAtom(car(p4)))
 				p2 = car(p4)
 				p4 = cdr(p4)
 				if (cdr(p4) == symbol(NIL))
@@ -262,7 +262,7 @@ combine_terms = (s, n) ->
 
 		p1 = pop()
 
-		if (iszero(p1))
+		if (isZeroAtomOrTensor(p1))
 			for j in [i...(n - 2)]
 				stack[s+j] = stack[s+j + 2]
 			n -= 2
@@ -301,7 +301,7 @@ push_terms = (p) ->
 		while (iscons(p))
 			push(car(p))
 			p = cdr(p)
-	else if (!iszero(p))
+	else if (!isZeroAtomOrTensor(p))
 		push(p)
 
 # add two expressions

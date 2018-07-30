@@ -64,11 +64,11 @@ choose = ->
 	restore()
 
 choose_check_args = ->
-	if (isnum(p1) && lessp(p1, zero))
+	if (isNumericAtom(p1) && lessp(p1, zero))
 		return 0
-	else if (isnum(p2) && lessp(p2, zero))
+	else if (isNumericAtom(p2) && lessp(p2, zero))
 		return 0
-	else if (isnum(p1) && isnum(p2) && lessp(p1, p2))
+	else if (isNumericAtom(p1) && isNumericAtom(p2) && lessp(p1, p2))
 		return 0
 	else
 		return 1

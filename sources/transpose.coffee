@@ -44,7 +44,7 @@ transpose = ->
 
 	# a transposition just goes away when
 	# applied to a scalar
-	if (isnum(p1))
+	if (isNumericAtom(p1))
 		push p1
 		restore()
 		return
@@ -130,7 +130,7 @@ transpose = ->
 
 
 	if (!istensor(p1))
-		if (!iszero(p1))
+		if (!isZeroAtomOrTensor(p1))
 			#stop("transpose: tensor expected, 1st arg is not a tensor")
 			push_symbol(TRANSPOSE)
 			push(p1)

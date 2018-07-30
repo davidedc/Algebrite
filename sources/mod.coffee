@@ -15,10 +15,10 @@ mod = ->
 	p2 = pop()
 	p1 = pop()
 
-	if (iszero(p2))
+	if (isZeroAtomOrTensor(p2))
 		stop("mod function: divide by zero")
 
-	if (!isnum(p1) || !isnum(p2))
+	if (!isNumericAtom(p1) || !isNumericAtom(p2))
 		push_symbol(MOD)
 		push(p1)
 		push(p2)

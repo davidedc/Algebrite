@@ -378,7 +378,7 @@ Eval_integral = ->
 	if (p2 == symbol(NIL))
 		guess()
 		push(symbol(NIL))
-	else if (isnum(p2))
+	else if (isNumericAtom(p2))
 		guess()
 		push(p2)
 	else
@@ -395,7 +395,7 @@ Eval_integral = ->
 
 		# N might be a symbol instead of a number
 
-		if (isnum(p5))
+		if (isNumericAtom(p5))
 			push(p5)
 			n = pop_integer()
 			if (isNaN(n))
@@ -434,14 +434,14 @@ Eval_integral = ->
 		# symbol	number		X = N, N = arg1, continue
 		# symbol	symbol		X = N, N = arg1, continue
 
-		if (isnum(p5))
+		if (isNumericAtom(p5))
 			p1 = cdr(p1)
 			push(car(p1))
 			Eval()
 			p5 = pop()
 			if (p5 == symbol(NIL))
 				break;		# arglist exhausted
-			if (isnum(p5))
+			if (isNumericAtom(p5))
 				doNothing = 1		# N = arg1
 			else
 				p4 = p5;		# X = arg1

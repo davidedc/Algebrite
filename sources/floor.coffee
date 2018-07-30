@@ -15,7 +15,7 @@ yyfloor = ->
 
 	p1 = pop()
 
-	if (!isnum(p1))
+	if (!isNumericAtom(p1))
 		push_symbol(FLOOR)
 		push(p1)
 		list(2)

@@ -230,7 +230,7 @@ divide_numbers = ->
 	p2 = pop()
 	p1 = pop()
 
-	if (iszero(p2))
+	if (isZeroAtomOrTensor(p2))
 		stop("divide by zero")
 
 	if (isdouble(p1))
@@ -254,7 +254,7 @@ invert_number = ->
 
 	p1 = pop()
 
-	if (iszero(p1))
+	if (isZeroAtomOrTensor(p1))
 		stop("divide by zero")
 
 	if (isdouble(p1))
@@ -309,7 +309,7 @@ compare_numbers = (a,b) ->
 negate_number = ->
 	save()
 	p1 = pop()
-	if (iszero(p1))
+	if (isZeroAtomOrTensor(p1))
 		push(p1)
 		restore()
 		return
