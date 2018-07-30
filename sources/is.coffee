@@ -4,6 +4,9 @@ DEBUG_IS = false
 
 # p is a U
 iszero = (p) ->
+# this routine is a simple check on whether we have
+# a basic zero in our hands. It doesn't perform any
+# calculations or simplifications.
 	i = 0
 	switch (p.k)
 		when NUM

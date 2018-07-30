@@ -1,6 +1,6 @@
 # If the number of args is odd then the last arg is the default result.
-
-
+# Works like a switch statement. Could also be used for piecewise
+# functions? TODO should probably be called "switch"?
 
 Eval_test = ->
 	orig = p1
@@ -235,11 +235,13 @@ cmp_args = ->
 			else
 				t = 1
 		when DOUBLE
+			#console.log "comparison p1.d: " + p1.d
 			if (p1.d < 0.0)
 				t = -1
 			else
 				t = 1
 		else
+			#console.log "comparison is null"
 			t = null
 
 	return t

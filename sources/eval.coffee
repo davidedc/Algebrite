@@ -284,7 +284,6 @@ so in the case above "a" is not assigned anything.
 
 ###
 
-# check definition
 Eval_check = ->
 	push(cadr(p1))
 	Eval_predicate()
@@ -656,6 +655,18 @@ Eval_noexpand = ->
 
 # like Eval() except "=" (assignment) is treated
 # as "==" (equality test)
+# This is because
+#  * this allows users to be lazy and just
+#    use "=" instead of "==" as per more common
+#    mathematical notation
+#  * in many places we don't expect an assignment
+#    e.g. we don't expect to test the zero-ness
+#    of an assignment or the truth value of
+#    an assignment
+# Note that these are questionable assumptions
+# as for example in most programming languages one
+# can indeed test the value of an assignment (the
+# value is just the evaluation of the right side)
 
 Eval_predicate = ->
 	save()
