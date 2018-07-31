@@ -43,10 +43,16 @@ test_mixedprint = ->
 		"-sqrt(2)/2",
 		"-1/2*2^(1/2)",
 
-		"printplain",
+		# we can't get rid of the multiplication sign
+		# in general, because expressions like
+		# (x+1)(x-1) actually represent a function call
+		# We could get rid of the multiplication sign
+		# in these special cases where there are numeric
+		# constants but we don't do that yet.
+		"printhuman",
 		"-1/2 2^(1/2)",
 
-		"printfull",
+		"printcomputer",
 		"-1/2*2^(1/2)",
 
 		"printlatex",
@@ -66,7 +72,7 @@ test_mixedprint = ->
 
 		# checks that no extra newlines are
 		# inserted
-		"x=0\ny=2\nfor(do(x=sqrt(2+x),y=2*y/x,printfull(y)),k,1,2)",
+		"x=0\ny=2\nfor(do(x=sqrt(2+x),y=2*y/x,printcomputer(y)),k,1,2)",
 		"2*2^(1/2)4*2^(1/2)/((2+2^(1/2))^(1/2))",
 
 		"clearall",

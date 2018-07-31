@@ -4,7 +4,7 @@ codeGen = false
 # this is only invoked when user invokes
 # "print" explicitly
 Eval_print = ->
-	stringsEmittedByUserPrintouts += _print(cdr(p1),environment_printmode)
+	stringsEmittedByUserPrintouts += _print(cdr(p1), printMode)
 	push(symbol(NIL));
 
 # this is only invoked when user invokes
@@ -14,9 +14,9 @@ Eval_print2dascii = ->
 	push(symbol(NIL));
 
 # this is only invoked when user invokes
-# "printfull" explicitly
-Eval_printfull = ->
-	stringsEmittedByUserPrintouts +=_print(cdr(p1),PRINTMODE_FULL)
+# "printcomputer" explicitly
+Eval_printcomputer = ->
+	stringsEmittedByUserPrintouts +=_print(cdr(p1),PRINTMODE_COMPUTER)
 	push(symbol(NIL));
 
 # this is only invoked when user invokes
@@ -26,14 +26,14 @@ Eval_printlatex = ->
 	push(symbol(NIL));
 
 # this is only invoked when user invokes
-# "printplain" explicitly
-Eval_printplain = ->
+# "printhuman" explicitly
+Eval_printhuman = ->
 	# test flag needs to be suspended
-	# because otherwise "printfull" mode
+	# because otherwise "printcomputer" mode
 	# will happen.
 	original_test_flag = test_flag
 	test_flag = 0
-	stringsEmittedByUserPrintouts +=_print(cdr(p1),PRINTMODE_PLAIN)
+	stringsEmittedByUserPrintouts +=_print(cdr(p1),PRINTMODE_HUMAN)
 	test_flag = original_test_flag
 	push(symbol(NIL));
 
@@ -68,12 +68,12 @@ _print = (p, passedPrintMode) ->
 		###
 
 		origPrintMode = printMode
-		if passedPrintMode == PRINTMODE_FULL
-			printMode = PRINTMODE_FULL
+		if passedPrintMode == PRINTMODE_COMPUTER
+			printMode = PRINTMODE_COMPUTER
 			accumulator = printline(p2);
 			rememberPrint(accumulator, LAST_FULL_PRINT)
-		else if passedPrintMode == PRINTMODE_PLAIN
-			printMode = PRINTMODE_PLAIN
+		else if passedPrintMode == PRINTMODE_HUMAN
+			printMode = PRINTMODE_HUMAN
 			accumulator = printline(p2);
 			rememberPrint(accumulator, LAST_PLAIN_PRINT)
 		else if passedPrintMode == PRINTMODE_2DASCII
@@ -257,7 +257,7 @@ print_a_over_b = (p) ->
 
 	if printMode == PRINTMODE_LATEX
 		accumulator += print_str('}{')
-	else if printMode == PRINTMODE_PLAIN and !test_flag
+	else if printMode == PRINTMODE_HUMAN and !test_flag
 		accumulator += print_str(" / ")
 	else
 		accumulator += print_str("/")
@@ -305,12 +305,12 @@ print_expr = (p) ->
 		p = cdr(p)
 		while (iscons(p))
 			if (sign_of_term(car(p)) == '+')
-				if printMode == PRINTMODE_PLAIN and !test_flag
+				if printMode == PRINTMODE_HUMAN and !test_flag
 					accumulator += print_str(" + ")
 				else
 					accumulator += print_str("+")
 			else
-				if printMode == PRINTMODE_PLAIN and !test_flag
+				if printMode == PRINTMODE_HUMAN and !test_flag
 					accumulator += print_str(" - ")
 				else
 					accumulator += print_str("-")
@@ -980,7 +980,7 @@ print_power = (base, exponent) ->
 			if (isminusone(exponent))
 				if printMode == PRINTMODE_LATEX
 					accumulator += print_str("\\frac{1}{")
-				else if printMode == PRINTMODE_PLAIN and !test_flag
+				else if printMode == PRINTMODE_HUMAN and !test_flag
 					accumulator += print_str("1 / ")
 				else
 					accumulator += print_str("1/")
@@ -1000,7 +1000,7 @@ print_power = (base, exponent) ->
 			if (isnegativeterm(exponent))
 				if printMode == PRINTMODE_LATEX
 					accumulator += print_str("\\frac{1}{")
-				else if printMode == PRINTMODE_PLAIN and !test_flag
+				else if printMode == PRINTMODE_HUMAN and !test_flag
 					accumulator += print_str("1 / ")
 				else
 					accumulator += print_str("1/")
@@ -1072,7 +1072,7 @@ print_power = (base, exponent) ->
 
 		# print the power symbol
 		#debugger
-		if printMode == PRINTMODE_PLAIN and !test_flag
+		if printMode == PRINTMODE_HUMAN and !test_flag
 			#print_str(" ^ ")
 			accumulator += print_str(power_str)
 		else
@@ -1199,7 +1199,7 @@ print_factor = (p, omitParens) ->
 		if printMode == PRINTMODE_LATEX
 			accumulator += print_str(" \\rightarrow ")
 		else
-			if printMode == PRINTMODE_PLAIN and !test_flag
+			if printMode == PRINTMODE_HUMAN and !test_flag
 				accumulator += print_str(" -> ")
 			else
 				accumulator += print_str("->")
@@ -1446,12 +1446,12 @@ print_list = (p) ->
 print_multiply_sign = ->
 	accumulator = ""
 	if printMode == PRINTMODE_LATEX
-		if printMode == PRINTMODE_PLAIN and !test_flag
+		if printMode == PRINTMODE_HUMAN and !test_flag
 			accumulator += print_str(" ")
 		else
 			return accumulator
 
-	if printMode == PRINTMODE_PLAIN and !test_flag and !codeGen
+	if printMode == PRINTMODE_HUMAN and !test_flag and !codeGen
 		accumulator += print_str(" ")
 	else
 		accumulator += print_str("*")

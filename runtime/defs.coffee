@@ -14,14 +14,13 @@ PRINTOUTRESULT = false
 # printing-related constants
 PRINTMODE_LATEX = "PRINTMODE_LATEX"
 PRINTMODE_2DASCII = "PRINTMODE_2DASCII"
-PRINTMODE_FULL = "PRINTMODE_FULL"
-PRINTMODE_PLAIN = "PRINTMODE_PLAIN"
+PRINTMODE_COMPUTER = "PRINTMODE_COMPUTER"
+PRINTMODE_HUMAN = "PRINTMODE_HUMAN"
 PRINTMODE_LIST = "PRINTMODE_LIST"
 
 # when the user uses the generic "print" statement
 # this setting kicks-in.
-environment_printmode = PRINTMODE_PLAIN
-printMode = PRINTMODE_PLAIN
+printMode = PRINTMODE_COMPUTER
 
 dontCreateNewRadicalsInDenominatorWhenEvalingMultiplication = true
 recursionLevelNestedRadicalsRemoval = 0
