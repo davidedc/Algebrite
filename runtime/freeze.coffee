@@ -1,7 +1,4 @@
 
-cached_runs = new LRUCache(100, 60000 * 60 * 24 * 265)
-cached_findDependenciesInScript = new LRUCache(100, 60000 * 60 * 24 * 265)
-
 freeze = ->
 
 	frozenSymbols = []
@@ -44,28 +41,6 @@ compareState = (previousHash) ->
 		return true
 	else
 		return false
-
-resetCache = ->
-	if cached_runs?
-		cached_runs.reset()
-		if DEBUG then console.log "resetting cached_runs"
-
-	if cached_findDependenciesInScript?
-		cached_findDependenciesInScript.reset()
-		if DEBUG then console.log "resetting cached_findDependenciesInScript"
-
-resetCacheHitMissCounts = ->
-	if cached_runs?
-		cached_runs.resetHitMissCount()
-
-	if cached_findDependenciesInScript?
-		cached_findDependenciesInScript.resetHitMissCount()
-
-totalAllCachesHits = ->
-	cached_runs.hitCount + cached_findDependenciesInScript.hitCount
-
-totalAllCachesMisses = ->
-	cached_runs.missCount + cached_findDependenciesInScript.missCount
 
 getStateHash = ->
 	frozenHash = ""

@@ -298,9 +298,6 @@ MAX_PROGRAM_SIZE = 100001
 MAXPRIMETAB = 10000
 MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES = 5
 MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE = 10
-ENABLE_CACHING = true
-cached_runs = null # the LRU cache will go here
-cached_findDependenciesInScript = null # the LRU cache will go here
 
 #define _USE_MATH_DEFINES // for MS C++
 

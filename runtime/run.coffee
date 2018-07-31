@@ -54,12 +54,6 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 
 	timeStartFromAlgebra  = new Date().getTime()
 
-	if CACHE_DEBUGS or CACHE_HITSMISS_DEBUGS or TIMING_DEBUGS
-		console.log " --------- findDependenciesInScript input: " + stringToBeParsed + " at: " + (new Date())
-		currentStateHash = getStateHash()
-		console.log "state hash: " + currentStateHash
-
-
 	inited = true
 	codeGen = true
 	symbolsDependencies = {}
@@ -83,33 +77,6 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 
 
 	stringToBeRun = stringToBeParsed
-	if ENABLE_CACHING and stringToBeRun != "clearall"
-		currentStateHash = getStateHash()
-		cacheKey = currentStateHash + " stringToBeRun: " + stringToBeRun + " - " + dontGenerateCode
-		if CACHE_DEBUGS then console.log "cached_findDependenciesInScript key: " + cacheKey
-		possiblyCached = cached_findDependenciesInScript.get(cacheKey)
-		if possiblyCached?
-			if CACHE_HITSMISS_DEBUGS then console.log "cached_findDependenciesInScript hit on " + stringToBeRun
-			unfreeze(possiblyCached)
-			# return the output string
-			if TIMING_DEBUGS
-				totalTime = new Date().getTime() - timeStartFromAlgebra
-				console.log "findDependenciesInScript input: " + stringToBeRun + " time: " + totalTime + "ms, saved " + (possiblyCached[possiblyCached.length-5] - totalTime) + "ms due to cache hit"
-
-			return [
-				possiblyCached[possiblyCached.length - 7],
-				possiblyCached[possiblyCached.length - 6],
-				possiblyCached[possiblyCached.length - 5],
-				possiblyCached[possiblyCached.length - 4],
-				possiblyCached[possiblyCached.length - 3],
-				possiblyCached[possiblyCached.length - 2],
-				possiblyCached[possiblyCached.length - 1]
-				]
-
-		else
-			if CACHE_HITSMISS_DEBUGS then console.log "cached_findDependenciesInScript miss on: " + stringToBeRun
-			if TIMING_DEBUGS
-				cacheMissPenalty = (new Date().getTime() - timeStartFromAlgebra)
 
 
 	# parse the input. This collects the
@@ -383,28 +350,6 @@ findDependenciesInScript = (stringToBeParsed, dontGenerateCode) ->
 	if TIMING_DEBUGS
 		console.log "findDependenciesInScript time for: " + stringToBeRun + " : "+ ((new Date().getTime()) - timeStartFromAlgebra) + "ms"
 
-	if ENABLE_CACHING and stringToBeRun != "clearall" and errorMessage == ""
-		frozen = freeze()
-		toBeFrozen = [
-			frozen[0],
-			frozen[1],
-			frozen[2],
-			frozen[3],
-			frozen[4],
-			frozen[5],
-			(new Date().getTime() - timeStartFromAlgebra),
-			testableString,
-			scriptEvaluation[0],
-			generatedCode,
-			readableSummaryOfGeneratedCode,
-			scriptEvaluation[1],
-			errorMessage,
-			dependencyInfo
-		]
-		if CACHE_DEBUGS then console.log "setting cached_findDependenciesInScript on key: " + cacheKey
-		cached_findDependenciesInScript.set(cacheKey, toBeFrozen)
-
-
 	return [testableString, scriptEvaluation[0], generatedCode, readableSummaryOfGeneratedCode, scriptEvaluation[1], errorMessage, dependencyInfo]
 
 recursiveDependencies = (variableToBeChecked, arrayWhereDependenciesWillBeAdded, variablesAlreadyFleshedOut, variablesWithCycles, chainBeingChecked, cyclesDescriptions) ->
@@ -492,11 +437,7 @@ normaliseDots = (stringToNormalise) ->
 	return stringToNormalise
 
 
-CACHE_DEBUGS = false
-CACHE_HITSMISS_DEBUGS = false
 TIMING_DEBUGS = false
-
-cacheMissPenalty = 0
 
 run = (stringToBeRun, generateLatex = false) ->
 
@@ -505,25 +446,6 @@ run = (stringToBeRun, generateLatex = false) ->
 	#stringToBeRun = stringToBeRun + "\n"
 	stringToBeRun = normaliseDots stringToBeRun
 	#console.log "run running: " + stringToBeRun
-
-	if ENABLE_CACHING and stringToBeRun != "clearall"
-		currentStateHash = getStateHash()
-		cacheKey = currentStateHash + " stringToBeRun: " + stringToBeRun
-		if CACHE_DEBUGS then console.log "cached_runs key: " + cacheKey
-		possiblyCached = cached_runs.get(cacheKey)
-		#possiblyCached = null
-		if possiblyCached?
-			if CACHE_HITSMISS_DEBUGS then console.log "cached_runs hit on: " + stringToBeRun
-			unfreeze(possiblyCached)
-			# return the output string
-			if TIMING_DEBUGS
-				totalTime = new Date().getTime() - timeStart
-				console.log "run time: " + totalTime + "ms, saved " + (possiblyCached[possiblyCached.length-2] - totalTime) + "ms due to cache hit"
-			return possiblyCached[possiblyCached.length - 1]
-		else
-			if CACHE_HITSMISS_DEBUGS then console.log "cached_runs miss on: " + stringToBeRun
-			if TIMING_DEBUGS
-				cacheMissPenalty = (new Date().getTime() - timeStart)
 
 	if stringToBeRun == "selftest"
 		selftest()
@@ -643,7 +565,6 @@ run = (stringToBeRun, generateLatex = false) ->
 				allReturnedLatexStrings += collectedLatexResult
 				allReturnedLatexStrings += "\n"
 
-			resetCache()
 			init()
 
 	if allReturnedPlainStrings[allReturnedPlainStrings.length-1] == "\n"
@@ -655,20 +576,12 @@ run = (stringToBeRun, generateLatex = false) ->
 
 	if generateLatex
 		if DEBUG then console.log "allReturnedLatexStrings: " + allReturnedLatexStrings
-		# TODO handle this case of caching
 		stringToBeReturned = [allReturnedPlainStrings, allReturnedLatexStrings]
 	else
 		stringToBeReturned = allReturnedPlainStrings
 
-	if ENABLE_CACHING and stringToBeRun != "clearall" and !errorWhileExecution
-		frozen = freeze()
-		toBeFrozen = [frozen[0], frozen[1], frozen[2], frozen[3], frozen[4], frozen[5], (new Date().getTime() - timeStart), stringToBeReturned]
-		if CACHE_DEBUGS then console.log "setting cached_runs on key: " + cacheKey
-		cached_runs.set(cacheKey, toBeFrozen)
-
 	if TIMING_DEBUGS
 		timingDebugWrite = "run time on: " + stringToBeRun + " : " + (new Date().getTime() - timeStart) + "ms"
-		if ENABLE_CACHING  and stringToBeRun != "clearall" then timingDebugWrite += ", of which cache miss penalty: " + cacheMissPenalty + "ms"
 		console.log timingDebugWrite
 
 	allReturnedPlainStrings = ""
@@ -899,16 +812,8 @@ computeResultsAndJavaScriptFromAlgebra = (codeFromAlgebraBlock) ->
 	latexResult: latexResult
 	dependencyInfo: dependencyInfo
 
-enableCaching = ->
-	ENABLE_CACHING = true
-
-disableCaching = ->
-	ENABLE_CACHING = false
-
 (exports ? this).run = run
 (exports ? this).findDependenciesInScript = findDependenciesInScript
 (exports ? this).computeDependenciesFromAlgebra = computeDependenciesFromAlgebra
 (exports ? this).computeResultsAndJavaScriptFromAlgebra = computeResultsAndJavaScriptFromAlgebra
 (exports ? this).clearAlgebraEnvironment = clearAlgebraEnvironment
-(exports ? this).enableCaching = enableCaching
-(exports ? this).disableCaching = disableCaching

@@ -21,7 +21,6 @@ test_low_level = ->
 	test_mroot()
 	test_dependencies()
 	test_assignments()
-	test_caching()
 	test_strings()
 	test_test()
 	test_check()
