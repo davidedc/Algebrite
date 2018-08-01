@@ -611,73 +611,48 @@ check_stack = ->
 
 top_level_eval = ->
 	if DEBUG then console.log "#### top level eval"
-	save()
 
 	trigmode = 0
 
-	p1 = symbol(AUTOEXPAND)
+	shouldAutoexpand = symbol(AUTOEXPAND)
 
-	if (isZeroAtomOrTensor(get_binding(p1)))
+	if (isZeroAtomOrTensor(get_binding(shouldAutoexpand)))
 		expanding = 0
 	else
 		expanding = 1
 
-	p1 = pop()
-	push(p1)
+	originalArgument = top()
 	Eval()
-	p2 = pop()
+	evalledArgument = top()
 
 	# "draw", "for" and "setq" return "nil", there is no result to print
-
-	if (p2 == symbol(NIL))
-		push(p2)
-		restore()
+	if (evalledArgument == symbol(NIL))
 		return
 
 	# update "last" to contain the last result
-	set_binding(symbol(LAST), p2)
+	set_binding(symbol(LAST), evalledArgument)
 
 	if (!isZeroAtomOrTensor(get_binding(symbol(BAKE))))
-		push(p2)
 		bake()
-		p2 = pop()
+		evalledArgument = top()
 
-	# If we evaluated the symbol "i" or "j" and the result was sqrt(-1)
-	# then don't do anything.
-	# Otherwise if "j" is an imaginary unit then subst.
-	# Otherwise if "i" is an imaginary unit then subst.
-	if ((p1 == symbol(SYMBOL_I) || p1 == symbol(SYMBOL_J)) && isimaginaryunit(p2))
-		doNothing = 0
+	# If user asked explicitly asked to evaluate "i" or "j" and
+	# they represent the imaginary unit (-1)^(1/2), then 
+	# show (-1)^(1/2).
+	if ((originalArgument == symbol(SYMBOL_I) || originalArgument == symbol(SYMBOL_J)) && isimaginaryunit(evalledArgument))
+		return
+	# In all other cases, replace all instances of (-1)^(1/2) in the result
+	# with the symbol "i" or "j" depending on which one
+	# represents the imaginary unit
 	else if (isimaginaryunit(get_binding(symbol(SYMBOL_J))))
-		push(p2)
 		push(imaginaryunit)
 		push_symbol(SYMBOL_J)
 		subst()
-		p2 = pop()
 	else if (isimaginaryunit(get_binding(symbol(SYMBOL_I))))
-		push(p2)
 		push(imaginaryunit)
 		push_symbol(SYMBOL_I)
 		subst()
-		p2 = pop()
 
-	#ifndef LINUX ----------------------
-
-	# if we evaluated the symbol "a" and got "b" then print "a=b"
-
-	# do not print "a=a"
-
-	#if (issymbol(p1) && !iskeyword(p1) && p1 != p2 && test_flag == 0)
-	#	push_symbol(SETQ)
-	#	push(p1)
-	#	push(p2)
-	#	list(3)
-	#	p2 = pop()
-	#endif -----------------------------
-
-	push(p2)
-
-	restore()
 
 check_esc_flag = ->
 	if (esc_flag)
