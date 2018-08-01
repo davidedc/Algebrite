@@ -23,6 +23,9 @@ Also tensors have necessarily to make a distinction between row vectors,
 column vectors (which have a rank of 2) and uni-dimensional vectors (rank 1).
 They look very similar but they are fundamentally different.
 
+Tensors are 1-indexed, as per general math notation, and like Fortran,
+Lua, Mathematica, SASL, MATLAB, Julia, Erlang and APL.
+
 Tensors with elements that are also tensors get promoted to a higher rank
 , this is so we can represent and get the rank of a matrix correctly.
 Example:
