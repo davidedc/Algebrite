@@ -5,6 +5,15 @@ test_assignments = ->
 		"e",
 		"e",
 
+		# normally sqrt(-1) is shown as i or j
+		# but if user really wants to look inside
+		# i/j then we are going to show sqrt(-1)
+		"i",
+		"(-1)^(1/2)",
+
+		"j",
+		"j",
+
 		# degenerate assignments give an error ----
 
 		"0=0",
