@@ -3,6 +3,11 @@
 test_low_level = ->
 	run("clearall"); # to initialize stack and memory
 
+	if exec("factor","(x^2-1)").toString() == "(x-1)*(x+1)"
+		console.log "exec text ok"
+	else
+		console.log "exec text failed"
+
 	test_clearall()
 	test_inv()
 	test_printlatex()

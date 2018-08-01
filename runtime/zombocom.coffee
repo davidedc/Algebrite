@@ -50,7 +50,7 @@ exec = (name, argus...) ->
 	push(p1)
 	
 	try
-		fixed_top_level_eval()
+		top_level_eval()
 		result = pop()
 		check_stack()
 	catch error
@@ -58,36 +58,6 @@ exec = (name, argus...) ->
 		throw error
 
 	return result
-
-
-fixed_top_level_eval = ->
-	save()
-
-	trigmode = 0
-
-	p1 = symbol(AUTOEXPAND)
-	if (isZeroAtomOrTensor(get_binding(p1)))
-		expanding = 0
-	else
-		expanding = 1
-
-	p1 = pop()
-	push(p1)
-	Eval()
-	p2 = pop()
-	
-	if (p2 == symbol(NIL))
-		push(p2)
-		restore()
-		return
-
-	if (!isZeroAtomOrTensor(get_binding(symbol(BAKE))))
-		push(p2)
-		bake()
-		p2 = pop()
-
-	push(p2)
-	restore()
 
 
 $.exec = exec
