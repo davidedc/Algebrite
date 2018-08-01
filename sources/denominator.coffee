@@ -23,32 +23,28 @@ Eval_denominator = ->
 denominator = ->
 	h = 0
 
-	save()
+	theArgument = pop()
+	#console.trace "denominator of: " + theArgument
 
-	p1 = pop()
-	#console.trace "denominator of: " + p1
-
-	if (car(p1) == symbol(ADD))
-		push(p1)
+	if (car(theArgument) == symbol(ADD))
+		push(theArgument)
 		rationalize()
-		p1 = pop()
+		theArgument = pop()
 
-	if (car(p1) == symbol(MULTIPLY) and !isplusone(car(cdr(p1))))
+	if (car(theArgument) == symbol(MULTIPLY) and !isplusone(car(cdr(theArgument))))
 		h = tos
-		p1 = cdr(p1)
-		while (iscons(p1))
-			push(car(p1))
+		theArgument = cdr(theArgument)
+		while (iscons(theArgument))
+			push(car(theArgument))
 			denominator()
-			p1 = cdr(p1)
+			theArgument = cdr(theArgument)
 		multiply_all(tos - h)
-	else if (isrational(p1))
-		push(p1)
+	else if (isrational(theArgument))
+		push(theArgument)
 		mp_denominator()
-	else if (car(p1) == symbol(POWER) && isnegativeterm(caddr(p1)))
-		push(p1)
+	else if (car(theArgument) == symbol(POWER) && isnegativeterm(caddr(theArgument)))
+		push(theArgument)
 		reciprocate()
 	else
 		push(one)
-
-	restore()
 

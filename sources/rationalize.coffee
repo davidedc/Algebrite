@@ -7,48 +7,46 @@ Eval_rationalize = ->
 
 rationalize = ->
 	x = expanding
-	save()
 	yyrationalize()
-	restore()
 	expanding = x
 
 yyrationalize = ->
-	p1 = pop()
+	theArgument = pop()
 
-	if (istensor(p1))
-		__rationalize_tensor()
+	if (istensor(theArgument))
+		__rationalize_tensor(theArgument)
 		return
 
 	expanding = 0
 
-	if (car(p1) != symbol(ADD))
-		push(p1)
+	if (car(theArgument) != symbol(ADD))
+		push(theArgument)
 		return
 
 	if DEBUG
 		printf("rationalize: this is the input expr:\n")
-		printline(p1)
+		printline(theArgument)
 
 	# get common denominator
 
 	push(one)
-	multiply_denominators(p1)
-	p2 = pop()
+	multiply_denominators(theArgument)
+	commonDenominator = pop()
 
 	if DEBUG
 		printf("rationalize: this is the common denominator:\n")
-		printline(p2)
+		printline(commonDenominator)
 
 	# multiply each term by common denominator
 
 	push(zero)
-	p3 = cdr(p1)
-	while (iscons(p3))
-		push(p2)
-		push(car(p3))
+	eachTerm = cdr(theArgument)
+	while (iscons(eachTerm))
+		push(commonDenominator)
+		push(car(eachTerm))
 		multiply()
 		add()
-		p3 = cdr(p3)
+		eachTerm = cdr(eachTerm)
 
 	if DEBUG
 		printf("rationalize: original expr times common denominator:\n")
@@ -64,7 +62,7 @@ yyrationalize = ->
 
 	# divide by common denominator
 
-	push(p2)
+	push(commonDenominator)
 	divide()
 
 	if DEBUG
@@ -115,30 +113,29 @@ multiply_denominators_factor = (p) ->
 
 	pop()
 
-__rationalize_tensor = ->
+__rationalize_tensor = (theTensor) ->
 
 	i = 0
-	push(p1)
+	push(theTensor)
 
 	Eval(); # makes a copy
 
-	p1 = pop()
+	theTensor = pop()
 
-	if (!istensor(p1)) # might be zero
-		push(p1)
+	if (!istensor(theTensor)) # might be zero
+		push(theTensor)
 		return
 
-	n = p1.tensor.nelem
+	n = theTensor.tensor.nelem
 
 	for i in [0...n]
-		push(p1.tensor.elem[i])
+		push(theTensor.tensor.elem[i])
 		rationalize()
-		p1.tensor.elem[i] = pop()
+		theTensor.tensor.elem[i] = pop()
 
-	check_tensor_dimensions p1
+	check_tensor_dimensions theTensor
 
-
-	push(p1)
+	push(theTensor)
 
 
 

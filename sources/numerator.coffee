@@ -8,36 +8,31 @@ Eval_numerator = ->
 numerator = ->
 	h = 0
 
-	save()
-
-	p1 = pop()
+	theArgument = pop()
 
 
-	if (car(p1) == symbol(ADD))
-		push(p1)
+	if (car(theArgument) == symbol(ADD))
+		push(theArgument)
 		#console.trace "rationalising "
 		rationalize()
-		p1 = pop()
-		#console.log "rationalised: " + p1
+		theArgument = pop()
+		#console.log "rationalised: " + theArgument
 
-	if (car(p1) == symbol(MULTIPLY) and !isplusone(car(cdr(p1))))
+	if (car(theArgument) == symbol(MULTIPLY) and !isplusone(car(cdr(theArgument))))
 		h = tos
-		p1 = cdr(p1)
-		#console.log "p1 inside multiply: " + p1
-		#console.log "first term: " + car(p1)
+		theArgument = cdr(theArgument)
+		#console.log "theArgument inside multiply: " + theArgument
+		#console.log "first term: " + car(theArgument)
 
-		while (iscons(p1))
-			push(car(p1))
+		while (iscons(theArgument))
+			push(car(theArgument))
 			numerator()
-			p1 = cdr(p1)
+			theArgument = cdr(theArgument)
 		multiply_all(tos - h)
-	else if (isrational(p1))
-		push(p1)
+	else if (isrational(theArgument))
+		push(theArgument)
 		mp_numerator()
-	else if (car(p1) == symbol(POWER) && isnegativeterm(caddr(p1)))
+	else if (car(theArgument) == symbol(POWER) && isnegativeterm(caddr(theArgument)))
 		push(one)
 	else 
-		push(p1)
-
-	restore()
-
+		push(theArgument)
