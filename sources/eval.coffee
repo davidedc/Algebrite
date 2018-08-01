@@ -552,7 +552,7 @@ Eval_rank = ->
 #   > x
 
 Eval_setq = ->
-	# case of array
+	# case of tensor
 	if (caadr(p1) == symbol(INDEX))
 		setq_indexed()
 		return
