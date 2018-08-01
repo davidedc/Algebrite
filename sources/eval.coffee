@@ -541,6 +541,9 @@ Eval_rank = ->
 # It's called setq because it stands for "set quoted" from Lisp,
 # see:
 #   http://stackoverflow.com/questions/869529/difference-between-set-setq-and-setf-in-common-lisp
+# Note that this also takes case of assigning to a tensor
+# element, which is something that setq wouldn't do
+# in list, see comments further down below.
 
 # Example:
 #   f = x
@@ -570,6 +573,11 @@ Eval_setq = ->
 	p2 = pop()
 	set_binding(cadr(p1), p2)
 
+	# An assignment returns nothing.
+	# This is unlike most programming languages
+	# where an assignment does return the
+	# assigned value.
+	# TODO Could be changed.
 	push(symbol(NIL))
 
 # Here "setq" is a misnomer because
@@ -597,8 +605,20 @@ Eval_setq = ->
 
 setq_indexed = ->
 	p4 = cadadr(p1)
+	console.log "p4: " + p4
 	if (!issymbol(p4))
-		stop("indexed assignment: error in symbol")
+		# this is likely to happen when one tries to
+		# do assignments like these
+		#   1[2] = 3
+		# or
+		#   f(x)[1] = 2
+		# or
+		#   [[1,2],[3,4]][5] = 6
+		#
+		# In other words, one can only do
+		# a straight assignment like
+		#   existingMatrix[index] = something
+		stop("indexed assignment: expected a symbol name")
 	h = tos
 	push(caddr(p1))
 	Eval()

@@ -74,6 +74,15 @@ test_assignments = ->
 
 		# ------------------------------------------
 
+		"1[2] = 3"
+		"Stop: indexed assignment: expected a symbol name"
+
+		"undefinedVar[1] = 2"
+		"Stop: error in indexed assign: assigning to something that is not a tensor"
+
+		"[[1,2],[3,4]][5] = 6"
+		"Stop: indexed assignment: expected a symbol name"
+
 		# ------------------------------------------
 
 		"f(x) = x + 1",

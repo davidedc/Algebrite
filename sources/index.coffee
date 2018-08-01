@@ -107,7 +107,7 @@ set_component = (n) ->
 	p1 = stack[s+1]; # p1 is LVALUE
 
 	if (!istensor(p1)) # p1 is LVALUE
-		stop("error in indexed assign")
+		stop("error in indexed assign: assigning to something that is not a tensor")
 
 	ndim = p1.tensor.ndim;  # p1 is LVALUE
 
