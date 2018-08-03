@@ -445,6 +445,12 @@ run = (stringToBeRun, generateLatex = false) ->
 
 	#stringToBeRun = stringToBeRun + "\n"
 	stringToBeRun = normaliseDots stringToBeRun
+
+	# when we get a multi-line script from the sandbox,
+	# since "eval" doesn't accept multilines, we replace
+	# the newlines with an arrow, so we undo that here
+	stringToBeRun = stringToBeRun.replace("↵","\n");
+
 	#console.log "run running: " + stringToBeRun
 
 	if stringToBeRun == "selftest"
