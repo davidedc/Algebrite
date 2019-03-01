@@ -9,80 +9,80 @@
 
 
 Eval_log = ->
-	push(cadr(p1))
-	Eval()
-	logarithm()
+  push(cadr(p1))
+  Eval()
+  logarithm()
 
 logarithm = ->
-	save()
-	yylog()
-	restore()
+  save()
+  yylog()
+  restore()
 
 yylog = ->
-	d = 0.0
+  d = 0.0
 
-	p1 = pop()
+  p1 = pop()
 
-	if (p1 == symbol(E))
-		push_integer(1)
-		return
+  if (p1 == symbol(E))
+    push_integer(1)
+    return
 
-	if (equaln(p1, 1))
-		push_integer(0)
-		return
+  if (equaln(p1, 1))
+    push_integer(0)
+    return
 
-	if (isnegativenumber(p1))
-		push(p1)
-		negate()
-		logarithm()
-		push(imaginaryunit)
-		if evaluatingAsFloats
-			push_double(Math.PI)
-		else
-			push_symbol(PI)
-		multiply()
-		add()
-		return
+  if (isnegativenumber(p1))
+    push(p1)
+    negate()
+    logarithm()
+    push(imaginaryunit)
+    if evaluatingAsFloats
+      push_double(Math.PI)
+    else
+      push_symbol(PI)
+    multiply()
+    add()
+    return
 
-	if (isdouble(p1))
-		d = Math.log(p1.d)
-		push_double(d)
-		return
+  if (isdouble(p1))
+    d = Math.log(p1.d)
+    push_double(d)
+    return
 
-	# rational number and not an integer?
+  # rational number and not an integer?
 
-	if (isfraction(p1))
-		push(p1)
-		numerator()
-		logarithm()
-		push(p1)
-		denominator()
-		logarithm()
-		subtract()
-		return
+  if (isfraction(p1))
+    push(p1)
+    numerator()
+    logarithm()
+    push(p1)
+    denominator()
+    logarithm()
+    subtract()
+    return
 
-	# log(a ^ b) --> b log(a)
+  # log(a ^ b) --> b log(a)
 
-	if (car(p1) == symbol(POWER))
-		push(caddr(p1))
-		push(cadr(p1))
-		logarithm()
-		multiply()
-		return
+  if (car(p1) == symbol(POWER))
+    push(caddr(p1))
+    push(cadr(p1))
+    logarithm()
+    multiply()
+    return
 
-	# log(a * b) --> log(a) + log(b)
+  # log(a * b) --> log(a) + log(b)
 
-	if (car(p1) == symbol(MULTIPLY))
-		push_integer(0)
-		p1 = cdr(p1)
-		while (iscons(p1))
-			push(car(p1))
-			logarithm()
-			add()
-			p1 = cdr(p1)
-		return
+  if (car(p1) == symbol(MULTIPLY))
+    push_integer(0)
+    p1 = cdr(p1)
+    while (iscons(p1))
+      push(car(p1))
+      logarithm()
+      add()
+      p1 = cdr(p1)
+    return
 
-	push_symbol(LOG)
-	push(p1)
-	list(2)
+  push_symbol(LOG)
+  push(p1)
+  list(2)
 

@@ -1,11 +1,11 @@
 test_arctanh = ->
-	run_test [
-		"arctanh(0.0)",
-		"0.0",
+  run_test [
+    "arctanh(0.0)",
+    "0.0",
 
-		"arctanh(0)",
-		"0",
+    "arctanh(0)",
+    "0",
 
-		"arctanh(tanh(x))",
-		"x",
-	]
+    "arctanh(tanh(x))",
+    "x",
+  ]

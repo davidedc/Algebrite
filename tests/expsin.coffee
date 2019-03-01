@@ -1,6 +1,6 @@
 test_expsin = ->
-	run_test [
+  run_test [
 
-		"expsin(x)",
-		"1/2*i*exp(-i*x)-1/2*i*exp(i*x)",
-	]
+    "expsin(x)",
+    "1/2*i*exp(-i*x)-1/2*i*exp(i*x)",
+  ]

@@ -4,7 +4,7 @@
 
 # n is an integer
 list = (n) ->
-	listIterator = 0
-	push(symbol(NIL))
-	for listIterator in [0...n]
-		cons()
+  listIterator = 0
+  push(symbol(NIL))
+  for listIterator in [0...n]
+    cons()

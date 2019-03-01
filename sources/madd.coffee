@@ -8,20 +8,20 @@
 
 madd = (a, b) ->
 
-	return a.add b
+  return a.add b
 
 msub = (a, b) ->
-	return a.subtract b
+  return a.subtract b
 
 addf = (a, b) ->
 
-	return a.add b
+  return a.add b
 
 subf = (a, b) ->
-	return a.subtract b
+  return a.subtract b
 
 # unsigned compare
 
 ucmp = (a,b) ->
-	return a.compareAbs b
+  return a.compareAbs b
 

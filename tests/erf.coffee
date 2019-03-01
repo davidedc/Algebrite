@@ -1,15 +1,15 @@
 test_erf = ->
-	run_test [
+  run_test [
 
-		"erf(a)",
-		"erf(a)",
+    "erf(a)",
+    "erf(a)",
 
-		"erf(0.0) + 1",		# add 1 to round off
-		"1.0",
+    "erf(0.0) + 1",    # add 1 to round off
+    "1.0",
 
-		"float(erf(0)) + 1",	# add 1 to round off
-		"1.0",
-	]
+    "float(erf(0)) + 1",  # add 1 to round off
+    "1.0",
+  ]
 
 ###
 

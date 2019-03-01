@@ -49,28 +49,28 @@ avoidCalculatingPowersIntoArctans = true
 
 
 class rational
-	a: null # a bigInteger
-	b: null # a bigInteger
+  a: null # a bigInteger
+  b: null # a bigInteger
 
 class U
-	cons: null # will have a car and cdr
-	printname: ""
-	str: ""
-	tensor: null
-	# rational number a over b
-	q: null # will point to a rational
-	d: 0.0 # a double
-	k: 0
-	tag: 0
+  cons: null # will have a car and cdr
+  printname: ""
+  str: ""
+  tensor: null
+  # rational number a over b
+  q: null # will point to a rational
+  d: 0.0 # a double
+  k: 0
+  tag: 0
 
-	toString: -> print_expr(this)
-	toLatexString: -> collectLatexStringFromReturnValue(this)
+  toString: -> print_expr(this)
+  toLatexString: -> collectLatexStringFromReturnValue(this)
 
-	constructor: ->
-		@cons = {}
-		@cons.car = null
-		@cons.cdr = null
-		@q = new rational()
+  constructor: ->
+    @cons = {}
+    @cons.car = null
+    @cons.cdr = null
+    @q = new rational()
 
 
 errorMessage = ""
@@ -166,7 +166,7 @@ INVG = counter++
 ISINTEGER = counter++
 ISPRIME = counter++
 LAGUERRE = counter++
-#	LAPLACE = counter++
+#  LAPLACE = counter++
 LCM = counter++
 LEADING = counter++
 LEGENDRE = counter++
@@ -230,7 +230,7 @@ ZERO = counter++
 
 # ALL THE SYMBOLS ABOVE NIL ARE KEYWORDS,
 # WHICH MEANS THAT USER CANNOT REDEFINE THEM
-NIL = counter++	# nil goes here, after standard functions
+NIL = counter++  # nil goes here, after standard functions
 LAST = counter++
 
 LAST_PRINT = counter++
@@ -247,7 +247,7 @@ TRACE = counter++
 
 YYE = counter++
 
-DRAWX = counter++	# special purpose internal symbols
+DRAWX = counter++  # special purpose internal symbols
 METAA = counter++
 METAB = counter++
 METAX = counter++
@@ -282,7 +282,7 @@ C4 = counter++
 C5 = counter++
 C6 = counter++
 
-USR_SYMBOLS = counter++	# this must be last
+USR_SYMBOLS = counter++  # this must be last
 
 E = YYE
 
@@ -312,31 +312,31 @@ symbolsInExpressionsWithoutAssignments = []
 patternHasBeenFound = false
 
 predefinedSymbolsInGlobalScope_doNotTrackInDependencies = [
-	"rationalize"
-	"abs"
-	"e"
-	"i"
-	"pi"
-	"sin"
-	"ceiling"
-	"cos"
-	"roots"
-	"integral"
-	"derivative"
-	"defint"
-	"sqrt"
-	"eig"
-	"cov"
-	"deig"
-	"dcov"
-	"float"
-	"floor"
-	"product"
-	"root"
-	"round"
-	"sum"
-	"test"
-	"unit"
+  "rationalize"
+  "abs"
+  "e"
+  "i"
+  "pi"
+  "sin"
+  "ceiling"
+  "cos"
+  "roots"
+  "integral"
+  "derivative"
+  "defint"
+  "sqrt"
+  "eig"
+  "cov"
+  "deig"
+  "dcov"
+  "float"
+  "floor"
+  "product"
+  "root"
+  "round"
+  "sum"
+  "test"
+  "unit"
 ]
 
 # you can do some little simplifications
@@ -357,27 +357,27 @@ called_from_Algebra_block = false
 
 
 class tensor
-	ndim: 0		# number of dimensions
-	dim: null	# dimension length, for each dimension
-	nelem: 0	# total number of elements
-	elem: null	# an array containing all the data
+  ndim: 0    # number of dimensions
+  dim: null  # dimension length, for each dimension
+  nelem: 0  # total number of elements
+  elem: null  # an array containing all the data
 
-	constructor: ->
-		@dim = (0 for [0..MAXDIM])
-		@elem = []
+  constructor: ->
+    @dim = (0 for [0..MAXDIM])
+    @elem = []
 
 
 class display
-	h: 0
-	w: 0
-	n: 0
-	a: [] # will contain an array of c,x,y (color,x,y)
+  h: 0
+  w: 0
+  n: 0
+  a: [] # will contain an array of c,x,y (color,x,y)
 
 
 class text_metric
-	ascent: 0
-	descent: 0
-	width: 0
+  ascent: 0
+  descent: 0
+  width: 0
 
 
 tos = 0 # top of stack
@@ -392,23 +392,23 @@ verbosing = 0
 
 
 primetab = do ->
-	primes = [2]
-	i = 3
-	while primes.length < MAXPRIMETAB
-		j = 0
-		ceil = Math.sqrt(i)
-		while j < primes.length and primes[j] <= ceil
-			if i % primes[j] == 0
-				j = -1
-				break
-			j++
-		if j != -1
-			primes.push(i)
-		i += 2
-	primes[MAXPRIMETAB] = 0
-	return primes
+  primes = [2]
+  i = 3
+  while primes.length < MAXPRIMETAB
+    j = 0
+    ceil = Math.sqrt(i)
+    while j < primes.length and primes[j] <= ceil
+      if i % primes[j] == 0
+        j = -1
+        break
+      j++
+    if j != -1
+      primes.push(i)
+    i += 2
+  primes[MAXPRIMETAB] = 0
+  return primes
 
-	
+  
 
 esc_flag = 0
 draw_flag = 0
@@ -466,21 +466,21 @@ istensor = (p) -> (if !p? then debugger else p.k == TENSOR)
 # because of recursion, we consider a scalar to be
 # a tensor, so a numeric scalar will return true
 isNumericAtomOrTensor = (p) ->
-	if isNumericAtom(p) or p == symbol(SYMBOL_IDENTITY_MATRIX)
-		return 1
+  if isNumericAtom(p) or p == symbol(SYMBOL_IDENTITY_MATRIX)
+    return 1
 
-	if !istensor(p) and !isNumericAtom(p)
-		#console.log "p not an atom nor a tensor: " + p
-		return 0
+  if !istensor(p) and !isNumericAtom(p)
+    #console.log "p not an atom nor a tensor: " + p
+    return 0
 
-	n = p.tensor.nelem
-	a = p.tensor.elem
+  n = p.tensor.nelem
+  a = p.tensor.elem
 
-	for i in [0...n]
-		if !isNumericAtomOrTensor(a[i])
-			#console.log "non-numeric element: " + a[i]
-			return 0
-	return 1
+  for i in [0...n]
+    if !isNumericAtomOrTensor(a[i])
+      #console.log "non-numeric element: " + a[i]
+      return 0
+  return 1
 
 issymbol = (p) -> (p.k == SYM)
 iskeyword = (p) -> (issymbol(p) && symnum(p) < NIL)
@@ -512,23 +512,23 @@ caddaddr = (p) -> car(cdr(cdr(car(cdr(cdr(p))))))
 
 # not used yet
 listLength = (p) ->
-	startCount = -1
+  startCount = -1
 
-	while iscons(p)
-		p = cdr(p)
-		startCount++
+  while iscons(p)
+    p = cdr(p)
+    startCount++
 
-	return startCount
+  return startCount
 
 # not used yet
 nthCadr = (p,n) ->
-	startCount = 0
+  startCount = 0
 
-	while startCount <= n
-		p = cdr(p)
-		startCount++
+  while startCount <= n
+    p = cdr(p)
+    startCount++
 
-	return car(p)
+  return car(p)
 
 isadd = (p) -> (car(p) == symbol(ADD))
 ismultiply = (p) -> (car(p) == symbol(MULTIPLY))
@@ -543,29 +543,29 @@ isinv = (p) -> (car(p) == symbol(INV))
 isidentitymatrix = (p) -> (p == symbol(SYMBOL_IDENTITY_MATRIX))
 
 MSIGN = (p) ->
-	if p.isPositive()
-		return 1
-	else if p.isZero()
-		return 0
-	else
-		return -1
+  if p.isPositive()
+    return 1
+  else if p.isZero()
+    return 0
+  else
+    return -1
 
 MLENGTH = (p) -> p.toString().length
 
 MZERO = (p) -> p.isZero()
 MEQUAL = (p, n) ->
-	if !p?
-		debugger
-	p.equals(n)
+  if !p?
+    debugger
+  p.equals(n)
 
 
 reset_after_error = ->
-	moveTos 0
-	esc_flag = 0
-	draw_flag = 0
-	frame = TOS
-	evaluatingAsFloats = 0
-	evaluatingPolar = 0
+  moveTos 0
+  esc_flag = 0
+  draw_flag = 0
+  frame = TOS
+  evaluatingAsFloats = 0
+  evaluatingPolar = 0
 
 
 $ = (exports ? this)

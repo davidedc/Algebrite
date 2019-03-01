@@ -13,23 +13,23 @@
 
 Eval_expand = ->
 
-	# 1st arg
+  # 1st arg
 
-	push(cadr(p1))
-	Eval()
+  push(cadr(p1))
+  Eval()
 
-	# 2nd arg
+  # 2nd arg
 
-	push(caddr(p1))
-	Eval()
+  push(caddr(p1))
+  Eval()
 
-	p2 = pop()
-	if (p2 == symbol(NIL))
-		guess()
-	else
-		push(p2)
+  p2 = pop()
+  if (p2 == symbol(NIL))
+    guess()
+  else
+    push(p2)
 
-	expand()
+  expand()
 
 #define A p2
 #define B p3
@@ -42,182 +42,182 @@ Eval_expand = ->
 
 expand = ->
 
-	save()
+  save()
 
-	p9 = pop()
-	p5 = pop()
+  p9 = pop()
+  p5 = pop()
 
-	if (istensor(p5))
-		expand_tensor()
-		restore()
-		return
+  if (istensor(p5))
+    expand_tensor()
+    restore()
+    return
 
-	# if sum of terms then sum over the expansion of each term
+  # if sum of terms then sum over the expansion of each term
 
-	if (car(p5) == symbol(ADD))
-		push_integer(0)
-		p1 = cdr(p5)
-		while (iscons(p1))
-			push(car(p1))
-			push(p9)
-			expand()
-			add()
-			p1 = cdr(p1)
-		restore()
-		return
+  if (car(p5) == symbol(ADD))
+    push_integer(0)
+    p1 = cdr(p5)
+    while (iscons(p1))
+      push(car(p1))
+      push(p9)
+      expand()
+      add()
+      p1 = cdr(p1)
+    restore()
+    return
 
-	# B = numerator
+  # B = numerator
 
-	push(p5)
-	numerator()
-	p3 = pop()
+  push(p5)
+  numerator()
+  p3 = pop()
 
-	# A = denominator
+  # A = denominator
 
-	push(p5)
-	denominator()
-	p2 = pop()
+  push(p5)
+  denominator()
+  p2 = pop()
 
-	remove_negative_exponents()
+  remove_negative_exponents()
 
-	# Q = quotient
+  # Q = quotient
 
-	push(p3)
-	push(p2)
-	push(p9)
+  push(p3)
+  push(p2)
+  push(p9)
 
-	# if the denominator is one then always bail out
-	# also bail out if the denominator is not one but
-	# it's not anything recognizable as a polynomial.
-	if isone(p3) || isone(p2)
-		if !ispoly(p2,p9) || isone(p2)
-			pop()
-			pop()
-			pop()
-			push(p5)
-			# p5 is the original input, leave unchanged
-			restore()
-			return
+  # if the denominator is one then always bail out
+  # also bail out if the denominator is not one but
+  # it's not anything recognizable as a polynomial.
+  if isone(p3) || isone(p2)
+    if !ispoly(p2,p9) || isone(p2)
+      pop()
+      pop()
+      pop()
+      push(p5)
+      # p5 is the original input, leave unchanged
+      restore()
+      return
 
-	divpoly()
-	p7 = pop()
+  divpoly()
+  p7 = pop()
 
-	# remainder B = B - A * Q
+  # remainder B = B - A * Q
 
-	push(p3)
-	push(p2)
-	push(p7)
-	multiply()
-	subtract()
-	p3 = pop()
+  push(p3)
+  push(p2)
+  push(p7)
+  multiply()
+  subtract()
+  p3 = pop()
 
-	# if the remainder is zero then we're done
+  # if the remainder is zero then we're done
 
-	if (isZeroAtomOrTensor(p3))
-		push(p7)
-		restore()
-		return
+  if (isZeroAtomOrTensor(p3))
+    push(p7)
+    restore()
+    return
 
-	# A = factor(A)
+  # A = factor(A)
 
-	#console.log("expand - to be factored: " + p2)
-	push(p2)
-	push(p9)
-	factorpoly()
-	p2 = pop()
-	#console.log("expand - factored to: " + p2)
+  #console.log("expand - to be factored: " + p2)
+  push(p2)
+  push(p9)
+  factorpoly()
+  p2 = pop()
+  #console.log("expand - factored to: " + p2)
 
-	expand_get_C()
-	expand_get_B()
-	expand_get_A()
+  expand_get_C()
+  expand_get_B()
+  expand_get_A()
 
-	if (istensor(p4))
-		push(p4)
-		prev_expanding = expanding
-		expanding = 1
-		inv()
-		expanding = prev_expanding
-		push(p3)
-		inner()
-		push(p2)
-		inner()
-	else
-		push(p3)
-		push(p4)
-		prev_expanding = expanding
-		expanding = 1
-		divide()
-		expanding = prev_expanding
-		push(p2)
-		multiply()
+  if (istensor(p4))
+    push(p4)
+    prev_expanding = expanding
+    expanding = 1
+    inv()
+    expanding = prev_expanding
+    push(p3)
+    inner()
+    push(p2)
+    inner()
+  else
+    push(p3)
+    push(p4)
+    prev_expanding = expanding
+    expanding = 1
+    divide()
+    expanding = prev_expanding
+    push(p2)
+    multiply()
 
-	push(p7)
-	add()
+  push(p7)
+  add()
 
-	restore()
+  restore()
 
 expand_tensor = ->
-	i = 0
-	push(p5)
-	copy_tensor()
-	p5 = pop()
-	for i in [0...p5.tensor.nelem]
-		push(p5.tensor.elem[i])
-		push(p9)
-		expand()
-		p5.tensor.elem[i] = pop()
-	push(p5)
+  i = 0
+  push(p5)
+  copy_tensor()
+  p5 = pop()
+  for i in [0...p5.tensor.nelem]
+    push(p5.tensor.elem[i])
+    push(p9)
+    expand()
+    p5.tensor.elem[i] = pop()
+  push(p5)
 
 remove_negative_exponents = ->
-	h = 0
-	i = 0
-	j = 0
-	k = 0
-	n = 0
+  h = 0
+  i = 0
+  j = 0
+  k = 0
+  n = 0
 
-	h = tos
-	factors(p2)
-	factors(p3)
-	n = tos - h
+  h = tos
+  factors(p2)
+  factors(p3)
+  n = tos - h
 
-	# find the smallest exponent
+  # find the smallest exponent
 
-	j = 0
-	for i in [0...n]
-		p1 = stack[h + i]
-		if (car(p1) != symbol(POWER))
-			continue
-		if (cadr(p1) != p9)
-			continue
-		push(caddr(p1))
-		k = pop_integer()
-		if (isNaN(k))
-			continue
-		if (k < j)
-			j = k
+  j = 0
+  for i in [0...n]
+    p1 = stack[h + i]
+    if (car(p1) != symbol(POWER))
+      continue
+    if (cadr(p1) != p9)
+      continue
+    push(caddr(p1))
+    k = pop_integer()
+    if (isNaN(k))
+      continue
+    if (k < j)
+      j = k
 
-	moveTos h
+  moveTos h
 
-	if (j == 0)
-		return
+  if (j == 0)
+    return
 
-	# A = A / X^j
+  # A = A / X^j
 
-	push(p2)
-	push(p9)
-	push_integer(-j)
-	power()
-	multiply()
-	p2 = pop()
+  push(p2)
+  push(p9)
+  push_integer(-j)
+  power()
+  multiply()
+  p2 = pop()
 
-	# B = B / X^j
+  # B = B / X^j
 
-	push(p3)
-	push(p9)
-	push_integer(-j)
-	power()
-	multiply()
-	p3 = pop()
+  push(p3)
+  push(p9)
+  push_integer(-j)
+  power()
+  multiply()
+  p3 = pop()
 
 # Returns the expansion coefficient matrix C.
 #
@@ -276,44 +276,44 @@ remove_negative_exponents = ->
 #       Y3       coeff(B,x,2)
 
 expand_get_C = ->
-	h = 0
-	i = 0
-	j = 0
-	n = 0
-	#U **a
-	h = tos
-	if (car(p2) == symbol(MULTIPLY))
-		p1 = cdr(p2)
-		while (iscons(p1))
-			p5 = car(p1)
-			expand_get_CF()
-			p1 = cdr(p1)
-	else
-		p5 = p2
-		expand_get_CF()
-	n = tos - h
-	if (n == 1)
-		p4 = pop()
-		return
-	p4 = alloc_tensor(n * n)
-	p4.tensor.ndim = 2
-	p4.tensor.dim[0] = n
-	p4.tensor.dim[1] = n
-	a = h
-	for i in [0...n]
-		for j in [0...n]
-			push(stack[a+j])
-			push(p9)
-			push_integer(i)
-			power()
-			prev_expanding = expanding
-			expanding = 1
-			divide()
-			expanding = prev_expanding
-			push(p9)
-			filter()
-			p4.tensor.elem[n * i + j] = pop()
-	moveTos tos - n
+  h = 0
+  i = 0
+  j = 0
+  n = 0
+  #U **a
+  h = tos
+  if (car(p2) == symbol(MULTIPLY))
+    p1 = cdr(p2)
+    while (iscons(p1))
+      p5 = car(p1)
+      expand_get_CF()
+      p1 = cdr(p1)
+  else
+    p5 = p2
+    expand_get_CF()
+  n = tos - h
+  if (n == 1)
+    p4 = pop()
+    return
+  p4 = alloc_tensor(n * n)
+  p4.tensor.ndim = 2
+  p4.tensor.dim[0] = n
+  p4.tensor.dim[1] = n
+  a = h
+  for i in [0...n]
+    for j in [0...n]
+      push(stack[a+j])
+      push(p9)
+      push_integer(i)
+      power()
+      prev_expanding = expanding
+      expanding = 1
+      divide()
+      expanding = prev_expanding
+      push(p9)
+      filter()
+      p4.tensor.elem[n * i + j] = pop()
+  moveTos tos - n
 
 # The following table shows the push order for simple roots, repeated roots,
 # and inrreducible factors.
@@ -391,143 +391,143 @@ expand_get_C = ->
 # where index j runs first.
 
 expand_get_CF = ->
-	d = 0
-	i = 0
-	j = 0
-	n = 0
+  d = 0
+  i = 0
+  j = 0
+  n = 0
 
-	if (!Find(p5, p9))
-		return
-	prev_expanding = expanding
-	expanding = 1
-	trivial_divide()
-	expanding = prev_expanding
-	if (car(p5) == symbol(POWER))
-		push(caddr(p5))
-		n = pop_integer()
-		p6 = cadr(p5)
-	else
-		n = 1
-		p6 = p5
+  if (!Find(p5, p9))
+    return
+  prev_expanding = expanding
+  expanding = 1
+  trivial_divide()
+  expanding = prev_expanding
+  if (car(p5) == symbol(POWER))
+    push(caddr(p5))
+    n = pop_integer()
+    p6 = cadr(p5)
+  else
+    n = 1
+    p6 = p5
 
-	push(p6)
-	push(p9)
-	degree()
-	d = pop_integer()
-	for i in [0...n]
-		for j in [0...d]
-			push(p8)
-			push(p6)
-			push_integer(i)
-			power()
-			prev_expanding = expanding
-			expanding = 1
-			multiply()
-			expanding = prev_expanding
-			push(p9)
-			push_integer(j)
-			power()
-			prev_expanding = expanding
-			expanding = 1
-			multiply()
-			expanding = prev_expanding
+  push(p6)
+  push(p9)
+  degree()
+  d = pop_integer()
+  for i in [0...n]
+    for j in [0...d]
+      push(p8)
+      push(p6)
+      push_integer(i)
+      power()
+      prev_expanding = expanding
+      expanding = 1
+      multiply()
+      expanding = prev_expanding
+      push(p9)
+      push_integer(j)
+      power()
+      prev_expanding = expanding
+      expanding = 1
+      multiply()
+      expanding = prev_expanding
 
 # Returns T = A/F where F is a factor of A.
 
 trivial_divide = ->
-	h = 0
-	if (car(p2) == symbol(MULTIPLY))
-		h = tos
-		p0 = cdr(p2)
-		while (iscons(p0))
-			if (!equal(car(p0), p5))
-				push(car(p0))
-				Eval(); # force expansion of (x+1)^2, f.e.
-			p0 = cdr(p0)
-		multiply_all(tos - h)
-	else
-		push_integer(1)
-	p8 = pop()
+  h = 0
+  if (car(p2) == symbol(MULTIPLY))
+    h = tos
+    p0 = cdr(p2)
+    while (iscons(p0))
+      if (!equal(car(p0), p5))
+        push(car(p0))
+        Eval(); # force expansion of (x+1)^2, f.e.
+      p0 = cdr(p0)
+    multiply_all(tos - h)
+  else
+    push_integer(1)
+  p8 = pop()
 
 # Returns the expansion coefficient vector B.
 
 expand_get_B = ->
-	i = 0
-	n = 0
-	if (!istensor(p4))
-		return
-	n = p4.tensor.dim[0]
-	p8 = alloc_tensor(n)
-	p8.tensor.ndim = 1
-	p8.tensor.dim[0] = n
-	for i in [0...n]
-		push(p3)
-		push(p9)
-		push_integer(i)
-		power()
-		prev_expanding = expanding
-		expanding = 1
-		divide()
-		expanding = prev_expanding
-		push(p9)
-		filter()
-		p8.tensor.elem[i] = pop()
-	p3 = p8
+  i = 0
+  n = 0
+  if (!istensor(p4))
+    return
+  n = p4.tensor.dim[0]
+  p8 = alloc_tensor(n)
+  p8.tensor.ndim = 1
+  p8.tensor.dim[0] = n
+  for i in [0...n]
+    push(p3)
+    push(p9)
+    push_integer(i)
+    power()
+    prev_expanding = expanding
+    expanding = 1
+    divide()
+    expanding = prev_expanding
+    push(p9)
+    filter()
+    p8.tensor.elem[i] = pop()
+  p3 = p8
 
 # Returns the expansion fractions in A.
 
 expand_get_A = ->
-	h = 0
-	i = 0
-	n = 0
-	if (!istensor(p4))
-		push(p2)
-		reciprocate()
-		p2 = pop()
-		return
-	h = tos
-	if (car(p2) == symbol(MULTIPLY))
-		p8 = cdr(p2)
-		while (iscons(p8))
-			p5 = car(p8)
-			expand_get_AF()
-			p8 = cdr(p8)
-	else
-		p5 = p2
-		expand_get_AF()
-	n = tos - h
-	p8 = alloc_tensor(n)
-	p8.tensor.ndim = 1
-	p8.tensor.dim[0] = n
-	for i in [0...n]
-		p8.tensor.elem[i] = stack[h + i]
-	moveTos h
-	p2 = p8
+  h = 0
+  i = 0
+  n = 0
+  if (!istensor(p4))
+    push(p2)
+    reciprocate()
+    p2 = pop()
+    return
+  h = tos
+  if (car(p2) == symbol(MULTIPLY))
+    p8 = cdr(p2)
+    while (iscons(p8))
+      p5 = car(p8)
+      expand_get_AF()
+      p8 = cdr(p8)
+  else
+    p5 = p2
+    expand_get_AF()
+  n = tos - h
+  p8 = alloc_tensor(n)
+  p8.tensor.ndim = 1
+  p8.tensor.dim[0] = n
+  for i in [0...n]
+    p8.tensor.elem[i] = stack[h + i]
+  moveTos h
+  p2 = p8
 
 expand_get_AF = ->
-	d = 0
-	i = 0
-	j = 0
-	n = 1
-	if (!Find(p5, p9))
-		return
-	if (car(p5) == symbol(POWER))
-		push(caddr(p5))
-		n = pop_integer()
-		p5 = cadr(p5)
-	push(p5)
-	push(p9)
-	degree()
-	d = pop_integer()
-	for i in [n...0]
-		for j in [0...d]
-			push(p5)
-			push_integer(i)
-			power()
-			reciprocate()
-			push(p9)
-			push_integer(j)
-			power()
-			multiply()
+  d = 0
+  i = 0
+  j = 0
+  n = 1
+  if (!Find(p5, p9))
+    return
+  if (car(p5) == symbol(POWER))
+    push(caddr(p5))
+    n = pop_integer()
+    p5 = cadr(p5)
+  push(p5)
+  push(p9)
+  degree()
+  d = pop_integer()
+  for i in [n...0]
+    for j in [0...d]
+      push(p5)
+      push_integer(i)
+      power()
+      reciprocate()
+      push(p9)
+      push_integer(j)
+      power()
+      multiply()
 
 

@@ -3,33 +3,33 @@
 
 
 Eval_quotient = ->
-	push(cadr(p1));			# 1st arg, p(x)
-	Eval()
+  push(cadr(p1));      # 1st arg, p(x)
+  Eval()
 
-	push(caddr(p1));		# 2nd arg, q(x)
-	Eval()
+  push(caddr(p1));    # 2nd arg, q(x)
+  Eval()
 
-	push(cadddr(p1));		# 3rd arg, x
-	Eval()
+  push(cadddr(p1));    # 3rd arg, x
+  Eval()
 
-	p1 = pop();			# default x
-	if (p1 == symbol(NIL))
-		p1 = symbol(SYMBOL_X)
-	push(p1)
+  p1 = pop();      # default x
+  if (p1 == symbol(NIL))
+    p1 = symbol(SYMBOL_X)
+  push(p1)
 
-	divpoly()
+  divpoly()
 
 #-----------------------------------------------------------------------------
 #
-#	Divide polynomials
+#  Divide polynomials
 #
-#	Input:		tos-3		Dividend
+#  Input:    tos-3    Dividend
 #
-#			tos-2		Divisor
+#      tos-2    Divisor
 #
-#			tos-1		x
+#      tos-1    x
 #
-#	Output:		tos-1		Quotient
+#  Output:    tos-1    Quotient
 #
 #-----------------------------------------------------------------------------
 
@@ -40,70 +40,70 @@ Eval_quotient = ->
 #define QUOTIENT p5
 
 divpoly = ->
-	h = 0
-	i = 0
-	m = 0
-	n = 0
-	x = 0
-	#U **dividend, **divisor
+  h = 0
+  i = 0
+  m = 0
+  n = 0
+  x = 0
+  #U **dividend, **divisor
 
-	save()
+  save()
 
-	p3 = pop()
-	p2 = pop()
-	p1 = pop()
+  p3 = pop()
+  p2 = pop()
+  p1 = pop()
 
-	h = tos
+  h = tos
 
-	dividend = tos
+  dividend = tos
 
-	push(p1)
-	push(p3)
-	m = coeff() - 1;	# m is dividend's power
+  push(p1)
+  push(p3)
+  m = coeff() - 1;  # m is dividend's power
 
-	divisor = tos
+  divisor = tos
 
-	push(p2)
-	push(p3)
-	n = coeff() - 1;	# n is divisor's power
+  push(p2)
+  push(p3)
+  n = coeff() - 1;  # n is divisor's power
 
-	x = m - n
+  x = m - n
 
-	push_integer(0)
-	p5 = pop()
+  push_integer(0)
+  p5 = pop()
 
-	while (x >= 0)
+  while (x >= 0)
 
-		push(stack[dividend+m])
-		push(stack[divisor+n])
-		divide()
-		p4 = pop()
+    push(stack[dividend+m])
+    push(stack[divisor+n])
+    divide()
+    p4 = pop()
 
-		for i in [0..n]
-			push(stack[dividend+x + i])
-			push(stack[divisor+i])
-			push(p4)
-			multiply()
-			subtract()
-			stack[dividend+x + i] = pop()
+    for i in [0..n]
+      push(stack[dividend+x + i])
+      push(stack[divisor+i])
+      push(p4)
+      multiply()
+      subtract()
+      stack[dividend+x + i] = pop()
 
-		push(p5)
-		push(p4)
-		push(p3)
-		push_integer(x)
-		power()
-		multiply()
-		add()
-		p5 = pop()
+    push(p5)
+    push(p4)
+    push(p3)
+    push_integer(x)
+    power()
+    multiply()
+    add()
+    p5 = pop()
 
-		m--
-		x--
+    m--
+    x--
 
-	moveTos h
+  moveTos h
 
-	push(p5)
+  push(p5)
 
-	restore()
+  restore()
 
 
 

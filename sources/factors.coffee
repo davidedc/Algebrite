@@ -20,23 +20,23 @@
 # Local U *p is OK here because no functional path to garbage collector.
 
 factors = (p) ->
-	h = tos
-	if (car(p) == symbol(ADD))
-		p = cdr(p)
-		while (iscons(p))
-			push_term_factors(car(p))
-			p = cdr(p)
-	else
-		push_term_factors(p)
-	return tos - h
+  h = tos
+  if (car(p) == symbol(ADD))
+    p = cdr(p)
+    while (iscons(p))
+      push_term_factors(car(p))
+      p = cdr(p)
+  else
+    push_term_factors(p)
+  return tos - h
 
 # Local U *p is OK here because no functional path to garbage collector.
 
 push_term_factors = (p) ->
-	if (car(p) == symbol(MULTIPLY))
-		p = cdr(p)
-		while (iscons(p))
-			push(car(p))
-			p = cdr(p)
-	else
-		push(p)
+  if (car(p) == symbol(MULTIPLY))
+    p = cdr(p)
+    while (iscons(p))
+      push(car(p))
+      p = cdr(p)
+  else
+    push(p)

@@ -1,43 +1,43 @@
-#	Multiply rational numbers
+#  Multiply rational numbers
 #
-#	Input:		tos-2		multiplicand
+#  Input:    tos-2    multiplicand
 #
-#			tos-1		multiplier
+#      tos-1    multiplier
 #
-#	Output:		product on stack
+#  Output:    product on stack
 
 
 
 qmul = ->
-	save()
+  save()
 
-	p2 = pop()
-	p1 = pop()
+  p2 = pop()
+  p1 = pop()
 
-	# zero?
+  # zero?
 
-	if (MZERO(p1.q.a) || MZERO(p2.q.a))
-		push(zero)
-		restore()
-		return
+  if (MZERO(p1.q.a) || MZERO(p2.q.a))
+    push(zero)
+    restore()
+    return
 
-	aa = mmul(p1.q.a, p2.q.a)
-	bb = mmul(p1.q.b, p2.q.b)
+  aa = mmul(p1.q.a, p2.q.a)
+  bb = mmul(p1.q.b, p2.q.b)
 
-	c = mgcd(aa, bb)
+  c = mgcd(aa, bb)
 
-	c = makeSignSameAs(c,bb)
+  c = makeSignSameAs(c,bb)
 
-	p1 = new U()
+  p1 = new U()
 
-	p1.k = NUM
+  p1.k = NUM
 
-	p1.q.a = mdiv(aa, c)
-	p1.q.b = mdiv(bb, c)
+  p1.q.a = mdiv(aa, c)
+  p1.q.b = mdiv(bb, c)
 
-	#mfree(aa)
-	#mfree(bb)
+  #mfree(aa)
+  #mfree(bb)
 
-	push(p1)
+  push(p1)
 
-	restore()
+  restore()

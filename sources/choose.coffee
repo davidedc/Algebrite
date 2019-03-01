@@ -24,11 +24,11 @@ For example, the number of five card hands is choose(52,5)
 
 
 Eval_choose = ->
-	push(cadr(p1))
-	Eval()
-	push(caddr(p1))
-	Eval()
-	choose()
+  push(cadr(p1))
+  Eval()
+  push(caddr(p1))
+  Eval()
+  choose()
 
 # Result vanishes for k < 0 or k > n. (A=B, p. 19)
 
@@ -36,41 +36,41 @@ Eval_choose = ->
 #define K p2
 
 choose = ->
-	save()
+  save()
 
-	p2 = pop()
-	p1 = pop()
+  p2 = pop()
+  p1 = pop()
 
-	if (choose_check_args() == 0)
-		push_integer(0)
-		restore()
-		return
+  if (choose_check_args() == 0)
+    push_integer(0)
+    restore()
+    return
 
-	push(p1)
-	factorial()
+  push(p1)
+  factorial()
 
-	push(p2)
-	factorial()
+  push(p2)
+  factorial()
 
-	divide()
+  divide()
 
-	push(p1)
-	push(p2)
-	subtract()
-	factorial()
+  push(p1)
+  push(p2)
+  subtract()
+  factorial()
 
-	divide()
+  divide()
 
-	restore()
+  restore()
 
 choose_check_args = ->
-	if (isNumericAtom(p1) && lessp(p1, zero))
-		return 0
-	else if (isNumericAtom(p2) && lessp(p2, zero))
-		return 0
-	else if (isNumericAtom(p1) && isNumericAtom(p2) && lessp(p1, p2))
-		return 0
-	else
-		return 1
+  if (isNumericAtom(p1) && lessp(p1, zero))
+    return 0
+  else if (isNumericAtom(p2) && lessp(p2, zero))
+    return 0
+  else if (isNumericAtom(p1) && isNumericAtom(p2) && lessp(p1, p2))
+    return 0
+  else
+    return 1
 
 

@@ -39,24 +39,24 @@ approxratioRecursive = ->
   restore()
 
 approxOneRatioOnly = ->
-	zzfloat()
-	supposedlyTheFloat = pop()
-	if supposedlyTheFloat.k == DOUBLE
+  zzfloat()
+  supposedlyTheFloat = pop()
+  if supposedlyTheFloat.k == DOUBLE
     theFloat = supposedlyTheFloat.d
     splitBeforeAndAfterDot = theFloat.toString().split(".")
     if splitBeforeAndAfterDot.length == 2
-    	numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
-    	precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
-    	theRatio = floatToRatioRoutine(theFloat,precision)
-    	push_rational(theRatio[0], theRatio[1])
+      numberOfDigitsAfterTheDot = splitBeforeAndAfterDot[1].length
+      precision = 1/Math.pow(10,numberOfDigitsAfterTheDot)
+      theRatio = floatToRatioRoutine(theFloat,precision)
+      push_rational(theRatio[0], theRatio[1])
     else
       push_integer(theFloat)
     return
 
-	# we didn't manage, just leave unexpressed
-	push_symbol(APPROXRATIO)
-	push(theArgument)
-	list(2)
+  # we didn't manage, just leave unexpressed
+  push_symbol(APPROXRATIO)
+  push(theArgument)
+  list(2)
 
 # original routine by John Kennedy, see
 # https://web.archive.org/web/20111027100847/http://homepage.smc.edu/kennedy_john/DEC2FRAC.PDF

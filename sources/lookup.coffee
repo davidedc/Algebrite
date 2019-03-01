@@ -113,7 +113,7 @@
 #       => gives z
 
 Eval_lookup = ->
-	p1 = cadr(p1)
-	if !iscons(p1) and cadr(p1).k == SYM
-		p1 = get_binding(p1)
-	push p1
+  p1 = cadr(p1)
+  if !iscons(p1) and cadr(p1).k == SYM
+    p1 = get_binding(p1)
+  push p1

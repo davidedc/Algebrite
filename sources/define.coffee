@@ -25,9 +25,9 @@
 #
 # We have
 #
-#	caadr(p1) points to the function name i.e. f
-#	cdadr(p1) points to the arguments i.e. the list (x y)
-#	caddr(p1) points to the function body i.e. (power x y)
+#  caadr(p1) points to the function name i.e. f
+#  cdadr(p1) points to the arguments i.e. the list (x y)
+#  caddr(p1) points to the function body i.e. (power x y)
 
 
 
@@ -36,45 +36,45 @@
 #define B p5 # B points to the function body
 
 define_user_function = ->
-	p3 = caadr(p1); # p3 is F
-	p4 = cdadr(p1); # p4 is A
-	p5 = caddr(p1); # p5 is B
+  p3 = caadr(p1); # p3 is F
+  p4 = cdadr(p1); # p4 is A
+  p5 = caddr(p1); # p5 is B
 
-	if (!issymbol(p3)) # p3 is F
-		stop("function name?")
+  if (!issymbol(p3)) # p3 is F
+    stop("function name?")
 
-	# evaluate function body (maybe)
+  # evaluate function body (maybe)
 
-	if (car(p5) == symbol(EVAL))  # p5 is B
-		push(cadr(p5));  # p5 is B
-		Eval()
-		p5 = pop();  # p5 is B
+  if (car(p5) == symbol(EVAL))  # p5 is B
+    push(cadr(p5));  # p5 is B
+    Eval()
+    p5 = pop();  # p5 is B
 
-	# note how, unless explicitly forced by an eval,
-	# (handled by the if just above)
-	# we don't eval/simplify
-	# the body.
-	# Why? because it's the easiest way
-	# to solve scope problems i.e.
-	#   x = 0
-	#   f(x) = x + 1
-	#   f(4) # would reply 1
-	# which would need to otherwise
-	# be solved by some scope device
-	# somehow
-	push_symbol(FUNCTION)
-	push p5
-	push p4
-	list(3)
-	p5 = pop()
+  # note how, unless explicitly forced by an eval,
+  # (handled by the if just above)
+  # we don't eval/simplify
+  # the body.
+  # Why? because it's the easiest way
+  # to solve scope problems i.e.
+  #   x = 0
+  #   f(x) = x + 1
+  #   f(4) # would reply 1
+  # which would need to otherwise
+  # be solved by some scope device
+  # somehow
+  push_symbol(FUNCTION)
+  push p5
+  push p4
+  list(3)
+  p5 = pop()
 
 
-	set_binding(p3, p5);  # p3 is F (function name)  # p4 is A  # p5 is B
+  set_binding(p3, p5);  # p3 is F (function name)  # p4 is A  # p5 is B
 
-	# return value is nil
+  # return value is nil
 
-	push_symbol(NIL)
+  push_symbol(NIL)
 
 Eval_function_reference = ->
-	push p1
+  push p1
 

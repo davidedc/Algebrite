@@ -4,25 +4,25 @@
 
 # put symbol at index n
 Eval_symbolsinfo = ->
-	symbolsinfoToBePrinted = symbolsinfo()
+  symbolsinfoToBePrinted = symbolsinfo()
 
-	if symbolsinfoToBePrinted != ""
-		new_string(symbolsinfoToBePrinted)
-	else
-		push_symbol(NIL)
+  if symbolsinfoToBePrinted != ""
+    new_string(symbolsinfoToBePrinted)
+  else
+    push_symbol(NIL)
 
 symbolsinfo = ->
-	symbolsinfoToBePrinted = ""
-	for i in [NIL+1...symtab.length]
-		if symtab[i].printname == ""
-			if isSymbolReclaimable[i] == false
-				break
-			else
-				continue
-		symtabi = symtab[i] + ""
-		bindingi = (binding[i] + "").substring(0,4)
-		symbolsinfoToBePrinted +=  "symbol: " + symtabi + " size: " + countsize(binding[i]) +  " value: " + bindingi + "...\n"
-	return symbolsinfoToBePrinted
+  symbolsinfoToBePrinted = ""
+  for i in [NIL+1...symtab.length]
+    if symtab[i].printname == ""
+      if isSymbolReclaimable[i] == false
+        break
+      else
+        continue
+    symtabi = symtab[i] + ""
+    bindingi = (binding[i] + "").substring(0,4)
+    symbolsinfoToBePrinted +=  "symbol: " + symtabi + " size: " + countsize(binding[i]) +  " value: " + bindingi + "...\n"
+  return symbolsinfoToBePrinted
 
 
 
@@ -32,14 +32,14 @@ symbolsinfo = ->
 # reuse the existing one. If that can never be a problem
 # then explain why, otherwise do create a new entry.
 std_symbol = (s, n, latexPrint) ->
-	p = symtab[n]
-	if !p?
-		debugger
-	p.printname = s
-	if latexPrint?
-		p.latexPrint = latexPrint
-	else
-		p.latexPrint = s
+  p = symtab[n]
+  if !p?
+    debugger
+  p.printname = s
+  if latexPrint?
+    p.latexPrint = latexPrint
+  else
+    p.latexPrint = s
 
 # symbol lookup, or symbol creation if symbol doesn't exist yet
 # this happens often from the scanner. When the scanner sees something
@@ -70,47 +70,47 @@ std_symbol = (s, n, latexPrint) ->
 # s is a string
 usr_symbol = (s) ->
 
-	#console.log "usr_symbol of " + s
-	#if s == "aaa"
-	#	debugger
+  #console.log "usr_symbol of " + s
+  #if s == "aaa"
+  #  debugger
 
-	# find either the existing symbol, or if we
-	# reach an empty symbol (printname == "") then
-	# re-use that location.
-	i = 0
-	for i in [0...NSYM]
-		if (s == symtab[i].printname)
-			# found the symbol
-			return symtab[i]
-		if (symtab[i].printname == "")
-			# found an entry in the symbol table
-			# with no printname, exit the loop
-			# and re-use this location
-			break
-	if (i == NSYM)
-		stop("symbol table overflow")
+  # find either the existing symbol, or if we
+  # reach an empty symbol (printname == "") then
+  # re-use that location.
+  i = 0
+  for i in [0...NSYM]
+    if (s == symtab[i].printname)
+      # found the symbol
+      return symtab[i]
+    if (symtab[i].printname == "")
+      # found an entry in the symbol table
+      # with no printname, exit the loop
+      # and re-use this location
+      break
+  if (i == NSYM)
+    stop("symbol table overflow")
 
 
-	symtab[i] =  new U()
-	symtab[i].k = SYM
-	symtab[i].printname = s
-	# say that we just created the symbol
-	# then, binding[the new symbol entry]
-	# by default points to the symbol.
-	# So the value of an unassigned symbol will
-	# be just its name.
-	binding[i] = symtab[i]
-	isSymbolReclaimable[i] = false
+  symtab[i] =  new U()
+  symtab[i].k = SYM
+  symtab[i].printname = s
+  # say that we just created the symbol
+  # then, binding[the new symbol entry]
+  # by default points to the symbol.
+  # So the value of an unassigned symbol will
+  # be just its name.
+  binding[i] = symtab[i]
+  isSymbolReclaimable[i] = false
 
-	return symtab[i]
+  return symtab[i]
 
 # get the symbol's printname
 
 # p is a U
 get_printname = (p) ->
-	if (p.k != SYM)
-		stop("symbol error")
-	return p.printname
+  if (p.k != SYM)
+    stop("symbol error")
+  return p.printname
 
 
 # p and q are both U
@@ -119,138 +119,138 @@ get_printname = (p) ->
 # The other one is the U with the content, and that
 # one will go in the corresponding "binding" array entry.
 set_binding = (p, q) ->
-	if (p.k != SYM)
-		stop("symbol error")
+  if (p.k != SYM)
+    stop("symbol error")
 
 
-	#console.log "setting binding of " + p.toString() + " to: " + q.toString()
-	#if p.toString() == "aaa"
-	#	debugger
+  #console.log "setting binding of " + p.toString() + " to: " + q.toString()
+  #if p.toString() == "aaa"
+  #  debugger
 
-	indexFound = symtab.indexOf(p)
-	###
-	if indexFound == -1
-		debugger
-		for i in [0...symtab.length]
-			if p.printname == symtab[i].printname
-				indexFound = i
-				console.log "remedied an index not found!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-				break
-	###
+  indexFound = symtab.indexOf(p)
+  ###
+  if indexFound == -1
+    debugger
+    for i in [0...symtab.length]
+      if p.printname == symtab[i].printname
+        indexFound = i
+        console.log "remedied an index not found!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        break
+  ###
 
-	if symtab.indexOf(p, indexFound + 1) != -1
-		console.log("ops, more than one element!")
-		debugger
-	if DEBUG then console.log("lookup >> set_binding lookup " + indexFound)
-	isSymbolReclaimable[indexFound] = false
-	binding[indexFound] = q
+  if symtab.indexOf(p, indexFound + 1) != -1
+    console.log("ops, more than one element!")
+    debugger
+  if DEBUG then console.log("lookup >> set_binding lookup " + indexFound)
+  isSymbolReclaimable[indexFound] = false
+  binding[indexFound] = q
 
 # p is a U
 get_binding = (p) ->
-	if (p.k != SYM)
-		stop("symbol error")
+  if (p.k != SYM)
+    stop("symbol error")
 
-	#console.log "getting binding of " + p.toString()
-	#if p.toString() == "aaa"
-	#	debugger
+  #console.log "getting binding of " + p.toString()
+  #if p.toString() == "aaa"
+  #  debugger
 
-	indexFound = symtab.indexOf(p)
-	###
-	if indexFound == -1
-		debugger
-		for i in [0...symtab.length]
-			if p.printname == symtab[i].printname
-				indexFound = i
-				console.log "remedied an index not found!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-				break
-	###
+  indexFound = symtab.indexOf(p)
+  ###
+  if indexFound == -1
+    debugger
+    for i in [0...symtab.length]
+      if p.printname == symtab[i].printname
+        indexFound = i
+        console.log "remedied an index not found!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        break
+  ###
 
-	if symtab.indexOf(p, indexFound + 1) != -1
-		console.log("ops, more than one element!")
-		debugger
-	if DEBUG then console.log("lookup >> get_binding lookup " + indexFound)
-	#if indexFound == 139
-	#	debugger
-	#if indexFound == 137
-	#	debugger
-	return binding[indexFound]
+  if symtab.indexOf(p, indexFound + 1) != -1
+    console.log("ops, more than one element!")
+    debugger
+  if DEBUG then console.log("lookup >> get_binding lookup " + indexFound)
+  #if indexFound == 139
+  #  debugger
+  #if indexFound == 137
+  #  debugger
+  return binding[indexFound]
 
 # the concept of user symbol is a little fuzzy
 # beucase mathematics is full of symbols that actually
 # have a special meaning, e.g. e,i,I in some cases j...
 is_usr_symbol = (p) ->
-	if (p.k != SYM)
-		return false
-	theSymnum = symnum(p)
-	# see "defs" file for the naming of the symbols
-	if theSymnum > PI and theSymnum != SYMBOL_I and theSymnum != SYMBOL_IDENTITY_MATRIX
-		return true
-	return false
+  if (p.k != SYM)
+    return false
+  theSymnum = symnum(p)
+  # see "defs" file for the naming of the symbols
+  if theSymnum > PI and theSymnum != SYMBOL_I and theSymnum != SYMBOL_IDENTITY_MATRIX
+    return true
+  return false
 
 # get symbol's number from ptr
 # p is U
 lookupsTotal = 0
 symnum = (p) ->
-	lookupsTotal++
-	if (p.k != SYM)
-		stop("symbol error")
-	indexFound = symtab.indexOf(p)
-	if symtab.indexOf(p, indexFound + 1) != -1
-		console.log("ops, more than one element!")
-		debugger
-	if DEBUG then console.log("lookup >> symnum lookup " + indexFound + " lookup # " + lookupsTotal)
-	#if lookupsTotal == 21
-	#	debugger
-	#if indexFound == 79
-	#	debugger
-	return indexFound
+  lookupsTotal++
+  if (p.k != SYM)
+    stop("symbol error")
+  indexFound = symtab.indexOf(p)
+  if symtab.indexOf(p, indexFound + 1) != -1
+    console.log("ops, more than one element!")
+    debugger
+  if DEBUG then console.log("lookup >> symnum lookup " + indexFound + " lookup # " + lookupsTotal)
+  #if lookupsTotal == 21
+  #  debugger
+  #if indexFound == 79
+  #  debugger
+  return indexFound
 
 # push indexed symbol
 
 # k is an int
 push_symbol = (k) ->
-	push(symtab[k])
+  push(symtab[k])
 
 clear_symbols = ->
-	# we can clear just what's assignable.
-	# everything before NIL is not assignable,
-	# so there is no need to clear it.
-	for i in [NIL+1...NSYM]
+  # we can clear just what's assignable.
+  # everything before NIL is not assignable,
+  # so there is no need to clear it.
+  for i in [NIL+1...NSYM]
 
-		# stop at the first empty
-		# entry that is not reclaimable
-		if symtab[i].printname == ""
-			if isSymbolReclaimable[i] == false
-				break
-			else
-				continue
+    # stop at the first empty
+    # entry that is not reclaimable
+    if symtab[i].printname == ""
+      if isSymbolReclaimable[i] == false
+        break
+      else
+        continue
 
-		symtab[i] =  new U()
-		symtab[i].k = SYM
-		binding[i] = symtab[i]
-		isSymbolReclaimable[i] = false
-		#symtab[i].printname = ""
-		#binding[i] = symtab[i]
+    symtab[i] =  new U()
+    symtab[i].k = SYM
+    binding[i] = symtab[i]
+    isSymbolReclaimable[i] = false
+    #symtab[i].printname = ""
+    #binding[i] = symtab[i]
 
 
 # collect all the variables in a tree
 collectUserSymbols = (p, accumulator = []) ->
 
-	if is_usr_symbol(p)
-		if accumulator.indexOf(p) == -1
-			accumulator.push p
-			return
+  if is_usr_symbol(p)
+    if accumulator.indexOf(p) == -1
+      accumulator.push p
+      return
 
-	if (istensor(p))
-		for i in [0...p.tensor.nelem]
-			collectUserSymbols p.tensor.elem[i], accumulator
-		return
+  if (istensor(p))
+    for i in [0...p.tensor.nelem]
+      collectUserSymbols p.tensor.elem[i], accumulator
+    return
 
-	while (iscons(p))
-		collectUserSymbols(car(p), accumulator)
-		p = cdr(p)
+  while (iscons(p))
+    collectUserSymbols(car(p), accumulator)
+    p = cdr(p)
 
-	return
+  return
 
 $.get_binding = get_binding
 $.set_binding = set_binding

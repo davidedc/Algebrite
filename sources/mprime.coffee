@@ -7,7 +7,7 @@
 
 
 mprime = (n) ->
-	return n.isProbablePrime()
+  return n.isProbablePrime()
 
 #if SELFTEST
 
