@@ -114,7 +114,7 @@ qpowf = ->
 
   # At this point p1 (BASE) is a positive integer and p2 (EXPO) is not an integer.
 
-  if ( !p2.q.a.isSmall || !p2.q.b.isSmall )  # p2 is EXPO
+  if ( !isSmall(p2.q.a) || !isSmall(p2.q.b) )  # p2 is EXPO
     push_symbol(POWER)
     push(p1)  # p1 is BASE
     push(p2);  # p2 is EXPO
@@ -233,4 +233,4 @@ normalize_angle = ->
   restore()
 
 is_small_integer = (p) ->
-  return p.q.a.isSmall
+  return isSmall(p.q.a)

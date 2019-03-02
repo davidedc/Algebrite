@@ -10,6 +10,8 @@
 mint = (a) ->
   return bigInt a
 
+isSmall = (a) ->
+  a.gt(Number.MIN_SAFE_INTEGER) && a.lt(Number.MAX_SAFE_INTEGER)
 
 # b is +1 or -1, a is a bigint
 setSignTo = (a,b) ->
@@ -480,7 +482,7 @@ pop_integer = ->
   switch (p1.k)
 
     when NUM
-      if (isinteger(p1) && p1.q.a.isSmall)
+      if (isinteger(p1) && isSmall(p1.q.a))
         n = p1.q.a.toJSNumber()
 
     when DOUBLE
