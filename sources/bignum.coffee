@@ -11,7 +11,7 @@ mint = (a) ->
   return bigInt a
 
 isSmall = (a) ->
-  a.gt(Number.MIN_SAFE_INTEGER) && a.lt(Number.MAX_SAFE_INTEGER)
+  a.geq(Number.MIN_SAFE_INTEGER) && a.leq(Number.MAX_SAFE_INTEGER)
 
 # b is +1 or -1, a is a bigint
 setSignTo = (a,b) ->
