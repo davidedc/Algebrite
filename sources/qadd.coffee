@@ -16,14 +16,8 @@ qadd = ->
   qadd_frac2 = pop()
   qadd_frac1 = pop()
 
-  #console.log "qadd qadd_frac1: " + qadd_frac1 + " numerator small: " + qadd_frac1.q.a.isSmall + " denom small: " + qadd_frac1.q.b.isSmall
-  #console.log "qadd qadd_frac2: " + qadd_frac2 + " numerator small: " + qadd_frac2.q.a.isSmall + " denom small: " + qadd_frac2.q.b.isSmall
-
-
   qadd_ab = mmul(qadd_frac1.q.a, qadd_frac2.q.b)
-  #console.log "calculated ab " + qadd_ab + " small: " + qadd_ab.isSmall
   qadd_ba = mmul(qadd_frac1.q.b, qadd_frac2.q.a)
-  #console.log "calculated ba " + qadd_ba + " small: " + qadd_ba.isSmall
 
   qadd_numerator = madd(qadd_ab, qadd_ba)
 
@@ -40,7 +34,6 @@ qadd = ->
 
   qadd_denominator = mmul(qadd_frac1.q.b, qadd_frac2.q.b)
 
-  #console.log "gcd("+qadd_numerator+","+qadd_denominator+") num small: " + qadd_numerator.isSmall + " denom is small: " + qadd_denominator.isSmall
   gcdBetweenNumeratorAndDenominator = mgcd(qadd_numerator, qadd_denominator)
   #console.log "gcd("+qadd_numerator+","+qadd_denominator+"): " + gcdBetweenNumeratorAndDenominator
 
