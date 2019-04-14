@@ -180,7 +180,6 @@ Logical-and of predicate expressions.
 
 # and definition
 Eval_and = ->
-  debugger
   wholeAndExpression = p1
   andPredicates = cdr(wholeAndExpression)
   somePredicateUnknown = false
