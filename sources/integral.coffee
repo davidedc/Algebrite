@@ -534,6 +534,7 @@ integral_of_form = ->
 
 # Implementation of hash codes based on ITALU (An Integral Table Look-Up)
 # https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19680004891.pdf
+# see Appendix A, page 153
 
 # The first two values are from the ITALU paper.
 # The others are just arbitrary constants.
