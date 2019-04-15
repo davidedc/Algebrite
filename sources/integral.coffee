@@ -298,7 +298,8 @@ itab = [
   # 443
   "f(arctan(a*x),x*arctan(a*x)-1/2*log(1+a^2*x^2)/a)",
   # 485 (with addition of a)
-  "f(log(a*x),x*log(a*x)-x)",
+  # however commenting out since it's a duplicate of 14
+  # "f(log(a*x),x*log(a*x)-x)",
   # 486 (with addition of a)
   "f(x*log(a*x),x^2*log(a*x)/2-x^2/4)",
   # 487 (with addition of a)
