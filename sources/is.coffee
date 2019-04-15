@@ -346,7 +346,7 @@ isintegerfactor = (p) ->
 
 isNumberOneOverSomething = (p) ->
   if isfraction(p) \
-  && Math.abs(p.q.a.value) == 1
+  && MEQUAL(p.q.a.abs(), 1)
     return 1
   else
     return 0
