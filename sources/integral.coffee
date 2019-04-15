@@ -543,7 +543,7 @@ hashcode_values =
   'constexp':1.43762,
   'constant':1.14416593629414332,
   'constbase':1.20364122304218824,
-  'sin': 1.14416593629414332,
+  'sin': 1.73305482518303221,
   'arcsin': 1.6483368529465804,
   'cos': 1.058672123686340116,
   'arccos': 1.8405225918106694,
@@ -615,7 +615,7 @@ hash_multiplication = (terms, x) ->
 
 hash_power = (base, power, x) ->
   base_hash = hashcode_values.constant
-  exp_hash = hashcode_values.constant
+  exp_hash = hashcode_values.constexp
   if (Find(base, x))
     base_hash = italu_hashcode(base, x)
   if (Find(power, x))
