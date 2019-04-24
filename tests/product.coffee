@@ -12,12 +12,12 @@ test_product = ->
     # a(n) is not memoized, so there
     # is quadratic cost as n increases.
     "float(2*product(2/a(k),k,1,9))",
-    "3.141588",
+    "3.141588...",
 
 
     # Wallis' product
     "2*product(float(4*k^2/(4*k^2-1)),k,1,100)",
-    "3.133787",
+    "3.133787...",
 
     # ---------------------------
     "f(a,b)=product(k,k,a,b)",

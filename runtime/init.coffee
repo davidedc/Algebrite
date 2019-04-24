@@ -67,6 +67,8 @@ defn_str = [
   "yrange=[-10,10]",
   "last=0",
   "trace=0",
+  "forceFixedPrintout=1",
+  "maxFixedPrintoutDigits=6",
   "printLeaveEAlone=1",
   "printLeaveXAlone=0",
   # cross definition
@@ -251,6 +253,9 @@ defn = ->
   std_symbol("lastplainprint", LAST_PLAIN_PRINT)
 
   std_symbol("trace", TRACE)
+
+  std_symbol("forceFixedPrintout", FORCE_FIXED_PRINTOUT)
+  std_symbol("maxFixedPrintoutDigits", MAX_FIXED_PRINTOUT_DIGITS)
 
   std_symbol("~", YYE)  # tilde so sort puts it after other symbols
 

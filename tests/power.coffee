@@ -118,8 +118,11 @@ test_power = ->
     # note how the "double" type
     # is toxic i.e. it propagates through
     # everything it touches.
+    # also, that -0.500000... _really_ is 0.5
+    # however we get some error in the calculations
+    # so it doesn't end up being exactly equal to -0.5
     "(-1.0)^(2/3)",
-    "-0.5+0.866025*i",
+    "-0.500000...+0.866025...*i",
 
     # this also has a nested radical
     # form but we are not calculating
@@ -186,10 +189,10 @@ test_power = ->
     "-(-1)^(7/8)/(2^(1/4))",
 
     "(1+i)^(0.5)",
-    "1.098684+0.45509*i",
+    "1.098684...+0.455090...*i",
 
     "(1+i)^(-0.5)",
-    "0.776887-0.321797*i",
+    "0.776887...-0.321797...*i",
 
     # test cases for simplification of polar forms, counterclockwise
 

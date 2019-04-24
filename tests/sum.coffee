@@ -14,7 +14,7 @@ test_sum = ->
 
     # Leibniz formula for π as a series
     "sum(float((-1)^k * (1/(2*k + 1))),k,0,100)*4",
-    "3.151493",
+    "3.151493...",
 
     # -------------------
 

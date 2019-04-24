@@ -16,11 +16,10 @@ test_eigen = ->
     "Stop: eigen: matrix is not symmetrical",
 
     "eigenval([[1,1,1,1],[1,2,3,4],[1,3,6,10],[1,4,10,20]])",
-    "[[0.038016,0.0,0.0,0.0],[0.0,0.453835,0.0,0.0],[0.0,0.0,2.203446,0.0],[0.0,0.0,0.0,26.304703]]",
+    "[[0.038016...,0.0,0.0,0.0],[0.0,0.453835...,0.0,0.0],[0.0,0.0,2.203446...,0.0],[0.0,0.0,0.0,26.304703...]]",
 
     "eigenvec([[1,1,1,1],[1,2,3,4],[1,3,6,10],[1,4,10,20]])",
-    "[[0.308686,-0.72309,0.594551,-0.168412],[0.787275,-0.163234,-0.532107,0.265358],[0.530366,0.640332,0.391832,-0.393897],[0.060187,0.201173,0.458082,0.863752]]",
-
+    "[[0.308686...,-0.723090...,0.594551...,-0.168412...],[0.787275...,-0.163234...,-0.532107...,0.265358...],[0.530366...,0.640332...,0.391832...,-0.393897...],[0.060187...,0.201173...,0.458082...,0.863752...]]",
     "eigen(hilbert(20))",
     "",
 
@@ -29,9 +28,11 @@ test_eigen = ->
     # this one takes quite some time to finish because of the
     # "dot(transpose(Q),D,Q))" calculation. Note that since
     # D and Q are matrices of doubles, the whole result is a double.
-    # also note that the result gives "-0.0", that's why I put the abs there
+    # also note that the result gives "-0.000000...", that's why I put the abs there
+    # Note that this should be really "0" however, because of calculation errors,
+    # it doesn't test equal to "0", so we get to this result
     "abs(contract(hilbert(20))-contract(dot(transpose(Q),D,Q)))",
-    "0.0",
+    "0.000000...",
 
     "D=quote(D)",
     "",

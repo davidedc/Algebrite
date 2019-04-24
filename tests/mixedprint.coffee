@@ -37,6 +37,73 @@ test_mixedprint = ->
     "111111111.0 * 111111111.0",
     "12345678987654320.0",
 
+    "1.0*10^(-6)",
+    "0.000001",
+
+    # check that this doesn't return 0.0
+    "1.0*10^(-7)",
+    "0.000000...",
+
+    # ------------------------------------------
+    "maxFixedPrintoutDigits",
+    "6",
+
+    "maxFixedPrintoutDigits=20",
+    "",
+
+    "maxFixedPrintoutDigits",
+    "20",
+
+    "1.0*10^(-15)",
+    "0.000000000000001",
+
+    "printhuman",
+    "0.000000000000001",
+
+    "printcomputer",
+    "0.000000000000001",
+
+    "printlatex",
+    "0.000000000000001",
+
+    "printlist",
+    "0.000000000000001",
+
+    "print2dascii",
+    "0.000000000000001",
+
+    "forceFixedPrintout=0",
+    "",
+
+    "1.0*10^(-15)",
+    "1*10^(-15)",
+
+    "printhuman",
+    "1*10^(-15)",
+
+    "printcomputer",
+    "1*10^(-15)",
+
+    "printlatex",
+    "1\\mathrm{e}{-15}",
+
+    "printlist",
+    "1*10^(-15)",
+
+    "print2dascii",
+    "1*10^(-15)",
+
+    "forceFixedPrintout=1",
+    "",
+
+    "maxFixedPrintoutDigits=6",
+    "",
+
+    # ------------------------------------------
+
+    "float(pi)",
+    "3.141593...",
+
     "print(\"hello\")",
     "\"hello\"",
 

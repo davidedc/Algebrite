@@ -42,62 +42,98 @@ test_cos = ->
     "f(-360,1)",      # -360
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(45,sqrt(2)/2)",    # 45
-    "1.0",
+    "1.000000...",
 
     "f(135,-sqrt(2)/2)",    # 135
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(225,-sqrt(2)/2)",    # 225
-    "1.0",
+    "1.000000...",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(315,sqrt(2)/2)",    # 315
-    "1.0",
+    "1.000000...",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(-45,sqrt(2)/2)",    # -45
-    "1.0",
+    "1.000000...",
 
     "f(-135,-sqrt(2)/2)",    # -135
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(-225,-sqrt(2)/2)",    # -225
-    "1.0",
+    "1.000000...",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(-315,sqrt(2)/2)",    # -315
-    "1.0",
+    "1.000000...",
 
     "f(30,sqrt(3)/2)",    # 30
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(150,-sqrt(3)/2)",    # 150
-    "1.0",
+    "1.000000...",
 
     "f(210,-sqrt(3)/2)",    # 210
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(330,sqrt(3)/2)",    # 330
-    "1.0",
+    "1.000000...",
 
     "f(-30,sqrt(3)/2)",    # -30
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(-150,-sqrt(3)/2)",    # -150
-    "1.0",
+    "1.000000...",
 
     "f(-210,-sqrt(3)/2)",    # -210
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(-330,sqrt(3)/2)",    # -330
-    "1.0",
+    "1.000000...",
 
     "f(60,1/2)",      # 60
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(120,-1/2)",      # 120
-    "1.0",
+    "1.000000...",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(240,-1/2)",      # 240
-    "1.0",
+    "1.000000...",
 
     "f(300,1/2)",      # 300
     "1.0",
@@ -105,11 +141,17 @@ test_cos = ->
     "f(-60,1/2)",      # -60
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(-120,-1/2)",      # -120
-    "1.0",
+    "1.000000...",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(-240,-1/2)",      # -240
-    "1.0",
+    "1.000000...",
 
     "f(-300,1/2)",      # -300
     "1.0",

@@ -42,17 +42,26 @@ test_sin = ->
     "f(-360,0)",      # -360
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(45,sqrt(2)/2)",    # 45
-    "1.0",
+    "1.000000...",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(135,sqrt(2)/2)",    # 135
-    "1.0",
+    "1.000000...",
 
     "f(225,-sqrt(2)/2)",    # 225
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(315,-sqrt(2)/2)",    # 315
-    "1.0",
+    "1.000000...",
 
     "f(-45,-sqrt(2)/2)",    # -45
     "1.0",
@@ -60,8 +69,11 @@ test_sin = ->
     "f(-135,-sqrt(2)/2)",    # -135
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(-225,sqrt(2)/2)",    # -225
-    "1.0",
+    "1.000000...",
 
     "f(-315,sqrt(2)/2)",    # -315
     "1.0",
@@ -72,11 +84,17 @@ test_sin = ->
     "f(150,1/2)",      # 150
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(210,-1/2)",      # 210
-    "1.0",
+    "1.000000...",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(330,-1/2)",      # 330
-    "1.0",
+    "1.000000...",
 
     "f(-30,-1/2)",      # -30
     "1.0",
@@ -87,29 +105,44 @@ test_sin = ->
     "f(-210,1/2)",      # -210
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(-330,1/2)",      # -330
-    "1.0",
+    "1.000000...",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(60,sqrt(3)/2)",    # 60
-    "1.0",
+    "1.000000...",
 
     "f(120,sqrt(3)/2)",    # 120
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(240,-sqrt(3)/2)",    # 240
-    "1.0",
+    "1.000000...",
 
     "f(300,-sqrt(3)/2)",    # 300
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(-60,-sqrt(3)/2)",    # -60
-    "1.0",
+    "1.000000...",
 
     "f(-120,-sqrt(3)/2)",    # -120
     "1.0",
 
+    # this should really be 1.0 , however
+    # we have errors doing the calculations so
+    # we don't get to that exact 1.0 float
     "f(-240,sqrt(3)/2)",    # -240
-    "1.0",
+    "1.000000...",
 
     "f(-300,sqrt(3)/2)",    # -300
     "1.0",

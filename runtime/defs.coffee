@@ -244,6 +244,8 @@ AUTOEXPAND = counter++
 BAKE = counter++
 ASSUME_REAL_VARIABLES = counter++
 TRACE = counter++
+FORCE_FIXED_PRINTOUT = counter++
+MAX_FIXED_PRINTOUT_DIGITS = counter++
 
 YYE = counter++
 
