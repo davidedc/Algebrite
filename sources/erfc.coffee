@@ -30,6 +30,10 @@ yyerfc = ->
     push_double(d)
     return
 
+  if isZeroAtomOrTensor(p1)
+    push(one)
+    return
+
   push_symbol(ERFC)
   push(p1)
   list(2)
@@ -37,6 +41,9 @@ yyerfc = ->
 
 # from Numerical Recipes in C
 erfc = (x) ->
+  if x == 0
+    return 1.0
+
   t = 0.0
   z = 0.0
   ans = 0.0

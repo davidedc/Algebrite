@@ -41,6 +41,10 @@ yyerf = ->
     push_double(d)
     return
 
+  if isZeroAtomOrTensor(p1)
+    push(zero)
+    return
+
   if (isnegativeterm(p1))
     push_symbol(ERF)
     push(p1)
