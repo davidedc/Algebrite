@@ -36,8 +36,6 @@ yyerfc = ->
   return
 
 # from Numerical Recipes in C
-
-#ifndef LINUX
 erfc = (x) ->
   t = 0.0
   z = 0.0
@@ -54,12 +52,3 @@ erfc = (x) ->
     return ans
   else
     return 2.0-ans
-#endif
-
-
-###
-  # commented-out test
-  "float(erfc(1))",
-  "0.157299",
-###
-

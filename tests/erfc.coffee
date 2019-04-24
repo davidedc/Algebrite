@@ -9,5 +9,7 @@ test_erfc = ->
 
     "float(erfc(0))",
     "1.0",
+    "float(erfc(1))",
+    "0.157299...",
     
   ]
