@@ -21,7 +21,7 @@ itab = [
   # Covers often-occurring exponents: each of
   # these case ends up in a dedicated entry, so we
   # only have to do one sure-shot match.
-  "f(x^(-2),-x^(-2))",
+  "f(x^(-2),-x^(-1))",
   "f(x^(-1/2),2*x^(1/2))",
   "f(x^(1/2),2/3*x^(3/2))",
   "f(x,x^2/2)",
@@ -669,7 +669,7 @@ hashed_itab = {
     "f(x^a,x^(a+1)/(a+1))"
   ],
   "1.095727": [
-    "f(x^(-2),-x^(-2))"
+    "f(x^(-2),-x^(-1))"
   ],
   "1.023118": [
     "f(x^(-1/2),2*x^(1/2))"
