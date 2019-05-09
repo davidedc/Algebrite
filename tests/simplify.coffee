@@ -1,6 +1,12 @@
 test_simplify = ->
   run_test [
 
+    # the system normally tries to
+    # arrange polynomials in a normal
+    # form, without the need for simplify
+    "x+a*x",
+    "(1+a)*x",
+
     "simplify(A)",
     "A",
 
@@ -27,14 +33,6 @@ test_simplify = ->
 
     "A=quote(A)",
     "",
-
-    # this shows need for <= in try_factoring
-
-    #  "x*(1+a)",
-    #  "x+a*x",
-
-    #  "simplify(last)",
-    #  "x*(1+a)",
 
     "simplify(-3 exp(-1/3 r + i phi) cos(theta) / sin(theta)\
      + 3 exp(-1/3 r + i phi) cos(theta) sin(theta)\
