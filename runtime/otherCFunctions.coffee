@@ -18,10 +18,22 @@ doubleToReasonableString = (d) ->
     # that would be parsed as 1.23*e - 123)
 
     if printMode == PRINTMODE_LATEX
-      # 1\mathrm{e}{-10} looks much better than the plain 1e-10
-      stringRepresentation = stringRepresentation.replace(/e(.*)/gm, "\\mathrm{e}{$1}");
+      # 1.0\mathrm{e}{-10} looks much better than the plain 1.0e-10
+      if /\d*\.\d*e.*/gm.test(stringRepresentation)
+        stringRepresentation = stringRepresentation.replace(/e(.*)/gm, "\\mathrm{e}{$1}");
+      else
+        # if there is no dot in the mantissa, add it so we see it's
+        # a double and not a perfect number
+        # e.g. 1e-10 becomes 1.0\mathrm{e}{-10}
+        stringRepresentation = stringRepresentation.replace(/(\d+)e(.*)/gm, "$1.0\\mathrm{e}{$2}");
     else
-      stringRepresentation = stringRepresentation.replace(/e(.*)/gm, "*10^($1)");
+      if /\d*\.\d*e.*/gm.test(stringRepresentation)
+        stringRepresentation = stringRepresentation.replace(/e(.*)/gm, "*10^($1)");
+      else
+        # if there is no dot in the mantissa, add it so we see it's
+        # a double and not a perfect number
+        # e.g. 1e-10 becomes 1.0e-10
+        stringRepresentation = stringRepresentation.replace(/(\d+)e(.*)/gm, "$1.0*10^($2)");
 
   else
     push(get_binding(symbol(MAX_FIXED_PRINTOUT_DIGITS)))
