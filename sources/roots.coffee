@@ -48,7 +48,7 @@ Eval_roots = ->
   p2 = pop()
   p1 = pop()
 
-  if (!ispoly(p1, p2))
+  if (!ispolyexpandedform(p1, p2))
     stop("roots: 1st argument is not a polynomial")
 
   push(p1)
@@ -276,12 +276,12 @@ roots3 = ->
   save()
   p2 = pop()
   p1 = pop()
-  if (car(p1) == symbol(POWER) && ispoly(cadr(p1), p2) && isposint(caddr(p1)))
+  if (car(p1) == symbol(POWER) && ispolyexpandedform(cadr(p1), p2) && isposint(caddr(p1)))
     push(cadr(p1))
     push(p2)
     n = normalisedCoeff()
     mini_solve(n)
-  else if (ispoly(p1, p2))
+  else if (ispolyexpandedform(p1, p2))
     push(p1)
     push(p2)
     n = normalisedCoeff()

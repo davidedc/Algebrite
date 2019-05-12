@@ -52,7 +52,7 @@ Eval_nroots = ->
   p2 = pop()
   p1 = pop()
 
-  if (!ispoly(p1, p2))
+  if (!ispolyexpandedform(p1, p2))
     stop("nroots: polynomial?")
 
   # mark the stack

@@ -1,6 +1,7 @@
 # Greatest common denominator
-
-
+# can also be run on polynomials, however
+# it works only on the integers and it works
+# by factoring the polynomials (not Euclidean algorithm)
 
 Eval_gcd = ->
   p1 = cdr(p1)
@@ -36,41 +37,124 @@ gcd_main = ->
     gcd_numbers()
     return
 
+
+  if (polyVar = areunivarpolysfactoredorexpandedform(p1, p2))
+    gcd_polys(polyVar)
+    return
+
+
   if (car(p1) == symbol(ADD) && car(p2) == symbol(ADD))
-    gcd_expr_expr()
+    gcd_sum_sum()
     return
 
   if (car(p1) == symbol(ADD))
-    gcd_expr(p1)
+    gcd_sum(p1)
     p1 = pop()
 
   if (car(p2) == symbol(ADD))
-    gcd_expr(p2)
+    gcd_sum(p2)
     p2 = pop()
 
-  if (car(p1) == symbol(MULTIPLY) && car(p2) == symbol(MULTIPLY))
-    gcd_term_term()
-    return
-
   if (car(p1) == symbol(MULTIPLY))
-    gcd_term_factor()
+    gcd_sum_product()
     return
 
   if (car(p2) == symbol(MULTIPLY))
-    gcd_factor_term()
+    gcd_product_sum()
     return
 
+  if (car(p1) == symbol(MULTIPLY) && car(p2) == symbol(MULTIPLY))
+    gcd_product_product()
+    return
+
+  gcd_powers_with_same_base()
+
+
+areunivarpolysfactoredorexpandedform = (p1, p2) ->
+  if polyVar = isunivarpolyfactoredorexpandedform(p1)
+    if isunivarpolyfactoredorexpandedform(p2,polyVar)
+      return polyVar
+  return false
+
+gcd_polys = (polyVar) ->
   # gcd of factors
+  push(p1)
+  push polyVar
+  factorpoly()
+  p1 = pop()
+  push(p2)
+  push polyVar
+  factorpoly()
+  p2 = pop()
+  if DEBUG then console.log "factored polys:"
+  if DEBUG then console.log "p1:" + p1.toString()
+  if DEBUG then console.log "p2:" + p2.toString()
+
+  # In case one of two polynomials can be factored,
+  # (and only in that case), then
+  # we'll need to run gcd_factors on the two polynomials.
+  # (In case neither of them can be factored there is no gcd).
+  # However, gcd_factors expects two _products_ , and
+  # in case _one_ of the polynomials can't be factored it will look
+  # like a sum instead of a product.
+  # So, we'll have to make that sum to look like a factor:
+  # let's just turn it into a product with 1.
+  
+  # in case one of the two polys has been factored...
+  if car(p1) == symbol(MULTIPLY) or car(p2) == symbol(MULTIPLY)
+
+    # then make sure that if one of them is a single
+    # factor, we take the sum and wrap it into a
+    # multiplication by 1
+
+    if car(p1) != symbol(MULTIPLY)
+      push_symbol(MULTIPLY);
+      push(p1);
+      push(one);
+      list(3);
+      p1 = pop()
+
+    if car(p2) != symbol(MULTIPLY)
+      push_symbol(MULTIPLY);
+      push(p2);
+      push(one);
+      list(3);
+      p2 = pop()
+
+  if (car(p1) == symbol(MULTIPLY) && car(p2) == symbol(MULTIPLY))
+    gcd_product_product()
+    return
+
+  gcd_powers_with_same_base()
+
+  return true
+
+
+gcd_product_product = ->
+  push(one)
+  p3 = cdr(p1)
+  while (iscons(p3))
+    p4 = cdr(p2)
+    while (iscons(p4))
+      push(car(p3))
+      push(car(p4))
+      gcd()
+      multiply()
+      p4 = cdr(p4)
+    p3 = cdr(p3)
+
+
+gcd_powers_with_same_base = ->
 
   if (car(p1) == symbol(POWER))
-    p3 = caddr(p1)
-    p1 = cadr(p1)
+    p3 = caddr(p1) # exponent
+    p1 = cadr(p1) # base
   else
     p3 = one
 
   if (car(p2) == symbol(POWER))
-    p4 = caddr(p2)
-    p2 = cadr(p2)
+    p4 = caddr(p2) # exponent
+    p2 = cadr(p2) # base
   else
     p4 = one
 
@@ -144,7 +228,7 @@ gcd_main = ->
 
 # in this case gcd is used as a composite function, i.e. gcd(gcd(gcd...
 
-gcd_expr_expr = ->
+gcd_sum_sum = ->
   if (length(p1) != length(p2))
     push(one)
     return
@@ -186,7 +270,7 @@ gcd_expr_expr = ->
   else
     push(one)
 
-gcd_expr = (p) ->
+gcd_sum = (p) ->
   p = cdr(p)
   push(car(p))
   p = cdr(p)
@@ -195,20 +279,7 @@ gcd_expr = (p) ->
     gcd()
     p = cdr(p)
 
-gcd_term_term = ->
-  push(one)
-  p3 = cdr(p1)
-  while (iscons(p3))
-    p4 = cdr(p2)
-    while (iscons(p4))
-      push(car(p3))
-      push(car(p4))
-      gcd()
-      multiply()
-      p4 = cdr(p4)
-    p3 = cdr(p3)
-
-gcd_term_factor = ->
+gcd_sum_product = ->
   push(one)
   p3 = cdr(p1)
   while (iscons(p3))
@@ -218,7 +289,7 @@ gcd_term_factor = ->
     multiply()
     p3 = cdr(p3)
 
-gcd_factor_term = ->
+gcd_product_sum = ->
   push(one)
   p4 = cdr(p2)
   while (iscons(p4))

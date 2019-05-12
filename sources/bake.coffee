@@ -16,11 +16,11 @@ bake = ->
 
   p1 = pop()
 
-  s = ispoly(p1, symbol(SYMBOL_S))
-  t = ispoly(p1, symbol(SYMBOL_T))
-  x = ispoly(p1, symbol(SYMBOL_X))
-  y = ispoly(p1, symbol(SYMBOL_Y))
-  z = ispoly(p1, symbol(SYMBOL_Z))
+  s = ispolyexpandedform(p1, symbol(SYMBOL_S))
+  t = ispolyexpandedform(p1, symbol(SYMBOL_T))
+  x = ispolyexpandedform(p1, symbol(SYMBOL_X))
+  y = ispolyexpandedform(p1, symbol(SYMBOL_Y))
+  z = ispolyexpandedform(p1, symbol(SYMBOL_Z))
 
   if (s == 1 && t == 0 && x == 0 && y == 0 && z == 0)
     p2 = symbol(SYMBOL_S)
@@ -65,7 +65,7 @@ polyform = ->
   p2 = pop()
   p1 = pop()
 
-  if (ispoly(p1, p2))
+  if (ispolyexpandedform(p1, p2))
     bake_poly()
   else if (iscons(p1))
     h = tos

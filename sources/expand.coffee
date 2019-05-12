@@ -90,7 +90,7 @@ expand = ->
   # also bail out if the denominator is not one but
   # it's not anything recognizable as a polynomial.
   if isone(p3) || isone(p2)
-    if !ispoly(p2,p9) || isone(p2)
+    if !ispolyexpandedform(p2,p9) || isone(p2)
       pop()
       pop()
       pop()

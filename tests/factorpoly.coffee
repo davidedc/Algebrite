@@ -322,7 +322,7 @@ test_factorpoly = ->
 
     # this used to cause divide by zero
 
-    # fixed by calling ispoly before calling coeff
+    # fixed by calling ispolyexpandedform before calling coeff
 
   #  "factor(1/x+1)",
   #  "(1+x)/x",

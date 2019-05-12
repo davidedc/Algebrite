@@ -145,6 +145,7 @@ simplify_main = ->
       return
 
   simplify_rectToClock()
+  simplify_rational_expressions()
 
   push(p1)
 
@@ -292,10 +293,82 @@ f9 = ->
     push(car(p2))
     simplify()
     add()
+
+    oldp1 = p1
+    oldp2 = p2
+    p1 = pop()
+    simplify_rational_expressions()
+    push(p1)
+    p1 = oldp1
+    p2 = oldp2
+
     p2 = cdr(p2)
   p2 = pop()
   if (count(p2) < count(p1))
     p1 = p2
+
+
+simplify_rational_expressions = ->
+  push p1
+  denominator()
+  denom = pop()
+
+  if isone(denom)
+    return
+
+  push p1
+  numerator()
+  num = pop()
+
+  if isone(num)
+    return
+
+  if !(polyVar = areunivarpolysfactoredorexpandedform(num, denom))
+    return
+
+  push num
+  push denom
+  gcd()
+
+  push(polyVar)
+  factor()
+
+  theGCD = pop()
+
+  # if there are no common factors then
+  # bail
+  if isone(theGCD)
+    return
+
+  push num
+  push(polyVar)
+  factor()
+  push theGCD
+  #divide()
+  inverse()
+  multiply_noexpand()
+  simplify()
+  sasa = stack[tos-1].toString()
+
+  push denom
+  push(polyVar)
+  factor()
+  push theGCD
+  #divide()
+  inverse()
+  multiply_noexpand()
+  simplify()
+  sasa = stack[tos-1].toString()
+
+  divide()
+  #simplify()
+  Condense()
+  sasa = stack[tos-1].toString()
+
+  p2 = pop()
+  if (count(p2) < count(p1))
+    p1 = p2
+
 
 # things like 6*(cos(2/9*pi)+i*sin(2/9*pi))
 # where we have sin and cos, those might start to
