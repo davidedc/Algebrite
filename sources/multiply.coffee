@@ -319,7 +319,11 @@ combine_gammas = (h) ->
   if (n > 1)
     push(_gamma[n])
 
-#endif
+# this is useful for example when you are just adding/removing
+# factors from an already factored quantity.
+# e.g. if you factored x^2 + 3x + 2 into (x+1)(x+2)
+# and you want to divide by (x+1) , i.e. you multiply by (x-1)^-1,
+# then there is no need to expand.
 
 multiply_noexpand = ->
   prev_expanding = expanding

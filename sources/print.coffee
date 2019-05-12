@@ -1353,7 +1353,6 @@ print_factor = (p, omitParens) ->
       accumulator += " \\lfloor {" + print_expr(cadr(p)) + "} \\rfloor "
       return accumulator
   else if car(p) == symbol(CEILING)
-    debugger
     if codeGen
       accumulator += "Math.ceiling("+print_expr(cadr(p))+")"
       return accumulator

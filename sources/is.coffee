@@ -198,7 +198,6 @@ isposint = (p) ->
   else
     return 0
 
-# both p,x are U
 ispoly = (p,x) ->
   if (Find(p, x))
     return ispoly_expr(p, x)
@@ -239,6 +238,8 @@ ispoly_factor = (p,x) ->
     return 0
   else
     return 1
+
+# --------------------------------------
 
 isnegativeterm = (p) ->
   if (isnegativenumber(p))
