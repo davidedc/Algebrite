@@ -480,7 +480,6 @@ test_simplify = ->
     "simplify((x^2+8x*k+16*k^2)/(x^2-16k^2))",
     "(x+4*k)/(x-4*k)",
 
-    # new ones
     "simplify((x^2-2x-8)/(x^2-9x+20))",
     "(x+2)/(x-5)",
 
