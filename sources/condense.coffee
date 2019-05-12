@@ -1,5 +1,4 @@
 # Condense an expression by factoring common terms.
-                                                                                
 
 
 Eval_condense = ->
@@ -47,7 +46,8 @@ yycondense = ->
   while (iscons(p3))
     push(p2)
     push(car(p3))
-    multiply()
+    #multiply()
+    multiply_noexpand()
     add()
     p3 = cdr(p3)
 
