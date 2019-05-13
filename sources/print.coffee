@@ -426,7 +426,7 @@ print_subexpr = (p) ->
 print_factorial_function = (p) ->
   accumulator = ""
   p = cadr(p)
-  if (car(p) == symbol(ADD) || car(p) == symbol(MULTIPLY) || car(p) == symbol(POWER) || car(p) == symbol(FACTORIAL))
+  if (isfraction(p) || car(p) == symbol(ADD) || car(p) == symbol(MULTIPLY) || car(p) == symbol(POWER) || car(p) == symbol(FACTORIAL))
     accumulator += print_subexpr(p)
   else
     accumulator += print_expr(p)

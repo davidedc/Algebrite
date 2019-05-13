@@ -662,7 +662,7 @@ emit_index_function = (p) ->
 
 emit_factorial_function = (p) ->
   p = cadr(p)
-  if (car(p) == symbol(ADD) || car(p) == symbol(MULTIPLY) || car(p) == symbol(POWER) || car(p) == symbol(FACTORIAL))
+  if (isfraction(p) || car(p) == symbol(ADD) || car(p) == symbol(MULTIPLY) || car(p) == symbol(POWER) || car(p) == symbol(FACTORIAL))
     emit_subexpr(p)
   else
     emit_expr(p)

@@ -163,4 +163,24 @@ test_mixedprint = ->
     "print2dascii(x^(1/(a+b)))",
     " 1/(a + b)\nx",
 
+    # ------------------------------------------
+
+    "(5/3)!",
+    "(5/3)!",
+
+    "printhuman",
+    "(5/3)!",
+
+    "printcomputer",
+    "(5/3)!",
+
+    "printlatex",
+    "(\\frac{5}{3})!",
+
+    "printlist",
+    "(factorial 5/3)",
+
+    "print2dascii",
+    "  5\n(---)!\n  3",
+
   ]
