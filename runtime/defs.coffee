@@ -1,7 +1,7 @@
 bigInt = require('big-integer')
 
 # also change the version in the package.json file
-version = "1.3.0"
+version = "1.3.1"
 
 SELFTEST = 1
 
