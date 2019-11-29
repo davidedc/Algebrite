@@ -6,8 +6,7 @@ DEBUG_IS = false
 # this routine is a simple check on whether we have
 # a basic zero in our hands. It doesn't perform any
 # calculations or simplifications.
-isZeroAtomOrTensor = (p) ->
-  i = 0
+isZeroAtom = (p) ->
   switch (p.k)
     when NUM
       if (MZERO(p.q.a))
@@ -15,12 +14,27 @@ isZeroAtomOrTensor = (p) ->
     when DOUBLE
       if (p.d == 0.0)
         return 1
-    when TENSOR
-      for i in [0...p.tensor.nelem]
-        if (!isZeroAtomOrTensor(p.tensor.elem[i]))
-          return 0
-      return 1
   return 0
+
+# p is a U
+# this routine is a simple check on whether we have
+# a basic zero in our hands. It doesn't perform any
+# calculations or simplifications.
+isZeroTensor = (p) ->
+  if p.k != TENSOR
+    return 0
+
+  for i in [0...p.tensor.nelem]
+    if (!isZeroAtomOrTensor(p.tensor.elem[i]))
+      return 0
+  return 1
+
+# p is a U
+# this routine is a simple check on whether we have
+# a basic zero in our hands. It doesn't perform any
+# calculations or simplifications.
+isZeroAtomOrTensor = (p) ->
+  isZeroAtom(p) or isZeroTensor(p)
 
 # This is a key routine to try to determine whether
 # the argument looks like zero/false, or non-zero/true,

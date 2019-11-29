@@ -301,7 +301,8 @@ push_terms = (p) ->
     while (iscons(p))
       push(car(p))
       p = cdr(p)
-  else if (!isZeroAtomOrTensor(p))
+  # omit zeroes
+  else if (!isZeroAtom(p))
     push(p)
 
 # add two expressions

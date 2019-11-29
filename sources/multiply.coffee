@@ -48,7 +48,7 @@ yymultiply = ->
 
   # is either operand zero?
 
-  if (isZeroAtomOrTensor(p1) || isZeroAtomOrTensor(p2))
+  if (isZeroAtom(p1) || isZeroAtom(p2))
     if evaluatingAsFloats then push_double(0.0) else push(zero)
     return
 
