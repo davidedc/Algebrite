@@ -70,6 +70,28 @@ arccos = ->
     restore()
     return
 
+  # if p1 == sqrt(3)/2 then return 1/6*pi (30 degrees)
+  if (issqrtthreeovertwo(p1))
+    if evaluatingAsFloats
+      push_double(Math.PI / 6.0)
+    else
+      push_rational(1, 6)
+      push_symbol(PI)
+      multiply()
+    restore()
+    return
+
+  # if p1 == -sqrt(3)/2 then return 5/6*pi (150 degrees)
+  if (isminussqrtthreeovertwo(p1))
+    if evaluatingAsFloats
+      push_double(5.0 * Math.PI / 6.0)
+    else
+      push_rational(5, 6)
+      push_symbol(PI)
+      multiply()
+    restore()
+    return
+
   if (!isrational(p1))
     push_symbol(ARCCOS)
     push(p1)

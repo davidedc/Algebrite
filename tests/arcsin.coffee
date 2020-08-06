@@ -44,6 +44,10 @@ test_arcsin = ->
 
     "arcsin(sin(-1/4*pi))",
     "-1/4*pi",
-  ]
 
-  
+    "arcsin(sqrt(3)/2)",
+    "1/3*pi",
+    
+    "arcsin(-sqrt(3)/2)",
+    "-1/3*pi",
+  ]

@@ -66,6 +66,28 @@ arcsin = ->
     restore()
     return
 
+  # if p1 == sqrt(3)/2 then return 1/3*pi (60 degrees)
+  if (issqrtthreeovertwo(p1))
+    if evaluatingAsFloats
+      push_double(Math.PI / 3.0)
+    else
+      push_rational(1, 3)
+      push_symbol(PI)
+      multiply()
+    restore()
+    return
+
+  # if p1 == -sqrt(3)/2 then return -1/3*pi (-60 degrees)
+  if (isminussqrtthreeovertwo(p1))
+    if evaluatingAsFloats
+      push_double(-Math.PI / 3.0)
+    else
+      push_rational(-1, 3)
+      push_symbol(PI)
+      multiply()
+    restore()
+    return
+
   if (!isrational(p1))
     push_symbol(ARCSIN)
     push(p1)
