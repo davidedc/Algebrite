@@ -143,13 +143,13 @@ itab = [
   #157
   "f(1/sqrt(x^2+a),log(x+sqrt(x^2+a)))",
   #158
-  "f(1/x*1/sqrt(x^2+a),arcsec(x/sqrt(-a))/sqrt(-a),or(not(number(a)),a<0))",
+  "f(1/x*1/sqrt(x^2+a),arccos(sqrt(-a)/x)/sqrt(-a),or(not(number(a)),a<0))",
   #159
   "f(1/x*1/sqrt(x^2+a),-1/sqrt(a)*log((sqrt(a)+sqrt(x^2+a))/x),or(not(number(a)),a>0))",
   #160
   "f(sqrt(x^2+a)/x,sqrt(x^2+a)-sqrt(a)*log((sqrt(a)+sqrt(x^2+a))/x),or(not(number(a)),a>0))",
   #161
-  "f(sqrt(x^2+a)/x,sqrt(x^2+a)-sqrt(-a)*arcsec(x/sqrt(-a)),or(not(number(a)),a<0))",
+  "f(sqrt(x^2+a)/x,sqrt(x^2+a)-sqrt(-a)*arccos(sqrt(-a)/x),or(not(number(a)),a<0))",
   #162
   "f(x/sqrt(x^2+a),sqrt(x^2+a))",
   #163
@@ -179,7 +179,7 @@ itab = [
   #174
   "f(1/x^3*1/sqrt(x^2+a),-1/2*sqrt(x^2+a)/a/x^2+1/2*log((sqrt(a)+sqrt(x^2+a))/x)/a^(3/2),or(not(number(a)),a>0))",
   #175
-  "f(1/x^3*1/sqrt(x^2-a),1/2*sqrt(x^2-a)/a/x^2+1/2*1/(a^(3/2))*arcsec(x/(a^(1/2))),or(not(number(a)),a>0))",
+  "f(1/x^3*1/sqrt(x^2-a),1/2*sqrt(x^2-a)/a/x^2+1/2*1/(a^(3/2))*arccos((a^(1/2))/x),or(not(number(a)),a>0))",
   #176+
   "f(x^2*sqrt(a+x^6+3*a^(1/3)*x^4+3*a^(2/3)*x^2),1/6*x*sqrt((x^2+a^(1/3))^5)-1/24*a^(1/3)*x*sqrt((x^2+a^(1/3))^3)-1/16*a^(2/3)*x*sqrt(x^2+a^(1/3))-1/16*a*log(x+sqrt(x^2+a^(1/3))),or(not(number(a)),a>0))",
   #176-
@@ -818,13 +818,13 @@ hashed_itab = {
     "f(sqrt(a*x^2+b),x*sqrt(a*x^2+b)/2+b*arcsin(x*sqrt(-a/b))/2/sqrt(-a),and(number(a),a<0))"
   ],
   "0.729886": [
-    "f(1/x*1/sqrt(x^2+a),arcsec(x/sqrt(-a))/sqrt(-a),or(not(number(a)),a<0))",
+    "f(1/x*1/sqrt(x^2+a),arccos(sqrt(-a)/x)/sqrt(-a),or(not(number(a)),a<0))",
     "f(1/x*1/sqrt(x^2+a),-1/sqrt(a)*log((sqrt(a)+sqrt(x^2+a))/x),or(not(number(a)),a>0))",
     "f(1/x*1/sqrt(a-x^2),-1/sqrt(a)*log((sqrt(a)+sqrt(a-x^2))/x),or(not(number(a)),a>0))"
   ],
   "1.501230": [
     "f(sqrt(x^2+a)/x,sqrt(x^2+a)-sqrt(a)*log((sqrt(a)+sqrt(x^2+a))/x),or(not(number(a)),a>0))",
-    "f(sqrt(x^2+a)/x,sqrt(x^2+a)-sqrt(-a)*arcsec(x/sqrt(-a)),or(not(number(a)),a<0))",
+    "f(sqrt(x^2+a)/x,sqrt(x^2+a)-sqrt(-a)*arccos(sqrt(-a)/x),or(not(number(a)),a<0))",
     "f(sqrt(a-x^2)/x,sqrt(a-x^2)-sqrt(a)*log((sqrt(a)+sqrt(a-x^2))/x),or(not(number(a)),a>0))"
   ],
   "0.666120": [
@@ -866,7 +866,7 @@ hashed_itab = {
   "0.652928": [
     "f(x^3/sqrt(x^2+a),1/3*sqrt((x^2+a)^3)-a*sqrt(x^2+a))",
     "f(1/x^3*1/sqrt(x^2+a),-1/2*sqrt(x^2+a)/a/x^2+1/2*log((sqrt(a)+sqrt(x^2+a))/x)/a^(3/2),or(not(number(a)),a>0))",
-    "f(1/x^3*1/sqrt(x^2-a),1/2*sqrt(x^2-a)/a/x^2+1/2*1/(a^(3/2))*arcsec(x/(a^(1/2))),or(not(number(a)),a>0))"
+    "f(1/x^3*1/sqrt(x^2-a),1/2*sqrt(x^2-a)/a/x^2+1/2*1/(a^(3/2))*arccos((a^(1/2))/x),or(not(number(a)),a>0))"
   ],
   "0.764022": [
     "f(1/x^2*1/sqrt(x^2+a),-sqrt(x^2+a)/a/x)",

@@ -251,7 +251,7 @@ test_integral = ->
     "0",
 
     #158
-    "integral(1/X*1/sqrt(X^2-2),X)-arcsec(X/sqrt(2))/sqrt(2)",
+    "integral(1/X*1/sqrt(X^2-2),X)-arccos(sqrt(2)/X)/sqrt(2)",
     "0",
 
     #159
@@ -263,7 +263,7 @@ test_integral = ->
     "0",
 
     #161
-    "integral(sqrt(X^2-2)/X,X)-sqrt(X^2-2)+sqrt(2)*arcsec(X/sqrt(2))",
+    "integral(sqrt(X^2-2)/X,X)-sqrt(X^2-2)+sqrt(2)*arccos(sqrt(2)/X)",
     "0",
 
     #162
@@ -322,7 +322,7 @@ test_integral = ->
     "0",
 
     #175
-    "integral(1/X^3*1/sqrt(X^2-2),X)-1/2*sqrt(X^2-2)/2/X^2-1/2*1/(2^(3/2))*arcsec(X/(2^(1/2)))",
+    "integral(1/X^3*1/sqrt(X^2-2),X)-1/2*sqrt(X^2-2)/2/X^2-1/2*1/(2^(3/2))*arccos((2^(1/2))/X)",
     "0",
 
     #176+
