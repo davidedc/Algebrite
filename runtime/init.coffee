@@ -68,7 +68,7 @@ defn_str = [
   "last=0",
   "trace=0",
   "forceFixedPrintout=1",
-  "maxFixedPrintoutDigits=6",
+  "maxFixedPrintoutDigits=20",
   "printLeaveEAlone=1",
   "printLeaveXAlone=0",
   # cross definition
