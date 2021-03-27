@@ -1122,6 +1122,16 @@ print_factor = (p, omitParens) ->
   accumulator = ""
   if (isNumericAtom(p))
     accumulator += print_number(p, false)
+    # in an evaluated term, all the numeric parts
+    # are at the beginning of the term.
+    # When printing the EXPRESSION,
+    # we peek into the first factor of the term and we
+    # look at whether it's a number less then zero.
+    # if it is, we print the "-" as the "leading" part of the
+    # print of the EXPRESSION, and then we proceed printint the factors
+    # of the term. This means that when we come here, we must
+    # skip printing the minus if the number is negative,
+    # because it's already been printed.
     return accumulator
 
   if (isstr(p))
