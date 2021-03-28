@@ -401,7 +401,7 @@ print_term = (p) ->
               if !isfraction(car(cdr(cdr(car(p)))))
                 accumulator += " \\cdot "
       accumulator += print_multiply_sign()
-      accumulator += print_factor(car(p))
+      accumulator += print_factor(car(p),false,true)
 
       previousFactorWasANumber = false
       if isNumericAtom(car(p))
@@ -1117,11 +1117,10 @@ print_index_function = (p) ->
   return accumulator
 
 
-print_factor = (p, omitParens) ->
+print_factor = (p, omitParens, pastFirstFactor) ->
   # debugger
   accumulator = ""
   if (isNumericAtom(p))
-    accumulator += print_number(p, false)
     # in an evaluated term, all the numeric parts
     # are at the beginning of the term.
     # When printing the EXPRESSION,
@@ -1132,6 +1131,11 @@ print_factor = (p, omitParens) ->
     # of the term. This means that when we come here, we must
     # skip printing the minus if the number is negative,
     # because it's already been printed.
+    if pastFirstFactor and lessp(p, zero)
+      accumulator += '('
+    accumulator += print_number(p, pastFirstFactor)
+    if pastFirstFactor and lessp(p, zero)
+      accumulator += ')'
     return accumulator
 
   if (isstr(p))

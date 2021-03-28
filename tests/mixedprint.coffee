@@ -183,4 +183,38 @@ test_mixedprint = ->
     "print2dascii",
     "  5\n(---)!\n  3",
 
+    # bug #106 ---------------------------------
+    # printing terms that are not "normalised"
+    # following an eval, one can't assume that
+    # the numbers are all leading, hence some
+    # checks had to be refined when printing
+    # the signs
+
+    "clearall",
+    "",
+
+    "print(quote(k*(-2)))",
+    "k*(-2)",
+
+    "print(quote(k*(-1/2)))",
+    "k*(-1/2)",
+
+    "print(quote(k*2))",
+    "k*2",
+
+    "print(quote(k*1/2))",
+    "k*1/2",
+
+    "print(k*(-2))",
+    "-2*k",
+
+    "print(k*(-1/2))",
+    "-1/2*k",
+
+    "print(k*2)",
+    "2*k",
+
+    "print(k*1/2)",
+    "1/2*k",
+
   ]
