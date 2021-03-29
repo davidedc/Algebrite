@@ -30,12 +30,12 @@ yycondense = ->
   p3 = cdr(p3)
   while (iscons(p3))
     push(car(p3))
-    #console.log "calculating gcd between: " + stack[tos - 1] + " and " + stack[tos - 2]
+    if DEBUG then console.log "calculating gcd between: " + stack[tos - 1] + " and " + stack[tos - 2]
     gcd()
-    #console.log "partial gcd: " + stack[tos - 1]
+    if DEBUG then console.log "partial gcd: " + stack[tos - 1]
     p3 = cdr(p3)
 
-  #console.log "condense: this is the gcd of all the terms: " + stack[tos - 1]
+  if DEBUG then console.log "condense: this is the gcd of all the terms: " + stack[tos - 1]
 
   # divide each term by gcd
 

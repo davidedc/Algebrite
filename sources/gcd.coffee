@@ -27,6 +27,8 @@ gcd_main = ->
   p2 = pop()
   p1 = pop()
 
+  if DEBUG then console.log "gcd_main: p1: " + p1 + " p2: " + p2
+
   if (equal(p1, p2))
     push(p1)
     return
@@ -71,12 +73,14 @@ gcd_main = ->
 
 
 areunivarpolysfactoredorexpandedform = (p1, p2) ->
+  if DEBUG then console.log "areunivarpolysfactoredorexpandedform: p1: " + p1 + " p2: " + p2
   if polyVar = isunivarpolyfactoredorexpandedform(p1)
     if isunivarpolyfactoredorexpandedform(p2,polyVar)
       return polyVar
   return false
 
 gcd_polys = (polyVar) ->
+  if DEBUG then console.log "gcd_polys: p1: " + p1 + " polyVar: " + polyVar
   # gcd of factors
   push(p1)
   push polyVar
@@ -86,9 +90,9 @@ gcd_polys = (polyVar) ->
   push polyVar
   factorpoly()
   p2 = pop()
-  if DEBUG then console.log "factored polys:"
-  if DEBUG then console.log "p1:" + p1.toString()
-  if DEBUG then console.log "p2:" + p2.toString()
+  if DEBUG then console.log "GCD: factored polys:"
+  if DEBUG then console.log "  p1:" + p1.toString()
+  if DEBUG then console.log "  p2:" + p2.toString()
 
   # In case one of two polynomials can be factored,
   # (and only in that case), then

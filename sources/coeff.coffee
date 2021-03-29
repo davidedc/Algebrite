@@ -65,6 +65,8 @@ Eval_coeff = ->
 
 coeff = ->
 
+  if DEBUG then console.log "coeff: " + stack[tos-1].toString() + " " + stack[tos-2].toString()
+
   save()
 
   p2 = pop()
@@ -92,6 +94,7 @@ coeff = ->
     if (equal(p1, zero))
       n = tos - h
       restore()
+      if DEBUG then console.log "coeff: result: " + n
       return n
 
     push(p1)

@@ -215,6 +215,8 @@ isposint = (p) ->
 # --------------------------------------
 
 isunivarpolyfactoredorexpandedform = (p,x) ->
+  if DEBUG then console.log "isunivarpolyfactoredorexpandedform: p: " + p + " x: " + x
+
   if !x?
     push p
     guess()

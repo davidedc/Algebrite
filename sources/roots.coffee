@@ -12,8 +12,11 @@ show_power_debug = false
 performing_roots = false
 
 Eval_roots = ->
-  # A == B -> A - B
 
+  # this transforms simple "equation" forms into
+  # something that can be processed. E.g., say, y = 3x - 2
+  # A == B -> A - B
+  # A = B -> A - B
   p2 = cadr(p1)
 
   if (car(p2) == symbol(SETQ) || car(p2) == symbol(TESTEQ))
@@ -49,7 +52,7 @@ Eval_roots = ->
   p1 = pop()
 
   if (!ispolyexpandedform(p1, p2))
-    stop("roots: 1st argument is not a polynomial")
+    stop("roots: 1st argument is not a polynomial in the variable " + p2)
 
   push(p1)
   push(p2)
@@ -123,6 +126,8 @@ roots = ->
   i = 0
   n = 0
 
+  if DEBUG then console.log "roots: " + stack[tos-1].toString() + " " + stack[tos-2].toString()
+
   save()
 
   # the simplification of nested radicals uses
@@ -141,7 +146,7 @@ roots = ->
   performing_roots = true
   h = tos - 2
 
-  if DEBUG then console.log("checking if " + stack[tos-1].toString() + " is a case of simple roots")
+  if DEBUG then console.log("roots checking if " + stack[tos-1].toString() + " is a case of simple roots")
 
   p2 = pop()
   p1 = pop()
@@ -235,6 +240,8 @@ getSimpleRoots = (n, leadingCoeff, lastCoeff) ->
 
 roots2 = ->
   save()
+
+  if DEBUG then console.log "roots2: " + stack[tos-1].toString() + " " + stack[tos-2].toString()
 
   p2 = pop() # the polynomial variable
   p1 = pop() # the polynomial

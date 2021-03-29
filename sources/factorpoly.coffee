@@ -16,6 +16,8 @@ polycoeff = 0
 factpoly_expo = 0
 
 factorpoly = ->
+  if DEBUG then console.log "factorpoly: " + stack[tos-1].toString() + " " + stack[tos-2].toString()
+
   save()
 
   p2 = pop()
@@ -53,6 +55,12 @@ factorpoly = ->
 #-----------------------------------------------------------------------------
 
 yyfactorpoly = ->
+
+  if DEBUG
+    firstParam = stack[tos-1].toString()
+    secondParam = stack[tos-2].toString()
+    console.log "yyfactorpoly: " + firstParam + " " + secondParam
+
   h = 0
   i = 0
 
@@ -72,15 +80,19 @@ yyfactorpoly = ->
   push(p2)
   factpoly_expo = coeff() - 1
 
+  if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " factpoly_expo before rationalize_coefficients: " + factpoly_expo
   rationalize_coefficients(h)
+  if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " factpoly_expo  after rationalize_coefficients: " + factpoly_expo
 
   # for univariate polynomials we could do factpoly_expo > 1
 
   whichRootsAreWeFinding = "real"
   remainingPoly = null
   while (factpoly_expo > 0)
+    if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " factpoly_expo inside while loop: " + factpoly_expo
 
     if (isZeroAtomOrTensor(stack[polycoeff+0]))
+      if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " isZeroAtomOrTensor"
       push_integer(1)
       p4 = pop()
       push_integer(0)
@@ -106,8 +118,7 @@ yyfactorpoly = ->
         add()
         p8 = pop()
 
-        if (DEBUG)
-          console.log("success\nFACTOR=" + p8)
+        if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " success\nFACTOR=" + p8
 
         # factor out negative sign (not req'd because p4 > 1)
         #if 0
@@ -177,8 +188,7 @@ yyfactorpoly = ->
           
         p8 = pop()
 
-        if (DEBUG)
-          console.log("success\nFACTOR=" + p8)
+        if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " success\nFACTOR=" + p8
 
         # factor out negative sign (not req'd because p4 > 1)
         #if 0
@@ -296,7 +306,7 @@ yyfactorpoly = ->
         #console.log("factpoly_expo: " + factpoly_expo)
 
 
-  # build the remaining unfactored part of the polynomial
+  if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " building the remaining unfactored part of the polynomial"
 
   push(zero)
   for i in [0..factpoly_expo]
@@ -308,8 +318,7 @@ yyfactorpoly = ->
     add()
   p1 = pop()
 
-  if (DEBUG)
-    console.log("POLY=" + p1)
+  if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " remaining unfactored part of the polynomial: " + p1.toString()
 
   push(p1)
 
@@ -319,7 +328,7 @@ yyfactorpoly = ->
   expanding = prev_expanding
 
   p1 = pop()
-  #console.log("new poly with extracted common factor: " + p1)
+  if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " new poly with extracted common factor: " + p1.toString()
   #debugger
 
   # factor out negative sign
@@ -340,8 +349,7 @@ yyfactorpoly = ->
   multiply_noexpand()
   p7 = pop()
 
-  if (DEBUG)
-    console.log("RESULT=" + p7)
+  if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " result: " + p7
 
   stack[h] = p7
 
@@ -375,8 +383,7 @@ rationalize_coefficients = (h) ->
   push(p7)
   reciprocate()
   p7 = pop()
-  if DEBUG then console.log("rationalize_coefficients result")
-  #console.log print_list(p7)
+  if DEBUG then console.log "rationalize_coefficients result: " + p7.toString()
 
 get_factor_from_real_root = ->
 
@@ -388,7 +395,7 @@ get_factor_from_real_root = ->
   na0 = 0
   nan = 0
 
-  if (DEBUG)
+  if DEBUG
     push(zero)
     for i in [0..factpoly_expo]
       push(stack[polycoeff+i])
@@ -414,7 +421,7 @@ get_factor_from_real_root = ->
   divisors_onstack()
   na0 = tos - a0
 
-  if (DEBUG)
+  if DEBUG
     console.log("divisors of base term")
     for i in [0...na0]
       console.log(", " + stack[a0 + i])
@@ -440,7 +447,7 @@ get_factor_from_real_root = ->
 
       Evalpoly()
 
-      if (DEBUG)
+      if DEBUG
         console.log("try A=" + p4)
         console.log(", B=" + p5)
         console.log(", root " + p2)
@@ -463,7 +470,7 @@ get_factor_from_real_root = ->
 
       Evalpoly()
 
-      if (DEBUG)
+      if DEBUG
         console.log("try A=" + p4)
         console.log(", B=" + p5)
         console.log(", root " + p2)
@@ -603,8 +610,7 @@ yydivpoly = ->
     subtract()
     stack[polycoeff+i - 1] = pop()
   stack[polycoeff+0] = p6
-  if DEBUG then console.log("yydivpoly Q:")
-  #console.log print_list(p6)
+  if DEBUG then console.log "yydivpoly Q: " + p6.toString()
 
 Evalpoly = ->
   i = 0
@@ -613,9 +619,9 @@ Evalpoly = ->
     push(p3)
     multiply()
     push(stack[polycoeff+i])
-    if DEBUG
-      console.log("Evalpoly top of stack:")
-      console.log print_list(stack[tos-i])
+    #if DEBUG
+    #  console.log("Evalpoly top of stack:")
+    #  console.log stack[tos-i].toString()
     add()
   p6 = pop()
 
