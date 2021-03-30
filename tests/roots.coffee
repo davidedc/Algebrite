@@ -72,6 +72,27 @@ test_roots = ->
     "",
 
     # --------------------------------------------
+    # examples covering https://github.com/davidedc/Algebrite/issues/130
+
+    "roots(-2*z+x^2+y^2,z)",
+    "1/2*x^2+1/2*y^2",
+
+    "roots(-2*z+x^2+y^2,z)",
+    "1/2*x^2+1/2*y^2",
+
+    "roots(x+y+z)",
+    "-y-z",
+
+    "roots(x+y+z,z)",
+    "-x-y",
+
+    "roots(x+y+a,z)",
+    "Stop: roots: 1st argument is not a polynomial in the variable z",
+
+    "clearall",
+    "",
+
+    # --------------------------------------------
     # some more tests with 3rd degree polynomials
     # including use of cubic formula.
     # Only the ones marked "DOES use cubic formula"

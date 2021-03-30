@@ -12,9 +12,6 @@
 #define RESULT p7
 #define FACTOR p8
 
-polycoeff = 0
-factpoly_expo = 0
-
 factorpoly = ->
   if DEBUG then console.log "factorpoly: " + stack[tos-1].toString() + " " + stack[tos-2].toString()
 
@@ -100,9 +97,9 @@ yyfactorpoly = ->
     else
       #console.log("trying to find a " + whichRootsAreWeFinding + " root")
       if whichRootsAreWeFinding == "real"
-        foundRealRoot = get_factor_from_real_root()
+        foundRealRoot = get_factor_from_real_root(factpoly_expo, polycoeff)
       else if whichRootsAreWeFinding == "complex"
-        foundComplexRoot = get_factor_from_complex_root(remainingPoly)
+        foundComplexRoot = get_factor_from_complex_root(remainingPoly, factpoly_expo, polycoeff)
 
     if whichRootsAreWeFinding == "real"
       if foundRealRoot == 0
@@ -147,7 +144,7 @@ yyfactorpoly = ->
         # Divide it by the newly-found factor so that
         # the stack then contains the coefficients of the
         # polynomial part still left to factor.
-        yydivpoly()
+        yydivpoly(factpoly_expo, polycoeff)
 
         while (factpoly_expo and isZeroAtomOrTensor(stack[polycoeff+factpoly_expo]))
           factpoly_expo--
@@ -385,7 +382,8 @@ rationalize_coefficients = (h) ->
   p7 = pop()
   if DEBUG then console.log "rationalize_coefficients result: " + p7.toString()
 
-get_factor_from_real_root = ->
+get_factor_from_real_root = (factpoly_expo, polycoeff)->
+
   if DEBUG then console.log "get_factor_from_real_root"
 
   i = 0
@@ -446,7 +444,7 @@ get_factor_from_real_root = ->
       negate()
       p3 = pop()
 
-      Evalpoly()
+      Evalpoly(factpoly_expo, polycoeff)
 
       if DEBUG
         console.log("try A=" + p4)
@@ -469,7 +467,7 @@ get_factor_from_real_root = ->
       negate()
       p3 = pop()
 
-      Evalpoly()
+      Evalpoly(factpoly_expo, polycoeff)
 
       if DEBUG
         console.log("try A=" + p4)
@@ -489,7 +487,7 @@ get_factor_from_real_root = ->
   if DEBUG then console.log "get_factor_from_real_root returning 0"
   return 0
 
-get_factor_from_complex_root = (remainingPoly) ->
+get_factor_from_complex_root = (remainingPoly, factpoly_expo, polycoeff) ->
 
   i = 0
   j = 0
@@ -520,7 +518,7 @@ get_factor_from_complex_root = (remainingPoly) ->
   push(p4)
   p3 = pop()
   push(p3)
-  Evalpoly()
+  Evalpoly(factpoly_expo, polycoeff)
   if DEBUG then console.log("complex root finding result: " + p6)
   if (isZeroAtomOrTensor(p6))
     moveTos h
@@ -539,7 +537,7 @@ get_factor_from_complex_root = (remainingPoly) ->
   push(p4)
   p3 = pop()
   push(p3)
-  Evalpoly()
+  Evalpoly(factpoly_expo, polycoeff)
   if DEBUG then console.log("complex root finding result: " + p6)
   if (isZeroAtomOrTensor(p6))
     moveTos h
@@ -566,7 +564,7 @@ get_factor_from_complex_root = (remainingPoly) ->
 
       push(p3)
 
-      Evalpoly()
+      Evalpoly(factpoly_expo, polycoeff)
 
       #console.log("complex root finding result: " + p6)
       if (isZeroAtomOrTensor(p6))
@@ -595,7 +593,7 @@ get_factor_from_complex_root = (remainingPoly) ->
 #
 #-----------------------------------------------------------------------------
 
-yydivpoly = ->
+yydivpoly = (factpoly_expo, polycoeff) ->
   i = 0
   p6 = zero
   for i in [factpoly_expo...0]
@@ -613,7 +611,7 @@ yydivpoly = ->
   stack[polycoeff+0] = p6
   if DEBUG then console.log "yydivpoly Q: " + p6.toString()
 
-Evalpoly = ->
+Evalpoly = (factpoly_expo, polycoeff) ->
   i = 0
   push(zero)
   for i in [factpoly_expo..0]
