@@ -18,7 +18,6 @@ Eval_roots = ->
   # A == B -> A - B
   # A = B -> A - B
   p2 = cadr(p1)
-
   if (car(p2) == symbol(SETQ) || car(p2) == symbol(TESTEQ))
     push(cadr(p2))
     Eval()

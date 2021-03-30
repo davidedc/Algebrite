@@ -386,6 +386,7 @@ rationalize_coefficients = (h) ->
   if DEBUG then console.log "rationalize_coefficients result: " + p7.toString()
 
 get_factor_from_real_root = ->
+  if DEBUG then console.log "get_factor_from_real_root"
 
   i = 0
   j = 0
