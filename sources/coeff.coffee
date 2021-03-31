@@ -51,9 +51,7 @@ Eval_coeff = ->
 #
 #  Put polynomial coefficients on the stack
 #
-#  Input:  tos-2    p(x) (the polynomial)
-#
-#      tos-1    x (the variable)
+#  Input:  as per params
 #
 #  Output:    Returns number of coefficients on stack
 #
@@ -63,47 +61,51 @@ Eval_coeff = ->
 #
 #-----------------------------------------------------------------------------
 
-coeff = ->
+coeff = (variable, polynomial)->
 
-  if DEBUG then console.log "coeff: " + stack[tos-1].toString() + " " + stack[tos-2].toString()
+  if DEBUG then console.log "coeff: " + variable + " " + polynomial
 
-  save()
+  # works like this:
+  #   1) find the constant (by just evaluating the pol setting the variable to zero)
+  #   2) set aside the found constant: it's one of the coefficients to return
+  #   3) take the polynomial and remove the constant
+  #   4) divide that by variable, lowering the degree by one
+  #   5) go back to 1) until degree is zero
 
-  p2 = pop()
-  p1 = pop()
+  coeffsCount = 0
 
-  h = tos
+  while true
 
-  while 1
-
-    push(p1)
-    push(p2)
+    push(polynomial)
+    push(variable)
     push(zero)
     subst()
     Eval()
 
-    p3 = pop()
-    push(p3)
+    constant = pop()
+    
+    # this will be a coefficient that will be returned
+    push(constant)
+    coeffsCount++
 
-    push(p1)
-    push(p3)
+    push(polynomial)
+    push(constant)
     subtract()
 
-    p1 = pop()
+    polynomialWithoutConstant = pop()
 
-    if (equal(p1, zero))
-      n = tos - h
-      restore()
-      if DEBUG then console.log "coeff: result: " + n
-      return n
+    if (equal(polynomialWithoutConstant, zero))
+      if DEBUG then console.log "coeff: result: " + coeffsCount
+      return coeffsCount
 
-    push(p1)
-    push(p2)
+    push(polynomialWithoutConstant)
+    push(variable)
     prev_expanding = expanding
     expanding = 1
     divide()
     expanding = prev_expanding
     #console.log("just divided: " + stack[tos-1].toString())
-    p1 = pop()
+    # this is now the new polynomial with degree decreased by 1
+    polynomial = pop()
 
 

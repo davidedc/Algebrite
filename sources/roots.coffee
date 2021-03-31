@@ -99,8 +99,8 @@ isSimpleRoot = (k) ->
   return isSimpleRootPolynomial
 
 
-normalisedCoeff = ->
-  k = coeff()
+normalisedCoeff = (variable, polynomial) ->
+  k = coeff(variable, polynomial)
   #console.log("->" + tos)
   divideBy = stack[tos-1]
   miniStack = []
@@ -153,9 +153,7 @@ roots = ->
   push(p1)
   push(p2)
 
-  push(p1)
-  push(p2)
-  k = normalisedCoeff()
+  k = normalisedCoeff(p2, p1)
 
   if isSimpleRoot(k)
     if DEBUG then console.log("yes, " + stack[tos-1].toString() + " is a case of simple roots")
@@ -248,9 +246,7 @@ roots2 = ->
   push(p1)
   push(p2)
 
-  push(p1)
-  push(p2)
-  k = normalisedCoeff()
+  k = normalisedCoeff(p2, p1)
 
   if !hasImaginaryCoeff(k)
     moveTos tos - k
@@ -283,14 +279,10 @@ roots3 = ->
   p2 = pop()
   p1 = pop()
   if (car(p1) == symbol(POWER) && ispolyexpandedform(cadr(p1), p2) && isposint(caddr(p1)))
-    push(cadr(p1))
-    push(p2)
-    n = normalisedCoeff()
+    n = normalisedCoeff(p2, cadr(p1))
     mini_solve(n)
   else if (ispolyexpandedform(p1, p2))
-    push(p1)
-    push(p2)
-    n = normalisedCoeff()
+    n = normalisedCoeff(p2, p1)
     mini_solve(n)
   restore()
 

@@ -73,9 +73,7 @@ yyfactorpoly = ->
 
   polycoeff = tos
 
-  push(p1)
-  push(p2)
-  factpoly_expo = coeff() - 1
+  factpoly_expo = coeff(p2, p1) - 1
 
   if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " factpoly_expo before rationalize_coefficients: " + factpoly_expo
   rationalize_coefficients(h)
@@ -294,9 +292,7 @@ yyfactorpoly = ->
         for i in [0..factpoly_expo]
           pop()
 
-        push(remainingPoly)
-        push(p2)
-        coeff()
+        coeff(p2, remainingPoly)
 
 
         factpoly_expo -= 2

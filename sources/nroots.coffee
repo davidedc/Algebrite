@@ -61,9 +61,7 @@ Eval_nroots = ->
 
   # get the coefficients
 
-  push(p1)
-  push(p2)
-  n = coeff()
+  n = coeff(p2, p1)
   if (n > NROOTS_YMAX)
     stop("nroots: degree?")
 

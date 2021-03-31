@@ -57,15 +57,11 @@ divpoly = ->
 
   dividend = tos
 
-  push(p1)
-  push(p3)
-  m = coeff() - 1;  # m is dividend's power
+  m = coeff(p3, p1) - 1;  # m is dividend's power
 
   divisor = tos
 
-  push(p2)
-  push(p3)
-  n = coeff() - 1;  # n is divisor's power
+  n = coeff(p3, p2) - 1;  # n is divisor's power
 
   x = m - n
 

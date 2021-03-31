@@ -89,9 +89,7 @@ bake_poly = ->
   n = 0
   #U **a
   a = tos
-  push(p1);    # p(x)
-  push(p2);    # x
-  k = coeff()
+  k = coeff(p2, p1)
   h = tos
   for i in[(k - 1)..0] by -1
     p1 = stack[a+i]
