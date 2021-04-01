@@ -45,6 +45,10 @@ test_arccos = ->
 
     "arccos(cos(3/4*pi))",
     "3/4*pi",
-  ]
 
-  
+    "arccos(sqrt(3)/2)",
+    "1/6*pi",
+
+    "arccos(-sqrt(3)/2)",
+    "5/6*pi",
+  ]

@@ -488,6 +488,35 @@ isminusoneoversqrttwo = (p) ->
   else
     return 0
 
+# p == sqrt(3)/2 ?
+issqrtthreeovertwo = (p) -> 
+  if car(p) == symbol(MULTIPLY) && \
+     isoneovertwo(cadr(p)) && \
+     issqrtthree(caddr(p)) && \
+     length(p) == 3
+    return 1
+  else
+    return 0
+
+# p == -sqrt(3)/2 ?
+isminussqrtthreeovertwo = (p) -> 
+  if car(p) == symbol(MULTIPLY) && \
+     isminusoneovertwo(cadr(p)) == 1 && \
+     issqrtthree(caddr(p)) == 1 && \
+     length(p) == 3
+    return 1
+  else
+    return 0
+
+# p == sqrt(3) ?
+issqrtthree = (p) ->
+  if car(p) == symbol(POWER) && \
+     equaln(cadr(p), 3) == 1 && \
+     isoneovertwo(caddr(p)) == 1
+    return 1
+  else
+    return 0
+
 isfloating = (p) ->
   if p.k == DOUBLE or p == symbol(FLOATF)
     return 1
