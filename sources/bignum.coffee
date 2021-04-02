@@ -434,15 +434,17 @@ convert_rational_to_double = (p) ->
   return result
 
 # n an integer
+new_integer = (n) ->
+  theNewInteger = new U()
+  theNewInteger.k = NUM
+  theNewInteger.q.a = bigInt(n)
+  theNewInteger.q.b = bigInt(1)
+  return theNewInteger
+
+# n an integer
 push_integer = (n) ->
   if DEBUG then console.log "pushing integer " + n
-  save()
-  p1 = new U()
-  p1.k = NUM
-  p1.q.a = bigInt(n)
-  p1.q.b = bigInt(1)
-  push(p1)
-  restore()
+  push new_integer(n)
 
 # d a double
 push_double = (d) ->

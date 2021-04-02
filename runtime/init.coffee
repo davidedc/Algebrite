@@ -316,11 +316,8 @@ defn = ->
   codeGen = originalCodeGen
 
 defineSomeHandyConstants = ->
-  push_integer(0)
-  zero = pop()    # must be untagged in gc
-
-  push_integer(1)
-  one = pop()    # must be untagged in gc
+  zero = new_integer 0
+  one = new_integer 1
 
   push_double(1.0)
   one_as_double = pop()
