@@ -2,6 +2,9 @@
 
 DEBUG_IS = false
 
+# jsBoolToToInt = (p) ->
+#   if p then 1 else 0
+
 # p is a U
 # this routine is a simple check on whether we have
 # a basic zero in our hands. It doesn't perform any
@@ -399,123 +402,84 @@ issymbolic = (p) ->
     return 0
 
 # i.e. 2, 2^3, etc.
-
 isintegerfactor = (p) ->
-  if (isinteger(p) || car(p) == symbol(POWER) \
-  && isinteger(cadr(p)) \
-  && isinteger(caddr(p)))
-    return 1
-  else
-    return 0
+  isinteger(p) || # note that and takes precedence over or
+  car(p) == symbol(POWER) and
+  isinteger(cadr(p)) and
+  isinteger(caddr(p))
 
 isNumberOneOverSomething = (p) ->
-  if isfraction(p) \
-  && MEQUAL(p.q.a.abs(), 1)
-    return 1
-  else
-    return 0
+  isfraction(p) and
+  MEQUAL(p.q.a.abs(), 1)
 
 
 isoneover = (p) ->
-  if (car(p) == symbol(POWER) \
-  && isminusone(caddr(p)))
-    return 1
-  else
-    return 0
+  car(p) == symbol(POWER) and
+  isminusone(caddr(p))
 
 isfraction = (p) ->
-  if (p.k == NUM && !MEQUAL(p.q.b, 1))
-    return 1
-  else
-    return 0
+  p.k == NUM && !MEQUAL(p.q.b, 1)
 
 # p is a U, n an int
 equaln = (p,n) ->
   switch (p.k)
     when NUM
-      if (MEQUAL(p.q.a, n) && MEQUAL(p.q.b, 1))
-        return 1
+      MEQUAL(p.q.a, n) && MEQUAL(p.q.b, 1)
     when DOUBLE
-      if (p.d == n)
-        return 1
-  return 0
+      p.d == n
+    else
+      false
 
 # p is a U, a and b ints
 equalq = (p, a, b) ->
   switch (p.k)
     when NUM
-      if (MEQUAL(p.q.a, a) && MEQUAL(p.q.b, b))
-        return 1
+      MEQUAL(p.q.a, a) && MEQUAL(p.q.b, b)
     when DOUBLE
-      if (p.d == a / b)
-        return 1
-  return 0
+      p.d == a / b
+    else
+      false
 
-# p == 1/2 ?
-
+# 1/2 ?
 isoneovertwo = (p) ->
-  if equalq(p, 1, 2)
-    return 1
-  else
-    return 0
+  equalq(p, 1, 2)
 
-# p == -1/2 ?
+# -1/2 ?
 isminusoneovertwo = (p) ->
-  if equalq(p, -1, 2)
-    return 1
-  else
-    return 0
+  equalq(p, -1, 2)
 
-
-# p == 1/sqrt(2) ?
-
+# 1/sqrt(2) ?
 isoneoversqrttwo = (p) ->
-  if (car(p) == symbol(POWER) \
-  && equaln(cadr(p), 2) \
-  && equalq(caddr(p), -1, 2))
-    return 1
-  else
-    return 0
+  car(p) == symbol(POWER) and
+  equaln(cadr(p), 2) and
+  equalq(caddr(p), -1, 2)
 
-# p == -1/sqrt(2) ?
-
+# -1/sqrt(2) ?
 isminusoneoversqrttwo = (p) ->
-  if (car(p) == symbol(MULTIPLY) \
-  && equaln(cadr(p), -1) \
-  && isoneoversqrttwo(caddr(p)) \
-  && length(p) == 3)
-    return 1
-  else
-    return 0
+  car(p) == symbol(MULTIPLY) and
+  equaln(cadr(p), -1) and
+  isoneoversqrttwo(caddr(p)) and
+  length(p) == 3
 
-# p == sqrt(3)/2 ?
+# sqrt(3)/2 ?
 issqrtthreeovertwo = (p) -> 
-  if car(p) == symbol(MULTIPLY) && \
-     isoneovertwo(cadr(p)) && \
-     issqrtthree(caddr(p)) && \
-     length(p) == 3
-    return 1
-  else
-    return 0
+  car(p) == symbol(MULTIPLY) and
+  isoneovertwo(cadr(p)) and
+  issqrtthree(caddr(p)) and
+  length(p) == 3
 
-# p == -sqrt(3)/2 ?
+# -sqrt(3)/2 ?
 isminussqrtthreeovertwo = (p) -> 
-  if car(p) == symbol(MULTIPLY) && \
-     isminusoneovertwo(cadr(p)) == 1 && \
-     issqrtthree(caddr(p)) == 1 && \
-     length(p) == 3
-    return 1
-  else
-    return 0
+  car(p) == symbol(MULTIPLY) and
+  isminusoneovertwo(cadr(p)) and
+  issqrtthree(caddr(p)) and
+  length(p) == 3
 
 # p == sqrt(3) ?
 issqrtthree = (p) ->
-  if car(p) == symbol(POWER) && \
-     equaln(cadr(p), 3) == 1 && \
-     isoneovertwo(caddr(p)) == 1
-    return 1
-  else
-    return 0
+  car(p) == symbol(POWER) and
+  equaln(cadr(p), 3) and
+  isoneovertwo(caddr(p))
 
 isfloating = (p) ->
   if p.k == DOUBLE or p == symbol(FLOATF)
