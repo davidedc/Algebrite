@@ -5,9 +5,6 @@
 
 #define POLY p1
 #define X p2
-#define Z p3
-#define A p4
-#define B p5
 #define Q p6
 #define RESULT p7
 #define FACTOR p8
@@ -35,9 +32,7 @@ factorpoly = ->
     restore()
     return
 
-  push(p1)
-  push(p2)
-  yyfactorpoly()
+  yyfactorpoly(p2, p1)
 
   restore()
 
@@ -51,11 +46,11 @@ factorpoly = ->
 #
 #-----------------------------------------------------------------------------
 
-yyfactorpoly = ->
+yyfactorpoly = (variable, polynomial) ->
 
   if DEBUG
-    firstParam = stack[tos-1].toString()
-    secondParam = stack[tos-2].toString()
+    firstParam = variable
+    secondParam = polynomial
     console.log "yyfactorpoly: " + firstParam + " " + secondParam
 
   h = 0
@@ -63,20 +58,17 @@ yyfactorpoly = ->
 
   save()
 
-  p2 = pop()
-  p1 = pop()
-
   h = tos
 
-  if (isfloating(p1))
+  if (isfloating(polynomial))
     stop("floating point numbers in polynomial")
 
   polycoeff = tos
 
-  factpoly_expo = coeff(p2, p1) - 1
+  factpoly_expo = coeff(variable, polynomial) - 1
 
   if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " factpoly_expo before rationalize_coefficients: " + factpoly_expo
-  rationalize_coefficients(h)
+  p7 = rationalize_coefficients(h)
   if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " factpoly_expo  after rationalize_coefficients: " + factpoly_expo
 
   # for univariate polynomials we could do factpoly_expo > 1
@@ -88,16 +80,14 @@ yyfactorpoly = ->
 
     if (isZeroAtomOrTensor(stack[polycoeff+0]))
       if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " isZeroAtomOrTensor"
-      push_integer(1)
-      p4 = pop()
-      push_integer(0)
-      p5 = pop()
+      A = one
+      B = zero
     else
       #console.log("trying to find a " + whichRootsAreWeFinding + " root")
       if whichRootsAreWeFinding == "real"
-        foundRealRoot = get_factor_from_real_root(factpoly_expo, polycoeff)
+        [foundRealRoot,A,B] = get_factor_from_real_root(variable, factpoly_expo, polycoeff)
       else if whichRootsAreWeFinding == "complex"
-        foundComplexRoot = get_factor_from_complex_root(remainingPoly, factpoly_expo, polycoeff)
+        [foundComplexRoot,A] = get_factor_from_complex_root(remainingPoly, factpoly_expo, polycoeff)
 
     if whichRootsAreWeFinding == "real"
       if foundRealRoot == 0
@@ -106,19 +96,19 @@ yyfactorpoly = ->
       else
         # build the 1-degree polynomial out of the
         # real solution that was just found.
-        push(p4) # A
-        push(p2) # x
+        push(A) # A
+        push(variable) # x
         multiply()
-        push(p5) # B
+        push(B) # B
         add()
         p8 = pop()
 
         if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " success\nFACTOR=" + p8
 
-        # factor out negative sign (not req'd because p4 > 1)
+        # factor out negative sign (not req'd because A > 1)
         #if 0
         ###
-        if (isnegativeterm(p4))
+        if (isnegativeterm(A))
           push(p8)
           negate()
           p8 = pop()
@@ -142,7 +132,7 @@ yyfactorpoly = ->
         # Divide it by the newly-found factor so that
         # the stack then contains the coefficients of the
         # polynomial part still left to factor.
-        yydivpoly(factpoly_expo, polycoeff)
+        p6 = yydivpoly(factpoly_expo, polycoeff, A, B)
 
         while (factpoly_expo and isZeroAtomOrTensor(stack[polycoeff+factpoly_expo]))
           factpoly_expo--
@@ -150,7 +140,7 @@ yyfactorpoly = ->
         push(zero)
         for i in [0..factpoly_expo]
           push(stack[polycoeff+i])
-          push(p2) # the free variable
+          push(variable) # the free variable
           push_integer(i)
           power()
           multiply()
@@ -164,14 +154,14 @@ yyfactorpoly = ->
       else
         # build the 2-degree polynomial out of the
         # real solution that was just found.
-        push(p4) # A
-        push(p2) # x
+        push(A) # A
+        push(variable) # x
         subtract()
         #console.log("first factor: " + stack[tos-1].toString())
 
-        push(p4) # A
+        push(A) # A
         conjugate()
-        push(p2) # x
+        push(variable) # x
         subtract()
         #console.log("second factor: " + stack[tos-1].toString())
 
@@ -185,10 +175,10 @@ yyfactorpoly = ->
 
         if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " success\nFACTOR=" + p8
 
-        # factor out negative sign (not req'd because p4 > 1)
+        # factor out negative sign (not req'd because A > 1)
         #if 0
         ###
-        if (isnegativeterm(p4))
+        if (isnegativeterm(A))
           push(p8)
           negate()
           p8 = pop()
@@ -223,7 +213,7 @@ yyfactorpoly = ->
           push(zero)
           for i in [0..factpoly_expo]
             push(stack[polycoeff+i])
-            push(p2) # the free variable
+            push(variable) # the free variable
             push_integer(i)
             power()
             multiply()
@@ -239,7 +229,7 @@ yyfactorpoly = ->
 
         #console.log("dividing " + stack[tos-1].toString() + " by " + p8)
         push(p8) # divisor
-        push(p2) # X
+        push(variable) # X
         divpoly()
         remainingPoly = pop()
 
@@ -292,7 +282,7 @@ yyfactorpoly = ->
         for i in [0..factpoly_expo]
           pop()
 
-        coeff(p2, remainingPoly)
+        coeff(variable, remainingPoly)
 
 
         factpoly_expo -= 2
@@ -304,41 +294,41 @@ yyfactorpoly = ->
   push(zero)
   for i in [0..factpoly_expo]
     push(stack[polycoeff+i])
-    push(p2) # the free variable
+    push(variable) # the free variable
     push_integer(i)
     power()
     multiply()
     add()
-  p1 = pop()
+  polynomial = pop()
 
-  if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " remaining unfactored part of the polynomial: " + p1.toString()
+  if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " remaining unfactored part of the polynomial: " + polynomial.toString()
 
-  push(p1)
+  push(polynomial)
 
   prev_expanding = expanding
   expanding = 0
   yycondense()
   expanding = prev_expanding
 
-  p1 = pop()
-  if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " new poly with extracted common factor: " + p1.toString()
+  polynomial = pop()
+  if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " new poly with extracted common factor: " + polynomial.toString()
   #debugger
 
   # factor out negative sign
 
   if (factpoly_expo > 0 && isnegativeterm(stack[polycoeff+factpoly_expo]))
-    push(p1)
+    push(polynomial)
     #prev_expanding = expanding
     #expanding = 1
     negate()
     #expanding = prev_expanding
-    p1 = pop()
+    polynomial = pop()
     push(p7)
     negate_noexpand()
     p7 = pop()
 
   push(p7)
-  push(p1)
+  push(polynomial)
   multiply_noexpand()
   p7 = pop()
 
@@ -355,30 +345,31 @@ rationalize_coefficients = (h) ->
 
   # LCM of all polynomial coefficients
 
-  p7 = one
+  ratio = one
   for i in [h...tos]
     push(stack[i])
     denominator()
-    push(p7)
+    push(ratio)
     lcm()
-    p7 = pop()
+    ratio = pop()
 
   # multiply each coefficient by RESULT
 
   for i in [h...tos]
-    push(p7)
+    push(ratio)
     push(stack[i])
     multiply()
     stack[i] = pop()
 
   # reciprocate RESULT
 
-  push(p7)
+  push(ratio)
   reciprocate()
-  p7 = pop()
-  if DEBUG then console.log "rationalize_coefficients result: " + p7.toString()
+  ratioInverse = pop()
+  if DEBUG then console.log "rationalize_coefficients result: " + ratioInverse.toString()
+  return ratioInverse
 
-get_factor_from_real_root = (factpoly_expo, polycoeff)->
+get_factor_from_real_root = (variable, factpoly_expo, polycoeff)->
 
   if DEBUG then console.log "get_factor_from_real_root"
 
@@ -394,13 +385,13 @@ get_factor_from_real_root = (factpoly_expo, polycoeff)->
     push(zero)
     for i in [0..factpoly_expo]
       push(stack[polycoeff+i])
-      push(p2)
+      push(variable)
       push_integer(i)
       power()
       multiply()
       add()
-    p1 = pop()
-    console.log("POLY=" + p1)
+    polynomial = pop()
+    console.log("POLY=" + polynomial)
 
   h = tos
 
@@ -431,57 +422,57 @@ get_factor_from_real_root = (factpoly_expo, polycoeff)->
 
       #if DEBUG then console.log "nan: " + nan + " na0: " + na0 + " i: " + rootsTries_i + " j: " + rootsTries_j
 
-      p4 = stack[an + rootsTries_i]
-      p5 = stack[a0 + rootsTries_j]
+      testNumerator = stack[an + rootsTries_i]
+      testDenominator = stack[a0 + rootsTries_j]
 
-      push(p5)
-      push(p4)
+      push(testDenominator)
+      push(testNumerator)
       divide()
       negate()
-      p3 = pop()
+      testValue = pop()
 
-      Evalpoly(factpoly_expo, polycoeff)
-
-      if DEBUG
-        console.log("try A=" + p4)
-        console.log(", B=" + p5)
-        console.log(", root " + p2)
-        console.log("=-B/A=" + p3)
-        console.log(", POLY(" + p3)
-        console.log(")=" + p6)
-
-      if (isZeroAtomOrTensor(p6))
-        moveTos h
-        if DEBUG then console.log "get_factor_from_real_root returning 1"
-        return 1
-
-      push(p5)
-      negate()
-      p5 = pop()
-
-      push(p3)
-      negate()
-      p3 = pop()
-
-      Evalpoly(factpoly_expo, polycoeff)
+      evalPolyResult = Evalpoly(factpoly_expo, polycoeff, testValue)
 
       if DEBUG
-        console.log("try A=" + p4)
-        console.log(", B=" + p5)
-        console.log(", root " + p2)
-        console.log("=-B/A=" + p3)
-        console.log(", POLY(" + p3)
-        console.log(")=" + p6)
+        console.log("try A=" + testNumerator)
+        console.log(", B=" + testDenominator)
+        console.log(", root " + variable)
+        console.log("=-B/A=" + testValue)
+        console.log(", POLY(" + testValue)
+        console.log(")=" + evalPolyResult)
 
-      if (isZeroAtomOrTensor(p6))
+      if (isZeroAtomOrTensor(evalPolyResult))
         moveTos h
         if DEBUG then console.log "get_factor_from_real_root returning 1"
-        return 1
+        return [1, testNumerator, testDenominator]
+
+      push(testDenominator)
+      negate()
+      testDenominator = pop()
+
+      push(testValue)
+      negate()
+      testValue = pop()
+
+      evalPolyResult = Evalpoly(factpoly_expo, polycoeff, testValue)
+
+      if DEBUG
+        console.log("try A=" + testNumerator)
+        console.log(", B=" + testDenominator)
+        console.log(", root " + variable)
+        console.log("=-B/A=" + testValue)
+        console.log(", POLY(" + testValue)
+        console.log(")=" + evalPolyResult)
+
+      if (isZeroAtomOrTensor(evalPolyResult))
+        moveTos h
+        if DEBUG then console.log "get_factor_from_real_root returning 1"
+        return [1, testNumerator, testDenominator]
 
   moveTos h
 
-  if DEBUG then console.log "get_factor_from_real_root returning 0"
-  return 0
+  if DEBUG then console.log "get_factor_from_real_root returning"
+  return [0, null, null]
 
 get_factor_from_complex_root = (remainingPoly, factpoly_expo, polycoeff) ->
 
@@ -495,10 +486,9 @@ get_factor_from_complex_root = (remainingPoly, factpoly_expo, polycoeff) ->
 
   if factpoly_expo <= 2
     if DEBUG then console.log("no more factoring via complex roots to be found in polynomial of degree <= 2")
-    return 0
+    return [0,null]
 
-  p1 = remainingPoly
-  if DEBUG then console.log("complex root finding for POLY=" + p1)
+  if DEBUG then console.log("complex root finding for POLY=" + remainingPoly)
 
   h = tos
   an = tos
@@ -509,17 +499,15 @@ get_factor_from_complex_root = (remainingPoly, factpoly_expo, polycoeff) ->
   push_rational(2,3)
   power()
   rect()
-  p4 = pop()
-  if DEBUG then console.log("complex root finding: trying with " + p4)
-  push(p4)
-  p3 = pop()
-  push(p3)
-  Evalpoly(factpoly_expo, polycoeff)
-  if DEBUG then console.log("complex root finding result: " + p6)
-  if (isZeroAtomOrTensor(p6))
+  testValue = pop()
+  if DEBUG then console.log("complex root finding: trying with " + testValue)
+  push(testValue)
+  evalPolyResult = Evalpoly(factpoly_expo, polycoeff, testValue)
+  if DEBUG then console.log("complex root finding result: " + evalPolyResult)
+  if (isZeroAtomOrTensor(evalPolyResult))
     moveTos h
     if DEBUG then console.log "get_factor_from_complex_root returning 1"
-    return 1
+    return [1,testValue]
 
   # trying 1^(2/3) which generates a polynomial in Z
   # http://www.wolframalpha.com/input/?i=(1)%5E(2%2F3)
@@ -528,17 +516,15 @@ get_factor_from_complex_root = (remainingPoly, factpoly_expo, polycoeff) ->
   push_rational(2,3)
   power()
   rect()
-  p4 = pop()
-  if DEBUG then console.log("complex root finding: trying with " + p4)
-  push(p4)
-  p3 = pop()
-  push(p3)
-  Evalpoly(factpoly_expo, polycoeff)
-  if DEBUG then console.log("complex root finding result: " + p6)
-  if (isZeroAtomOrTensor(p6))
+  testValue = pop()
+  if DEBUG then console.log("complex root finding: trying with " + testValue)
+  push(testValue)
+  evalPolyResult = Evalpoly(factpoly_expo, polycoeff, testValue)
+  if DEBUG then console.log("complex root finding result: " + evalPolyResult)
+  if (isZeroAtomOrTensor(evalPolyResult))
     moveTos h
     if DEBUG then console.log "get_factor_from_complex_root returning 1"
-    return 1
+    return [1,testValue]
 
 
   # trying some simple complex numbers. All of these
@@ -551,27 +537,24 @@ get_factor_from_complex_root = (remainingPoly, factpoly_expo, polycoeff) ->
       multiply()
       add()
       rect()
-      p4 = pop()
-      #console.log("complex root finding: trying simple complex combination: " + p4)
-
-      push(p4)
-      p3 = pop()
+      testValue = pop()
+      if DEBUG then console.log("complex root finding: trying simple complex combination " + testValue)
 
 
-      push(p3)
+      push(testValue)
 
-      Evalpoly(factpoly_expo, polycoeff)
+      evalPolyResult = Evalpoly(factpoly_expo, polycoeff, testValue)
 
-      #console.log("complex root finding result: " + p6)
-      if (isZeroAtomOrTensor(p6))
+      #console.log("complex root finding result: " + evalPolyResult)
+      if (isZeroAtomOrTensor(evalPolyResult))
         moveTos h
-        if DEBUG then console.log "found complex root: " + p6
-        return 1
+        if DEBUG then console.log "found complex root: " + evalPolyResult
+        return [1,testValue]
 
   moveTos h
 
   if DEBUG then console.log "get_factor_from_complex_root returning 0"
-  return 0
+  return [0,null]
 
 #-----------------------------------------------------------------------------
 #
@@ -579,44 +562,45 @@ get_factor_from_complex_root = (remainingPoly, factpoly_expo, polycoeff) ->
 #
 #  Input:  on stack:  polycoeff  Dividend coefficients
 #
-#      factpoly_expo    Degree of dividend
+#      factpoly_expo   as parameter
 #
-#      A (p4)    As above
+#      A    as parameter
 #
-#      B (p5)    As above
+#      B    as parameter
 #
 #  Output:   on stack: polycoeff  Contains quotient coefficients
 #
 #-----------------------------------------------------------------------------
 
-yydivpoly = (factpoly_expo, polycoeff) ->
+yydivpoly = (factpoly_expo, polycoeff, A, B) ->
   i = 0
-  p6 = zero
+  Q = zero
   for i in [factpoly_expo...0]
     push(stack[polycoeff+i])
-    stack[polycoeff+i] = p6
-    push(p4)
+    stack[polycoeff+i] = Q
+    push(A)
     divide()
-    p6 = pop()
+    Q = pop()
     push(stack[polycoeff+i - 1])
-    push(p6)
-    push(p5)
+    push(Q)
+    push(B)
     multiply()
     subtract()
     stack[polycoeff+i - 1] = pop()
-  stack[polycoeff+0] = p6
-  if DEBUG then console.log "yydivpoly Q: " + p6.toString()
+  stack[polycoeff+0] = Q
+  if DEBUG then console.log "yydivpoly Q: " + Q.toString()
+  return Q
 
-Evalpoly = (factpoly_expo, polycoeff) ->
+Evalpoly = (factpoly_expo, polycoeff, evaluateAt) ->
   i = 0
   push(zero)
   for i in [factpoly_expo..0]
-    push(p3)
+    push(evaluateAt)
     multiply()
     push(stack[polycoeff+i])
     #if DEBUG
     #  console.log("Evalpoly top of stack:")
     #  console.log stack[tos-i].toString()
     add()
-  p6 = pop()
+  return pop()
 
