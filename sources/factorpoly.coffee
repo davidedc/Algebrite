@@ -14,25 +14,16 @@ factorpoly = ->
 
   save()
 
-  p2 = pop()
-  p1 = pop()
+  variable = pop()
+  polynomial = pop()
 
-  if (!Find(p1, p2))
-    push(p1)
-    restore()
-    return
+  if !Find(polynomial, variable) or
+   !ispolyexpandedform(polynomial, variable) or
+   !issymbol(variable)
+    push(polynomial)
 
-  if (!ispolyexpandedform(p1, p2))
-    push(p1)
-    restore()
-    return
-
-  if (!issymbol(p2))
-    push(p1)
-    restore()
-    return
-
-  yyfactorpoly(p2, p1)
+  else
+    yyfactorpoly(variable, polynomial)
 
   restore()
 
