@@ -590,15 +590,11 @@ __normalize_radical_factors = (h) ->
   restore()
 
 # don't include i
-
 # p is a U
+# TODO should this be in is.coffee ?
 __is_radical_number = (p) ->
   # don't use i
-
-  if (car(p) == symbol(POWER) && isNumericAtom(cadr(p)) && isNumericAtom(caddr(p)) && !isminusone(cadr(p)))
-    return 1
-  else
-    return 0
+  car(p) == symbol(POWER) && isNumericAtom(cadr(p)) && isfraction(caddr(p)) && !isminusone(cadr(p))
 
 #-----------------------------------------------------------------------------
 #
