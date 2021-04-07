@@ -2,12 +2,10 @@
 
 # s is a string
 new_string = (s) ->
-  save()
-  p1 = new U()
-  p1.k = STR
-  p1.str = s
-  push(p1)
-  restore()
+  theNewString = new U()
+  theNewString.k = STR
+  theNewString.str = s
+  return theNewString
 
 out_of_memory = ->
   stop("out of memory")

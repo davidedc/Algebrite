@@ -80,7 +80,7 @@ Eval_patternsinfo = ->
   patternsinfoToBePrinted = patternsinfo()
 
   if patternsinfoToBePrinted != ""
-    new_string(patternsinfoToBePrinted)
+    push new_string(patternsinfoToBePrinted)
   else
     push_symbol(NIL)
 

@@ -500,7 +500,7 @@ scan_symbol = ->
   get_next_token()
 
 scan_string = ->
-  new_string(token_buf)
+  push new_string(token_buf)
   get_next_token()
 
 scan_function_call_with_function_name = ->

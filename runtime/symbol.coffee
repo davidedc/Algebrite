@@ -7,7 +7,7 @@ Eval_symbolsinfo = ->
   symbolsinfoToBePrinted = symbolsinfo()
 
   if symbolsinfoToBePrinted != ""
-    new_string(symbolsinfoToBePrinted)
+    push new_string(symbolsinfoToBePrinted)
   else
     push_symbol(NIL)
 
