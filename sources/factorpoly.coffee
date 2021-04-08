@@ -44,8 +44,6 @@ yyfactorpoly = (variable, polynomial) ->
     secondParam = polynomial
     console.log "yyfactorpoly: " + firstParam + " " + secondParam
 
-  h = 0
-  i = 0
 
   save()
 
@@ -332,7 +330,6 @@ yyfactorpoly = (variable, polynomial) ->
   restore()
 
 rationalize_coefficients = (h) ->
-  i = 0
 
   # LCM of all polynomial coefficients
 
@@ -564,7 +561,6 @@ get_factor_from_complex_root = (remainingPoly, factpoly_expo, polycoeff) ->
 #-----------------------------------------------------------------------------
 
 yydivpoly = (factpoly_expo, polycoeff, A, B) ->
-  i = 0
   Q = zero
   for i in [factpoly_expo...0]
     push(stack[polycoeff+i])
@@ -583,7 +579,6 @@ yydivpoly = (factpoly_expo, polycoeff, A, B) ->
   return Q
 
 Evalpoly = (factpoly_expo, polycoeff, evaluateAt) ->
-  i = 0
   push(zero)
   for i in [factpoly_expo..0]
     push(evaluateAt)

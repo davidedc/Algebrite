@@ -19,7 +19,6 @@ push_zero_matrix = (i,j) ->
 
 push_identity_matrix = (n) ->
   push_zero_matrix(n, n)
-  i = 0
   for i in [0...n]
     stack[tos - 1].tensor.elem[i * n + i] = one
 
@@ -29,12 +28,6 @@ push_cars = (p) ->
   while (iscons(p))
     push(car(p))
     p = cdr(p)
-
-peek = ->
-  save()
-  p1 = pop()
-  push(p1)
-  restore()
 
 # see cmp_expr definition, this
 # function alone just does simple structure comparison

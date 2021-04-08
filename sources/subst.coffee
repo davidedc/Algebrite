@@ -13,7 +13,6 @@
 
 
 subst = ->
-  i = 0
   save()
   p3 = pop(); # new expr
   p2 = pop(); # old expr
