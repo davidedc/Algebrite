@@ -12,12 +12,11 @@ DEBUG_IS = false
 isZeroAtom = (p) ->
   switch (p.k)
     when NUM
-      if (MZERO(p.q.a))
-        return 1
+      MZERO(p.q.a)
     when DOUBLE
-      if (p.d == 0.0)
-        return 1
-  return 0
+      p.d == 0.0
+    else
+      false
 
 # p is a U
 # this routine is a simple check on whether we have
