@@ -1,14 +1,5 @@
 # Factor a polynomial
 
-
-
-
-#define POLY p1
-#define X p2
-#define Q p6
-#define RESULT p7
-#define FACTOR p8
-
 factorpoly = ->
   if DEBUG then console.log "factorpoly: " + stack[tos-1].toString() + " " + stack[tos-2].toString()
 
@@ -57,7 +48,7 @@ yyfactorpoly = (variable, polynomial) ->
   factpoly_expo = coeff(variable, polynomial) - 1
 
   if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " factpoly_expo before rationalize_coefficients: " + factpoly_expo
-  p7 = rationalize_coefficients(h)
+  partOfPolynomialFactoredSoFar = rationalize_coefficients(h)
   if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " factpoly_expo  after rationalize_coefficients: " + factpoly_expo
 
   # for univariate polynomials we could do factpoly_expo > 1
@@ -90,38 +81,38 @@ yyfactorpoly = (variable, polynomial) ->
         multiply()
         push(B) # B
         add()
-        p8 = pop()
+        AxPlusB = pop()
 
-        if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " success\nFACTOR=" + p8
+        if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " success\nFACTOR=" + AxPlusB
 
         # factor out negative sign (not req'd because A > 1)
         #if 0
         ###
         if (isnegativeterm(A))
-          push(p8)
+          push(AxPlusB)
           negate()
-          p8 = pop()
-          push(p7)
+          AxPlusB = pop()
+          push(partOfPolynomialFactoredSoFar)
           negate_noexpand()
-          p7 = pop()
+          partOfPolynomialFactoredSoFar = pop()
         ###
         #endif
         
-        # p7 is the part of the polynomial that was factored so far,
+        # partOfPolynomialFactoredSoFar is the part of the polynomial that was factored so far,
         # add the newly found factor to it. Note that we are not actually
         # multiplying the polynomials fully, we are just leaving them
         # expressed as (P1)*(P2), we are not expanding the product.
-        push(p7)
-        push(p8)
+        push(partOfPolynomialFactoredSoFar)
+        push(AxPlusB)
         multiply_noexpand()
-        p7 = pop()
+        partOfPolynomialFactoredSoFar = pop()
 
         # ok now on stack we have the coefficients of the
         # remaining part of the polynomial still to factor.
         # Divide it by the newly-found factor so that
         # the stack then contains the coefficients of the
         # polynomial part still left to factor.
-        p6 = yydivpoly(factpoly_expo, polycoeff, A, B)
+        yydivpoly(factpoly_expo, polycoeff, A, B)
 
         while (factpoly_expo and isZeroAtomOrTensor(stack[polycoeff+factpoly_expo]))
           factpoly_expo--
@@ -160,39 +151,39 @@ yyfactorpoly = (variable, polynomial) ->
         #  negate()
         #  negate_noexpand()
           
-        p8 = pop()
+        secondDegreePloly = pop()
 
-        if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " success\nFACTOR=" + p8
+        if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " success\nFACTOR=" + secondDegreePloly
 
         # factor out negative sign (not req'd because A > 1)
         #if 0
         ###
         if (isnegativeterm(A))
-          push(p8)
+          push(secondDegreePloly)
           negate()
-          p8 = pop()
-          push(p7)
+          secondDegreePloly = pop()
+          push(partOfPolynomialFactoredSoFar)
           negate_noexpand()
-          p7 = pop()
+          partOfPolynomialFactoredSoFar = pop()
         ###
         #endif
         
-        # p7 is the part of the polynomial that was factored so far,
+        # partOfPolynomialFactoredSoFar is the part of the polynomial that was factored so far,
         # add the newly found factor to it. Note that we are not actually
         # multiplying the polynomials fully, we are just leaving them
         # expressed as (P1)*(P2), we are not expanding the product.
 
-        push(p7)
+        push(partOfPolynomialFactoredSoFar)
         previousFactorisation = pop()
 
         #console.log("previousFactorisation: " + previousFactorisation)
 
-        push(p7)
-        push(p8)
+        push(partOfPolynomialFactoredSoFar)
+        push(secondDegreePloly)
         multiply_noexpand()
-        p7 = pop()
+        partOfPolynomialFactoredSoFar = pop()
 
-        #console.log("new prospective factorisation: " + p7)
+        #console.log("new prospective factorisation: " + partOfPolynomialFactoredSoFar)
 
 
         # build the polynomial of the unfactored part
@@ -216,14 +207,14 @@ yyfactorpoly = (variable, polynomial) ->
         #startingDegree = pop()
         push(dividend)
 
-        #console.log("dividing " + stack[tos-1].toString() + " by " + p8)
-        push(p8) # divisor
+        #console.log("dividing " + stack[tos-1].toString() + " by " + secondDegreePloly)
+        push(secondDegreePloly) # divisor
         push(variable) # X
         divpoly()
         remainingPoly = pop()
 
         push(remainingPoly)
-        push(p8) # divisor
+        push(secondDegreePloly) # divisor
         multiply()
         checkingTheDivision = pop()
 
@@ -245,8 +236,8 @@ yyfactorpoly = (variable, polynomial) ->
           expanding = prev_expanding
 
           multiply_noexpand()
-          p7 = pop()
-          stack[h] = p7
+          partOfPolynomialFactoredSoFar = pop()
+          stack[h] = partOfPolynomialFactoredSoFar
           moveTos h + 1
           restore()
           return
@@ -312,18 +303,18 @@ yyfactorpoly = (variable, polynomial) ->
     negate()
     #expanding = prev_expanding
     polynomial = pop()
-    push(p7)
+    push(partOfPolynomialFactoredSoFar)
     negate_noexpand()
-    p7 = pop()
+    partOfPolynomialFactoredSoFar = pop()
 
-  push(p7)
+  push(partOfPolynomialFactoredSoFar)
   push(polynomial)
   multiply_noexpand()
-  p7 = pop()
+  partOfPolynomialFactoredSoFar = pop()
 
-  if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " result: " + p7
+  if DEBUG then console.log "yyfactorpoly: " + firstParam + " " + secondParam + " result: " + partOfPolynomialFactoredSoFar
 
-  stack[h] = p7
+  stack[h] = partOfPolynomialFactoredSoFar
 
   moveTos h + 1
 
