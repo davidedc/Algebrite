@@ -567,7 +567,6 @@ yydivpoly = (factpoly_expo, polycoeff, A, B) ->
     stack[polycoeff+i - 1] = pop()
   stack[polycoeff+0] = Q
   if DEBUG then console.log "yydivpoly Q: " + Q.toString()
-  return Q
 
 Evalpoly = (factpoly_expo, polycoeff, evaluateAt) ->
   push(zero)
