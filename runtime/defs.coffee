@@ -5,6 +5,7 @@ version = "1.3.1"
 
 SELFTEST = 1
 
+
 # size of the symbol table
 NSYM = 1000
 
