@@ -11,6 +11,8 @@
 #static void parse_p2(void)
 #static void __normalize_radical_factors(int)
 
+DEBUG_MULTIPLY = false
+
 Eval_multiply = ->
   push(cadr(p1))
   Eval()
@@ -462,7 +464,7 @@ __normalize_radical_factors = (h) ->
 
   push(stack[h])
   mp_numerator()
-  #console.log("__normalize_radical_factors numerator: " + stack[tos-1])
+  if DEBUG_MULTIPLY then console.log("__normalize_radical_factors numerator: " + stack[tos-1])
   p1 = pop(); # p1 is A
 
   for i in [(h + 1)...tos]
@@ -510,7 +512,7 @@ __normalize_radical_factors = (h) ->
 
   push(stack[h])
   mp_denominator()
-  #console.log("__normalize_radical_factors denominator: " + stack[tos-1])
+  if DEBUG_MULTIPLY then console.log("__normalize_radical_factors denominator: " + stack[tos-1])
   p2 = pop(); # p2 is B
 
   for i in [(h + 1)...tos]
@@ -539,8 +541,8 @@ __normalize_radical_factors = (h) ->
 
     if (!isinteger(p5)) #p5 is TMP
       continue
-    #console.log("__new radical p5: " + p5.toString())
-    #console.log("__new radical top stack: " + stack[tos-1])
+    if DEBUG_MULTIPLY then console.log("__new radical p5: " + p5.toString())
+    if DEBUG_MULTIPLY then console.log("__new radical top stack: " + stack[tos-1])
 
     # reduce denominator
 
@@ -551,8 +553,8 @@ __normalize_radical_factors = (h) ->
     push_symbol(POWER)
     push(p3); #p3 is BASE
     push(p4);  #p4 is EXPO
-    #console.log("__new radical p3: " + p3.toString())
-    #console.log("__new radical p4: " + p4.toString())
+    if DEBUG_MULTIPLY then console.log("__new radical p3: " + p3.toString())
+    if DEBUG_MULTIPLY then console.log("__new radical p4: " + p4.toString())
     push(one)
     subtract()
 
@@ -575,7 +577,7 @@ __normalize_radical_factors = (h) ->
         p1 = pop()
 
         break
-    #console.log("__new radical exponent: " + stack[tos-1])
+    if DEBUG_MULTIPLY then console.log("__new radical exponent: " + stack[tos-1])
 
     list(3)
     stack[i] = pop()

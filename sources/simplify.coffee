@@ -1,4 +1,5 @@
 
+DEBUG_SIMPLIFY = false
 
 Eval_simplify = ->
   push(cadr(p1))
@@ -18,17 +19,17 @@ runUserDefinedSimplifications = ->
   if userSimplificationsInListForm.length != 0 and !Find(cadr(p1), symbol(INTEGRAL))
     originalexpanding = expanding
     expanding = false
-    if DEBUG then console.log("runUserDefinedSimplifications passed: " + stack[tos-1].toString())
+    if DEBUG_SIMPLIFY then console.log("runUserDefinedSimplifications passed: " + stack[tos-1].toString())
     Eval()
-    if DEBUG then console.log("runUserDefinedSimplifications after eval no expanding: " + stack[tos-1].toString())
+    if DEBUG_SIMPLIFY then console.log("runUserDefinedSimplifications after eval no expanding: " + stack[tos-1].toString())
     expanding = originalexpanding
 
 
     p1 = stack[tos-1]
 
-    if DEBUG then console.log "patterns to be checked: "
+    if DEBUG_SIMPLIFY then console.log "patterns to be checked: "
     for eachSimplification in userSimplificationsInListForm
-      if DEBUG then console.log "..." + eachSimplification
+      if DEBUG_SIMPLIFY then console.log "..." + eachSimplification
 
     atLeastOneSuccessInRouldOfRulesApplications = true
     numberOfRulesApplications = 0
@@ -42,23 +43,22 @@ runUserDefinedSimplifications = ->
         eachConsecutiveRuleApplication = 0
         while success and eachConsecutiveRuleApplication < MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE
           eachConsecutiveRuleApplication++
-          if DEBUG then console.log "simplify - tos: " + tos + " checking pattern: " + eachSimplification + " on: " + p1
+          if DEBUG_SIMPLIFY then console.log "simplify - tos: " + tos + " checking pattern: " + eachSimplification + " on: " + p1
           push_symbol(NIL)
           success = transform(eachSimplification, true)
           if success
             atLeastOneSuccessInRouldOfRulesApplications = true
           p1 = stack[tos-1]
-          if DEBUG then console.log "p1 at this stage of simplification: " + p1
+          if DEBUG_SIMPLIFY then console.log "p1 at this stage of simplification: " + p1
         if eachConsecutiveRuleApplication == MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE
           stop("maximum application of single transformation rule exceeded: " + eachSimplification)
 
     if numberOfRulesApplications == MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES
       stop("maximum application of all transformation rules exceeded ")
 
-    if DEBUG
-      console.log "METAX = " + get_binding(symbol(METAX))
-      console.log "METAA = " + get_binding(symbol(METAA))
-      console.log "METAB = " + get_binding(symbol(METAB))
+    if DEBUG_SIMPLIFY then console.log "METAX = " + get_binding(symbol(METAX))
+    if DEBUG_SIMPLIFY then console.log "METAA = " + get_binding(symbol(METAA))
+    if DEBUG_SIMPLIFY then console.log "METAB = " + get_binding(symbol(METAB))
 
   # ------------------------
 
@@ -124,12 +124,19 @@ simplify_main = ->
       p1 = p3
 
   f10()
+  if DEBUG_SIMPLIFY then console.log "f10: " + p1.toString()
   f1()
+  if DEBUG_SIMPLIFY then console.log "f1: " + p1.toString()
   f2()
+  if DEBUG_SIMPLIFY then console.log "f2: " + p1.toString()
   f3()
+  if DEBUG_SIMPLIFY then console.log "f3: " + p1.toString()
   f4()
+  if DEBUG_SIMPLIFY then console.log "f4: " + p1.toString()
   f5()
+  if DEBUG_SIMPLIFY then console.log "f5: " + p1.toString()
   f9()
+  if DEBUG_SIMPLIFY then console.log "f9: " + p1.toString()
   simplify_polarRect()
   if do_simplify_nested_radicals
     # if there is some de-nesting then
@@ -139,7 +146,7 @@ simplify_main = ->
     # e.g. simplify(14^(1/2) - (16 - 4*7^(1/2))^(1/2))
     # needs some more semplification after the de-nesting.
     if simplify_nested_radicals()
-      if DEBUG then console.log("de-nesting successful into: " + p1.toString())
+      if DEBUG_SIMPLIFY then console.log("de-nesting successful into: " + p1.toString())
       push(p1)
       simplify()
       return
@@ -211,7 +218,7 @@ f10 = ->
     # both operands a transpose?
 
     if (car(car(cdr(p1))) == symbol(TRANSPOSE)) and (car(car(cdr(cdr(p1)))) == symbol(TRANSPOSE))
-      if DEBUG then console.log "maybe collecting a transpose " + p1
+      if DEBUG_SIMPLIFY then console.log "maybe collecting a transpose " + p1
       a = cadr(car(cdr(p1)))
       b = cadr(car(cdr(cdr(p1))))
       if carp1 == symbol(MULTIPLY)
@@ -232,7 +239,7 @@ f10 = ->
       p2 = pop()
       if (count(p2) < count(p1))
         p1 = p2
-      if DEBUG then console.log "collecting a transpose " + p2
+      if DEBUG_SIMPLIFY then console.log "collecting a transpose " + p2
 
 # try expanding denominators
 
@@ -384,7 +391,7 @@ simplify_rectToClock = ->
   clockform()
 
   p2 = pop(); # put new (hopefully simplified expr) in p2
-  if DEBUG then console.log "before simplification clockform: " + p1 + " after: " + p2
+  if DEBUG_SIMPLIFY then console.log "before simplification clockform: " + p1 + " after: " + p2
 
   if (count(p2) < count(p1))
     p1 = p2
@@ -447,7 +454,7 @@ nterms = (p) ->
 
 simplify_nested_radicals = ->
   if recursionLevelNestedRadicalsRemoval > 0
-    if DEBUG then console.log("denesting bailing out because of too much recursion")
+    if DEBUG_SIMPLIFY then console.log("denesting bailing out because of too much recursion")
     return false
 
   push(p1)
@@ -487,7 +494,7 @@ simplify_nested_radicals = ->
 
 take_care_of_nested_radicals = ->
   if recursionLevelNestedRadicalsRemoval > 0
-    if DEBUG then console.log("denesting bailing out because of too much recursion")
+    if DEBUG_SIMPLIFY then console.log("denesting bailing out because of too much recursion")
     return false
 
 
@@ -719,7 +726,7 @@ take_care_of_nested_radicals = ->
       roots()
       recursionLevelNestedRadicalsRemoval--
       if equal(stack[tos-1], symbol(NIL))
-        if DEBUG then console.log("roots bailed out because of too much recursion")
+        if DEBUG_SIMPLIFY then console.log("roots bailed out because of too much recursion")
         pop()
         push(p1)
         restore()

@@ -1,4 +1,5 @@
 
+DEBUG_RATIONALIZE = true
 
 Eval_rationalize = ->
   push(cadr(p1))
@@ -23,51 +24,42 @@ yyrationalize = ->
     push(theArgument)
     return
 
-  if DEBUG
-    printf("rationalize: this is the input expr:\n")
-    printline(theArgument)
+  if DEBUG_RATIONALIZE then console.log("rationalize: this is the input expr: " + theArgument)
 
-  # get common denominator
+  # get new denominator
 
   push(one)
   multiply_denominators(theArgument)
   commonDenominator = pop()
 
-  if DEBUG
-    printf("rationalize: this is the common denominator:\n")
-    printline(commonDenominator)
+  if DEBUG_RATIONALIZE then console.log("rationalize: this is the new denominator: " + commonDenominator)
 
-  # multiply each term by common denominator
+  # multiply each term by new denominator
 
   push(zero)
   eachTerm = cdr(theArgument)
   while (iscons(eachTerm))
+    if DEBUG_RATIONALIZE then console.log("term: " + car(eachTerm))
     push(commonDenominator)
     push(car(eachTerm))
     multiply()
     add()
     eachTerm = cdr(eachTerm)
 
-  if DEBUG
-    printf("rationalize: original expr times common denominator:\n")
-    printline(stack[tos - 1])
+  if DEBUG_RATIONALIZE then console.log("rationalize: original terms times new denominator: " + stack[tos - 1])
 
   # collect common factors
 
   Condense()
 
-  if DEBUG
-    printf("rationalize: after factoring:\n")
-    printline(stack[tos - 1])
+  if DEBUG_RATIONALIZE then console.log("rationalize: after factoring: " + stack[tos - 1])
 
   # divide by common denominator
 
   push(commonDenominator)
   divide()
 
-  if DEBUG
-    printf("rationalize: after dividing by common denom. (and we're done):\n")
-    printline(stack[tos - 1])
+  if DEBUG_RATIONALIZE then console.log("rationalize: after dividing by new denom. (and we're done): " + stack[tos - 1])
 
 multiply_denominators = (p) ->
   if (car(p) == symbol(ADD))
