@@ -1,5 +1,5 @@
 
-DEBUG_RATIONALIZE = true
+DEBUG_RATIONALIZE = false
 
 Eval_rationalize = ->
   push(cadr(p1))
