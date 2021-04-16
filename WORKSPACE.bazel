@@ -1,0 +1,62 @@
+# Bazel workspace created by @bazel/create 1.7.0
+
+# Declares that this directory is the root of a Bazel workspace.
+# See https://docs.bazel.build/versions/master/build-ref.html#workspace
+workspace(
+    # How this workspace would be referenced with absolute labels from another workspace
+    name = "algebrite",
+    # Map the @npm bazel workspace to the node_modules directory.
+    # This lets Bazel use the same node_modules as other local tooling.
+    managed_directories = {"@npm": ["node_modules"]},
+)
+
+# Install the nodejs "bootstrap" package
+# This provides the basic tools for running and packaging nodejs programs in Bazel
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+http_archive(
+    name = "build_bazel_rules_nodejs",
+    sha256 = "bfacf15161d96a6a39510e7b3d3b522cf61cb8b82a31e79400a84c5abcab5347",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/3.2.1/rules_nodejs-3.2.1.tar.gz"],
+)
+
+# The npm_install rule runs yarn anytime the package.json or package-lock.json file changes.
+# It also extracts any Bazel rules distributed in an npm package.
+load("@build_bazel_rules_nodejs//:index.bzl", "npm_install")
+npm_install(
+    # Name this npm so that Bazel Label references look like @npm//package
+    name = "npm",
+    package_json = "//:package.json",
+    package_lock_json = "//:package-lock.json",
+)
+
+
+_ESBUILD_VERSION = "0.11.5"  # reminder: update SHAs below when changing this value
+http_archive(
+    name = "esbuild_darwin",
+    urls = [
+        "https://registry.npmjs.org/esbuild-darwin-64/-/esbuild-darwin-64-%s.tgz" % _ESBUILD_VERSION,
+    ],
+    strip_prefix = "package",
+    build_file_content = """exports_files(["bin/esbuild"])""",
+    sha256 = "98436890727bdb0d4beddd9c9e07d0aeff0e8dfe0169f85e568eca0dd43f665e",
+)
+
+http_archive(
+    name = "esbuild_windows",
+    urls = [
+        "https://registry.npmjs.org/esbuild-windows-64/-/esbuild-windows-64-%s.tgz" % _ESBUILD_VERSION,
+    ],
+    strip_prefix = "package",
+    build_file_content = """exports_files(["esbuild.exe"])""",
+    sha256 = "589c8ff97210bd41de106e6317ce88f9e88d2cacfd8178ae1217f2b857ff6c3a",
+)
+
+http_archive(
+    name = "esbuild_linux",
+    urls = [
+        "https://registry.npmjs.org/esbuild-linux-64/-/esbuild-linux-64-%s.tgz" % _ESBUILD_VERSION,
+    ],
+    strip_prefix = "package",
+    build_file_content = """exports_files(["bin/esbuild"])""",
+    sha256 = "113c2e84895f4422a3676db4e15d9f01b2b4fac041edab25284fdb9574ba58a0",
+)
