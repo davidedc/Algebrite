@@ -261,26 +261,20 @@ function roots2() {
   if (ismultiply(p1)) {
     // scan through all the factors and find the roots of each of them
     p1.tail().forEach((p) => {
-      push(p);
-      push(p2);
-      roots3();
+      roots3(p, p2);
     });
   } else {
-    push(p1);
-    push(p2);
-    roots3();
+    roots3(p1, p2);
   }
 }
 
-function roots3() {
-  let p2 = pop();
-  let p1 = pop();
+function roots3(p1: U, p2: U) {
   if (ispower(p1) && ispolyexpandedform(cadr(p1), p2) && isposint(caddr(p1))) {
     const n = normalisedCoeff(cadr(p1), p2);
-    mini_solve(n);
+    push_all(mini_solve(n));
   } else if (ispolyexpandedform(p1, p2)) {
     const n = normalisedCoeff(p1, p2);
-    mini_solve(n);
+    push_all(mini_solve(n));
   }
 }
 
@@ -288,7 +282,7 @@ function roots3() {
 // actually end up using the quadratic/cubic/quartic formulas in here,
 // since there is a chance we factored the polynomial and in so
 // doing we found some solutions and lowered the degree.
-function mini_solve(coefficients: U[]) {
+function mini_solve(coefficients: U[]): U[] {
   const n = coefficients.length;
 
   // AX + B, X = -B/A
@@ -296,8 +290,7 @@ function mini_solve(coefficients: U[]) {
     //console.log "mini_solve >>>>>>>>> 1st degree"
     const A = coefficients.pop();
     const B = coefficients.pop();
-    push_all(_handle2(A, B));
-    return;
+    return _handle2(A, B);
   }
 
   // AX^2 + BX + C, X = (-B +/- (B^2 - 4AC)^(1/2)) / (2A)
@@ -306,18 +299,26 @@ function mini_solve(coefficients: U[]) {
     const A = coefficients.pop();
     const B = coefficients.pop();
     const C = coefficients.pop();
-    push_all(_handle3(A, B, C));
-    return;
+    return _handle3(A, B, C);
   }
 
-  if (n === 4 || n === 5) {
+  if (n === 4) {
     const A = coefficients.pop();
     const B = coefficients.pop();
     const C = coefficients.pop();
     const D = coefficients.pop();
-    const E = n === 5 ? coefficients.pop() : undefined;
-    push_all(_handle4and5(n, A, B, C, D, E));
-    return;
+    return _handle4(A, B, C, D);
+  }
+
+  // See http://www.sscc.edu/home/jdavidso/Math/Catalog/Polynomials/Fourth/Fourth.html
+  // for a description of general shapes and properties of fourth degree polynomials
+  if (n === 5) {
+    const A = coefficients.pop();
+    const B = coefficients.pop();
+    const C = coefficients.pop();
+    const D = coefficients.pop();
+    const E = coefficients.pop();
+    return _handle5(A, B, C, D, E);
   }
 }
 
@@ -344,9 +345,7 @@ function _handle3(A: U, B: U, C: U): U[] {
   return [result1, result2];
 }
 
-function _handle4and5(n: number, A: U, B: U, C: U, D: U, E: U): U[] {
-  const results = [];
-
+function _handle4(A: U, B: U, C: U, D: U): U[] {
   // C - only related calculations
   const R_c2 = multiply(C, C);
 
@@ -389,8 +388,7 @@ function _handle4and5(n: number, A: U, B: U, C: U, D: U, E: U): U[] {
 
   const R_3_a_c = multiply(R_a_c, integer(3));
 
-  let arg2 = multiply(A, R_c3);
-  const R_m4_a_c3 = multiply(integer(-4), arg2);
+  const R_m4_a_c3 = multiply(integer(-4), multiply(A, R_c3));
 
   const R_m9_a_b_c = negate(multiply(R_a_b_c, integer(9)));
 
@@ -400,88 +398,8 @@ function _handle4and5(n: number, A: U, B: U, C: U, D: U, E: U): U[] {
 
   const R_b2_c2 = multiply(R_b2, R_c2);
 
-  let arg1 = negate(B);
-  const R_m_b_over_3a = divide(arg1, R_3_a);
+  const R_m_b_over_3a = divide(negate(B), R_3_a);
 
-  const common4 = {
-    R_DELTA0,
-    R_18_a_b_c_d,
-    R_m4_b3_d,
-    R_b2_c2,
-    R_m4_a_c3,
-    R_m27_a2_d2,
-    R_2_b3,
-    R_m9_a_b_c,
-    R_27_a2_d,
-    R_m_b_over_3a,
-    R_b3,
-    R_a_b_c,
-    R_3_a,
-  };
-  if (n === 4) {
-    return _handle4(A, B, C, D, common4);
-  }
-
-  // See http://www.sscc.edu/home/jdavidso/Math/Catalog/Polynomials/Fourth/Fourth.html
-  // for a description of general shapes and properties of fourth degree polynomials
-  const common5 = {
-    R_a3,
-    R_a2_d,
-    R_a2,
-    R_c2,
-    R_a2_d2,
-    R_m27_a2_d2,
-    R_a_b_c,
-    R_b2,
-    R_a_b_c_d,
-    R_a_c,
-    R_c3,
-    R_b3,
-    R_b3_d,
-    R_m4_b3_d,
-    R_b2_c2,
-  };
-  if (n === 5) {
-    return _handle5(A, B, C, D, E, common5);
-  }
-
-  return results;
-}
-
-interface CommonArgs4 {
-  R_DELTA0: U;
-  R_18_a_b_c_d: U;
-  R_m4_b3_d: U;
-  R_b2_c2: U;
-  R_m4_a_c3: U;
-  R_m27_a2_d2: U;
-  R_2_b3: U;
-  R_m9_a_b_c: U;
-  R_27_a2_d: U;
-  R_m_b_over_3a: U;
-  R_b3: U;
-  R_a_b_c: U;
-  R_3_a: U;
-}
-
-function _handle4(A: U, B: U, C: U, D: U, common: CommonArgs4): U[] {
-  const results = [];
-  const {
-    R_DELTA0,
-    R_18_a_b_c_d,
-    R_m4_b3_d,
-    R_b2_c2,
-    R_m4_a_c3,
-    R_m27_a2_d2,
-    R_2_b3,
-    R_m9_a_b_c,
-    R_27_a2_d,
-    R_m_b_over_3a,
-    R_b3,
-    R_a_b_c,
-    R_3_a,
-  } = common;
-  let R_C: U;
   if (DEBUG) {
     console.log(
       '>>>>>>>>>>>>>>>> actually using cubic formula <<<<<<<<<<<<<<< '
@@ -516,49 +434,22 @@ function _handle4(A: U, B: U, C: U, D: U, common: CommonArgs4): U[] {
     power(subtract(power(R_DELTA1, integer(2)), R_4_DELTA03), rational(1, 2))
   );
 
+  const results = [];
   if (isZeroAtomOrTensor(R_determinant)) {
-    if (isZeroAtomOrTensor(R_DELTA0_toBeCheckedIfZero)) {
-      if (DEBUG) console.log(' cubic: DETERMINANT IS ZERO and delta0 is zero');
-      return [R_m_b_over_3a]; // just same solution three times
-    }
-
-    if (DEBUG) {
-      console.log(' cubic: DETERMINANT IS ZERO and delta0 is not zero');
-    }
-    const root_solution = divide(
-      subtract(multiply(A, multiply(D, integer(9))), multiply(B, C)),
-      multiply(R_DELTA0, integer(2))
-    ); // first solution
-    results.push(root_solution); // pushing two of them on the stack
-    results.push(root_solution);
-
-    // second solution here
-
-    // -9*b^3
-    const numer_term1 = negate(R_b3);
-    // -9a*a*d
-    const numer_term2 = negate(
-      multiply(A, multiply(A, multiply(D, integer(9))))
-    );
-    // 4*a*b*c
-    const numer_term3 = multiply(R_a_b_c, integer(4));
-
-    // build the fraction
-    // numerator: sum the three terms
-    // denominator: a*delta0
-    results.push(
-      divide(
-        add_all([numer_term3, numer_term2, numer_term1]),
-        multiply(A, R_DELTA0)
-      )
-    );
-
-    return results;
+    const data = {
+      R_DELTA0_toBeCheckedIfZero,
+      R_m_b_over_3a,
+      R_DELTA0,
+      R_b3,
+      R_a_b_c,
+    };
+    return _handle4ZeroRDeterminant(A, B, C, D, data);
   }
 
   let C_CHECKED_AS_NOT_ZERO = false;
   let flipSignOFQSoCIsNotZero = false;
 
+  let R_C: U;
   // C will go as denominator, we have to check
   // that is not zero
   while (!C_CHECKED_AS_NOT_ZERO) {
@@ -642,44 +533,66 @@ function _handle4(A: U, B: U, C: U, D: U, common: CommonArgs4): U[] {
   return results;
 }
 
-interface CommonArgs5 {
-  R_a3: U;
-  R_a2_d: U;
-  R_a2: U;
-  R_c2: U;
-  R_a2_d2: U;
-  R_m27_a2_d2: U;
-  R_a_b_c: U;
-  R_b2: U;
-  R_a_b_c_d: U;
-  R_a_c: U;
-  R_c3: U;
+interface CommonArgs4ZeroRDeterminant {
+  R_DELTA0_toBeCheckedIfZero: U;
+  R_m_b_over_3a: U;
+  R_DELTA0: U;
   R_b3: U;
-  R_b3_d: U;
-  R_m4_b3_d: U;
-  R_b2_c2: U;
+  R_a_b_c: U;
 }
 
-function _handle5(A: U, B: U, C: U, D: U, E: U, common: CommonArgs5): U[] {
-  const results = [];
+function _handle4ZeroRDeterminant(
+  A: U,
+  B: U,
+  C: U,
+  D: U,
+  common: CommonArgs4ZeroRDeterminant
+): U[] {
   const {
-    R_a3,
-    R_a2_d,
-    R_a2,
-    R_c2,
-    R_a2_d2,
-    R_m27_a2_d2,
-    R_a_b_c,
-    R_b2,
-    R_a_b_c_d,
-    R_a_c,
-    R_c3,
+    R_DELTA0_toBeCheckedIfZero,
+    R_m_b_over_3a,
+    R_DELTA0,
     R_b3,
-    R_b3_d,
-    R_m4_b3_d,
-    R_b2_c2,
+    R_a_b_c,
   } = common;
-  let eachSolution: U, R_r: U, R_S: U;
+  if (isZeroAtomOrTensor(R_DELTA0_toBeCheckedIfZero)) {
+    if (DEBUG) console.log(' cubic: DETERMINANT IS ZERO and delta0 is zero');
+    return [R_m_b_over_3a]; // just same solution three times
+  }
+  const results = [];
+  if (DEBUG) {
+    console.log(' cubic: DETERMINANT IS ZERO and delta0 is not zero');
+  }
+  const root_solution = divide(
+    subtract(multiply(A, multiply(D, integer(9))), multiply(B, C)),
+    multiply(R_DELTA0, integer(2))
+  ); // first solution
+  results.push(root_solution); // pushing two of them on the stack
+  results.push(root_solution);
+
+  // second solution here
+
+  // -9*b^3
+  const numer_term1 = negate(R_b3);
+  // -9a*a*d
+  const numer_term2 = negate(multiply(A, multiply(A, multiply(D, integer(9)))));
+  // 4*a*b*c
+  const numer_term3 = multiply(R_a_b_c, integer(4));
+
+  // build the fraction
+  // numerator: sum the three terms
+  // denominator: a*delta0
+  results.push(
+    divide(
+      add_all([numer_term3, numer_term2, numer_term1]),
+      multiply(A, R_DELTA0)
+    )
+  );
+
+  return results;
+}
+
+function _handle5(A: U, B: U, C: U, D: U, E: U): U[] {
   if (DEBUG) {
     console.log(
       '>>>>>>>>>>>>>>>> actually using quartic formula <<<<<<<<<<<<<<< '
@@ -692,134 +605,38 @@ function _handle5(A: U, B: U, C: U, D: U, E: U, common: CommonArgs5): U[] {
     !isZeroAtomOrTensor(C) &&
     !isZeroAtomOrTensor(E)
   ) {
-    if (DEBUG) {
-      console.log('biquadratic case');
-    }
-    results.push(
-      add(
-        multiply(A, power(symbol(SECRETX), integer(2))),
-        add(multiply(C, symbol(SECRETX)), E)
-      )
-    );
-
-    results.push(symbol(SECRETX));
-    push_all(results);
-    roots();
-
-    const biquadraticSolutions = pop() as Tensor;
-
-    for (eachSolution of Array.from(biquadraticSolutions.tensor.elem)) {
-      results.push(simplify(power(eachSolution, rational(1, 2))));
-      results.push(simplify(negate(power(eachSolution, rational(1, 2)))));
-    }
-
-    return results;
-  }
-
-  // D - only related calculations
-  const R_d2 = multiply(D, D);
-
-  // E - only related calculations
-  const R_e2 = multiply(E, E);
-
-  const R_e3 = multiply(R_e2, E);
-
-  // DETERMINANT
-  const terms: U[] = [];
-  // first term 256 a^3 e^3
-  terms.push(multiply(integer(256), multiply(R_a3, R_e3)));
-
-  // second term -192 a^3 b d e^2
-  terms.push(multiply(integer(-192), multiply(R_a2_d, multiply(R_e2, B))));
-
-  // third term -128 a^2 c^2 e^2
-  terms.push(multiply(integer(-128), multiply(R_a2, multiply(R_c2, R_e2))));
-
-  // fourth term 144 a^2 c d^2 e
-  terms.push(multiply(integer(144), multiply(R_a2_d2, multiply(C, E))));
-
-  // fifth term -27 a^2 d^4
-  terms.push(multiply(R_m27_a2_d2, R_d2));
-
-  // sixth term 144 a b^2 c e^2
-  terms.push(multiply(integer(144), multiply(R_a_b_c, multiply(B, R_e2))));
-
-  // seventh term -6 a b^2 d^2 e
-  terms.push(
-    multiply(integer(-6), multiply(A, multiply(R_b2, multiply(R_d2, E))))
-  );
-
-  // eigth term -80 a b c^2 d e
-  terms.push(multiply(integer(-80), multiply(R_a_b_c_d, multiply(C, E))));
-
-  // ninth term 18 a b c d^3
-  terms.push(multiply(integer(18), multiply(R_a_b_c_d, R_d2)));
-
-  // tenth term 16 a c^4 e
-  terms.push(multiply(integer(16), multiply(R_a_c, multiply(R_c3, E))));
-
-  // eleventh term -4 a c^3 d^2
-  terms.push(multiply(integer(-4), multiply(R_a_c, multiply(R_c2, R_d2))));
-
-  // twelveth term -27 b^4 e^2
-  terms.push(multiply(integer(-27), multiply(R_b3, multiply(B, R_e2))));
-
-  // thirteenth term 18 b^3 c d e
-  terms.push(multiply(integer(18), multiply(R_b3_d, multiply(C, E))));
-
-  // fourteenth term -4 b^3 d^3
-  terms.push(multiply(R_m4_b3_d, R_d2));
-
-  // fifteenth term -4 b^2 c^3 e
-  terms.push(multiply(integer(-4), multiply(R_b2_c2, multiply(C, E))));
-
-  // sixteenth term b^2 c^2 d^2
-  terms.push(multiply(R_b2_c2, R_d2));
-
-  // add together the sixteen terms
-  const R_determinant = add_all(terms);
-
-  if (DEBUG) {
-    console.log(`R_determinant: ${R_determinant}`);
-  }
-
-  // DELTA0
-  const DELTA0_term1 = R_c2; // term one of DELTA0
-  const DELTA0_term2 = multiply(integer(-3), multiply(B, D)); // term two of DELTA0
-  const DELTA0_term3 = multiply(integer(12), multiply(A, E)); // term three of DELTA0
-
-  // add the three terms together
-  const R_DELTA0 = add_all([DELTA0_term1, DELTA0_term2, DELTA0_term3]);
-
-  if (DEBUG) {
-    console.log(`R_DELTA0: ${R_DELTA0}`);
-  }
-
-  // DELTA1
-  const DELTA1_term1 = multiply(integer(2), R_c3);
-  const DELTA1_term2 = multiply(integer(-9), multiply(B, multiply(C, D)));
-  const DELTA1_term3 = multiply(integer(27), multiply(R_b2, E));
-  const DELTA1_term4 = multiply(integer(27), multiply(A, R_d2));
-  const DELTA1_term5 = multiply(integer(-72), multiply(R_a_c, E));
-
-  // add the five terms together
-  const R_DELTA1 = add_all([
-    DELTA1_term1,
-    DELTA1_term2,
-    DELTA1_term3,
-    DELTA1_term4,
-    DELTA1_term5,
-  ]);
-
-  if (DEBUG) {
-    console.log(`R_DELTA1: ${R_DELTA1}`);
+    return _handle5Biquadratic(A, B, C, D, E);
   }
 
   if (!isZeroAtomOrTensor(B)) {
-    return _handle5NonzeroB(A, B, C, D, E, common);
+    return _handle5NonzeroB(A, B, C, D, E);
   } else {
     return _handle5ZeroB(A, B, C, D, E);
   }
+}
+
+function _handle5Biquadratic(A: U, B: U, C: U, D: U, E: U): U[] {
+  if (DEBUG) {
+    console.log('biquadratic case');
+  }
+  push_all([
+    add(
+      multiply(A, power(symbol(SECRETX), integer(2))),
+      add(multiply(C, symbol(SECRETX)), E)
+    ),
+    symbol(SECRETX),
+  ]);
+  roots();
+
+  const biquadraticSolutions = pop() as Tensor;
+
+  const results = [];
+  for (const eachSolution of Array.from(biquadraticSolutions.tensor.elem)) {
+    results.push(simplify(power(eachSolution, rational(1, 2))));
+    results.push(simplify(negate(power(eachSolution, rational(1, 2)))));
+  }
+
+  return results;
 }
 
 function _handle5ZeroB(A: U, B: U, C: U, D: U, E: U): U[] {
@@ -833,9 +650,7 @@ function _handle5ZeroB(A: U, B: U, C: U, D: U, E: U): U[] {
   // https://en.wikipedia.org/wiki/Quartic_function#Ferrari.27s_solution
   // finding the "m" in the depressed equation
   const coeff2 = multiply(rational(5, 2), R_p);
-
   const coeff3 = subtract(multiply(integer(2), power(R_p, integer(2))), R_r);
-
   const coeff4 = add(
     multiply(rational(-1, 2), multiply(R_p, R_r)),
     add(
@@ -930,18 +745,10 @@ function _handle5ZeroB(A: U, B: U, C: U, D: U, E: U): U[] {
   return results;
 }
 
-function _handle5NonzeroB(
-  A: U,
-  B: U,
-  C: U,
-  D: U,
-  E: U,
-  common: CommonArgs5
-): U[] {
+function _handle5NonzeroB(A: U, B: U, C: U, D: U, E: U): U[] {
   const results = [];
-  const { R_a3, R_a2_d, R_b2 } = common;
   if (DEBUG) {
-    console.log('tos 2 ' + defs.tos);
+    console.log(`tos 2 ${defs.tos}`);
   }
 
   let R_p = divide(
@@ -971,8 +778,11 @@ function _handle5NonzeroB(
     console.log(`q for depressed quartic: ${R_q}`);
   }
 
-  // convert to depressed quartic
+  const R_a3 = multiply(multiply(A, A), A);
+  const R_b2 = multiply(B, B);
+  const R_a2_d = multiply(multiply(A, A), D);
 
+  // convert to depressed quartic
   let R_r = divide(
     add(
       multiply(power(B, integer(4)), integer(-3)),
@@ -989,7 +799,7 @@ function _handle5NonzeroB(
 
   if (DEBUG) {
     console.log(`r for depressed quartic: ${R_r}`);
-    console.log('tos 4 ' + defs.tos);
+    console.log(`tos 4 ${defs.tos}`);
   }
 
   const arg1c = power(symbol(SECRETX), integer(4));
