@@ -6,7 +6,8 @@ import {
   cadr,
   car,
   cdr,
-  Constants, COS,
+  Constants,
+  COS,
   DEBUG,
   defs,
   do_simplify_nested_radicals,
@@ -26,13 +27,14 @@ import {
   METAX,
   MULTIPLY,
   NIL,
-  noexpand, POWER,
+  noexpand,
+  POWER,
   SECRETX,
   SIN,
   symbol,
   Tensor,
   TRANSPOSE,
-  U
+  U,
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
 import { stop } from '../runtime/run';
@@ -52,15 +54,10 @@ import {
   isimaginaryunit,
   isminusone,
   isnegativenumber,
-  isZeroAtomOrTensor
+  isZeroAtomOrTensor,
 } from './is';
 import { list, makeList } from './list';
-import {
-  divide,
-  inverse,
-  multiply,
-  negate
-} from './multiply';
+import { divide, inverse, multiply, negate } from './multiply';
 import { polar } from './polar';
 import { power } from './power';
 import { rationalize } from './rationalize';
@@ -722,11 +719,10 @@ function take_care_of_nested_radicals(): boolean {
 
       //console.log("whole polynomial: " + stack[tos-1].toString())
 
-      push(symbol(SECRETX));
-
       defs.recursionLevelNestedRadicalsRemoval++;
       //console.log("invoking roots at recursion level: " + recursionLevelNestedRadicalsRemoval)
-      roots();
+      let arg1 = pop();
+      roots(arg1, symbol(SECRETX));
       defs.recursionLevelNestedRadicalsRemoval--;
       if (equal(top(), symbol(NIL))) {
         if (DEBUG) {
