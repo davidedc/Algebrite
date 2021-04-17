@@ -102,11 +102,12 @@ export function Eval_abs(p1: U) {
   push(abs(pop()));
 }
 
-export function absValFloat() {
+export function absValFloat(p1: U): U {
+  push(p1);
   Eval();
   push(absval(pop()));
   Eval(); // normalize
-  push(zzfloat(pop()));
+  return zzfloat(pop());
 }
 // zzfloat of an abs doesn't necessarily result in a double
 // , for example if there are variables. But

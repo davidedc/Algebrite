@@ -18,7 +18,6 @@ import {
 import { pop, push } from '../runtime/stack';
 import { equal } from '../sources/misc';
 import { add, add_all, subtract } from './add';
-import { integer } from './bignum';
 import { Eval } from './eval';
 import { factorial } from './factorial';
 import { equaln, isminusone, isplusone } from './is';

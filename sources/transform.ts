@@ -70,8 +70,8 @@ true is successful, false if not.
 //define C p7
 
 export function transform(s: string[] | U, generalTransform: boolean) {
-  let X = pop(); // X i.e. free variable
-  let F = pop(); // F i.e. input expression
+  const X = pop(); // X i.e. free variable
+  const F = pop(); // F i.e. input expression
 
   if (DEBUG) {
     console.log(`         !!!!!!!!!   transform on: ${F}`);
