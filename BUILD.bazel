@@ -231,8 +231,7 @@ nodejs_test(
         ":tsc",
         "@npm//big-integer",
     ],
-    shard_count = 10,
-    entry_point = ":tests/roots.ts",
+    entry_point = ":tests/roots_slow.ts",
     tags = ["manual"],
 )
 
