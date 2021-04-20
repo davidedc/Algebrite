@@ -98,7 +98,7 @@ import {
 import { make_hashed_itab } from './sources/integral';
 import { run } from './runtime/run';
 
-export const $: { [key: string]: unknown } = {};
+const $: { [key: string]: unknown } = {};
 $.version = version;
 $.isadd = isadd;
 $.ismultiply = ismultiply;
@@ -325,6 +325,5 @@ const builtin_fns = [
 ];
 
 Array.from(builtin_fns).map(fn => ($[fn] = exec.bind(this, fn)));
-defs.fullDoubleOutput = true;
-(globalThis as any).Algebrite = $;
+export default $;
 
