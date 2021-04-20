@@ -3,7 +3,9 @@
   "//": "also change the version in the Algebrite variable at the top of defs file",
   "version": "1.3.1",
   "description": "Computer Algebra System in TypeScript",
-  "main": "bazel-bin/algebrite.js",
+  "main": "./algebrite.js",
+  "module": "./index.js",
+  "browser": "./algebrite.bundle-for-browser.js",
   "directories": {
     "test": "tests"
   },

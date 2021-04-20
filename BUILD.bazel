@@ -1,7 +1,7 @@
 load("@npm//@bazel/typescript:index.bzl", "ts_project")
 load("@npm//@bazel/esbuild:index.bzl", "esbuild")
 load("gen_tests.bzl", "gen_tests")
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test", "pkg_npm", "copy_to_bin")
 
 # Allow any ts_library rules in this workspace to reference the config
 # Note: if you move the tsconfig.json file to a subdirectory, you can add an alias() here instead
@@ -22,8 +22,26 @@ esbuild(
     name="algebrite",
     deps=[":tsc"],
     entry_point = "index.ts",
+    platform = "node",
+    external = ["big-integer"],
+    tool = select({
+        "@bazel_tools//src/conditions:darwin": "@esbuild_darwin//:bin/esbuild",
+        "@bazel_tools//src/conditions:windows": "@esbuild_windows//:esbuild.exe",
+        "@bazel_tools//src/conditions:linux_x86_64": "@esbuild_linux//:bin/esbuild",
+    }),
+    visibility=["//visibility:public"],
+)
+
+copy_to_bin(
+    name="copy_browser_main",
+    srcs=["sources/browser_main.js"],
+)
+
+esbuild(
+    name="algebrite.bundle-for-browser",
+    deps=[":tsc"],
+    entry_point = ":copy_browser_main",
     minify = True,
-    # https://community.canvaslms.com/t5/Canvas-Basics-Guide/What-are-the-browser-and-computer-requirements-for-Canvas/ta-p/66
     target = "safari13,chrome87,firefox85",
     tool = select({
         "@bazel_tools//src/conditions:darwin": "@esbuild_darwin//:bin/esbuild",
@@ -31,6 +49,16 @@ esbuild(
         "@bazel_tools//src/conditions:linux_x86_64": "@esbuild_linux//:bin/esbuild",
     }),
     visibility=["//visibility:public"],
+)
+
+pkg_npm(
+    name="npm",
+    srcs = ["package.json"],
+    deps = [
+        ":tsc",
+        ":algebrite",
+        ":algebrite.bundle-for-browser",
+    ]
 )
 
 nodejs_test(
@@ -203,8 +231,7 @@ nodejs_test(
         ":tsc",
         "@npm//big-integer",
     ],
-    shard_count = 10,
-    entry_point = ":tests/roots.ts",
+    entry_point = ":tests/roots_slow.ts",
     tags = ["manual"],
 )
 
