@@ -38,7 +38,7 @@ import {
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
 import { stop } from '../runtime/run';
-import { pop, push, top } from '../runtime/stack';
+import { pop, push, top, push_all } from '../runtime/stack';
 import { get_binding, push_symbol } from '../runtime/symbol';
 import { equal, length } from '../sources/misc';
 import { add } from './add';
@@ -722,7 +722,7 @@ function take_care_of_nested_radicals(): boolean {
       defs.recursionLevelNestedRadicalsRemoval++;
       //console.log("invoking roots at recursion level: " + recursionLevelNestedRadicalsRemoval)
       let arg1 = pop();
-      roots(arg1, symbol(SECRETX));
+      push_all(roots(arg1, symbol(SECRETX)));
       defs.recursionLevelNestedRadicalsRemoval--;
       if (equal(top(), symbol(NIL))) {
         if (DEBUG) {

@@ -227,3 +227,7 @@ export function sort_stack(n: number) {
     .concat(subsetOfStack)
     .concat(defs.stack.slice(h + n));
 }
+
+export function sort(arr: U[]): void {
+  arr.sort(cmp_expr);
+}

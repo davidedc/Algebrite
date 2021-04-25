@@ -18,7 +18,7 @@ import {
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
 import { moveTos, pop, push, push_all, top } from '../runtime/stack';
-import { sort_stack } from '../sources/misc';
+import { sort } from '../sources/misc';
 import { absValFloat } from './abs';
 import { add, add_all, subtract } from './add';
 import { integer, rational } from './bignum';
@@ -89,7 +89,7 @@ export function Eval_roots(p1: U) {
     stop('roots: 1st argument is not a polynomial');
   }
 
-  roots(POLY, X);
+  push_all(roots(POLY, X));
 }
 
 function hasImaginaryCoeff(k: U[]) {
@@ -106,20 +106,16 @@ function hasImaginaryCoeff(k: U[]) {
   return imaginaryCoefficients;
 }
 
+// polycoeff = tos
+// k[0]      Coefficient of x^0
+// k[n-1]    Coefficient of x^(n-1)
 function isSimpleRoot(k: U[]) {
-  // polycoeff = tos
-
-  // k[0]      Coefficient of x^0
-  // k[n-1]    Coefficient of x^(n-1)
-
   if (k.length <= 2) {
     return false;
   }
-
   if (isZeroAtomOrTensor(k[0])) {
     return false;
   }
-
   return k.slice(1, k.length - 1).every((el) => isZeroAtomOrTensor(el));
 }
 
@@ -139,7 +135,14 @@ function normalisedCoeff(poly: U, x: U): U[] {
 // takes the polynomial and the
 // variable on the stack
 
-export function roots(POLY: U, X: U) {
+export function roots(POLY: U, X: U): (U | Tensor)[] {
+  performing_roots = true;
+  const result = _roots(POLY, X);
+  performing_roots = false;
+  return result;
+}
+
+function _roots(POLY: U, X: U): (U | Tensor)[] {
   // the simplification of nested radicals uses
   // "roots", which in turn uses simplification
   // of nested radicals. Usually there is no problem,
@@ -147,12 +150,8 @@ export function roots(POLY: U, X: U) {
   // we probably got stuck in a strange case of infinite
   // recursion, so bail out and return NIL.
   if (defs.recursionLevelNestedRadicalsRemoval > 1) {
-    push(symbol(NIL));
-    return;
+    return [symbol(NIL)];
   }
-
-  performing_roots = true;
-  const h = defs.tos;
 
   if (DEBUG) {
     console.log(`checking if ${top()} is a case of simple roots`);
@@ -160,6 +159,7 @@ export function roots(POLY: U, X: U) {
 
   const k = normalisedCoeff(POLY, X);
 
+  const results = [];
   if (isSimpleRoot(k)) {
     if (DEBUG) {
       console.log(`yes, ${k[k.length - 1]} is a case of simple roots`);
@@ -167,29 +167,26 @@ export function roots(POLY: U, X: U) {
     const kn = k.length;
     const lastCoeff = k[0];
     const leadingCoeff = k.pop();
-    push_all(getSimpleRoots(kn, leadingCoeff, lastCoeff));
+    results.push(...getSimpleRoots(kn, leadingCoeff, lastCoeff));
   } else {
-    push_all(roots2(POLY, X));
+    results.push(...roots2(POLY, X));
   }
 
-  const n = defs.tos - h;
+  const n = results.length;
   if (n === 0) {
     stop('roots: the polynomial is not factorable, try nroots');
   }
   if (n === 1) {
-    performing_roots = false;
-    return;
+    return results;
   }
-  sort_stack(n);
+  sort(results);
   POLY = alloc_tensor(n);
   POLY.tensor.ndim = 1;
   POLY.tensor.dim[0] = n;
   for (let i = 0; i < n; i++) {
-    POLY.tensor.elem[i] = defs.stack[h + i];
+    POLY.tensor.elem[i] = results[i];
   }
-  moveTos(h);
-  push(POLY);
-  performing_roots = false;
+  return [POLY];
 }
 
 // ok to generate these roots take a look at their form
@@ -595,15 +592,13 @@ function _mini_solve5CoeffsBiquadratic(A: U, B: U, C: U, D: U, E: U): U[] {
     console.log('biquadratic case');
   }
 
-  roots(
+  const biquadraticSolutions = roots(
     add(
       multiply(A, power(symbol(SECRETX), integer(2))),
       add(multiply(C, symbol(SECRETX)), E)
     ),
     symbol(SECRETX)
-  );
-
-  const biquadraticSolutions = pop() as Tensor;
+  )[0] as Tensor;
 
   const results = [];
   for (const eachSolution of Array.from(biquadraticSolutions.tensor.elem)) {
@@ -644,9 +639,7 @@ function _mini_solve5CoeffsZeroB(A: U, B: U, C: U, D: U, E: U): U[] {
     console.log(`resolventCubic: ${top()}`);
   }
 
-  roots(arg1, symbol(SECRETX));
-
-  const resolventCubicSolutions = pop() as Tensor;
+  const resolventCubicSolutions = roots(arg1, symbol(SECRETX))[0] as Tensor;
   if (DEBUG) {
     console.log(`resolventCubicSolutions: ${resolventCubicSolutions}`);
   }
@@ -791,9 +784,7 @@ function _mini_solve5CoeffsNonzeroB(A: U, B: U, C: U, D: U, E: U): U[] {
     console.log(`solving depressed quartic: ${arg1}`);
   }
 
-  roots(arg1, symbol(SECRETX));
-
-  const depressedSolutions = pop() as Tensor;
+  const depressedSolutions = roots(arg1, symbol(SECRETX))[0] as Tensor;
   if (DEBUG) {
     console.log(`depressedSolutions: ${depressedSolutions}`);
   }
