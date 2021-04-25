@@ -45,6 +45,8 @@ const log = {
   },
 };
 
+const flatten = (arr: any[]) => [].concat(...arr);
+
 //define POLY p1
 //define X p2
 //define A p3
@@ -52,60 +54,59 @@ const log = {
 //define C p5
 //define Y p6
 
-export function Eval_roots(p1: U) {
+export function Eval_roots(POLY: U) {
   // A == B -> A - B
 
-  let p2 = cadr(p1);
+  let X = cadr(POLY);
 
-  if (car(p2) === symbol(SETQ) || car(p2) === symbol(TESTEQ)) {
-    push(cadr(p2));
+  if (car(X) === symbol(SETQ) || car(X) === symbol(TESTEQ)) {
+    push(cadr(X));
     Eval();
-    push(caddr(p2));
+    push(caddr(X));
     Eval();
     const arg2 = pop();
     const arg1 = pop();
     push(subtract(arg1, arg2));
   } else {
-    push(p2);
+    push(X);
     Eval();
-    p2 = pop();
-    if (car(p2) === symbol(SETQ) || car(p2) === symbol(TESTEQ)) {
-      push(cadr(p2));
+    X = pop();
+    if (car(X) === symbol(SETQ) || car(X) === symbol(TESTEQ)) {
+      push(cadr(X));
       Eval();
-      push(caddr(p2));
+      push(caddr(X));
       Eval();
       const arg2 = pop();
       const arg1 = pop();
       push(subtract(arg1, arg2));
     } else {
-      push(p2);
+      push(X);
     }
   }
 
   // 2nd arg, x
-
-  push(caddr(p1));
+  push(caddr(POLY));
   Eval();
-  p2 = pop();
+  X = pop();
 
-  const X = p2 === symbol(NIL) ? guess(top()) : p2;
-  const POLY = pop();
+  const X1 = X === symbol(NIL) ? guess(top()) : X;
+  const POLY1 = pop();
 
-  if (!ispolyexpandedform(POLY, X)) {
+  if (!ispolyexpandedform(POLY1, X1)) {
     stop('roots: 1st argument is not a polynomial');
   }
 
-  push_all(roots(POLY, X));
+  push_all(roots(POLY1, X1));
 }
 
-function hasImaginaryCoeff(k: U[]) {
+function hasImaginaryCoeff(k: U[]): boolean {
   return k.some((c) => iscomplexnumber(c));
 }
 
 // polycoeff = tos
 // k[0]      Coefficient of x^0
 // k[n-1]    Coefficient of x^(n-1)
-function isSimpleRoot(k: U[]) {
+function isSimpleRoot(k: U[]): boolean {
   if (k.length <= 2) {
     return false;
   }
@@ -128,12 +129,10 @@ function normalisedCoeff(poly: U, x: U): U[] {
 }
 
 export function roots(POLY: U, X: U): (U | Tensor)[] {
-  // the simplification of nested radicals uses
-  // "roots", which in turn uses simplification
-  // of nested radicals. Usually there is no problem,
-  // one level of recursion does the job. Beyond that,
-  // we probably got stuck in a strange case of infinite
-  // recursion, so bail out and return NIL.
+  // the simplification of nested radicals uses "roots", which in turn uses
+  // simplification of nested radicals. Usually there is no problem, one level
+  // of recursion does the job. Beyond that, we probably got stuck in a
+  // strange case of infinite recursion, so bail out and return NIL.
   if (defs.recursionLevelNestedRadicalsRemoval > 1) {
     return [symbol(NIL)];
   }
@@ -148,9 +147,11 @@ export function roots(POLY: U, X: U): (U | Tensor)[] {
     const kn = k.length;
     const lastCoeff = k[0];
     const leadingCoeff = k.pop();
-    results.push(...getSimpleRoots(kn, leadingCoeff, lastCoeff));
+    const simpleRoots = getSimpleRoots(kn, leadingCoeff, lastCoeff);
+    results.push(...simpleRoots);
   } else {
-    results.push(...roots2(POLY, X));
+    const roots = roots2(POLY, X);
+    results.push(...roots);
   }
 
   const n = results.length;
@@ -213,18 +214,14 @@ function getSimpleRoots(n: number, leadingCoeff: U, lastCoeff: U): U[] {
 
 function roots2(POLY: U, X: U): U[] {
   const k = normalisedCoeff(POLY, X);
-
   if (!hasImaginaryCoeff(k)) {
     POLY = factorpoly(POLY, X);
   }
-
   if (ismultiply(POLY)) {
     // scan through all the factors and find the roots of each of them
     const mapped = POLY.tail().map((p) => roots3(p, X));
-    const flatten = (arr: any[]) => [].concat(...arr);
     return flatten(mapped);
   }
-
   return roots3(POLY, X);
 }
 
@@ -253,19 +250,17 @@ function mini_solve(coefficients: U[]): U[] {
 
   // AX + B, X = -B/A
   if (n === 2) {
-    //console.log "mini_solve >>>>>>>>> 1st degree"
     const A = coefficients.pop();
     const B = coefficients.pop();
-    return _mini_solve2Coeffs(A, B);
+    return _solveDegree1(A, B);
   }
 
   // AX^2 + BX + C, X = (-B +/- (B^2 - 4AC)^(1/2)) / (2A)
   if (n === 3) {
-    //console.log "mini_solve >>>>>>>>> 2nd degree"
     const A = coefficients.pop();
     const B = coefficients.pop();
     const C = coefficients.pop();
-    return _mini_solve3Coeffs(A, B, C);
+    return _solveDegree2(A, B, C);
   }
 
   if (n === 4) {
@@ -273,7 +268,7 @@ function mini_solve(coefficients: U[]): U[] {
     const B = coefficients.pop();
     const C = coefficients.pop();
     const D = coefficients.pop();
-    return _mini_solve4Coeffs(A, B, C, D);
+    return _solveDegree3(A, B, C, D);
   }
 
   // See http://www.sscc.edu/home/jdavidso/Math/Catalog/Polynomials/Fourth/Fourth.html
@@ -284,17 +279,17 @@ function mini_solve(coefficients: U[]): U[] {
     const C = coefficients.pop();
     const D = coefficients.pop();
     const E = coefficients.pop();
-    return _mini_solve5Coeffs(A, B, C, D, E);
+    return _solveDegree4(A, B, C, D, E);
   }
 
   return [];
 }
 
-function _mini_solve2Coeffs(A: U, B: U): U[] {
+function _solveDegree1(A: U, B: U): U[] {
   return [negate(divide(B, A))];
 }
 
-function _mini_solve3Coeffs(A: U, B: U, C: U): U[] {
+function _solveDegree2(A: U, B: U, C: U): U[] {
   // (B^2 - 4AC)^(1/2)
   const p6 = power(
     // prettier-ignore
@@ -313,7 +308,7 @@ function _mini_solve3Coeffs(A: U, B: U, C: U): U[] {
   return [result1, result2];
 }
 
-function _mini_solve4Coeffs(A: U, B: U, C: U, D: U): U[] {
+function _solveDegree3(A: U, B: U, C: U, D: U): U[] {
   // C - only related calculations
   const R_c3 = multiply(multiply(C, C), C);
 
@@ -352,30 +347,25 @@ function _mini_solve4Coeffs(A: U, B: U, C: U, D: U): U[] {
 
   const R_m_b_over_3a = divide(negate(B), R_3_a);
 
-  log.debug('>>>>>>>>>>>>>>>> actually using cubic formula <<<<<<<<<<<<<<< ');
-  log.debug(`cubic: D0: ${R_DELTA0.toString()}`);
-
   const R_4_DELTA03 = multiply(power(R_DELTA0, integer(3)), integer(4));
 
   const R_DELTA0_toBeCheckedIfZero = absValFloat(simplify(R_DELTA0));
-  log.debug(`cubic: D0 as float: ${R_DELTA0_toBeCheckedIfZero}`);
 
-  // DETERMINANT
   const R_determinant = absValFloat(
     simplify(
       add_all([R_18_a_b_c_d, R_m4_b3_d, R_b2_c2, R_m4_a_c3, R_m27_a2_d2])
     )
   );
-  log.debug(`cubic: DETERMINANT: ${R_determinant}`);
-
-  // R_DELTA1
   const R_DELTA1 = add_all([R_2_b3, R_m9_a_b_c, R_27_a2_d]);
-  log.debug(`cubic: D1: ${R_DELTA1}`);
-
-  // R_Q
-  let R_Q = simplify(
+  const R_Q = simplify(
     power(subtract(power(R_DELTA1, integer(2)), R_4_DELTA03), rational(1, 2))
   );
+
+  log.debug('>>>>>>>>>>>>>>>> actually using cubic formula <<<<<<<<<<<<<<< ');
+  log.debug(`cubic: D0: ${R_DELTA0}`);
+  log.debug(`cubic: D0 as float: ${R_DELTA0_toBeCheckedIfZero}`);
+  log.debug(`cubic: DETERMINANT: ${R_determinant}`);
+  log.debug(`cubic: D1: ${R_DELTA1}`);
 
   if (isZeroAtomOrTensor(R_determinant)) {
     const data = {
@@ -385,29 +375,26 @@ function _mini_solve4Coeffs(A: U, B: U, C: U, D: U): U[] {
       R_b3,
       R_a_b_c,
     };
-    return _mini_solve4CoeffsZeroRDeterminant(A, B, C, D, data);
+    return _solveDegree3ZeroRDeterminant(A, B, C, D, data);
   }
 
   let C_CHECKED_AS_NOT_ZERO = false;
   let flipSignOFQSoCIsNotZero = false;
 
   let R_C: U;
-  // C will go as denominator, we have to check
-  // that is not zero
+  // C will go as denominator, we have to check that is not zero
   while (!C_CHECKED_AS_NOT_ZERO) {
     const arg1 = flipSignOFQSoCIsNotZero ? negate(R_Q) : R_Q;
     R_C = simplify(
       power(multiply(add(arg1, R_DELTA1), rational(1, 2)), rational(1, 3))
     );
-    log.debug(`cubic: C: ${R_C}`);
-
     const R_C_simplified_toCheckIfZero = absValFloat(simplify(R_C));
+
+    log.debug(`cubic: C: ${R_C}`);
     log.debug(`cubic: C as absval and float: ${R_C_simplified_toCheckIfZero}`);
 
     if (isZeroAtomOrTensor(R_C_simplified_toCheckIfZero)) {
-      if (DEBUG) {
-        console.log(' cubic: C IS ZERO flipping the sign');
-      }
+      log.debug(' cubic: C IS ZERO flipping the sign');
       flipSignOFQSoCIsNotZero = true;
     } else {
       C_CHECKED_AS_NOT_ZERO = true;
@@ -466,7 +453,7 @@ interface CommonArgs4ZeroRDeterminant {
   R_a_b_c: U;
 }
 
-function _mini_solve4CoeffsZeroRDeterminant(
+function _solveDegree3ZeroRDeterminant(
   A: U,
   B: U,
   C: U,
@@ -511,7 +498,7 @@ function _mini_solve4CoeffsZeroRDeterminant(
   return [rootSolution, rootSolution, secondSolution];
 }
 
-function _mini_solve5Coeffs(A: U, B: U, C: U, D: U, E: U): U[] {
+function _solveDegree4(A: U, B: U, C: U, D: U, E: U): U[] {
   log.debug('>>>>>>>>>>>>>>>> actually using quartic formula <<<<<<<<<<<<<<< ');
 
   if (
@@ -520,17 +507,17 @@ function _mini_solve5Coeffs(A: U, B: U, C: U, D: U, E: U): U[] {
     !isZeroAtomOrTensor(C) &&
     !isZeroAtomOrTensor(E)
   ) {
-    return _mini_solve5CoeffsBiquadratic(A, B, C, D, E);
+    return _solveDegree4Biquadratic(A, B, C, D, E);
   }
 
   if (!isZeroAtomOrTensor(B)) {
-    return _mini_solve5CoeffsNonzeroB(A, B, C, D, E);
+    return _solveDegree4NonzeroB(A, B, C, D, E);
   } else {
-    return _mini_solve5CoeffsZeroB(A, B, C, D, E);
+    return _solveDegree4ZeroB(A, B, C, D, E);
   }
 }
 
-function _mini_solve5CoeffsBiquadratic(A: U, B: U, C: U, D: U, E: U): U[] {
+function _solveDegree4Biquadratic(A: U, B: U, C: U, D: U, E: U): U[] {
   log.debug('biquadratic case');
 
   const biquadraticSolutions = roots(
@@ -542,15 +529,15 @@ function _mini_solve5CoeffsBiquadratic(A: U, B: U, C: U, D: U, E: U): U[] {
   )[0] as Tensor;
 
   const results = [];
-  for (const eachSolution of Array.from(biquadraticSolutions.tensor.elem)) {
-    results.push(simplify(power(eachSolution, rational(1, 2))));
-    results.push(simplify(negate(power(eachSolution, rational(1, 2)))));
+  for (const sol of biquadraticSolutions.tensor.elem) {
+    results.push(simplify(power(sol, rational(1, 2))));
+    results.push(simplify(negate(power(sol, rational(1, 2)))));
   }
 
   return results;
 }
 
-function _mini_solve5CoeffsZeroB(A: U, B: U, C: U, D: U, E: U): U[] {
+function _solveDegree4ZeroB(A: U, B: U, C: U, D: U, E: U): U[] {
   const R_p = C;
   const R_q = D;
   const R_r = E;
@@ -583,16 +570,14 @@ function _mini_solve5CoeffsZeroB(A: U, B: U, C: U, D: U, E: U): U[] {
 
   let R_m = null;
   //R_m = resolventCubicSolutions.tensor.elem[1]
-  for (const eachSolution of resolventCubicSolutions.tensor.elem) {
-    log.debug(`examining solution: ${eachSolution}`);
+  for (const sol of resolventCubicSolutions.tensor.elem) {
+    log.debug(`examining solution: ${sol}`);
 
-    const toBeCheckedIfZero = absValFloat(
-      add(multiply(eachSolution, integer(2)), R_p)
-    );
-    log.debug(`abs value is: ${eachSolution}`);
+    const toBeCheckedIfZero = absValFloat(add(multiply(sol, integer(2)), R_p));
+    log.debug(`abs value is: ${sol}`);
 
     if (!isZeroAtomOrTensor(toBeCheckedIfZero)) {
-      R_m = eachSolution;
+      R_m = sol;
       break;
     }
   }
@@ -613,35 +598,33 @@ function _mini_solve5CoeffsZeroB(A: U, B: U, C: U, D: U, E: U): U[] {
   );
 
   // solution1
-  let arg2 = simplify(
+  const sol1Arg = simplify(
     power(negate(add(threePPlus2M, twoQOversqrtPPlus2M)), rational(1, 2))
   );
-  const solution1 = divide(add(sqrtPPlus2M, arg2), integer(2));
+  const solution1 = divide(add(sqrtPPlus2M, sol1Arg), integer(2));
 
   // solution2
-  arg2 = simplify(
+  const sol2Arg = simplify(
     power(negate(add(threePPlus2M, twoQOversqrtPPlus2M)), rational(1, 2))
   );
-  const solution2 = divide(subtract(sqrtPPlus2M, arg2), integer(2));
+  const solution2 = divide(subtract(sqrtPPlus2M, sol2Arg), integer(2));
 
   // solution3
-  arg2 = simplify(
+  const sol3Arg = simplify(
     power(negate(subtract(threePPlus2M, twoQOversqrtPPlus2M)), rational(1, 2))
   );
-  const solution3 = divide(add(negate(sqrtPPlus2M), arg2), integer(2));
+  const solution3 = divide(add(negate(sqrtPPlus2M), sol3Arg), integer(2));
 
   // solution4
-  arg2 = simplify(
+  const sol4Arg = simplify(
     power(negate(subtract(threePPlus2M, twoQOversqrtPPlus2M)), rational(1, 2))
   );
-  const solution4 = divide(subtract(negate(sqrtPPlus2M), arg2), integer(2));
+  const solution4 = divide(subtract(negate(sqrtPPlus2M), sol4Arg), integer(2));
 
   return [solution1, solution2, solution3, solution4];
 }
 
-function _mini_solve5CoeffsNonzeroB(A: U, B: U, C: U, D: U, E: U): U[] {
-  log.debug(`tos 2 ${defs.tos}`);
-
+function _solveDegree4NonzeroB(A: U, B: U, C: U, D: U, E: U): U[] {
   const R_p = divide(
     add(
       multiply(integer(8), multiply(C, A)),
@@ -649,9 +632,6 @@ function _mini_solve5CoeffsNonzeroB(A: U, B: U, C: U, D: U, E: U): U[] {
     ),
     multiply(integer(8), power(A, integer(2)))
   );
-
-  log.debug(`p for depressed quartic: ${R_p}`);
-
   const R_q = divide(
     add(
       power(B, integer(3)),
@@ -662,9 +642,6 @@ function _mini_solve5CoeffsNonzeroB(A: U, B: U, C: U, D: U, E: U): U[] {
     ),
     multiply(integer(8), power(A, integer(3)))
   );
-
-  log.debug(`q for depressed quartic: ${R_q}`);
-
   const R_a3 = multiply(multiply(A, A), A);
   const R_b2 = multiply(B, B);
   const R_a2_d = multiply(multiply(A, A), D);
@@ -683,24 +660,21 @@ function _mini_solve5CoeffsNonzeroB(A: U, B: U, C: U, D: U, E: U): U[] {
     ),
     multiply(integer(256), power(A, integer(4)))
   );
+  const four_x_4 = power(symbol(SECRETX), integer(4));
+  const r_q_x_2 = multiply(R_p, power(symbol(SECRETX), integer(2)));
+  const r_q_x = multiply(R_q, symbol(SECRETX));
+  const simplified = simplify(add_all([four_x_4, r_q_x_2, r_q_x, R_r]));
+  const depressedSolutions = roots(simplified, symbol(SECRETX))[0] as Tensor;
 
+  log.debug(`p for depressed quartic: ${R_p}`);
+  log.debug(`q for depressed quartic: ${R_q}`);
   log.debug(`r for depressed quartic: ${R_r}`);
   log.debug(`tos 4 ${defs.tos}`);
-
-  const four_x_4 = power(symbol(SECRETX), integer(4));
   log.debug(`4 * x^4: ${four_x_4}`);
-
-  const r_q_x_2 = multiply(R_p, power(symbol(SECRETX), integer(2)));
   log.debug(`R_p * x^2: ${r_q_x_2}`);
-
-  const r_q_x = multiply(R_q, symbol(SECRETX));
   log.debug(`R_q * x: ${r_q_x}`);
   log.debug(`R_r: ${R_r}`);
-
-  const arg1 = simplify(add_all([four_x_4, r_q_x_2, r_q_x, R_r]));
-  log.debug(`solving depressed quartic: ${arg1}`);
-
-  const depressedSolutions = roots(arg1, symbol(SECRETX))[0] as Tensor;
+  log.debug(`solving depressed quartic: ${simplified}`);
   log.debug(`depressedSolutions: ${depressedSolutions}`);
 
   return depressedSolutions.tensor.elem.map((sol) => {
