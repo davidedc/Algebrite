@@ -47,10 +47,9 @@ let show_power_debug = false;
 let performing_roots = false;
 
 export function Eval_roots(p1: U) {
-  let p2: U;
   // A == B -> A - B
 
-  p2 = cadr(p1);
+  let p2 = cadr(p1);
 
   if (car(p2) === symbol(SETQ) || car(p2) === symbol(TESTEQ)) {
     push(cadr(p2));
@@ -168,9 +167,9 @@ export function roots(POLY: U, X: U) {
     const kn = k.length;
     const lastCoeff = k[0];
     const leadingCoeff = k.pop();
-    getSimpleRoots(kn, leadingCoeff, lastCoeff);
+    push_all(getSimpleRoots(kn, leadingCoeff, lastCoeff));
   } else {
-    roots2(POLY, X);
+    push_all(roots2(POLY, X));
   }
 
   const n = defs.tos - h;
@@ -199,13 +198,10 @@ export function roots(POLY: U, X: U) {
 // http://www.wolframalpha.com/input/?i=roots+ax%5E14+%2B+b
 // http://www.wolframalpha.com/input/?i=roots+x%5E15+%2B+1
 // http://www.wolframalpha.com/input/?i=roots+a*x%5E15+%2B+b
-function getSimpleRoots(n: number, leadingCoeff: U, lastCoeff: U) {
-  if (DEBUG) {
-    console.log('getSimpleRoots');
-  }
-
-  //tos-n    Coefficient of x^0
-  //tos-1    Coefficient of x^(n-1)
+// leadingCoeff    Coefficient of x^0
+// lastCoeff       Coefficient of x^(n-1)
+function getSimpleRoots(n: number, leadingCoeff: U, lastCoeff: U): U[] {
+  if (DEBUG) console.log('getSimpleRoots');
 
   n = n - 1;
 
@@ -213,29 +209,31 @@ function getSimpleRoots(n: number, leadingCoeff: U, lastCoeff: U) {
     power(lastCoeff, rational(1, n)),
     power(leadingCoeff, rational(1, n))
   );
+  const results = [];
 
   if (n % 2 === 0) {
-    for (let rootsOfOne = 1; rootsOfOne <= n; rootsOfOne += 2) {
+    for (let i = 1; i <= n; i += 2) {
       const aSol = multiply(
         commonPart,
-        power(Constants.negOne, rational(rootsOfOne, n))
+        power(Constants.negOne, rational(i, n))
       );
-      push(aSol);
-      push(negate(aSol));
+      results.push(aSol);
+      results.push(negate(aSol));
     }
-  } else {
-    for (let rootsOfOne = 1; rootsOfOne <= n; rootsOfOne++) {
-      push(
-        multiply(commonPart, power(Constants.negOne, rational(rootsOfOne, n)))
-      );
-      if (rootsOfOne % 2 === 0) {
-        push(negate(pop()));
-      }
-    }
+    return results;
   }
+
+  for (let i = 1; i <= n; i++) {
+    let sol = multiply(commonPart, power(Constants.negOne, rational(i, n)));
+    if (i % 2 === 0) {
+      sol = negate(sol);
+    }
+    results.push(sol);
+  }
+  return results;
 }
 
-function roots2(POLY: U, X: U) {
+function roots2(POLY: U, X: U): U[] {
   const k = normalisedCoeff(POLY, X);
 
   if (!hasImaginaryCoeff(k)) {
@@ -244,12 +242,12 @@ function roots2(POLY: U, X: U) {
 
   if (ismultiply(POLY)) {
     // scan through all the factors and find the roots of each of them
-    POLY.tail().forEach((p) => {
-      push_all(roots3(p, X));
-    });
-  } else {
-    push_all(roots3(POLY, X));
+    const mapped = POLY.tail().map((p) => roots3(p, X));
+    const flatten = (arr: any[]) => [].concat(...arr);
+    return flatten(mapped);
   }
+
+  return roots3(POLY, X);
 }
 
 function roots3(POLY: U, X: U): U[] {
@@ -280,7 +278,7 @@ function mini_solve(coefficients: U[]): U[] {
     //console.log "mini_solve >>>>>>>>> 1st degree"
     const A = coefficients.pop();
     const B = coefficients.pop();
-    return _mini_solve2(A, B);
+    return _mini_solve2Coeffs(A, B);
   }
 
   // AX^2 + BX + C, X = (-B +/- (B^2 - 4AC)^(1/2)) / (2A)
@@ -289,7 +287,7 @@ function mini_solve(coefficients: U[]): U[] {
     const A = coefficients.pop();
     const B = coefficients.pop();
     const C = coefficients.pop();
-    return _mini_solve3(A, B, C);
+    return _mini_solve3Coeffs(A, B, C);
   }
 
   if (n === 4) {
@@ -297,7 +295,7 @@ function mini_solve(coefficients: U[]): U[] {
     const B = coefficients.pop();
     const C = coefficients.pop();
     const D = coefficients.pop();
-    return _mini_solve4(A, B, C, D);
+    return _mini_solve4Coeffs(A, B, C, D);
   }
 
   // See http://www.sscc.edu/home/jdavidso/Math/Catalog/Polynomials/Fourth/Fourth.html
@@ -308,15 +306,17 @@ function mini_solve(coefficients: U[]): U[] {
     const C = coefficients.pop();
     const D = coefficients.pop();
     const E = coefficients.pop();
-    return _mini_solve5(A, B, C, D, E);
+    return _mini_solve5Coeffs(A, B, C, D, E);
   }
+
+  return [];
 }
 
-function _mini_solve2(A: U, B: U): U[] {
+function _mini_solve2Coeffs(A: U, B: U): U[] {
   return [negate(divide(B, A))];
 }
 
-function _mini_solve3(A: U, B: U, C: U): U[] {
+function _mini_solve3Coeffs(A: U, B: U, C: U): U[] {
   // (B^2 - 4AC)^(1/2)
   const p6 = power(
     // prettier-ignore
@@ -335,7 +335,7 @@ function _mini_solve3(A: U, B: U, C: U): U[] {
   return [result1, result2];
 }
 
-function _mini_solve4(A: U, B: U, C: U, D: U): U[] {
+function _mini_solve4Coeffs(A: U, B: U, C: U, D: U): U[] {
   // C - only related calculations
   const R_c2 = multiply(C, C);
 
@@ -433,7 +433,7 @@ function _mini_solve4(A: U, B: U, C: U, D: U): U[] {
       R_b3,
       R_a_b_c,
     };
-    return _mini_solve4ZeroRDeterminant(A, B, C, D, data);
+    return _mini_solve4CoeffsZeroRDeterminant(A, B, C, D, data);
   }
 
   let C_CHECKED_AS_NOT_ZERO = false;
@@ -444,10 +444,7 @@ function _mini_solve4(A: U, B: U, C: U, D: U): U[] {
   // that is not zero
   while (!C_CHECKED_AS_NOT_ZERO) {
     // R_C
-    let arg1 = R_Q;
-    if (flipSignOFQSoCIsNotZero) {
-      arg1 = negate(arg1);
-    }
+    const arg1 = flipSignOFQSoCIsNotZero ? negate(R_Q) : R_Q;
     R_C = simplify(
       power(multiply(add(arg1, R_DELTA1), rational(1, 2)), rational(1, 3))
     );
@@ -472,9 +469,7 @@ function _mini_solve4(A: U, B: U, C: U, D: U): U[] {
     }
   }
 
-  const R_3_a_C = multiply(R_C, R_3_a);
-
-  const R_6_a_C = multiply(R_3_a_C, integer(2));
+  const R_6_a_C = multiply(multiply(R_C, R_3_a), integer(2));
 
   // imaginary parts calculations
   const i_sqrt3 = multiply(
@@ -482,45 +477,40 @@ function _mini_solve4(A: U, B: U, C: U, D: U): U[] {
     power(integer(3), rational(1, 2))
   );
   const one_plus_i_sqrt3 = add(Constants.one, i_sqrt3);
-
   const one_minus_i_sqrt3 = subtract(Constants.one, i_sqrt3);
-
   const R_C_over_3a = divide(R_C, R_3_a);
 
   // first solution
-  const firstSolTerm1 = R_m_b_over_3a; // first term
-  const firstSolTerm2 = negate(R_C_over_3a); // second term
-  const firstSolTerm3 = negate(divide(R_DELTA0, R_3_a_C)); // third term
-  // now add the three terms together
-  results.push(
-    simplify(add_all([firstSolTerm1, firstSolTerm2, firstSolTerm3]))
+  const firstSolTerm1 = R_m_b_over_3a;
+  const firstSolTerm2 = negate(R_C_over_3a);
+  const firstSolTerm3 = negate(divide(R_DELTA0, multiply(R_C, R_3_a)));
+  const firstSolution = simplify(
+    add_all([firstSolTerm1, firstSolTerm2, firstSolTerm3])
   );
 
   // second solution
-  const secondSolTerm1 = R_m_b_over_3a; // first term
+  const secondSolTerm1 = R_m_b_over_3a;
   const secondSolTerm2 = divide(
     multiply(R_C_over_3a, one_plus_i_sqrt3),
     integer(2)
-  ); // second term
-  const secondSolTerm3 = divide(multiply(one_minus_i_sqrt3, R_DELTA0), R_6_a_C); // third term
-  // now add the three terms together
-  results.push(
-    simplify(add_all([secondSolTerm1, secondSolTerm2, secondSolTerm3]))
+  );
+  const secondSolTerm3 = divide(multiply(one_minus_i_sqrt3, R_DELTA0), R_6_a_C);
+  const secondSolution = simplify(
+    add_all([secondSolTerm1, secondSolTerm2, secondSolTerm3])
   );
 
   // third solution
-  const thirdSolTerm1 = R_m_b_over_3a; // first term
+  const thirdSolTerm1 = R_m_b_over_3a;
   const thirdSolTerm2 = divide(
     multiply(R_C_over_3a, one_minus_i_sqrt3),
     integer(2)
-  ); // second term
-  const thirdSolTerm3 = divide(multiply(one_plus_i_sqrt3, R_DELTA0), R_6_a_C); // third term
-  // now add the three terms together
-  results.push(
-    simplify(add_all([thirdSolTerm1, thirdSolTerm2, thirdSolTerm3]))
+  );
+  const thirdSolTerm3 = divide(multiply(one_plus_i_sqrt3, R_DELTA0), R_6_a_C);
+  const thirdSolution = simplify(
+    add_all([thirdSolTerm1, thirdSolTerm2, thirdSolTerm3])
   );
 
-  return results;
+  return [firstSolution, secondSolution, thirdSolution];
 }
 
 interface CommonArgs4ZeroRDeterminant {
@@ -531,7 +521,7 @@ interface CommonArgs4ZeroRDeterminant {
   R_a_b_c: U;
 }
 
-function _mini_solve4ZeroRDeterminant(
+function _mini_solve4CoeffsZeroRDeterminant(
   A: U,
   B: U,
   C: U,
@@ -549,16 +539,13 @@ function _mini_solve4ZeroRDeterminant(
     if (DEBUG) console.log(' cubic: DETERMINANT IS ZERO and delta0 is zero');
     return [R_m_b_over_3a]; // just same solution three times
   }
-  const results = [];
   if (DEBUG) {
     console.log(' cubic: DETERMINANT IS ZERO and delta0 is not zero');
   }
-  const root_solution = divide(
+  const rootSolution = divide(
     subtract(multiply(A, multiply(D, integer(9))), multiply(B, C)),
     multiply(R_DELTA0, integer(2))
-  ); // first solution
-  results.push(root_solution); // pushing two of them on the stack
-  results.push(root_solution);
+  );
 
   // second solution here
 
@@ -572,17 +559,15 @@ function _mini_solve4ZeroRDeterminant(
   // build the fraction
   // numerator: sum the three terms
   // denominator: a*delta0
-  results.push(
-    divide(
-      add_all([numer_term3, numer_term2, numer_term1]),
-      multiply(A, R_DELTA0)
-    )
+  const secondSolution = divide(
+    add_all([numer_term3, numer_term2, numer_term1]),
+    multiply(A, R_DELTA0)
   );
 
-  return results;
+  return [rootSolution, rootSolution, secondSolution];
 }
 
-function _mini_solve5(A: U, B: U, C: U, D: U, E: U): U[] {
+function _mini_solve5Coeffs(A: U, B: U, C: U, D: U, E: U): U[] {
   if (DEBUG) {
     console.log(
       '>>>>>>>>>>>>>>>> actually using quartic formula <<<<<<<<<<<<<<< '
@@ -595,17 +580,17 @@ function _mini_solve5(A: U, B: U, C: U, D: U, E: U): U[] {
     !isZeroAtomOrTensor(C) &&
     !isZeroAtomOrTensor(E)
   ) {
-    return _mini_solve5Biquadratic(A, B, C, D, E);
+    return _mini_solve5CoeffsBiquadratic(A, B, C, D, E);
   }
 
   if (!isZeroAtomOrTensor(B)) {
-    return _mini_solve5NonzeroB(A, B, C, D, E);
+    return _mini_solve5CoeffsNonzeroB(A, B, C, D, E);
   } else {
-    return _mini_solve5ZeroB(A, B, C, D, E);
+    return _mini_solve5CoeffsZeroB(A, B, C, D, E);
   }
 }
 
-function _mini_solve5Biquadratic(A: U, B: U, C: U, D: U, E: U): U[] {
+function _mini_solve5CoeffsBiquadratic(A: U, B: U, C: U, D: U, E: U): U[] {
   if (DEBUG) {
     console.log('biquadratic case');
   }
@@ -629,7 +614,7 @@ function _mini_solve5Biquadratic(A: U, B: U, C: U, D: U, E: U): U[] {
   return results;
 }
 
-function _mini_solve5ZeroB(A: U, B: U, C: U, D: U, E: U): U[] {
+function _mini_solve5CoeffsZeroB(A: U, B: U, C: U, D: U, E: U): U[] {
   const R_p = C;
   const R_q = D;
   const R_r = E;
@@ -668,18 +653,18 @@ function _mini_solve5ZeroB(A: U, B: U, C: U, D: U, E: U): U[] {
 
   let R_m = null;
   //R_m = resolventCubicSolutions.tensor.elem[1]
-  for (const eachSolution of Array.from(resolventCubicSolutions.tensor.elem)) {
+  for (const eachSolution of resolventCubicSolutions.tensor.elem) {
     if (DEBUG) {
       console.log(`examining solution: ${eachSolution}`);
     }
 
-    const toBeCheckedIFZero = absValFloat(
+    const toBeCheckedIfZero = absValFloat(
       add(multiply(eachSolution, integer(2)), R_p)
     );
     if (DEBUG) {
       console.log(`abs value is: ${eachSolution}`);
     }
-    if (!isZeroAtomOrTensor(toBeCheckedIFZero)) {
+    if (!isZeroAtomOrTensor(toBeCheckedIfZero)) {
       R_m = eachSolution;
       break;
     }
@@ -693,49 +678,48 @@ function _mini_solve5ZeroB(A: U, B: U, C: U, D: U, E: U): U[] {
     power(add(multiply(R_m, integer(2)), R_p), rational(1, 2))
   );
 
-  const TwoQOversqrtPPlus2M = simplify(
+  const twoQOversqrtPPlus2M = simplify(
     divide(multiply(R_q, integer(2)), sqrtPPlus2M)
   );
 
-  const ThreePPlus2M = add(
+  const threePPlus2M = add(
     multiply(R_p, integer(3)),
     multiply(R_m, integer(2))
   );
 
-  const results = [];
   // solution1
   let arg2 = simplify(
-    power(negate(add(ThreePPlus2M, TwoQOversqrtPPlus2M)), rational(1, 2))
+    power(negate(add(threePPlus2M, twoQOversqrtPPlus2M)), rational(1, 2))
   );
-  results.push(divide(add(sqrtPPlus2M, arg2), integer(2)));
+  const solution1 = divide(add(sqrtPPlus2M, arg2), integer(2));
 
   // solution2
   arg2 = simplify(
-    power(negate(add(ThreePPlus2M, TwoQOversqrtPPlus2M)), rational(1, 2))
+    power(negate(add(threePPlus2M, twoQOversqrtPPlus2M)), rational(1, 2))
   );
-  results.push(divide(subtract(sqrtPPlus2M, arg2), integer(2)));
+  const solution2 = divide(subtract(sqrtPPlus2M, arg2), integer(2));
 
   // solution3
   arg2 = simplify(
-    power(negate(subtract(ThreePPlus2M, TwoQOversqrtPPlus2M)), rational(1, 2))
+    power(negate(subtract(threePPlus2M, twoQOversqrtPPlus2M)), rational(1, 2))
   );
-  results.push(divide(add(negate(sqrtPPlus2M), arg2), integer(2)));
+  const solution3 = divide(add(negate(sqrtPPlus2M), arg2), integer(2));
 
   // solution4
   arg2 = simplify(
-    power(negate(subtract(ThreePPlus2M, TwoQOversqrtPPlus2M)), rational(1, 2))
+    power(negate(subtract(threePPlus2M, twoQOversqrtPPlus2M)), rational(1, 2))
   );
-  results.push(divide(subtract(negate(sqrtPPlus2M), arg2), integer(2)));
+  const solution4 = divide(subtract(negate(sqrtPPlus2M), arg2), integer(2));
 
-  return results;
+  return [solution1, solution2, solution3, solution4];
 }
 
-function _mini_solve5NonzeroB(A: U, B: U, C: U, D: U, E: U): U[] {
+function _mini_solve5CoeffsNonzeroB(A: U, B: U, C: U, D: U, E: U): U[] {
   if (DEBUG) {
     console.log(`tos 2 ${defs.tos}`);
   }
 
-  let R_p = divide(
+  const R_p = divide(
     add(
       multiply(integer(8), multiply(C, A)),
       multiply(integer(-3), power(B, integer(2)))
@@ -747,7 +731,7 @@ function _mini_solve5NonzeroB(A: U, B: U, C: U, D: U, E: U): U[] {
     console.log(`p for depressed quartic: ${R_p}`);
   }
 
-  let R_q = divide(
+  const R_q = divide(
     add(
       power(B, integer(3)),
       add(
@@ -786,23 +770,23 @@ function _mini_solve5NonzeroB(A: U, B: U, C: U, D: U, E: U): U[] {
     console.log(`tos 4 ${defs.tos}`);
   }
 
-  const arg1c = power(symbol(SECRETX), integer(4));
+  const four_x_4 = power(symbol(SECRETX), integer(4));
   if (DEBUG) {
-    console.log(`4 * x^4: ${arg1c}`);
+    console.log(`4 * x^4: ${four_x_4}`);
   }
 
-  const arg1b = multiply(R_p, power(symbol(SECRETX), integer(2)));
+  const r_q_x_2 = multiply(R_p, power(symbol(SECRETX), integer(2)));
   if (DEBUG) {
-    console.log(`R_p * x^2: ${arg1b}`);
+    console.log(`R_p * x^2: ${r_q_x_2}`);
   }
 
-  const arg1a = multiply(R_q, symbol(SECRETX));
+  const r_q_x = multiply(R_q, symbol(SECRETX));
   if (DEBUG) {
-    console.log(`R_q * x: ${arg1a}`);
+    console.log(`R_q * x: ${r_q_x}`);
     console.log(`R_r: ${R_r}`);
   }
 
-  const arg1 = simplify(add_all([arg1c, arg1b, arg1a, R_r]));
+  const arg1 = simplify(add_all([four_x_4, r_q_x_2, r_q_x, R_r]));
   if (DEBUG) {
     console.log(`solving depressed quartic: ${arg1}`);
   }
@@ -814,10 +798,8 @@ function _mini_solve5NonzeroB(A: U, B: U, C: U, D: U, E: U): U[] {
     console.log(`depressedSolutions: ${depressedSolutions}`);
   }
 
-  return Array.from(depressedSolutions.tensor.elem).map((eachSolution) => {
-    const result = simplify(
-      subtract(eachSolution, divide(B, multiply(integer(4), A)))
-    );
+  return depressedSolutions.tensor.elem.map((sol) => {
+    const result = simplify(subtract(sol, divide(B, multiply(integer(4), A))));
     if (DEBUG) {
       console.log(`solution from depressed: ${result}`);
     }
