@@ -9,7 +9,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { absval } from './abs';
 import { Eval } from './eval';
 import { iscomplexnumber, isnegativeterm } from './is';
@@ -27,9 +27,8 @@ import { power } from './power';
 //
 //-----------------------------------------------------------------------------
 export function Eval_sgn(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(sgn(pop()));
+  const result = sgn(Eval(cadr(p1)));
+  push(result);
 }
 
 export function sgn(p1: U): U {

@@ -8,10 +8,10 @@ import {
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { get_binding, push_symbol, set_binding } from '../runtime/symbol';
-import { integer, pop_integer } from './bignum';
-import { Eval } from './eval';
+import { integer } from './bignum';
+import { Eval, evaluate_integer } from './eval';
 
 // 'for' function
 
@@ -40,17 +40,13 @@ export function Eval_for(p1: U) {
     stop('for: 2nd arg should be the variable to loop over');
   }
 
-  push(cadddr(p1));
-  Eval();
-  const j = pop_integer();
+  const j = evaluate_integer(cadddr(p1));
   if (isNaN(j)) {
     push(p1);
     return;
   }
 
-  push(caddddr(p1));
-  Eval();
-  const k = pop_integer();
+  const k = evaluate_integer(caddddr(p1));
   if (isNaN(k)) {
     push(p1);
     return;
@@ -62,9 +58,7 @@ export function Eval_for(p1: U) {
 
   for (let i = j; i <= k; i++) {
     set_binding(loopingVariable, integer(i));
-    push(cadr(p1));
-    Eval();
-    pop();
+    Eval(cadr(p1));
   }
 
   // put back the index variable to original content

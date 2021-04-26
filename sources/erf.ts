@@ -1,5 +1,5 @@
 import { cadr, Constants, ERF, isdouble, symbol, U } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { double } from './bignum';
 import { erfc } from './erfc';
 import { Eval } from './eval';
@@ -28,9 +28,8 @@ erf(-x)=erf(x)
 
 */
 export function Eval_erf(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(yerf(pop()));
+  const result = yerf(Eval(cadr(p1)));
+  push(result);
 }
 
 function yerf(p1: U): U {

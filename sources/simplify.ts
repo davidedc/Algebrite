@@ -72,8 +72,7 @@ import { transpose } from './transpose';
 export function Eval_simplify(p1: U) {
   push(cadr(p1));
   runUserDefinedSimplifications();
-  Eval();
-  push(simplify(pop()));
+  push(simplify(Eval(pop())));
 }
 
 function runUserDefinedSimplifications() {
@@ -200,11 +199,9 @@ function simplify_main(): void {
   // we can given the current assignments.
   if (defs.codeGen && car(p1) === symbol(FUNCTION)) {
     const fbody = cadr(p1);
-    push(fbody);
     // let's simplify the body so we give it a
     // compact form
-    Eval();
-    const p3 = simplify(pop());
+    const p3 = simplify(Eval(fbody));
 
     // replace the evaled body
     const args = caddr(p1); // p5 is B
@@ -366,14 +363,10 @@ function f5(p1: U): U {
   const p2 = p1;
 
   defs.trigmode = 1;
-  push(p2);
-  Eval();
-  let p3 = pop();
+  let p3 = Eval(p2);
 
   defs.trigmode = 2;
-  push(p2);
-  Eval();
-  let p4 = pop();
+  let p4 = Eval(p2);
 
   defs.trigmode = 0;
 
@@ -416,9 +409,7 @@ function simplify_rectToClock(p1: U): [U] {
     return [p1];
   }
 
-  push(p1);
-  Eval();
-  p2 = clockform(pop()); // put new (hopefully simplified expr) in p2
+  p2 = clockform(Eval(p1)); // put new (hopefully simplified expr) in p2
 
   if (DEBUG) {
     console.log(`before simplification clockform: ${p1} after: ${p2}`);
@@ -435,9 +426,8 @@ function simplify_polarRect(p1: U): [U] {
   push(p1);
 
   polarRectAMinusOneBase();
-  Eval();
 
-  p2 = pop(); // put new (hopefully simplified expr) in p2
+  p2 = Eval(pop()); // put new (hopefully simplified expr) in p2
 
   if (count(p2) < count(p1)) {
     p1 = p2;

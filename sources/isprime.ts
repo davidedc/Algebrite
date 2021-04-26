@@ -1,13 +1,12 @@
 import { cadr, Constants, U } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { Eval } from './eval';
 import { isnonnegativeinteger } from './is';
 import { mprime } from './mprime';
 
 export function Eval_isprime(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(isprime(pop()));
+  const result = isprime(Eval(cadr(p1)));
+  push(result);
 }
 
 function isprime(p1: U): U {

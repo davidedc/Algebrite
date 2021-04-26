@@ -8,7 +8,7 @@ import {
   TANH,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { double } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
@@ -18,9 +18,8 @@ import { makeList } from './list';
 //  tanh(x) = --------------
 //             exp(2 x) + 1
 export function Eval_tanh(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(tanh(pop()));
+  const result = tanh(Eval(cadr(p1)));
+  push(result);
 }
 
 function tanh(p1: U): U {

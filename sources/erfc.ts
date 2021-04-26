@@ -1,5 +1,5 @@
 import { cadr, Constants, ERFC, isdouble, symbol, U } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { double } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
@@ -15,9 +15,8 @@ import { makeList } from './list';
 //
 //-----------------------------------------------------------------------------
 export function Eval_erfc(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(yerfc(pop()));
+  const result = yerfc(Eval(cadr(p1)));
+  push(result);
 }
 
 function yerfc(p1: U): U {

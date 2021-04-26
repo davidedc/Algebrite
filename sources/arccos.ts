@@ -14,7 +14,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { double, integer, rational, nativeInt } from './bignum';
 import { Eval } from './eval';
 import {
@@ -44,9 +44,7 @@ Returns the inverse cosine of x.
 
 */
 export function Eval_arccos(x: U) {
-  push(cadr(x));
-  Eval();
-  push(arccos(pop()));
+  push(arccos(Eval(cadr(x))));
 }
 
 function arccos(x: U): U {

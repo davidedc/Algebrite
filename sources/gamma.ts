@@ -11,7 +11,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { add } from './add';
 import { rational } from './bignum';
 import { Eval } from './eval';
@@ -29,9 +29,8 @@ import { sine } from './sin';
 //
 //-----------------------------------------------------------------------------
 export function Eval_gamma(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(gamma(pop()));
+  const result = gamma(Eval(cadr(p1)));
+  push(result);
 }
 
 function gamma(p1: U): U {

@@ -500,8 +500,7 @@ export function defn(): [U, U] {
       console.log('top of stack:');
       console.log(print_list(top()));
     }
-    Eval();
-    pop();
+    Eval(pop());
   }
 
   // restore the symbol dependencies as they were before.

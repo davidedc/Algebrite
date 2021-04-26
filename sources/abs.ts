@@ -21,7 +21,7 @@ import {
   findPossibleExponentialForm,
 } from '../runtime/find';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { exponential } from '../sources/misc';
 import { add } from './add';
 import { integer, rational } from './bignum';
@@ -97,17 +97,12 @@ Notes
 const DEBUG_ABS = false;
 
 export function Eval_abs(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(abs(pop()));
+  const result = abs(Eval(cadr(p1)));
+  push(result);
 }
 
 export function absValFloat(p1: U): U {
-  push(p1);
-  Eval();
-  push(absval(pop()));
-  Eval(); // normalize
-  return zzfloat(pop());
+  return zzfloat(Eval(absval(Eval(p1))));
 }
 // zzfloat of an abs doesn't necessarily result in a double
 // , for example if there are variables. But
@@ -221,11 +216,10 @@ export function absval(p1: U): U {
 
     if (DEBUG_ABS) {
       console.log(` abs: ${p1} is -1 to any power`);
-      if (defs.evaluatingAsFloats) {
-        console.log(' abs: numeric, so result is 1.0');
-      } else {
-        console.log(' abs: symbolic, so result is 1');
-      }
+      const msg = defs.evaluatingAsFloats
+        ? ' abs: numeric, so result is 1.0'
+        : ' abs: symbolic, so result is 1';
+      console.log(msg);
       console.log(` --> ABS of ${input} : ${one}`);
     }
 
@@ -326,7 +320,5 @@ function absval_tensor(p1: Tensor): U {
     stop('abs(tensor) with tensor rank > 1');
   }
 
-  push(simplify(power(inner(p1, conjugate(p1)), rational(1, 2))));
-  Eval();
-  return pop();
+  return Eval(simplify(power(inner(p1, conjugate(p1)), rational(1, 2))));
 }

@@ -15,7 +15,7 @@ import {
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push, top } from '../runtime/stack';
+import { pop, push } from '../runtime/stack';
 import { integer } from './bignum';
 import { Eval } from './eval';
 import { factorpoly } from './factorpoly';
@@ -26,23 +26,16 @@ import { factor_number } from './pollard';
 
 // factor a polynomial or integer
 export function Eval_factor(p1: U) {
-  push(cadr(p1));
-  Eval();
-
-  push(caddr(p1));
-  Eval();
-  const p2 = pop();
-  const variable = p2 === symbol(NIL) ? guess(top()) : p2;
-  const arg1 = pop();
-  let temp = factor(arg1, variable);
+  const top = Eval(cadr(p1));
+  const p2 = Eval(caddr(p1));
+  const variable = p2 === symbol(NIL) ? guess(top) : p2;
+  let temp = factor(top, variable);
 
   // more factoring?
   p1 = cdddr(p1);
 
   while (iscons(p1)) {
-    push(car(p1));
-    Eval();
-    const arg2 = pop();
+    const arg2 = Eval(car(p1));
     temp = factor_again(temp, arg2);
     p1 = cdr(p1);
   }

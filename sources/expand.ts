@@ -14,7 +14,7 @@ import {
   U,
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
-import { pop, push, top } from '../runtime/stack';
+import { pop, push } from '../runtime/stack';
 import { equal } from '../sources/misc';
 import { add, subtract } from './add';
 import { integer, nativeInt } from './bignum';
@@ -45,17 +45,10 @@ import { copy_tensor } from './tensor';
 //        2     x     x + 1
 //       x
 export function Eval_expand(p1: U) {
-  // 1st arg
-  push(cadr(p1));
-  Eval();
-
-  // 2nd arg
-  push(caddr(p1));
-  Eval();
-
-  const p2 = pop();
-  const X = p2 === symbol(NIL) ? guess(top()) : p2;
-  const F = pop();
+  const top = Eval(cadr(p1));
+  const p2 = Eval(caddr(p1));
+  const X = p2 === symbol(NIL) ? guess(top) : p2;
+  const F = top;
   push(expand(F, X));
 }
 
@@ -379,9 +372,8 @@ function trivial_divide(p2: U, p5: U): U {
     const arr: U[] = [];
     p2.tail().forEach((p0) => {
       if (!equal(p0, p5)) {
-        push(p0);
-        Eval(); // force expansion of (x+1)^2, f.e.
-        arr.push(pop());
+        // force expansion of (x+1)^2, f.e.
+        arr.push(Eval(p0));
       }
     });
     result = multiply_all(arr);

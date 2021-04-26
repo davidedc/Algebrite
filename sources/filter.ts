@@ -23,14 +23,11 @@ Remove terms that involve a given symbol or expression. For example...
 */
 export function Eval_filter(p1: U) {
   p1 = cdr(p1);
-  push(car(p1));
-  Eval();
+  push(Eval(car(p1)));
 
   if (iscons(p1)) {
     p1.tail().forEach((p) => {
-      push(p);
-      Eval();
-      const arg2 = pop();
+      const arg2 = Eval(p);
       const arg1 = pop();
       push(filter(arg1, arg2));
     });

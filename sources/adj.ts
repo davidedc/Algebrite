@@ -1,7 +1,7 @@
 import { alloc_tensor } from '../runtime/alloc';
 import { cadr, U } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { cofactor } from './cofactor';
 import { Eval } from './eval';
 import { is_square_matrix } from './tensor';
@@ -22,9 +22,8 @@ Returns the adjunct of matrix m. The inverse of m is equal to adj(m) divided by 
 
 */
 export function Eval_adj(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(adj(pop()));
+  const result = adj(Eval(cadr(p1)));
+  push(result);
 }
 
 export function adj(p1: U): U {

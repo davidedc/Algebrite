@@ -8,7 +8,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { add } from './add';
 import { double } from './bignum';
 import { Eval } from './eval';
@@ -33,9 +33,8 @@ Returns the smallest integer not less than x.
 
 */
 export function Eval_ceiling(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(ceiling(pop()));
+  const result = ceiling(Eval(cadr(p1)));
+  push(result);
 }
 
 function ceiling(p1: U): U {

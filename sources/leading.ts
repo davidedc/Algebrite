@@ -1,5 +1,5 @@
 import { caddr, cadr, NIL, symbol, U } from '../runtime/defs';
-import { pop, push, top } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { degree } from './degree';
 import { Eval } from './eval';
 import { filter } from './filter';
@@ -21,13 +21,11 @@ Result
 The result is undefined if P is not a polynomial.
 */
 export function Eval_leading(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(caddr(p1));
-  Eval();
-  p1 = pop();
-  const X = p1 === symbol(NIL) ? guess(top()) : p1;
-  const P = pop();
+  const top = Eval(cadr(p1));
+
+  p1 = Eval(caddr(p1));
+  const X = p1 === symbol(NIL) ? guess(top) : p1;
+  const P = top;
   push(leading(P, X));
 }
 

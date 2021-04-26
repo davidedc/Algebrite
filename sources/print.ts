@@ -85,7 +85,6 @@ import {
   TESTGT,
   TESTLE,
   TESTLT,
-  TRANSPOSE,
   U,
   UNIT,
 } from '../runtime/defs';
@@ -93,7 +92,7 @@ import { pop, push } from '../runtime/stack';
 import { get_binding, get_printname, set_binding } from '../runtime/symbol';
 import { lessp } from '../sources/misc';
 import { absval } from './abs';
-import { integer, mp_denominator, mp_numerator, print_number } from './bignum';
+import { mp_denominator, mp_numerator, print_number } from './bignum';
 import { denominator } from './denominator';
 import { Eval } from './eval';
 import {
@@ -167,9 +166,7 @@ function _print(p: U, passedPrintMode: string): string {
   let accumulator = '';
 
   while (iscons(p)) {
-    push(car(p));
-    Eval();
-    const p2 = pop();
+    const p2 = Eval(car(p));
 
     // display single symbol as "symbol = result"
     // but don't display "symbol = symbol"
@@ -1420,7 +1417,11 @@ function print_index_function(p: BaseAtom): string {
   return accumulator;
 }
 
-function print_factor(p: BaseAtom, omitParens = false, pastFirstFactor=false): string {
+function print_factor(
+  p: BaseAtom,
+  omitParens = false,
+  pastFirstFactor = false
+): string {
   // breakpoint
   let accumulator = '';
   if (isNumericAtom(p)) {

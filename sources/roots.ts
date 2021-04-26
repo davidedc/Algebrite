@@ -56,38 +56,20 @@ const flatten = (arr: any[]) => [].concat(...arr);
 
 export function Eval_roots(POLY: U) {
   // A == B -> A - B
-
   let X = cadr(POLY);
-
   if (car(X) === symbol(SETQ) || car(X) === symbol(TESTEQ)) {
-    push(cadr(X));
-    Eval();
-    push(caddr(X));
-    Eval();
-    const arg2 = pop();
-    const arg1 = pop();
-    push(subtract(arg1, arg2));
+    push(subtract(Eval(cadr(X)), Eval(caddr(X))));
   } else {
-    push(X);
-    Eval();
-    X = pop();
+    X = Eval(X);
     if (car(X) === symbol(SETQ) || car(X) === symbol(TESTEQ)) {
-      push(cadr(X));
-      Eval();
-      push(caddr(X));
-      Eval();
-      const arg2 = pop();
-      const arg1 = pop();
-      push(subtract(arg1, arg2));
+      push(subtract(Eval(cadr(X)), Eval(caddr(X))));
     } else {
       push(X);
     }
   }
 
   // 2nd arg, x
-  push(caddr(POLY));
-  Eval();
-  X = pop();
+  X = Eval(caddr(POLY));
 
   const X1 = X === symbol(NIL) ? guess(top()) : X;
   const POLY1 = pop();

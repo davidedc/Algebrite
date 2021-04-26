@@ -24,10 +24,8 @@ import { copy_tensor } from './tensor';
 
 export function Eval_float(p1: U) {
   evalFloats(() => {
-    push(cadr(p1));
-    Eval();
-    push(yyfloat(pop()));
-    Eval(); // normalize
+    const result = Eval(yyfloat(Eval(cadr(p1))));
+    push(result);
   });
 }
 
@@ -61,9 +59,7 @@ export function zzfloat(p1: U): U {
     //p1 = pop()
     //push(cadr(p1))
     //push(p1)
-    Eval();
-    push(yyfloat(pop()));
-    Eval(); // normalize
+    push(Eval(yyfloat(Eval(pop()))));
   });
   return pop();
 }

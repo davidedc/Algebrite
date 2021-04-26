@@ -8,7 +8,7 @@ import {
   TAN,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { double, integer, rational, nativeInt } from './bignum';
 import { Eval } from './eval';
 import { isnegative } from './is';
@@ -18,9 +18,8 @@ import { power } from './power';
 
 // Tangent function of numerical and symbolic arguments
 export function Eval_tan(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(tangent(pop()));
+  const result = tangent(Eval(cadr(p1)));
+  push(result);
 }
 
 function tangent(p1: U): U {

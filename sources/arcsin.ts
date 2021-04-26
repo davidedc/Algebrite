@@ -14,7 +14,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { double, integer, rational, nativeInt } from './bignum';
 import { Eval } from './eval';
 import {
@@ -44,9 +44,7 @@ Returns the inverse sine of x.
 
 */
 export function Eval_arcsin(x: U) {
-  push(cadr(x));
-  Eval();
-  push(arcsin(pop()));
+  push(arcsin(Eval(cadr(x))));
 }
 
 function arcsin(x: U): U {

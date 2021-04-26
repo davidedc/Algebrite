@@ -43,7 +43,6 @@ import { init } from './init';
 import {
   collectUserSymbols,
   get_binding,
-  push_symbol,
   set_binding,
   usr_symbol,
 } from './symbol';
@@ -934,14 +933,10 @@ export function top_level_eval() {
 
   const shouldAutoexpand = symbol(AUTOEXPAND);
 
-  if (isZeroAtomOrTensor(get_binding(shouldAutoexpand))) {
-    defs.expanding = false;
-  } else {
-    defs.expanding = true;
-  }
+  defs.expanding = !isZeroAtomOrTensor(get_binding(shouldAutoexpand));
 
   const originalArgument = top();
-  Eval();
+  push(Eval(pop()));
   let evalledArgument = top();
 
   // "draw", "for" and "setq" return "nil", there is no result to print

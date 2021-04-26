@@ -8,11 +8,11 @@ import {
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { get_binding, set_binding } from '../runtime/symbol';
 import { add } from './add';
-import { integer, pop_integer } from './bignum';
-import { Eval } from './eval';
+import { integer } from './bignum';
+import { Eval, evaluate_integer } from './eval';
 
 // 'sum' function
 
@@ -33,18 +33,14 @@ export function Eval_sum(p1: U) {
   }
 
   // 3rd arg (lower limit)
-  push(cadddr(p1));
-  Eval();
-  const j = pop_integer();
+  const j = evaluate_integer(cadddr(p1));
   if (isNaN(j)) {
     push(p1);
     return;
   }
 
   // 4th arg (upper limit)
-  push(caddddr(p1));
-  Eval();
-  const k = pop_integer();
+  const k = evaluate_integer(caddddr(p1));
   if (isNaN(k)) {
     push(p1);
     return;
@@ -57,10 +53,7 @@ export function Eval_sum(p1: U) {
   let temp: U = Constants.zero;
   for (let i = j; i <= k; i++) {
     set_binding(indexVariable, integer(i));
-    push(body);
-    Eval();
-    const arg2 = pop();
-    temp = add(temp, arg2);
+    temp = add(temp, Eval(body));
   }
   push(temp);
 

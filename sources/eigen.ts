@@ -184,11 +184,9 @@ function EIG_check_arg(
 ):
   | { arg: Tensor<Double>; invalid?: undefined }
   | { arg?: undefined; invalid: U } {
-  push(cadr(p1));
-  Eval();
-  push(yyfloat(pop()));
-  Eval();
-  p1 = pop();
+  push(Eval(cadr(p1)));
+
+  p1 = Eval(yyfloat(pop()));
 
   if (!istensor(p1)) {
     return { invalid: p1 };

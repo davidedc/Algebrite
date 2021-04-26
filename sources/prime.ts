@@ -1,6 +1,6 @@
 import { cadr, MAXPRIMETAB, primetab, U } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { push, pop } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { integer, nativeInt } from './bignum';
 import { Eval } from './eval';
 
@@ -14,9 +14,8 @@ import { Eval } from './eval';
 //
 //-----------------------------------------------------------------------------
 export function Eval_prime(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(prime(pop()));
+  const result = prime(Eval(cadr(p1)));
+  push(result);
 }
 
 function prime(p1: U) {

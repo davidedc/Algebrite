@@ -23,29 +23,21 @@ Taylor expansion of a function
 export function Eval_taylor(p1: U) {
   // 1st arg
   p1 = cdr(p1);
-  push(car(p1));
-  Eval();
-  const F = pop();
+  const F = Eval(car(p1));
 
   // 2nd arg
   p1 = cdr(p1);
-  push(car(p1));
-  Eval();
-  let p2 = pop();
-  const X = p2 === symbol(NIL) ? guess(top()) : p2;
+  let p2 = Eval(car(p1));
+  const X = p2 === symbol(NIL) ? guess(top()) : p2; // TODO: should this be `top()`?
 
   // 3rd arg
   p1 = cdr(p1);
-  push(car(p1));
-  Eval();
-  p2 = pop();
+  p2 = Eval(car(p1));
   const N = p2 === symbol(NIL) ? integer(24) : p2; // 24: default number of terms
 
   // 4th arg
   p1 = cdr(p1);
-  push(car(p1));
-  Eval();
-  p2 = pop();
+  p2 = Eval(car(p1));
   const A = p2 === symbol(NIL) ? Constants.zero : p2; // 0: default expansion point
 
   push(taylor(F, X, N, A));
@@ -57,11 +49,8 @@ function taylor(F: U, X: U, N: U, A: U): U {
     return makeList(symbol(TAYLOR), F, X, N, A);
   }
 
-  push(subst(F, X, A)); // F: f(a)
-  Eval();
-
   let p5: U = Constants.one;
-  let temp = pop();
+  let temp = Eval(subst(F, X, A)); // F: f(a)
   for (let i = 1; i <= k; i++) {
     F = derivative(F, X); // F: f = f'
 
@@ -72,10 +61,7 @@ function taylor(F: U, X: U, N: U, A: U): U {
     // c = c * (x - a)
     p5 = multiply(p5, subtract(X, A));
 
-    push(subst(F, X, A)); // F: f(a)
-    Eval();
-
-    const arg1a = pop();
+    const arg1a = Eval(subst(F, X, A)); // F: f(a)
     temp = add(temp, divide(multiply(arg1a, p5), factorial(integer(i))));
   }
   return temp;

@@ -73,15 +73,13 @@ export function Eval_user_function(p1: U) {
   // evaluated to get to the function definition instead
   // (e.g. the function is an element of an array)
   // so we do an eval to sort it all out.
-  push(car(p1));
-  Eval();
 
   // we expect to find either the body and
   // formula arguments, OR, if the function
   // has not been defined yet, then the
   // function will just contain its own name, as
   // all undefined variables do.
-  const bodyAndFormalArguments = pop();
+  const bodyAndFormalArguments = Eval(car(p1));
 
   if (isNumericAtom(bodyAndFormalArguments)) {
     stop(
@@ -120,8 +118,7 @@ export function Eval_user_function(p1: U) {
     push(bodyAndFormalArguments);
     p1 = B;
     while (iscons(p1)) {
-      push(car(p1));
-      Eval();
+      push(Eval(car(p1)));
       p1 = cdr(p1);
     }
     list(defs.tos - h);
@@ -153,7 +150,7 @@ export function Eval_user_function(p1: U) {
     rewrite_args();
   }
   //console.log "rewritten body: " + stack[tos-1]
-  Eval();
+  push(Eval(pop()));
 }
 
 // Rewrite by expanding symbols that contain args

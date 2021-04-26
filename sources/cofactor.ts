@@ -1,9 +1,8 @@
 import { cadddr, caddr, cadr, Tensor, U } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
-import { pop_integer } from './bignum';
+import { push } from '../runtime/stack';
 import { determinant } from './det';
-import { Eval } from './eval';
+import { Eval, evaluate_integer } from './eval';
 import { negate } from './multiply';
 import { is_square_matrix } from './tensor';
 
@@ -25,22 +24,17 @@ This function returns c[i,j].
 
 */
 export function Eval_cofactor(p1: U) {
-  push(cadr(p1));
-  Eval();
-  const p2 = pop();
+  const p2 = Eval(cadr(p1));
   if (!is_square_matrix(p2)) {
     stop('cofactor: 1st arg: square matrix expected');
   }
   const n = p2.tensor.dim[0];
-  push(caddr(p1));
-  Eval();
-  const i = pop_integer();
+
+  const i = evaluate_integer(caddr(p1));
   if (i < 1 || i > n) {
     stop('cofactor: 2nd arg: row index expected');
   }
-  push(cadddr(p1));
-  Eval();
-  const j = pop_integer();
+  const j = evaluate_integer(cadddr(p1));
   if (j < 1 || j > n) {
     stop('cofactor: 3rd arg: column index expected');
   }

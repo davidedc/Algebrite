@@ -268,9 +268,7 @@ export function transform(s: string[] | U, generalTransform: boolean) {
   if (transformationSuccessful) {
     //console.log "transformation successful"
     // a transformation was successful
-    push(B);
-    Eval();
-    temp = pop();
+    temp = Eval(B);
     //console.log "...into: " + p1
     transformationSuccessful = true;
   } else {
@@ -324,9 +322,7 @@ function f_equals_a(
       // now test all the conditions (it's an and between them)
       let temp = C;
       while (iscons(temp)) {
-        push(car(temp));
-        Eval();
-        const p2 = pop();
+        const p2 = Eval(car(temp));
         if (isZeroAtomOrTensor(p2)) {
           break;
         }
@@ -348,11 +344,11 @@ function f_equals_a(
           )} and binding METAX to ${get_binding(symbol(METAX))}`
         );
       }
-      push(A);
       if (generalTransform) {
+        push(A);
         Eval_noexpand();
       } else {
-        Eval();
+        push(Eval(A));
       }
       if (DEBUG) {
         console.log(`  comparing ${top()} to: ${defs.stack[defs.tos - 2]}`);

@@ -12,7 +12,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { subtract } from './add';
 import { double, integer, rational, nativeInt } from './bignum';
 import { cosine } from './cos';
@@ -63,13 +63,8 @@ Examples:
 
 */
 export function Eval_besselj(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(caddr(p1));
-  Eval();
-  const arg2 = pop();
-  const arg1 = pop();
-  push(besselj(arg1, arg2));
+  const result = besselj(Eval(cadr(p1)), Eval(caddr(p1)));
+  push(result);
 }
 
 export function besselj(p1: U, p2: U): U {

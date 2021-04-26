@@ -25,9 +25,7 @@ example, defint(f,x,a,b,y,c,d).
 
 */
 export function Eval_defint(p1: U) {
-  push(cadr(p1));
-  Eval();
-  let F = pop();
+  let F = Eval(cadr(p1));
 
   p1 = cddr(p1);
 
@@ -35,20 +33,14 @@ export function Eval_defint(p1: U) {
   // integrals, so we loop over the
   // multiple integrals here
   while (iscons(p1)) {
-    push(car(p1));
+    const X = Eval(car(p1));
     p1 = cdr(p1);
-    Eval();
-    const X = pop();
 
-    push(car(p1));
+    const A = Eval(car(p1));
     p1 = cdr(p1);
-    Eval();
-    const A = pop();
 
-    push(car(p1));
+    const B = Eval(car(p1));
     p1 = cdr(p1);
-    Eval();
-    const B = pop();
 
     // obtain the primitive of F against the
     // specified variable X
@@ -58,12 +50,10 @@ export function Eval_defint(p1: U) {
     F = integral(F, X); // contains the antiderivative of F
 
     // evaluate the integral in A
-    push(subst(F, X, B));
-    Eval();
+    const arg1 = Eval(subst(F, X, B));
 
     // evaluate the integral in B
-    push(subst(F, X, A));
-    Eval();
+    const arg2 = Eval(subst(F, X, A));
 
     // integral between B and A is the
     // subtraction. Note that this could
@@ -72,8 +62,6 @@ export function Eval_defint(p1: U) {
     // number/function again doing the while
     // loop again if this is a multiple
     // integral.
-    const arg2 = pop();
-    const arg1 = pop();
     F = subtract(arg1, arg2);
   }
 

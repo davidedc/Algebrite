@@ -9,7 +9,7 @@ import {
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { double } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
@@ -31,9 +31,7 @@ Returns the inverse hyperbolic tangent of x.
 
 */
 export function Eval_arctanh(x: U) {
-  push(cadr(x));
-  Eval();
-  push(arctanh(pop()));
+  push(arctanh(Eval(cadr(x))));
 }
 
 function arctanh(x: U): U {

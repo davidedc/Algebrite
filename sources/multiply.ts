@@ -71,15 +71,10 @@ import { append } from '../runtime/otherCFunctions';
 //static void parse_p2(void)
 //static void __normalize_radical_factors(int)
 export function Eval_multiply(p1: U) {
-  push(cadr(p1));
-  Eval();
+  let temp = Eval(cadr(p1));
   p1 = cddr(p1);
-
-  let temp = pop();
   while (iscons(p1)) {
-    push(car(p1));
-    Eval();
-    const arg2 = pop();
+    const arg2 = Eval(car(p1));
     temp = multiply(temp, arg2);
     p1 = cdr(p1);
   }

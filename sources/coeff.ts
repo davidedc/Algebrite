@@ -9,7 +9,7 @@ import {
   SYMBOL_X,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { equal } from '../sources/misc';
 import { subtract } from './add';
 import { Eval } from './eval';
@@ -34,18 +34,9 @@ Returns the coefficient of x^n in polynomial p. The x argument can be omitted fo
 
 */
 export function Eval_coeff(p1: U) {
-  push(cadr(p1));
-  Eval();
-
-  push(caddr(p1));
-  Eval();
-
-  push(cadddr(p1));
-  Eval();
-
-  let N = pop();
-  let X = pop();
-  const P = pop();
+  let N = Eval(cadddr(p1));
+  let X = Eval(caddr(p1));
+  const P = Eval(cadr(p1));
 
   if (N === symbol(NIL)) {
     // only 2 args?
@@ -75,10 +66,7 @@ export function coeff(p: U, x: U): U[] {
   const coefficients = [];
 
   while (true) {
-    push(subst(p, x, Constants.zero));
-    Eval();
-
-    const c = pop();
+    const c = Eval(subst(p, x, Constants.zero));
     coefficients.push(c);
 
     p = subtract(p, c);

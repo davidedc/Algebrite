@@ -4,7 +4,6 @@ import {
   car,
   cdr,
   Constants,
-  DEBUG,
   defs,
   isadd,
   iscons,
@@ -12,8 +11,6 @@ import {
   isNumericAtom,
   ispower,
   isrational,
-  MULTIPLY,
-  symbol,
   U,
 } from '../runtime/defs';
 import { pop, push } from '../runtime/stack';
@@ -21,23 +18,18 @@ import { equal, length, lessp } from '../sources/misc';
 import { subtract } from './add';
 import { gcd_numbers } from './bignum';
 import { Eval } from './eval';
-import { factorpoly } from './factorpoly';
-import { isnegativenumber, isunivarpolyfactoredorexpandedform } from './is';
-import { makeList } from './list';
+import { isnegativenumber } from './is';
 import { divide, multiply } from './multiply';
 import { power } from './power';
 
 // Greatest common denominator
 export function Eval_gcd(p1: U) {
   p1 = cdr(p1);
-  push(car(p1));
-  Eval();
+  push(Eval(car(p1)));
 
   if (iscons(p1)) {
     p1.tail().forEach((p) => {
-      push(p);
-      Eval();
-      const arg2 = pop();
+      const arg2 = Eval(p);
       const arg1 = pop();
       push(gcd(arg1, arg2));
     });
@@ -87,7 +79,6 @@ function gcd_main(p1: U, p2: U): U {
     return gcd_factor_term(p1, p2);
   }
 
-
   return gcd_powers_with_same_base(p1, p2);
 }
 
@@ -122,8 +113,14 @@ function gcd_powers_with_same_base(base1: U, base2: U): U {
 
   if (isNumericAtom(p5)) {
     // choose the smallest exponent
-    p5 = ismultiply(exponent1) && isNumericAtom(cadr(exponent1)) ? cadr(exponent1) : Constants.one;
-    p6 = ismultiply(exponent2) && isNumericAtom(cadr(exponent2)) ? cadr(exponent2) : Constants.one;
+    p5 =
+      ismultiply(exponent1) && isNumericAtom(cadr(exponent1))
+        ? cadr(exponent1)
+        : Constants.one;
+    p6 =
+      ismultiply(exponent2) && isNumericAtom(cadr(exponent2))
+        ? cadr(exponent2)
+        : Constants.one;
     const exponent = lessp(p5, p6) ? exponent1 : exponent2;
     return power(base1, exponent);
   }
@@ -164,7 +161,7 @@ function gcd_expr(p: U): U {
   return iscons(p) ? p.tail().reduce(gcd) : car(cdr(p));
 }
 
-function gcd_term_term(p1: U, p2:U): U {
+function gcd_term_term(p1: U, p2: U): U {
   if (!iscons(p1) || !iscons(p2)) {
     return Constants.one;
   }

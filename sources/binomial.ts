@@ -1,5 +1,5 @@
 import { caddr, cadr, Constants, isNumericAtom, U } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { lessp } from '../sources/misc';
 import { subtract } from './add';
 import { Eval } from './eval';
@@ -19,13 +19,10 @@ import { divide } from './multiply';
 //  The binomial coefficient vanishes for k < 0 or k > n. (A=B, p. 19)
 
 export function Eval_binomial(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(caddr(p1));
-  Eval();
-  const K = pop();
-  const N = pop();
-  push(binomial(N, K));
+  const N = Eval(cadr(p1));
+  const K = Eval(caddr(p1));
+  const result = binomial(N, K);
+  push(result);
 }
 
 function binomial(N: U, K: U): U {

@@ -1,5 +1,5 @@
 import { cadr, Constants, U } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { subtract } from './add';
 import { integer } from './bignum';
 import { conjugate } from './conj';
@@ -20,9 +20,8 @@ import { rect } from './rect';
 const DEBUG_IMAG = false;
 
 export function Eval_imag(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(imag(pop()));
+  const result = imag(Eval(cadr(p1)));
+  push(result);
 }
 
 export function imag(p: U): U {

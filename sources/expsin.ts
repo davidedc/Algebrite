@@ -1,5 +1,5 @@
 import { cadr, Constants, U } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { exponential } from '../sources/misc';
 import { subtract } from './add';
 import { rational } from './bignum';
@@ -8,9 +8,8 @@ import { divide, multiply, negate } from './multiply';
 
 // Do the exponential sine function.
 export function Eval_expsin(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(expsin(pop()));
+  const result = expsin(Eval(cadr(p1)));
+  push(result);
 }
 
 export function expsin(p1: U): U {

@@ -12,7 +12,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { add, subtract } from './add';
 import { double, integer, rational, nativeInt } from './bignum';
 import { cosine } from './cos';
@@ -24,12 +24,9 @@ import { power } from './power';
 
 // Sine function of numerical and symbolic arguments
 export function Eval_sin(p1: U) {
-  //console.log "sin ---- "
-  push(cadr(p1));
-  Eval();
-  push(sine(pop()));
+  const result = sine(Eval(cadr(p1)));
+  push(result);
 }
-//console.log "sin end ---- "
 
 export function sine(p1: U): U {
   if (isadd(p1)) {

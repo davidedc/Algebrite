@@ -11,7 +11,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { add, subtract } from './add';
 import { double, integer, rational, nativeInt } from './bignum';
 import { Eval } from './eval';
@@ -37,9 +37,8 @@ Returns the cosine of x.
 
 */
 export function Eval_cos(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(cosine(pop()));
+  const result = cosine(Eval(cadr(p1)));
+  push(result);
 }
 
 export function cosine(p1: U): U {

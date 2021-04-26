@@ -1,5 +1,5 @@
 import { cadr, Constants, evalPolar, U } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { exponential } from '../sources/misc';
 import { abs } from './abs';
 import { arg } from './arg';
@@ -15,9 +15,8 @@ Convert complex z to polar form
   polar(z) = abs(z) * exp(i * arg(z))
 */
 export function Eval_polar(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(polar(pop()));
+  const result = polar(Eval(cadr(p1)));
+  push(result);
 }
 
 export function polar(p1: U): U {

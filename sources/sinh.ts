@@ -8,7 +8,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { double } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
@@ -18,9 +18,8 @@ import { makeList } from './list';
 //  sinh(x) = ----------------
 //                   2
 export function Eval_sinh(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(ysinh(pop()));
+  const result = ysinh(Eval(cadr(p1)));
+  push(result);
 }
 
 export function ysinh(p1: U): U {

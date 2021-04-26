@@ -35,16 +35,13 @@ contract(m) is equivalent to the trace of matrix m.
 
 */
 export function Eval_contract(p1: U) {
-  push(cadr(p1));
-  Eval();
+  push(Eval(cadr(p1)));
   if (cddr(p1) === symbol(NIL)) {
     push(Constants.one);
     push_integer(2);
   } else {
-    push(caddr(p1));
-    Eval();
-    push(cadddr(p1));
-    Eval();
+    push(Eval(caddr(p1)));
+    push(Eval(cadddr(p1)));
   }
   contract();
 }

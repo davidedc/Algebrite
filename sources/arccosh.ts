@@ -9,7 +9,7 @@ import {
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { double } from './bignum';
 import { Eval } from './eval';
 import { isplusone } from './is';
@@ -31,9 +31,7 @@ Returns the inverse hyperbolic cosine of x.
 
 */
 export function Eval_arccosh(x: U) {
-  push(cadr(x));
-  Eval();
-  push(arccosh(pop()));
+  push(arccosh(Eval(cadr(x))));
 }
 
 function arccosh(x: U): U {

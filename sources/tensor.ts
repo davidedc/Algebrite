@@ -14,7 +14,7 @@ import {
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { equal, lessp } from '../sources/misc';
 import { add } from './add';
 import { nativeInt } from './bignum';
@@ -102,11 +102,7 @@ export function Eval_tensor(a: Tensor) {
 
   check_tensor_dimensions(b);
 
-  b.tensor.elem = a.tensor.elem.map((el) => {
-    push(el);
-    Eval();
-    return pop();
-  });
+  b.tensor.elem = a.tensor.elem.map((el) => Eval(el));
 
   check_tensor_dimensions(a);
   check_tensor_dimensions(b);

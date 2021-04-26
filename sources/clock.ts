@@ -1,5 +1,5 @@
 import { cadr, Constants, POWER, symbol, U } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { abs } from './abs';
 import { arg } from './arg';
 import { Eval } from './eval';
@@ -31,9 +31,8 @@ import { divide, multiply } from './multiply';
 const DEBUG_CLOCKFORM = false;
 
 export function Eval_clock(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(clockform(pop()));
+  const result = clockform(Eval(cadr(p1)));
+  push(result);
 }
 
 export function clockform(p1: U): U {

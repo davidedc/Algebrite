@@ -6,7 +6,6 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
 import { subtract } from './add';
 import { integer, nativeInt } from './bignum';
 import { Eval } from './eval';
@@ -39,9 +38,7 @@ function yyhermite(X: U, N: U): U {
     return yyhermite2(n, X);
   }
 
-  push(subst(yyhermite2(n, symbol(SECRETX)), symbol(SECRETX), X));
-  Eval();
-  return pop();
+  return Eval(subst(yyhermite2(n, symbol(SECRETX)), symbol(SECRETX), X));
 }
 
 function yyhermite2(n: number, p1: U) {

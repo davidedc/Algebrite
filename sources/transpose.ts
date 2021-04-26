@@ -35,8 +35,7 @@ import { multiply } from './multiply';
 
 // Transpose tensor indices
 export function Eval_transpose(p1: U) {
-  push(cadr(p1));
-  Eval();
+  push(Eval(cadr(p1)));
 
   // add default params if they
   // have not been passed
@@ -44,10 +43,8 @@ export function Eval_transpose(p1: U) {
     push(Constants.one);
     push_integer(2);
   } else {
-    push(caddr(p1));
-    Eval();
-    push(cadddr(p1));
-    Eval();
+    push(Eval(caddr(p1)));
+    push(Eval(cadddr(p1)));
   }
   const arg3 = pop();
   const arg2 = pop();

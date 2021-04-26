@@ -10,7 +10,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { Eval } from './eval';
 import { isnegativeterm } from './is';
 import { makeList } from './list';
@@ -26,9 +26,8 @@ import { negate } from './multiply';
 //  dirac(b-a)=dirac(a-b)
 //-----------------------------------------------------------------------------
 export function Eval_dirac(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(dirac(pop()));
+  const result = dirac(Eval(cadr(p1)));
+  push(result);
 }
 
 export function dirac(p1: U): U {

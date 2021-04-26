@@ -21,7 +21,6 @@ import { get_binding } from '../runtime/symbol';
 import { abs } from './abs';
 import { add } from './add';
 import { arg } from './arg';
-import { integer } from './bignum';
 import { cosine } from './cos';
 import { Eval } from './eval';
 import { isimaginaryunit, isZeroAtomOrTensor } from './is';
@@ -39,9 +38,8 @@ Convert complex z to rectangular form
 const DEBUG_RECT = false;
 
 export function Eval_rect(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(rect(pop()));
+  const result = rect(Eval(cadr(p1)));
+  push(result);
 }
 
 export function rect(p1: U): U {
