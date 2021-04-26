@@ -159,8 +159,7 @@ export function isZeroLikeOrNonZeroLikeOrUndetermined(
   // we just did
 
   if (Find(evalledArgument, Constants.imaginaryunit)) {
-    push(evalledArgument);
-    absValFloat();
+    push(absValFloat(evalledArgument));
 
     Eval_predicate();
     evalledArgument = pop();

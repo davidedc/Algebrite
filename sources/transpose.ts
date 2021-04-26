@@ -61,12 +61,8 @@ export function Eval_transpose(p1: U) {
 // p1: what needs to be transposed
 export function transpose(p1: U, p2: U, p3: U) {
   let t = 0;
-  const ai: number[] = [];
-  const an: number[] = [];
-  for (let i = 0; i < MAXDIM; i++) {
-    ai[i] = 0;
-    an[i] = 0;
-  }
+  const ai: number[] = Array(MAXDIM).fill(0);
+  const an: number[] = Array(MAXDIM).fill(0);
 
   // a transposition just goes away when applied to a scalar
   if (isNumericAtom(p1)) {

@@ -65,9 +65,9 @@ export function Eval_product(p1: U) {
     temp = multiply(temp, arg2);
 
     if (DEBUG) {
-      console.log('product - factor 1: ' + arg2.toString());
-      console.log('product - factor 2: ' + temp.toString());
-      console.log('product - result: ' + top().toString());
+      console.log(`product - factor 1: ${arg2}`);
+      console.log(`product - factor 2: ${temp}`);
+      console.log(`product - result: ${top()}`);
     }
   }
   push(temp);
