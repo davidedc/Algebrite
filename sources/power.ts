@@ -42,7 +42,6 @@ import {
   double,
   integer,
   nativeDouble,
-  push_integer,
   rational,
   nativeInt,
 } from './bignum';
@@ -73,9 +72,8 @@ import { power_tensor } from './tensor';
 
 /* Power function
 
-  Input:    push  Base
-
-      push  Exponent
+  Input:    push  Base 
+            push  Exponent
 
   Output:    Result on stack
 */
@@ -85,12 +83,8 @@ export function Eval_power(p1: U) {
   if (DEBUG_POWER) {
     breakpoint;
   }
-  push(cadr(p1));
-  Eval();
-  push(caddr(p1));
-  Eval();
-  const exponent = pop();
-  const base = pop();
+  const exponent = Eval(caddr(p1));
+  const base = Eval(cadr(p1));
   push(power(base, exponent));
 }
 

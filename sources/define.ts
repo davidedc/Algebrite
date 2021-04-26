@@ -12,7 +12,7 @@ import {
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { push_symbol, set_binding } from '../runtime/symbol';
 import { Eval } from './eval';
 import { makeList } from './list';
@@ -62,9 +62,7 @@ export function define_user_function(p1: U) {
   // evaluate function body (maybe)
 
   if (car(B) === symbol(EVAL)) {
-    push(cadr(B));
-    Eval();
-    B = pop();
+    B = Eval(cadr(B));
   }
 
   // note how, unless explicitly forced by an eval,

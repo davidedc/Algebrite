@@ -1,8 +1,7 @@
 import { alloc_tensor } from '../runtime/alloc';
 import { Constants, iscons, MAXDIM, U } from '../runtime/defs';
 import { push } from '../runtime/stack';
-import { pop_integer } from './bignum';
-import { Eval } from './eval';
+import { evaluate_integer } from './eval';
 
 export function Eval_zero(p1: U) {
   const k: number[] = Array(MAXDIM).fill(0);
@@ -11,9 +10,7 @@ export function Eval_zero(p1: U) {
   let n = 0;
   if (iscons(p1)) {
     for (const el of p1.tail()) {
-      push(el);
-      Eval();
-      const i = pop_integer();
+      const i = evaluate_integer(el);
       if (i < 1 || isNaN(i)) {
         // if the input is nonsensical just return 0
         push(Constants.zero);

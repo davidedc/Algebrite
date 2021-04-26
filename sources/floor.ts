@@ -8,7 +8,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { add } from './add';
 import { double } from './bignum';
 import { Eval } from './eval';
@@ -17,9 +17,8 @@ import { makeList } from './list';
 import { mdiv } from './mmul';
 
 export function Eval_floor(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(yfloor(pop()));
+  const result = yfloor(Eval(cadr(p1)));
+  push(result);
 }
 
 function yfloor(p1: U): U {

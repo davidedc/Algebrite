@@ -39,11 +39,9 @@ export function Eval_decomp(p1: U) {
   console.log('Eval_decomp is being called!!!!!!!!!!!!!!!!!!!!');
   const h = defs.tos;
   push(symbol(NIL));
-  push(cadr(p1));
-  Eval();
-  push(caddr(p1));
-  Eval();
-  p1 = pop();
+  push(Eval(cadr(p1)));
+  p1 = Eval(caddr(p1));
+
   const variable = p1 === symbol(NIL) ? guess(top()) : p1;
   push(variable);
   decomp(false);

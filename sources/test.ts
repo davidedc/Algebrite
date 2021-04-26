@@ -35,8 +35,7 @@ export function Eval_test(p1: U) {
     // last argument becomes the default case
     // i.e. the one without a test.
     if (cdr(p1) === symbol(NIL)) {
-      push(car(p1)); // default case
-      Eval();
+      push(Eval(car(p1))); // default case
       return;
     }
 
@@ -51,8 +50,7 @@ export function Eval_test(p1: U) {
       return;
     } else if (checkResult) {
       // test succesful, we found out output
-      push(cadr(p1));
-      Eval();
+      push(Eval(cadr(p1)));
       return;
     } else {
       // test unsuccessful, continue to the
@@ -74,13 +72,7 @@ export function Eval_test(p1: U) {
 export function Eval_testeq(p1: U) {
   // first try without simplifyng both sides
   const orig = p1;
-  push(cadr(p1));
-  Eval();
-  push(caddr(p1));
-  Eval();
-  let arg2 = pop();
-  let arg1 = pop();
-  let subtractionResult = subtract(arg1, arg2);
+  let subtractionResult = subtract(Eval(cadr(p1)), Eval(caddr(p1)));
 
   // OK so we are doing something tricky here
   // we are using isZeroLikeOrNonZeroLikeOrUndetermined to check if the result
@@ -101,13 +93,8 @@ export function Eval_testeq(p1: U) {
   // we didn't get a simple numeric result but
   // let's try again after doing
   // a simplification on both sides
-  push(cadr(p1));
-  Eval();
-  push(simplify(pop()));
-  push(caddr(p1));
-  Eval();
-  arg2 = simplify(pop());
-  arg1 = pop();
+  const arg1 = simplify(Eval(cadr(p1)));
+  const arg2 = simplify(Eval(caddr(p1)));
   subtractionResult = subtract(arg1, arg2);
 
   checkResult = isZeroLikeOrNonZeroLikeOrUndetermined(subtractionResult);
@@ -322,21 +309,13 @@ export function Eval_or(p1: U) {
 // a bit like we do in Eval_testeq
 function cmp_args(p1: U): Sign {
   let t: Sign = 0;
-
-  push(cadr(p1));
-  Eval();
-  push(simplify(pop()));
-  push(caddr(p1));
-  Eval();
-  const arg2 = simplify(pop());
-  const arg1 = pop();
+  const arg1 = simplify(Eval(cadr(p1)));
+  const arg2 = simplify(Eval(caddr(p1)));
   p1 = subtract(arg1, arg2);
 
   // try floating point if necessary
   if (p1.k !== NUM && p1.k !== DOUBLE) {
-    push(yyfloat(p1));
-    Eval();
-    p1 = pop();
+    p1 = Eval(yyfloat(p1));
   }
 
   //console.log "comparison: " + p1.toString()

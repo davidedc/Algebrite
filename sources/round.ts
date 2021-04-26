@@ -7,7 +7,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { double, integer } from './bignum';
 import { Eval } from './eval';
 import { yyfloat } from './float';
@@ -15,9 +15,8 @@ import { isinteger } from './is';
 import { makeList } from './list';
 
 export function Eval_round(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(yround(pop()));
+  const result = yround(Eval(cadr(p1)));
+  push(result);
 }
 
 function yround(p1: U): U {

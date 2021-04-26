@@ -18,7 +18,7 @@ import {
   U,
 } from '../runtime/defs';
 import { check_esc_flag } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { cmp_expr, equal } from './misc';
 import { add_numbers } from './bignum';
 import { Eval } from './eval';
@@ -57,9 +57,7 @@ export function Eval_add(p1: Cons) {
   const terms: U[] = [];
   p1 = cdr(p1) as Cons;
   for (const t of p1) {
-    push(t);
-    Eval();
-    const p2 = pop();
+    const p2 = Eval(t);
     push_terms(terms, p2);
   }
   push(add_terms(terms));

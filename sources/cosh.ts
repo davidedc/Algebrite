@@ -8,7 +8,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { double } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
@@ -36,9 +36,8 @@ Returns the hyperbolic cosine of x
 
 */
 export function Eval_cosh(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(ycosh(pop()));
+  const result = ycosh(Eval(cadr(p1)));
+  push(result);
 }
 
 export function ycosh(p1: U): U {

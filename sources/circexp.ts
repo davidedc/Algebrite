@@ -13,7 +13,7 @@ import {
   TENSOR,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { exponential } from '../sources/misc';
 import { add, subtract } from './add';
 import { integer, rational } from './bignum';
@@ -40,14 +40,8 @@ Returns expression x with circular and hyperbolic functions converted to exponen
 
 */
 export function Eval_circexp(p1: U) {
-  push(cadr(p1));
-  Eval();
-
-  push(circexp(pop()));
-
-  // normalize
-
-  Eval();
+  const result = circexp(Eval(cadr(p1)));
+  push(Eval(result));
 }
 
 function circexp(p1: U): U {

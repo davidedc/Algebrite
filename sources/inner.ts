@@ -169,13 +169,8 @@ export function Eval_inner(p1: U) {
             isNumericAtomOrTensor(operands[i + shift + 1])
           )
         ) {
-          push(operands[i + shift]);
-          Eval();
-          push(inv(pop()));
-          push(operands[i + shift + 1]);
-          Eval();
-          const arg2 = pop();
-          const arg1 = pop();
+          const arg2 = Eval(operands[i + shift + 1]);
+          const arg1 = inv(Eval(operands[i + shift]));
           const difference = subtract(arg1, arg2);
           //console.log "result: " + difference
           if (isZeroAtomOrTensor(difference)) {
@@ -229,13 +224,10 @@ export function Eval_inner(p1: U) {
   p1 = pop();
 
   p1 = cdr(p1);
-  push(car(p1));
-  Eval();
+  push(Eval(car(p1)));
   if (iscons(p1)) {
     p1.tail().forEach((p) => {
-      push(p);
-      Eval();
-      const arg2 = pop();
+      const arg2 = Eval(p);
       const arg1 = pop();
       push(inner(arg1, arg2));
     });

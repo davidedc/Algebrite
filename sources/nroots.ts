@@ -61,15 +61,10 @@ for (let initNRoots = 0; initNRoots < NROOTS_YMAX; initNRoots++) {
 }
 
 export function Eval_nroots(p1: U) {
-  push(cadr(p1));
-  Eval();
+  let p2: U = Eval(caddr(p1));
+  p1 = Eval(cadr(p1));
 
-  push(caddr(p1));
-  Eval();
-  let p2: U = pop();
-
-  p2 = p2 === symbol(NIL) ? guess(top()) : p2;
-  p1 = pop();
+  p2 = p2 === symbol(NIL) ? guess(p1) : p2;
 
   if (!ispolyexpandedform(p1, p2)) {
     stop('nroots: polynomial?');
@@ -87,12 +82,8 @@ export function Eval_nroots(p1: U) {
 
   // convert the coefficients to real and imaginary doubles
   for (let i = 0; i < n; i++) {
-    push(yyfloat(real(cs[i])));
-    Eval();
-    p1 = pop();
-    push(yyfloat(imag(cs[i])));
-    Eval();
-    p2 = pop();
+    p1 = Eval(yyfloat(real(cs[i])));
+    p2 = Eval(yyfloat(imag(cs[i])));
     if (!isdouble(p1) || !isdouble(p2)) {
       stop('nroots: coefficients?');
     }

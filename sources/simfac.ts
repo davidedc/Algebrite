@@ -52,9 +52,8 @@ Then simplify the sum to get
 */
 // simplify factorials term-by-term
 function Eval_simfac(p1: U) {
-  push(cadr(p1));
-  Eval();
-  return simfac();
+  push(Eval(cadr(p1)));
+  simfac();
 }
 
 //if 1

@@ -399,8 +399,7 @@ export function Eval_integral(p1: U) {
 
   // evaluate 1st arg to get function F
   p1 = cdr(p1);
-  push(car(p1));
-  Eval();
+  push(Eval(car(p1)));
 
   // evaluate 2nd arg and then...
   // example    result of 2nd arg  what to do
@@ -411,10 +410,8 @@ export function Eval_integral(p1: U) {
   // integral(f,x,2)  x      X = x, N = 2
   // integral(f,x,y)  x      X = x, N = y
   p1 = cdr(p1);
-  push(car(p1));
-  Eval();
 
-  const p2 = pop();
+  const p2 = Eval(car(p1));
   if (p2 === symbol(NIL)) {
     push(guess(top()));
     push(symbol(NIL));
@@ -424,8 +421,7 @@ export function Eval_integral(p1: U) {
   } else {
     push(p2);
     p1 = cdr(p1);
-    push(car(p1));
-    Eval();
+    push(Eval(car(p1)));
   }
 
   let N = pop();
@@ -474,25 +470,19 @@ export function Eval_integral(p1: U) {
     // symbol  symbol    X = N, N = arg1, continue
     if (isNumericAtom(N)) {
       p1 = cdr(p1);
-      push(car(p1));
-      Eval();
-      N = pop();
+      N = Eval(car(p1));
       if (N === symbol(NIL)) {
         break; // arglist exhausted
       }
       if (!isNumericAtom(N)) {
         X = N;
         p1 = cdr(p1);
-        push(car(p1));
-        Eval();
-        N = pop();
+        N = Eval(car(p1));
       }
     } else {
       X = N;
       p1 = cdr(p1);
-      push(car(p1));
-      Eval();
-      N = pop();
+      N = Eval(car(p1));
     }
   }
 
@@ -511,9 +501,8 @@ export function integral(p1: U, p2: U): U {
   if (Find(integ, symbol(INTEGRAL))) {
     stop('integral: sorry, could not find a solution');
   }
-  push(simplify(integ)); // polish the result
-  Eval(); // normalize the result
-  return pop();
+  // polish then normalize
+  return Eval(simplify(integ));
 }
 
 function integral_of_sum(p1: U, p2: U): U {
@@ -556,21 +545,21 @@ function integral_of_form(p1: U, p2: U): U {
 // The first two values are from the ITALU paper.
 // The others are just arbitrary constants.
 const hashcode_values = {
-  'x': 0.95532,
-  'constexp': 1.43762,
-  'constant': 1.14416593629414332,
-  'constbase': 1.20364122304218824,
-  'sin': 1.73305482518303221,
-  'arcsin': 1.6483368529465804,
-  'cos': 1.058672123686340116,
-  'arccos': 1.8405225918106694,
-  'tan': 1.12249437762925064,
-  'arctan': 1.1297397925394962,
-  'sinh': 1.8176164926060078,
-  'cosh': 1.9404934661708022,
-  'tanh': 1.6421307715103121,
-  'log': 1.47744370135492387,
-  'erf': 1.0825269225702916,
+  x: 0.95532,
+  constexp: 1.43762,
+  constant: 1.14416593629414332,
+  constbase: 1.20364122304218824,
+  sin: 1.73305482518303221,
+  arcsin: 1.6483368529465804,
+  cos: 1.058672123686340116,
+  arccos: 1.8405225918106694,
+  tan: 1.12249437762925064,
+  arctan: 1.1297397925394962,
+  sinh: 1.8176164926060078,
+  cosh: 1.9404934661708022,
+  tanh: 1.6421307715103121,
+  log: 1.47744370135492387,
+  erf: 1.0825269225702916,
 };
 
 function italu_hashcode(u: U, x: U): number {

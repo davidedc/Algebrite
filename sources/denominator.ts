@@ -10,7 +10,7 @@ import {
   isrational,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { mp_denominator } from './bignum';
 import { Eval } from './eval';
 import { isnegativeterm, isplusone } from './is';
@@ -33,9 +33,8 @@ Returns the denominator of expression x.
 
 */
 export function Eval_denominator(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(denominator(pop()));
+  const result = denominator(Eval(cadr(p1)));
+  push(result);
 }
 
 export function denominator(p1: U): U {

@@ -9,16 +9,11 @@ import { scalar_times_tensor, tensor_times_scalar } from './tensor';
 // Outer product of tensors
 export function Eval_outer(p1: U) {
   p1 = cdr(p1);
-  push(car(p1));
-  Eval();
+  let temp = Eval(car(p1));
   p1 = cdr(p1);
 
-  let temp = pop();
   while (iscons(p1)) {
-    push(car(p1));
-    Eval();
-    const arg2 = pop();
-    temp = outer(temp, arg2);
+    temp = outer(temp, Eval(car(p1)));
     p1 = cdr(p1);
   }
   push(temp);

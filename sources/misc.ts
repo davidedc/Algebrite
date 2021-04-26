@@ -17,7 +17,7 @@ import {
   U,
 } from '../runtime/defs';
 import { strcmp } from '../runtime/otherCFunctions';
-import { push, pop } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { get_printname } from '../runtime/symbol';
 import { compare_numbers, integer } from './bignum';
 import { Eval } from './eval';
@@ -196,12 +196,11 @@ function unique_f(p: U, p1: U, p2: U) {
 }
 
 export function yyexpand(p1: U): U {
-  push(p1);
   const prev_expanding = defs.expanding;
   defs.expanding = true;
-  Eval();
+  const result = Eval(p1);
   defs.expanding = prev_expanding;
-  return pop();
+  return result;
 }
 
 export function exponential(p1: U): U {

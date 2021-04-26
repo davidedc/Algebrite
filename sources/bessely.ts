@@ -7,7 +7,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { double, nativeInt } from './bignum';
 import { Eval } from './eval';
 import { isnegativeterm } from './is';
@@ -33,13 +33,8 @@ Bessel function of second kind.
 
 */
 export function Eval_bessely(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(caddr(p1));
-  Eval();
-  const arg2 = pop();
-  const arg1 = pop();
-  push(bessely(arg1, arg2));
+  const result = bessely(Eval(cadr(p1)), Eval(caddr(p1)));
+  push(result);
 }
 
 export function bessely(p1: U, p2: U): U {

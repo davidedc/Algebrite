@@ -75,8 +75,7 @@ import { d_scalar_tensor, d_tensor_scalar, d_tensor_tensor } from './tensor';
 export function Eval_derivative(p1: U) {
   // evaluate 1st arg to get function F
   p1 = cdr(p1);
-  push(car(p1));
-  Eval();
+  push(Eval(car(p1)));
 
   // evaluate 2nd arg and then...
 
@@ -89,10 +88,8 @@ export function Eval_derivative(p1: U) {
   // d(f,x,y)  x      X = x, N = y
 
   p1 = cdr(p1);
-  push(car(p1));
-  Eval();
 
-  const p2 = pop();
+  const p2 = Eval(car(p1));
   if (p2 === symbol(NIL)) {
     push(guess(top()));
     push(symbol(NIL));
@@ -102,8 +99,7 @@ export function Eval_derivative(p1: U) {
   } else {
     push(p2);
     p1 = cdr(p1);
-    push(car(p1));
-    Eval();
+    push(Eval(car(p1)));
   }
 
   let N = pop();
@@ -155,25 +151,19 @@ export function Eval_derivative(p1: U) {
 
     if (isNumericAtom(N)) {
       p1 = cdr(p1);
-      push(car(p1));
-      Eval();
-      N = pop();
+      N = Eval(car(p1));
       if (N === symbol(NIL)) {
         break; // arglist exhausted
       }
       if (!isNumericAtom(N)) {
         X = N;
         p1 = cdr(p1);
-        push(car(p1));
-        Eval();
-        N = pop();
+        N = Eval(car(p1));
       }
     } else {
       X = N;
       p1 = cdr(p1);
-      push(car(p1));
-      Eval();
-      N = pop();
+      N = Eval(car(p1));
     }
   }
 

@@ -45,19 +45,13 @@ In the "for" loop i = n-1 so the recurrence relation becomes
 */
 export function Eval_laguerre(p1: U) {
   // 1st arg
-  push(cadr(p1));
-  Eval();
-  const X = pop();
+  const X = Eval(cadr(p1));
 
   // 2nd arg
-  push(caddr(p1));
-  Eval();
-  const N = pop();
+  const N = Eval(caddr(p1));
 
   // 3rd arg
-  push(cadddr(p1));
-  Eval();
-  const p2 = pop();
+  const p2 = Eval(cadddr(p1));
   const K = p2 === symbol(NIL) ? Constants.zero : p2;
 
   push(laguerre(X, N, K));
@@ -73,9 +67,7 @@ function laguerre(X: U, N: U, K: U): U {
     return laguerre2(n, X, K);
   }
 
-  push(subst(laguerre2(n, symbol(SECRETX), K), symbol(SECRETX), X));
-  Eval();
-  return pop();
+  return Eval(subst(laguerre2(n, symbol(SECRETX), K), symbol(SECRETX), X));
 }
 
 function laguerre2(n: number, p1: U, p3: U): U {

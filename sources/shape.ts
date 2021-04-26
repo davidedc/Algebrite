@@ -1,16 +1,15 @@
 import { alloc_tensor } from '../runtime/alloc';
-import { cadr, Constants, istensor, MAXDIM, U } from '../runtime/defs';
+import { cadr, Constants, istensor, U } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { integer } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
 
 // shape of tensor
 export function Eval_shape(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(shape(pop()));
+  const result = shape(Eval(cadr(p1)));
+  push(result);
 }
 
 function shape(p1: U): U {
@@ -18,8 +17,7 @@ function shape(p1: U): U {
     if (!isZeroAtomOrTensor(p1)) {
       stop('transpose: tensor expected, 1st arg is not a tensor');
     }
-    push(Constants.zero);
-    return;
+    return Constants.zero;
   }
 
   let { ndim } = p1.tensor;

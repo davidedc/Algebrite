@@ -16,7 +16,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { get_binding } from '../runtime/symbol';
 import { add, subtract } from './add';
 import { arctan } from './arctan';
@@ -105,9 +105,7 @@ Notes
 const DEBUG_ARG = false;
 
 export function Eval_arg(z: U) {
-  push(cadr(z));
-  Eval();
-  push(arg(pop()));
+  push(arg(Eval(cadr(z))));
 }
 
 export function arg(z: U): U {

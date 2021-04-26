@@ -57,19 +57,13 @@ For m > 0
 */
 export function Eval_legendre(p1: U) {
   // 1st arg
-  push(cadr(p1));
-  Eval();
-  const X = pop();
+  const X = Eval(cadr(p1));
 
   // 2nd arg
-  push(caddr(p1));
-  Eval();
-  const N = pop();
+  const N = Eval(caddr(p1));
 
   // 3rd arg (optional)
-  push(cadddr(p1));
-  Eval();
-  const p2 = pop();
+  const p2 = Eval(cadddr(p1));
   const M = p2 === symbol(NIL) ? Constants.zero : p2;
 
   push(legendre(X, N, M));
@@ -92,9 +86,7 @@ function __legendre(X: U, N: U, M: U): U {
     result = __legendre2(n, m, X);
   } else {
     const expr = __legendre2(n, m, symbol(SECRETX));
-    push(subst(expr, symbol(SECRETX), X));
-    Eval();
-    result = pop();
+    result = Eval(subst(expr, symbol(SECRETX), X));
   }
   result = __legendre3(result, m, X) || result;
   return result;

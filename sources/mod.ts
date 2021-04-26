@@ -9,7 +9,7 @@ import {
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { integer, nativeInt } from './bignum';
 import { Eval } from './eval';
 import { isinteger, isZeroAtomOrTensor } from './is';
@@ -17,12 +17,8 @@ import { makeList } from './list';
 import { mmod } from './mmul';
 
 export function Eval_mod(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(caddr(p1));
-  Eval();
-  let arg2 = pop();
-  let arg1 = pop();
+  const arg2 = Eval(caddr(p1));
+  const arg1 = Eval(cadr(p1));
   push(mod(arg1, arg2));
 }
 

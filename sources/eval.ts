@@ -194,9 +194,9 @@ import { Eval_bessely } from './bessely';
 import {
   convert_rational_to_double,
   double,
-  pop_integer,
   push_integer,
   rational,
+  nativeInt,
 } from './bignum';
 import { Eval_binomial } from './binomial';
 import { Eval_ceiling } from './ceiling';
@@ -310,15 +310,18 @@ import { Eval_transpose } from './transpose';
 import { Eval_user_function } from './userfunc';
 import { Eval_zero } from './zero';
 
+export function evaluate_integer(p: U): number {
+  return nativeInt(Eval(p));
+}
+
 // Evaluate an expression, for example...
 //
 //  push(p1)
 //  Eval()
 //  p2 = pop()
-export function Eval() {
+export function Eval(p1: U): U {
   let willEvaluateAsFloats: boolean;
   check_esc_flag();
-  const p1: U = pop();
   if (p1 == null) {
     breakpoint;
   }
@@ -328,25 +331,28 @@ export function Eval() {
     defs.evaluatingAsFloats = true;
   }
 
+  let result: U;
   switch (p1.k) {
     case CONS:
       Eval_cons(p1);
+      result = pop();
       break;
     case NUM:
-      const result = defs.evaluatingAsFloats
+      result = defs.evaluatingAsFloats
         ? double(convert_rational_to_double(p1))
         : p1;
-      push(result);
       break;
     case DOUBLE:
     case STR:
-      push(p1);
+      result = p1;
       break;
     case TENSOR:
       Eval_tensor(p1);
+      result = pop();
       break;
     case SYM:
       Eval_sym(p1);
+      result = pop();
       break;
     default:
       stop('atom?');
@@ -355,6 +361,7 @@ export function Eval() {
   if (willEvaluateAsFloats) {
     defs.evaluatingAsFloats = false;
   }
+  return result;
 }
 
 function Eval_sym(p1: Sym) {
@@ -368,8 +375,7 @@ function Eval_sym(p1: Sym) {
   // at the binding array, because keywords
   // are not redefinable.
   if (iskeyword(p1)) {
-    push(makeList(p1, symbol(LAST)));
-    Eval();
+    push(Eval(makeList(p1, symbol(LAST))));
     return;
   } else if (p1 === symbol(PI) && defs.evaluatingAsFloats) {
     push(Constants.piAsDouble);
@@ -419,7 +425,7 @@ function Eval_sym(p1: Sym) {
 
     defs.chainOfUserSymbolsNotFunctionsBeingEvaluated.push(p1);
 
-    Eval();
+    push(Eval(pop()));
 
     defs.chainOfUserSymbolsNotFunctionsBeingEvaluated.pop();
   }
@@ -765,9 +771,7 @@ function Eval_check(p1: U) {
 }
 
 function Eval_det(p1: U) {
-  push(cadr(p1));
-  Eval();
-  const arg = pop() as Tensor;
+  const arg = Eval(cadr(p1)) as Tensor;
   push(det(arg));
 }
 
@@ -788,17 +792,8 @@ Returns the cardinality of the nth index of tensor "m".
 */
 function Eval_dim(p1: U) {
   //int n
-  let n: number;
-  push(cadr(p1));
-  Eval();
-  const p2 = pop();
-  if (iscons(cddr(p1))) {
-    push(caddr(p1));
-    Eval();
-    n = pop_integer();
-  } else {
-    n = 1;
-  }
+  const p2 = Eval(cadr(p1));
+  const n = iscons(cddr(p1)) ? evaluate_integer(caddr(p1)) : 1;
   if (!istensor(p2)) {
     push(Constants.one); // dim of scalar is 1
   } else if (n < 1 || n > p2.tensor.ndim) {
@@ -809,9 +804,7 @@ function Eval_dim(p1: U) {
 }
 
 function Eval_divisors(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(divisors(pop()));
+  push(divisors(Eval(cadr(p1))));
 }
 
 /* do =====================================================================
@@ -835,19 +828,15 @@ function Eval_do(p1: U) {
 
   while (iscons(p1)) {
     pop();
-    push(car(p1));
-    Eval();
+    push(Eval(car(p1)));
     p1 = cdr(p1);
   }
 }
 
 function Eval_dsolve(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(caddr(p1));
-  Eval();
-  push(cadddr(p1));
-  Eval();
+  push(Eval(cadr(p1)));
+  push(Eval(caddr(p1)));
+  push(Eval(cadddr(p1)));
   stop('dsolve');
   //dsolve();
 }
@@ -855,72 +844,48 @@ function Eval_dsolve(p1: U) {
 // for example, Eval(f,x,2)
 
 function Eval_Eval(p1: U) {
-  push(cadr(p1));
-  Eval();
+  push(Eval(cadr(p1)));
   p1 = cddr(p1);
   while (iscons(p1)) {
-    push(car(p1));
-    Eval();
-    push(cadr(p1));
-    Eval();
-    const newExpr = pop();
-    const oldExpr = pop();
+    const newExpr = Eval(cadr(p1));
+    const oldExpr = Eval(car(p1));
     const expr = pop();
     push(subst(expr, oldExpr, newExpr));
     p1 = cddr(p1);
   }
-  Eval();
+  push(Eval(pop()));
 }
 
 // exp evaluation: it replaces itself with
 // a POWER(E,something) node and evals that one
 function Eval_exp(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(exponential(pop()));
+  push(exponential(Eval(cadr(p1))));
 }
 
 function Eval_factorial(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(factorial(pop()));
+  push(factorial(Eval(cadr(p1))));
 }
 
 function Eval_factorpoly(p1: U) {
   p1 = cdr(p1);
-  push(car(p1));
-  Eval();
+  const arg1 = Eval(car(p1));
   p1 = cdr(p1);
-  push(car(p1));
-  Eval();
-  const arg2 = pop();
-  const arg1 = pop();
+  const arg2 = Eval(car(p1));
   let temp = factorpoly(arg1, arg2);
   if (iscons(p1)) {
-    temp = p1.tail().reduce((a: U, b: U) => {
-      push(b);
-      Eval();
-      const arg2 = pop();
-      return factorpoly(a, arg2);
-    }, temp);
+    temp = p1.tail().reduce((a: U, b: U) => factorpoly(a, Eval(b)), temp);
   }
   push(temp);
 }
 
 function Eval_hermite(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(caddr(p1));
-  Eval();
-  const arg2 = pop();
-  const arg1 = pop();
+  const arg2 = Eval(caddr(p1));
+  const arg1 = Eval(cadr(p1));
   push(hermite(arg1, arg2));
 }
 
 function Eval_hilbert(p1: U) {
-  push(cadr(p1));
-  Eval();
-  push(hilbert(pop()));
+  push(hilbert(Eval(cadr(p1))));
 }
 
 function Eval_index(p1: U) {
@@ -931,7 +896,7 @@ function Eval_index(p1: U) {
   // when evaluated it should be a tensor
   p1 = cdr(p1);
   push(car(p1));
-  Eval();
+  push(Eval(pop()));
   const theTensor = top();
 
   if (isNumericAtom(theTensor)) {
@@ -951,8 +916,7 @@ function Eval_index(p1: U) {
   // the indexes
   p1 = cdr(p1);
   while (iscons(p1)) {
-    push(car(p1));
-    Eval();
+    push(Eval(car(p1)));
     if (!isintegerorintegerfloat(top())) {
       // index with something other than
       // an integer
@@ -966,52 +930,36 @@ function Eval_index(p1: U) {
 }
 
 function Eval_inv(p1: U) {
-  push(cadr(p1));
-  Eval();
-  const arg = pop();
+  const arg = Eval(cadr(p1));
   push(inv(arg));
 }
 
 function Eval_invg(p1: U) {
-  push(cadr(p1));
-  Eval();
-  const arg = pop();
+  const arg = Eval(cadr(p1));
   push(invg(arg));
 }
 
 function Eval_isinteger(p1: U) {
-  push(cadr(p1));
-  Eval();
-  p1 = pop();
+  p1 = Eval(cadr(p1));
   if (isrational(p1)) {
-    if (isinteger(p1)) {
-      push(Constants.one);
-    } else {
-      push(Constants.zero);
-    }
+    const result = isinteger(p1) ? Constants.one : Constants.zero;
+    push(result);
     return;
   }
   if (isdouble(p1)) {
     const n = Math.floor(p1.d);
-    if (n === p1.d) {
-      push(Constants.one);
-    } else {
-      push(Constants.zero);
-    }
+    const result = n === p1.d ? Constants.one : Constants.zero;
+    push(result);
     return;
   }
   push(makeList(symbol(ISINTEGER), p1));
 }
 
 function Eval_number(p1: U) {
-  push(cadr(p1));
-  Eval();
-  p1 = pop();
-  if (p1.k === NUM || p1.k === DOUBLE) {
-    push(Constants.one);
-  } else {
-    push(Constants.zero);
-  }
+  p1 = Eval(cadr(p1));
+  const result =
+    p1.k === NUM || p1.k === DOUBLE ? Constants.one : Constants.zero;
+  push(result);
 }
 
 function Eval_operator(p1: U) {
@@ -1019,8 +967,7 @@ function Eval_operator(p1: U) {
   push_symbol(OPERATOR);
   if (iscons(p1)) {
     p1.tail().forEach((p) => {
-      push(p);
-      Eval();
+      push(Eval(p));
     });
   }
   list(defs.tos - h);
@@ -1033,9 +980,7 @@ function Eval_quote(p1: U) {
 
 // rank definition
 function Eval_rank(p1: U) {
-  push(cadr(p1));
-  Eval();
-  p1 = pop();
+  p1 = Eval(cadr(p1));
   if (istensor(p1)) {
     push_integer(p1.tensor.ndim);
   } else {
@@ -1077,9 +1022,7 @@ function Eval_setq(p1: U) {
     stop('symbol assignment: error in symbol');
   }
 
-  push(caddr(p1));
-  Eval();
-  const p2 = pop();
+  const p2 = Eval(caddr(p1));
   set_binding(cadr(p1), p2);
 
   // An assignment returns nothing.
@@ -1130,12 +1073,10 @@ function setq_indexed(p1: U) {
     stop('indexed assignment: expected a symbol name');
   }
   const h = defs.tos;
-  push(caddr(p1));
-  Eval();
+  push(Eval(caddr(p1)));
   let p2 = cdadr(p1);
   while (iscons(p2)) {
-    push(car(p2));
-    Eval();
+    push(Eval(car(p2)));
     p2 = cdr(p2);
   }
   set_component(defs.tos - h);
@@ -1145,9 +1086,7 @@ function setq_indexed(p1: U) {
 }
 
 function Eval_sqrt(p1: U) {
-  push(cadr(p1));
-  Eval();
-  const base = pop();
+  const base = Eval(cadr(p1));
   push(power(base, rational(1, 2)));
 }
 
@@ -1156,26 +1095,17 @@ function Eval_stop() {
 }
 
 function Eval_subst(p1: U) {
-  push(cadddr(p1));
-  Eval();
-  push(caddr(p1));
-  Eval();
-  push(cadr(p1));
-  Eval();
-  const newExpr = pop();
-  const oldExpr = pop();
-  const expr = pop();
-  push(subst(expr, oldExpr, newExpr));
-  Eval(); // normalize
+  const newExpr = Eval(cadr(p1));
+  const oldExpr = Eval(caddr(p1));
+  const expr = Eval(cadddr(p1));
+  push(Eval(subst(expr, oldExpr, newExpr)));
 }
 
 // always returns a matrix with rank 2
 // i.e. two dimensions,
 // the passed parameter is the size
 function Eval_unit(p1: U) {
-  push(cadr(p1));
-  Eval();
-  const n = pop_integer();
+  const n = evaluate_integer(cadr(p1));
 
   if (isNaN(n)) {
     push(p1);
@@ -1199,7 +1129,9 @@ function Eval_unit(p1: U) {
 }
 
 export function Eval_noexpand() {
-  noexpand(Eval);
+  noexpand(() => {
+    push(Eval(pop()));
+  });
 }
 
 // like Eval() except "=" (assignment) is treated
@@ -1226,5 +1158,5 @@ export function Eval_predicate() {
     push(makeList(symbol(TESTEQ), cadr(p1), caddr(p1)));
   }
 
-  Eval();
+  push(Eval(pop()));
 }

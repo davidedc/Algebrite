@@ -8,7 +8,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { double } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
@@ -30,9 +30,7 @@ Returns the inverse hyperbolic sine of x.
 
 */
 export function Eval_arcsinh(x: U) {
-  push(cadr(x));
-  Eval();
-  push(arcsinh(pop()));
+  push(arcsinh(Eval(cadr(x))));
 }
 
 function arcsinh(x: U): U {
