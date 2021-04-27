@@ -921,15 +921,16 @@ function emit_number(p: U, emit_sign: number) {
       for (let i = 0; i < tmpString.length; i++) {
         __emit_char(tmpString[i]);
       }
-
+      break;
     case DOUBLE:
-      tmpString = doubleToReasonableString((p as Double).d); // Todo: Investigate possible fallthrough bug
+      tmpString = doubleToReasonableString((p as Double).d);
       if (tmpString[0] === '-' && emit_sign === 0) {
         tmpString = tmpString.substring(1);
       }
       for (let i = 0; i < tmpString.length; i++) {
         __emit_char(tmpString[i]);
       }
+      break;
   }
 }
 
