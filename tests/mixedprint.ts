@@ -131,6 +131,12 @@ run_test([
   'printlist(a+b)\nprintlist(c+d)',
   '(add a b)(add c d)',
 
+  'print2dascii',
+  '   1   1/2\n- --- 2\n   2',
+
+  'last2dasciiprint',
+  '"   1   1/2\n- --- 2\n   2"',
+
   // checks that no extra newlines are
   // inserted
   'x=0\ny=2\nfor(do(x=sqrt(2+x),y=2*y/x,printcomputer(y)),k,1,2)',
