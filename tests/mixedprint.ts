@@ -131,6 +131,12 @@ run_test([
   'printlist(a+b)\nprintlist(c+d)',
   '(add a b)(add c d)',
 
+  'print2dascii',
+  '   1   1/2\n- --- 2\n   2',
+
+  'last2dasciiprint',
+  '"   1   1/2\n- --- 2\n   2"',
+
   // checks that no extra newlines are
   // inserted
   'x=0\ny=2\nfor(do(x=sqrt(2+x),y=2*y/x,printcomputer(y)),k,1,2)',
@@ -150,6 +156,15 @@ run_test([
 
   'print2dascii(x^(1/(a+b)))',
   ' 1/(a + b)\nx',
+
+  'print2dascii(-sqrt(2)/2)',
+  '   1   1/2\n- --- 2\n   2',
+
+  'print2dascii(1/sqrt(-15))',
+  '        1/2\n    (-1)\n- -----------\n    1/2  1/2\n   3    5',
+
+  'print2dascii(x^(a/2))',
+  ' 1/2 a\nx',
 
   // ------------------------------------------
 
@@ -178,52 +193,30 @@ run_test([
   // checks had to be refined when printing
   // the signs
 
-  "clearall",
-  "",
+  'clearall',
+  '',
 
-  "print(quote(k*(-2)))",
-  "k*(-2)",
+  'print(quote(k*(-2)))',
+  'k*(-2)',
 
-  "print(quote(k*(-1/2)))",
-  "k*(-1/2)",
+  'print(quote(k*(-1/2)))',
+  'k*(-1/2)',
 
-  "print(quote(k*2))",
-  "k*2",
+  'print(quote(k*2))',
+  'k*2',
 
-  "print(quote(k*1/2))",
-  "k*1/2",
+  'print(quote(k*1/2))',
+  'k*1/2',
 
-  "print(k*(-2))",
-  "-2*k",
+  'print(k*(-2))',
+  '-2*k',
 
-  "print(k*(-1/2))",
-  "-1/2*k",
+  'print(k*(-1/2))',
+  '-1/2*k',
 
-  "print(k*2)",
-  "2*k",
+  'print(k*2)',
+  '2*k',
 
-  "print(k*1/2)",
-  "1/2*k",
-
+  'print(k*1/2)',
+  '1/2*k',
 ]);
-
-test.failing(
-  'print2dascii',
-  ava_run,
-  `-sqrt(2)/2
-   print2dascii
-   last2dasciiprint`,
-  '-1/2*2^(1/2)\n   1   1/2\n- --- 2\n   2\n  1   1/2\n- --- 2\n   2'
-);
-test.failing(
-  'print2dascii(1/sqrt(-15))',
-  ava_run,
-  'print2dascii(1/sqrt(-15))',
-  '        1/2\n    (-1)\n- -----------\n    1/2  1/2\n   3    5'
-);
-test.failing(
-  'print2dascii(x^(a/2))',
-  ava_run,
-  'print2dascii(x^(a/2))',
-  ' 1/2 a\nx'
-);
