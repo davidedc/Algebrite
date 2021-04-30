@@ -94,10 +94,9 @@ function runUserDefinedSimplifications(p: U): U {
   if (DEBUG) {
     console.log(`runUserDefinedSimplifications passed: ${p}`);
   }
-  let p1 = noexpand(Eval, p);
-  push(p1);
+  let F1 = noexpand(Eval, p);
   if (DEBUG) {
-    console.log(`runUserDefinedSimplifications after eval no expanding: ${p1}`);
+    console.log(`runUserDefinedSimplifications after eval no expanding: ${F1}`);
     console.log('patterns to be checked: ');
     for (const simplification of Array.from(
       defs.userSimplificationsInListForm
@@ -109,7 +108,6 @@ function runUserDefinedSimplifications(p: U): U {
   let atLeastOneSuccessInRouldOfRulesApplications = true;
   let numberOfRulesApplications = 0;
 
-  let F1 = pop();
   while (
     atLeastOneSuccessInRouldOfRulesApplications &&
     numberOfRulesApplications < MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES
@@ -129,7 +127,7 @@ function runUserDefinedSimplifications(p: U): U {
         eachConsecutiveRuleApplication++;
         if (DEBUG) {
           console.log(
-            `simplify - tos: ${defs.tos} checking pattern: ${eachSimplification} on: ${p1}`
+            `simplify - tos: ${defs.tos} checking pattern: ${eachSimplification} on: ${F1}`
           );
         }
         [F1, success] = transform(F1, symbol(NIL), eachSimplification, true);
@@ -513,7 +511,7 @@ function take_care_of_nested_radicals(): boolean {
       (equalq(exponent, 1, 3) || equalq(exponent, 1, 2))
     ) {
       //console.log("ok there is a radix with a term inside")
-      let checkSize, i, innerbase, innerexponent, lowercase_a;
+      let i, innerbase, innerexponent, lowercase_a;
       const firstTerm = cadr(base);
       push(firstTerm);
       take_care_of_nested_radicals();
@@ -600,83 +598,62 @@ function take_care_of_nested_radicals(): boolean {
       //console.log("B: " + B.toString())
 
       if (equalq(exponent, 1, 3)) {
-        checkSize = divide(multiply(negate(A), C), B); // 4th coeff
+        const checkSize1 = divide(multiply(negate(A), C), B); // 4th coeff
         //console.log("constant coeff " + stack[tos-1].toString())
-        const result1 = nativeDouble(yyfloat(real(checkSize)));
+        const result1 = nativeDouble(yyfloat(real(checkSize1)));
         if (Math.abs(result1) > Math.pow(2, 32)) {
           push(p1);
           return false;
         }
-        push(checkSize);
+        const arg1c = checkSize1;
 
-        checkSize = multiply(integer(3), C); // 3rd coeff
+        const checkSize2 = multiply(integer(3), C); // 3rd coeff
         //console.log("next coeff " + stack[tos-1].toString())
-        const result2 = nativeDouble(yyfloat(real(checkSize)));
+        const result2 = nativeDouble(yyfloat(real(checkSize2)));
         if (Math.abs(result2) > Math.pow(2, 32)) {
-          pop();
           push(p1);
           return false;
         }
-        push(multiply(checkSize, symbol(SECRETX)));
+        const arg1b = multiply(checkSize2, symbol(SECRETX));
 
-        checkSize = divide(multiply(integer(-3), A), B); // 2nd coeff
-        const result3 = nativeDouble(yyfloat(real(checkSize)));
+        const checkSize3 = divide(multiply(integer(-3), A), B); // 2nd coeff
+        const result3 = nativeDouble(yyfloat(real(checkSize3)));
         if (Math.abs(result3) > Math.pow(2, 32)) {
-          pop();
-          pop();
           push(p1);
           return false;
         }
 
-        //console.log("next coeff " + stack[tos-1].toString())
-        let arg2 = power(symbol(SECRETX), integer(2));
-        push(multiply(checkSize, arg2));
-
-        const coeff1 = Constants.one; // 1st coeff
-        //console.log("next coeff " + stack[tos-1].toString())
-
-        const arg1a = pop();
-        const arg1b = pop();
-        const arg1c = pop();
-        push(
+        const result = add(
+          arg1c,
           add(
-            arg1c,
+            arg1b,
             add(
-              arg1b,
-              add(arg1a, multiply(coeff1, power(symbol(SECRETX), integer(3))))
+              multiply(checkSize3, power(symbol(SECRETX), integer(2))),
+              multiply(Constants.one, power(symbol(SECRETX), integer(3)))
             )
           )
         );
+        push(result);
       } else if (equalq(exponent, 1, 2)) {
-        checkSize = C; // 3th coeff
-        const result1 = nativeDouble(yyfloat(real(checkSize)));
+        const result1 = nativeDouble(yyfloat(real(C)));
         if (Math.abs(result1) > Math.pow(2, 32)) {
           push(p1);
           return false;
         }
-        push(checkSize);
-        //console.log("constant coeff " + stack[tos-1].toString())
 
-        checkSize = divide(multiply(integer(-2), A), B); // 2nd coeff
+        const checkSize = divide(multiply(integer(-2), A), B);
         const result2 = nativeDouble(yyfloat(real(checkSize)));
         if (Math.abs(result2) > Math.pow(2, 32)) {
-          pop();
           push(p1);
           return false;
         }
-
-        //console.log("next coeff " + stack[tos-1].toString())
-        push(multiply(checkSize, symbol(SECRETX)));
-
-        const coeff1 = Constants.one; // 1st coeff
-        //console.log("next coeff " + stack[tos-1].toString())
-
-        const arg1a = pop();
-        const arg1b = pop();
         push(
           add(
-            arg1b,
-            add(arg1a, multiply(coeff1, power(symbol(SECRETX), integer(2))))
+            C,
+            add(
+              multiply(checkSize, symbol(SECRETX)),
+              multiply(Constants.one, power(symbol(SECRETX), integer(2)))
+            )
           )
         );
       }
@@ -773,28 +750,24 @@ function take_care_of_nested_radicals(): boolean {
           break
       */
 
+      let lowercase_b: U;
       if (equalq(exponent, 1, 3)) {
         //console.log("argument of cubic root: " + stack[tos-1].toString())
-        push(
-          power(
-            divide(
-              A,
-              add(
-                power(SOLUTION, integer(3)),
-                multiply(multiply(integer(3), C), SOLUTION)
-              )
-            ),
-            rational(1, 3)
-          )
+        lowercase_b = power(
+          divide(
+            A,
+            add(
+              power(SOLUTION, integer(3)),
+              multiply(multiply(integer(3), C), SOLUTION)
+            )
+          ),
+          rational(1, 3)
         );
       } else if (equalq(exponent, 1, 2)) {
         const base = divide(A, add(power(SOLUTION, integer(2)), C));
         //console.log("argument of cubic root: " + stack[tos-1].toString())
-        push(power(base, rational(1, 2)));
+        lowercase_b = power(base, rational(1, 2));
       }
-      //console.log("b is: " + stack[tos-1].toString())
-
-      let lowercase_b = pop();
       if (lowercase_b == null) {
         push(p1);
         return false;
