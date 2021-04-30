@@ -528,8 +528,7 @@ function integral_of_form(F: U, X: U): U {
     // italu_hashcode(p1, p2)
     return makeList(symbol(INTEGRAL), F, X);
   }
-  transform(F, X, tab, false);
-  const p3 = pop();
+  const [p3, _] = transform(F, X, tab, false);
   if (p3 === symbol(NIL)) {
     return makeList(symbol(INTEGRAL), F, X);
   }

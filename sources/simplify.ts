@@ -109,6 +109,7 @@ function runUserDefinedSimplifications(p: U): U {
   let atLeastOneSuccessInRouldOfRulesApplications = true;
   let numberOfRulesApplications = 0;
 
+  let F1 = pop();
   while (
     atLeastOneSuccessInRouldOfRulesApplications &&
     numberOfRulesApplications < MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES
@@ -131,14 +132,12 @@ function runUserDefinedSimplifications(p: U): U {
             `simplify - tos: ${defs.tos} checking pattern: ${eachSimplification} on: ${p1}`
           );
         }
-        const F1 = pop(); // F i.e. input expression
-        success = transform(F1, symbol(NIL), eachSimplification, true);
+        [F1, success] = transform(F1, symbol(NIL), eachSimplification, true);
         if (success) {
           atLeastOneSuccessInRouldOfRulesApplications = true;
         }
-        p1 = top();
         if (DEBUG) {
-          console.log(`p1 at this stage of simplification: ${p1}`);
+          console.log(`p1 at this stage of simplification: ${F1}`);
         }
       }
       if (
@@ -161,7 +160,7 @@ function runUserDefinedSimplifications(p: U): U {
     console.log(`METAA = ${get_binding(symbol(METAA))}`);
     console.log(`METAB = ${get_binding(symbol(METAB))}`);
   }
-  return pop();
+  return F1;
 }
 
 // ------------------------

@@ -75,7 +75,7 @@ export function transform(
   X: U,
   s: string[] | U,
   generalTransform: boolean
-) {
+): [U, boolean] {
   if (DEBUG) {
     console.log(`         !!!!!!!!!   transform on: ${F}`);
   }
@@ -202,7 +202,7 @@ export function transform(
           if (DEBUG) {
             console.log(`about to try to simplify other term: ${secondTerm}`);
           }
-          const success = transform(
+          const [t, success] = transform(
             secondTerm,
             symbol(NIL),
             s,
@@ -210,7 +210,7 @@ export function transform(
           );
           transformationSuccessful = transformationSuccessful || success;
 
-          transformedTerms.push(pop());
+          transformedTerms.push(t);
 
           if (DEBUG) {
             console.log(
@@ -279,19 +279,12 @@ export function transform(
     transformationSuccessful = true;
   } else {
     // transformations failed
-    if (generalTransform) {
-      // result = original expression
-      temp = F;
-    } else {
-      temp = symbol(NIL);
-    }
+    temp = generalTransform ? F : symbol(NIL);
   }
 
   restoreMetaBindings();
 
-  push(temp);
-
-  return transformationSuccessful;
+  return [temp, transformationSuccessful];
 }
 
 function saveMetaBindings() {
@@ -340,7 +333,6 @@ function f_equals_a(
         // skip to the next binding of metas
         continue;
       }
-      push(F); // F = A?
       if (DEBUG) {
         console.log(
           `about to evaluate template expression: ${A} binding METAA to ${get_binding(
@@ -350,12 +342,11 @@ function f_equals_a(
           )} and binding METAX to ${get_binding(symbol(METAX))}`
         );
       }
-      const ans = generalTransform ? noexpand(Eval, A) : Eval(A);
-      const arg1 = pop();
+      const arg2 = generalTransform ? noexpand(Eval, A) : Eval(A);
       if (DEBUG) {
-        console.log(`  comparing ${ans} to: ${arg1}`);
+        console.log(`  comparing ${arg2} to: ${F}`);
       }
-      temp = subtract(arg1, ans);
+      temp = subtract(F, arg2);
       if (isZeroAtomOrTensor(temp)) {
         if (DEBUG) {
           console.log(`binding METAA to ${get_binding(symbol(METAA))}`);
