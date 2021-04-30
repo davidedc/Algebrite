@@ -206,32 +206,21 @@ export function Eval_inner(p1: U) {
 
   // now rebuild the arguments, just using the
   // refined operands
-  push(symbol(INNER));
   //console.log "rebuilding the argument ----"
 
-  if (operands.length > 0) {
-    for (let i = 0; i < operands.length; i++) {
-      //console.log "pushing " + operands[i]
-      push(operands[i]);
-    }
-  } else {
-    pop();
+  if (operands.length === 0) {
     push(symbol(SYMBOL_IDENTITY_MATRIX));
     return;
   }
-  //console.log "list(operands.length): " + (operands.length+1)
-  list(operands.length + 1);
-  p1 = pop();
+
+  p1 = makeList(symbol(INNER), ...operands);
 
   p1 = cdr(p1);
-  push(Eval(car(p1)));
+  let result = Eval(car(p1));
   if (iscons(p1)) {
-    p1.tail().forEach((p) => {
-      const arg2 = Eval(p);
-      const arg1 = pop();
-      push(inner(arg1, arg2));
-    });
+    result = p1.tail().reduce((acc: U, p: U) => inner(acc, Eval(p)), result);
   }
+  push(result);
 }
 
 // inner definition

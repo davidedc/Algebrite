@@ -69,10 +69,12 @@ true is successful, false if not.
 //define B p6
 //define C p7
 
-export function transform(s: string[] | U, generalTransform: boolean) {
-  const X = pop(); // X i.e. free variable
-  const F = pop(); // F i.e. input expression
-
+export function transform(
+  F: U,
+  X: U,
+  s: string[] | U,
+  generalTransform: boolean
+) {
   if (DEBUG) {
     console.log(`         !!!!!!!!!   transform on: ${F}`);
   }
@@ -191,8 +193,6 @@ export function transform(s: string[] | U, generalTransform: boolean) {
             console.log('tos before recursive transform: ' + defs.tos);
           }
 
-          push(secondTerm);
-          push_symbol(NIL);
           if (DEBUG) {
             console.log(`testing: ${secondTerm}`);
           }
@@ -201,7 +201,12 @@ export function transform(s: string[] | U, generalTransform: boolean) {
           if (DEBUG) {
             console.log(`about to try to simplify other term: ${secondTerm}`);
           }
-          const success = transform(s, generalTransform);
+          const success = transform(
+            secondTerm,
+            symbol(NIL),
+            s,
+            generalTransform
+          );
           transformationSuccessful = transformationSuccessful || success;
 
           transformedTerms.push(pop());

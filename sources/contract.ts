@@ -11,9 +11,9 @@ import {
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { add } from './add';
-import { push_integer, nativeInt } from './bignum';
+import { integer, nativeInt } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
 
@@ -35,35 +35,28 @@ contract(m) is equivalent to the trace of matrix m.
 
 */
 export function Eval_contract(p1: U) {
-  push(Eval(cadr(p1)));
+  const p1_prime = Eval(cadr(p1));
+  let p2: U, p3: U;
   if (cddr(p1) === symbol(NIL)) {
-    push(Constants.one);
-    push_integer(2);
+    p2 = Constants.one;
+    p3 = integer(2);
   } else {
-    push(Eval(caddr(p1)));
-    push(Eval(cadddr(p1)));
+    p2 = Eval(caddr(p1));
+    p3 = Eval(cadddr(p1));
   }
-  contract();
+  const result = contract(p1_prime, p2, p3);
+  push(result);
 }
 
-function contract() {
-  yycontract();
-}
-
-function yycontract() {
+function contract(p1: U, p2: U, p3: U): U {
   const ai = [];
   const an = [];
-
-  const p3: U = pop();
-  let p2: U = pop();
-  const p1: U = pop();
 
   if (!istensor(p1)) {
     if (!isZeroAtomOrTensor(p1)) {
       stop('contract: tensor expected, 1st arg is not a tensor');
     }
-    push(Constants.zero);
-    return;
+    return Constants.zero;
   }
 
   let l = nativeInt(p2);
@@ -96,10 +89,7 @@ function yycontract() {
     }
   }
 
-  //console.log "nelem:" + nelem
   p2 = alloc_tensor(nelem);
-  //console.log "p2:" + p2
-
   p2.tensor.ndim = ndim - 2;
 
   let j = 0;
@@ -111,9 +101,6 @@ function yycontract() {
 
   const a = p1.tensor.elem;
   const b = p2.tensor.elem;
-
-  //console.log "a: " + a
-  //console.log "b: " + b
 
   for (let i = 0; i < ndim; i++) {
     ai[i] = 0;
@@ -147,10 +134,8 @@ function yycontract() {
   }
 
   if (nelem === 1) {
-    push(b[0]);
-  } else {
-    push(p2);
+    return b[0];
   }
-}
 
-//console.log "returning: " + stack[tos-1]
+  return p2;
+}

@@ -13,7 +13,7 @@ import {
   isrational,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { equal, length, lessp } from '../sources/misc';
 import { subtract } from './add';
 import { gcd_numbers } from './bignum';
@@ -25,19 +25,17 @@ import { power } from './power';
 // Greatest common denominator
 export function Eval_gcd(p1: U) {
   p1 = cdr(p1);
-  push(Eval(car(p1)));
+  let result = Eval(car(p1));
 
   if (iscons(p1)) {
-    p1.tail().forEach((p) => {
-      const arg2 = Eval(p);
-      const arg1 = pop();
-      push(gcd(arg1, arg2));
-    });
+    result = p1.tail().reduce((acc: U, p: U) => gcd(acc, Eval(p)), result);
   }
+  push(result);
 }
 
 export function gcd(p1: U, p2: U): U {
   const prev_expanding = defs.expanding;
+  defs.expanding = true;
   const result = gcd_main(p1, p2);
   defs.expanding = prev_expanding;
   return result;
@@ -45,7 +43,6 @@ export function gcd(p1: U, p2: U): U {
 
 function gcd_main(p1: U, p2: U): U {
   let polyVar: U | false;
-  defs.expanding = true;
 
   if (equal(p1, p2)) {
     return p1;

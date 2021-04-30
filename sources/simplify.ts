@@ -135,8 +135,8 @@ function runUserDefinedSimplifications() {
               `simplify - tos: ${defs.tos} checking pattern: ${eachSimplification} on: ${p1}`
             );
           }
-          push_symbol(NIL);
-          success = transform(eachSimplification, true);
+          const F1 = pop(); // F i.e. input expression
+          success = transform(F1, symbol(NIL), eachSimplification, true);
           if (success) {
             atLeastOneSuccessInRouldOfRulesApplications = true;
           }
@@ -180,18 +180,13 @@ export function simplifyForCodeGeneration() {
   // because we really want to resolve all
   // the variables indirections and apply
   // all the simplifications we can.
-  simplify_main();
+  const arg = pop();
+  const result = simplify(arg);
   defs.codeGen = false;
+  push(result);
 }
 
 export function simplify(p1: U): U {
-  push(p1);
-  simplify_main();
-  return pop();
-}
-
-function simplify_main(): void {
-  let p1 = pop();
   // when we do code generation, we proceed to
   // fully evaluate and simplify the body of
   // a function, so we resolve all variables
@@ -210,17 +205,12 @@ function simplify_main(): void {
   }
 
   if (istensor(p1)) {
-    push(simplify_tensor(p1));
-    return;
+    return simplify_tensor(p1);
   }
 
   if (Find(p1, symbol(FACTORIAL))) {
-    push(p1);
-    simfac();
-    const p2 = pop();
-    push(rationalize(p1));
-    simfac();
-    const p3 = pop();
+    const p2 = simfac(p1);
+    const p3 = simfac(rationalize(p1));
     p1 = count(p2) < count(p3) ? p2 : p3;
   }
 
@@ -245,14 +235,13 @@ function simplify_main(): void {
       if (DEBUG) {
         console.log('de-nesting successful into: ' + p1.toString());
       }
-      push(simplify(p1));
-      return;
+      return simplify(p1);
     }
   }
 
   [p1] = simplify_rectToClock(p1);
 
-  push(p1);
+  return p1;
 }
 
 function simplify_tensor(p1: Tensor) {
@@ -316,13 +305,16 @@ function f10(p1: U): U {
       }
       const a = cadr(car(cdr(p1)));
       const b = cadr(car(cdr(cdr(p1))));
+      let arg1: U;
       if (carp1 === symbol(MULTIPLY)) {
-        push(multiply(a, b));
+        arg1 = multiply(a, b);
       } else if (isinnerordot(p1)) {
-        push(inner(b, a));
+        arg1 = inner(b, a);
+      } else {
+        arg1 = pop();
       }
-      const arg1 = pop();
 
+      // const p2 = noexpand(transpose, arg1, Constants.one, integer(2));
       const p2 = noexpand(() => {
         return transpose(arg1, Constants.one, integer(2));
       });
@@ -422,12 +414,9 @@ function simplify_rectToClock(p1: U): [U] {
 }
 
 function simplify_polarRect(p1: U): [U] {
-  let p2: U;
-  push(p1);
+  const tmp = polarRectAMinusOneBase(p1);
 
-  polarRectAMinusOneBase();
-
-  p2 = Eval(pop()); // put new (hopefully simplified expr) in p2
+  const p2 = Eval(tmp); // put new (hopefully simplified expr) in p2
 
   if (count(p2) < count(p1)) {
     p1 = p2;
@@ -435,38 +424,31 @@ function simplify_polarRect(p1: U): [U] {
   return [p1];
 }
 
-function polarRectAMinusOneBase() {
-  let p1: U = pop();
-
+function polarRectAMinusOneBase(p1: U): U {
   if (isimaginaryunit(p1)) {
-    push(p1);
-    return;
+    return p1;
   }
-
   if (equal(car(p1), symbol(POWER)) && isminusone(cadr(p1))) {
     // base we just said is minus 1
     const base = negate(Constants.one);
 
     // exponent
-    push(caddr(p1));
-    polarRectAMinusOneBase();
-
-    const exponent = pop();
+    const exponent = polarRectAMinusOneBase(caddr(p1));
     // try to simplify it using polar and rect
-    push(rect(polar(power(base, exponent))));
-  } else if (iscons(p1)) {
-    const h = defs.tos;
+    return rect(polar(power(base, exponent)));
+  }
+  if (iscons(p1)) {
+    const arr = [];
     while (iscons(p1)) {
       //console.log("recursing on: " + car(p1).toString())
-      push(car(p1));
-      polarRectAMinusOneBase();
+      arr.push(polarRectAMinusOneBase(car(p1)));
       //console.log("...transformed into: " + stack[tos-1].toString())
       p1 = cdr(p1);
     }
-    list(defs.tos - h);
-  } else {
-    push(p1);
+
+    return makeList(...arr);
   }
+  return p1;
 }
 
 function nterms(p: U) {

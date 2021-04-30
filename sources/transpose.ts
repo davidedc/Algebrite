@@ -21,12 +21,13 @@ import {
   symbol,
   TRANSPOSE,
   U,
+  SYMBOL_IDENTITY_MATRIX,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
 import { pop, push } from '../runtime/stack';
 import { equal } from '../sources/misc';
 import { add } from './add';
-import { push_integer, nativeInt } from './bignum';
+import { integer, nativeInt } from './bignum';
 import { Eval } from './eval';
 import { inner } from './inner';
 import { isplusone, isplustwo, isZeroAtomOrTensor } from './is';
@@ -35,20 +36,18 @@ import { multiply } from './multiply';
 
 // Transpose tensor indices
 export function Eval_transpose(p1: U) {
-  push(Eval(cadr(p1)));
+  const arg1 = Eval(cadr(p1));
+  let arg2: U, arg3: U;
 
   // add default params if they
   // have not been passed
   if (cddr(p1) === symbol(NIL)) {
-    push(Constants.one);
-    push_integer(2);
+    arg2 = Constants.one;
+    arg3 = integer(2);
   } else {
-    push(Eval(caddr(p1)));
-    push(Eval(cadddr(p1)));
+    arg2 = Eval(caddr(p1));
+    arg3 = Eval(cadddr(p1));
   }
-  const arg3 = pop();
-  const arg2 = pop();
-  const arg1 = pop();
   push(transpose(arg1, arg2, arg3));
 }
 
@@ -56,7 +55,7 @@ export function Eval_transpose(p1: U) {
 // p3: index to be transposed
 // p2: other index to be transposed
 // p1: what needs to be transposed
-export function transpose(p1: U, p2: U, p3: U) {
+export function transpose(p1: U, p2: U, p3: U): U {
   let t = 0;
   const ai: number[] = Array(MAXDIM).fill(0);
   const an: number[] = Array(MAXDIM).fill(0);
@@ -115,16 +114,11 @@ export function transpose(p1: U, p2: U, p3: U) {
       accumulator.push(...p1.tail().map((p) => [p, p2, p3]));
     }
 
-    for (let i = accumulator.length - 1; i >= 0; i--) {
-      push(transpose(accumulator[i][0], accumulator[i][1], accumulator[i][2]));
-      if (i !== accumulator.length - 1) {
-        const arg2 = pop();
-        const arg1 = pop();
-        push(inner(arg1, arg2));
-      }
-    }
-
-    return pop();
+    accumulator.reverse();
+    return accumulator.reduce(
+      (acc: U, p: U[]): U => inner(acc, transpose(p[0], p[1], p[2])),
+      symbol(SYMBOL_IDENTITY_MATRIX)
+    );
   }
 
   if (!istensor(p1)) {

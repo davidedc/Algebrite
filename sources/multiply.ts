@@ -163,9 +163,7 @@ function yymultiply(p1: U, p2: U): U {
 
     if (caar(p1) === symbol(OPERATOR) && caar(p2) === symbol(OPERATOR)) {
       push_symbol(OPERATOR);
-      push(cdar(p1));
-      push(cdar(p2));
-      append();
+      append(cdar(p1), cdar(p2));
       cons();
       p1 = cdr(p1);
       p2 = cdr(p2);
