@@ -39,12 +39,12 @@ export function Eval_decomp(p1: U) {
   console.log('Eval_decomp is being called!!!!!!!!!!!!!!!!!!!!');
   const h = defs.tos;
   push(symbol(NIL));
-  push(Eval(cadr(p1)));
+  const arg = Eval(cadr(p1));
   p1 = Eval(caddr(p1));
 
-  const variable = p1 === symbol(NIL) ? guess(top()) : p1;
-  push(variable);
-  decomp(false);
+  const variable = p1 === symbol(NIL) ? guess(arg) : p1;
+  const result = decomp(false, arg, variable);
+  push(result);
   list(defs.tos - h);
 }
 
@@ -64,10 +64,7 @@ function pushTryNotToDuplicate(toBePushed: U) {
 }
 
 // returns constant expressions on the stack
-export function decomp(generalTransform: boolean) {
-  const p2 = pop();
-  const p1 = pop();
-
+export function decomp(generalTransform: boolean, p1: U, p2: U) {
   if (DEBUG) {
     console.log(`DECOMPOSING ${p1}`);
   }
@@ -79,7 +76,7 @@ export function decomp(generalTransform: boolean) {
         console.log(` ground thing: ${p1}`);
       }
       pushTryNotToDuplicate(p1);
-      return;
+      return pop();
     }
   } else {
     if (!Find(p1, p2)) {
@@ -87,23 +84,23 @@ export function decomp(generalTransform: boolean) {
         console.log(' entire expression is constant');
       }
       pushTryNotToDuplicate(p1);
-      return;
+      return pop();
     }
   }
 
   // sum?
   if (isadd(p1)) {
     decomp_sum(generalTransform, p1, p2);
-    return;
+    return pop();
   }
 
   // product?
   if (ismultiply(p1)) {
     const result = decomp_product(generalTransform, p1, p2);
     if (result) {
-      push(result);
+      return result;
     }
-    return;
+    return pop();
   }
 
   // naive decomp if not sum or product
@@ -125,19 +122,14 @@ export function decomp(generalTransform: boolean) {
 
     if (DEBUG) {
       console.log('recursive decomposition');
-    }
-    push(car(p3));
-
-    if (DEBUG) {
       console.log(`car(p3): ${car(p3)}`);
-    }
-    push(p2);
-    if (DEBUG) {
       console.log(`p2: ${p2}`);
     }
-    decomp(generalTransform);
+    const result = decomp(generalTransform, car(p3), p2);
+    push(result);
     p3 = cdr(p3);
   }
+  return pop();
 }
 
 function decomp_sum(generalTransform: boolean, p1: U, p2: U) {
@@ -150,9 +142,8 @@ function decomp_sum(generalTransform: boolean, p1: U, p2: U) {
 
   while (iscons(p3)) {
     if (Find(car(p3), p2) || generalTransform) {
-      push(car(p3));
-      push(p2);
-      decomp(generalTransform);
+      const result = decomp(generalTransform, car(p3), p2);
+      push(result);
     }
     p3 = cdr(p3);
   }
@@ -190,9 +181,8 @@ function decomp_product(
 
   while (iscons(p3)) {
     if (Find(car(p3), p2) || generalTransform) {
-      push(car(p3));
-      push(p2);
-      decomp(generalTransform);
+      const result = decomp(generalTransform, car(p3), p2);
+      push(result);
     }
     p3 = cdr(p3);
   }
@@ -219,7 +209,3 @@ function decomp_product(
   }
   return undefined;
 }
-//p3 = pop();  # may need later for pushing both +a, -a
-//push(p3)
-//push(p3)
-//negate()

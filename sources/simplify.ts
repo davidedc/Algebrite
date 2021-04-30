@@ -39,13 +39,13 @@ import {
 import { Find } from '../runtime/find';
 import { stop } from '../runtime/run';
 import { pop, push, top, push_all } from '../runtime/stack';
-import { get_binding, push_symbol } from '../runtime/symbol';
+import { get_binding } from '../runtime/symbol';
 import { equal, length } from '../sources/misc';
 import { add } from './add';
 import { integer, nativeDouble, rational } from './bignum';
 import { clockform } from './clock';
 import { Condense, yycondense } from './condense';
-import { Eval, Eval_noexpand } from './eval';
+import { Eval } from './eval';
 import { yyfloat } from './float';
 import { inner } from './inner';
 import {
@@ -70,12 +70,12 @@ import { transform } from './transform';
 import { transpose } from './transpose';
 
 export function Eval_simplify(p1: U) {
-  push(cadr(p1));
-  runUserDefinedSimplifications();
-  push(simplify(Eval(pop())));
+  const arg = runUserDefinedSimplifications(cadr(p1));
+  const result = simplify(Eval(arg));
+  push(result);
 }
 
-function runUserDefinedSimplifications() {
+function runUserDefinedSimplifications(p: U): U {
   // -----------------------
   // unfortunately for the time being user
   // specified simplifications are only
@@ -85,105 +85,98 @@ function runUserDefinedSimplifications() {
   // some clobbering as "transform" is called
   // recursively?
   if (
-    defs.userSimplificationsInListForm.length !== 0 &&
-    !Find(top(), symbol(INTEGRAL))
+    defs.userSimplificationsInListForm.length === 0 ||
+    Find(p, symbol(INTEGRAL))
   ) {
-    if (DEBUG) {
-      console.log(`runUserDefinedSimplifications passed: ${top()}`);
-    }
-    Eval_noexpand();
-    if (DEBUG) {
-      console.log(
-        `runUserDefinedSimplifications after eval no expanding: ${top()}`
-      );
-    }
-    let p1 = top();
+    return p;
+  }
 
-    if (DEBUG) {
-      console.log('patterns to be checked: ');
+  if (DEBUG) {
+    console.log(`runUserDefinedSimplifications passed: ${p}`);
+  }
+  let p1 = noexpand(Eval, p);
+  push(p1);
+  if (DEBUG) {
+    console.log(`runUserDefinedSimplifications after eval no expanding: ${p1}`);
+    console.log('patterns to be checked: ');
+    for (const simplification of Array.from(
+      defs.userSimplificationsInListForm
+    )) {
+      console.log(`...${simplification}`);
     }
+  }
+
+  let atLeastOneSuccessInRouldOfRulesApplications = true;
+  let numberOfRulesApplications = 0;
+
+  while (
+    atLeastOneSuccessInRouldOfRulesApplications &&
+    numberOfRulesApplications < MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES
+  ) {
+    atLeastOneSuccessInRouldOfRulesApplications = false;
+    numberOfRulesApplications++;
     for (const eachSimplification of Array.from(
       defs.userSimplificationsInListForm
     )) {
-      if (DEBUG) {
-        console.log(`...${eachSimplification}`);
-      }
-    }
-
-    let atLeastOneSuccessInRouldOfRulesApplications = true;
-    let numberOfRulesApplications = 0;
-
-    while (
-      atLeastOneSuccessInRouldOfRulesApplications &&
-      numberOfRulesApplications < MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES
-    ) {
-      atLeastOneSuccessInRouldOfRulesApplications = false;
-      numberOfRulesApplications++;
-      for (const eachSimplification of Array.from(
-        defs.userSimplificationsInListForm
-      )) {
-        let success = true;
-        let eachConsecutiveRuleApplication = 0;
-        while (
-          success &&
-          eachConsecutiveRuleApplication <
-            MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE
-        ) {
-          eachConsecutiveRuleApplication++;
-          if (DEBUG) {
-            console.log(
-              `simplify - tos: ${defs.tos} checking pattern: ${eachSimplification} on: ${p1}`
-            );
-          }
-          const F1 = pop(); // F i.e. input expression
-          success = transform(F1, symbol(NIL), eachSimplification, true);
-          if (success) {
-            atLeastOneSuccessInRouldOfRulesApplications = true;
-          }
-          p1 = top();
-          if (DEBUG) {
-            console.log(`p1 at this stage of simplification: ${p1}`);
-          }
-        }
-        if (
-          eachConsecutiveRuleApplication ===
+      let success = true;
+      let eachConsecutiveRuleApplication = 0;
+      while (
+        success &&
+        eachConsecutiveRuleApplication <
           MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE
-        ) {
-          stop(
-            `maximum application of single transformation rule exceeded: ${eachSimplification}`
+      ) {
+        eachConsecutiveRuleApplication++;
+        if (DEBUG) {
+          console.log(
+            `simplify - tos: ${defs.tos} checking pattern: ${eachSimplification} on: ${p1}`
           );
         }
+        const F1 = pop(); // F i.e. input expression
+        success = transform(F1, symbol(NIL), eachSimplification, true);
+        if (success) {
+          atLeastOneSuccessInRouldOfRulesApplications = true;
+        }
+        p1 = top();
+        if (DEBUG) {
+          console.log(`p1 at this stage of simplification: ${p1}`);
+        }
+      }
+      if (
+        eachConsecutiveRuleApplication ===
+        MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE
+      ) {
+        stop(
+          `maximum application of single transformation rule exceeded: ${eachSimplification}`
+        );
       }
     }
-
-    if (
-      numberOfRulesApplications === MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES
-    ) {
-      stop('maximum application of all transformation rules exceeded ');
-    }
-
-    if (DEBUG) {
-      console.log(`METAX = ${get_binding(symbol(METAX))}`);
-      console.log(`METAA = ${get_binding(symbol(METAA))}`);
-      console.log(`METAB = ${get_binding(symbol(METAB))}`);
-    }
   }
+
+  if (numberOfRulesApplications === MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES) {
+    stop('maximum application of all transformation rules exceeded ');
+  }
+
+  if (DEBUG) {
+    console.log(`METAX = ${get_binding(symbol(METAX))}`);
+    console.log(`METAA = ${get_binding(symbol(METAA))}`);
+    console.log(`METAB = ${get_binding(symbol(METAB))}`);
+  }
+  return pop();
 }
 
 // ------------------------
 
-export function simplifyForCodeGeneration() {
-  runUserDefinedSimplifications();
+export function simplifyForCodeGeneration(p: U): U {
+  const arg = runUserDefinedSimplifications(p);
   defs.codeGen = true;
   // in "codeGen" mode we completely
   // eval and simplify the function bodies
   // because we really want to resolve all
   // the variables indirections and apply
   // all the simplifications we can.
-  const arg = pop();
   const result = simplify(arg);
   defs.codeGen = false;
-  push(result);
+  return result;
 }
 
 export function simplify(p1: U): U {

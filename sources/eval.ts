@@ -1128,12 +1128,6 @@ function Eval_unit(p1: U) {
   push(p1);
 }
 
-export function Eval_noexpand() {
-  noexpand(() => {
-    push(Eval(pop()));
-  });
-}
-
 // like Eval() except "=" (assignment) is treated
 // as "==" (equality test)
 // This is because

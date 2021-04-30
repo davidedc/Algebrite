@@ -20,13 +20,14 @@ import {
   SYMBOL_B_UNDERSCORE,
   SYMBOL_X_UNDERSCORE,
   U,
+  noexpand,
 } from '../runtime/defs';
-import { moveTos, pop, push, top } from '../runtime/stack';
-import { get_binding, push_symbol, set_binding } from '../runtime/symbol';
+import { moveTos, pop, push } from '../runtime/stack';
+import { get_binding, set_binding } from '../runtime/symbol';
 import { subtract } from './add';
 import { polyform } from './bake';
 import { decomp } from './decomp';
-import { Eval, Eval_noexpand } from './eval';
+import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
 import { scan_meta } from './scan';
@@ -86,11 +87,11 @@ export function transform(
   // put constants in F(X) on the stack
   const transform_h = defs.tos;
   push(Constants.one);
-  push(polyform(F, X)); // collect coefficients of x, x^2, etc.
-  push(X);
 
-  const bookmarkTosToPrintDecomps = defs.tos - 2;
-  decomp(generalTransform);
+  const bookmarkTosToPrintDecomps = defs.tos;
+  const arg = polyform(F, X); // collect coefficients of x, x^2, etc.
+  const result = decomp(generalTransform, arg, X);
+  push(result);
   const numberOfDecomps = defs.tos - bookmarkTosToPrintDecomps;
 
   if (DEBUG) {
@@ -349,18 +350,12 @@ function f_equals_a(
           )} and binding METAX to ${get_binding(symbol(METAX))}`
         );
       }
-      if (generalTransform) {
-        push(A);
-        Eval_noexpand();
-      } else {
-        push(Eval(A));
-      }
-      if (DEBUG) {
-        console.log(`  comparing ${top()} to: ${defs.stack[defs.tos - 2]}`);
-      }
-      const arg2 = pop();
+      const ans = generalTransform ? noexpand(Eval, A) : Eval(A);
       const arg1 = pop();
-      temp = subtract(arg1, arg2);
+      if (DEBUG) {
+        console.log(`  comparing ${ans} to: ${arg1}`);
+      }
+      temp = subtract(arg1, ans);
       if (isZeroAtomOrTensor(temp)) {
         if (DEBUG) {
           console.log(`binding METAA to ${get_binding(symbol(METAA))}`);
