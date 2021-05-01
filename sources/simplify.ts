@@ -38,10 +38,10 @@ import {
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
 import { stop } from '../runtime/run';
-import { pop, push, top, push_all } from '../runtime/stack';
+import { pop, push } from '../runtime/stack';
 import { get_binding } from '../runtime/symbol';
 import { equal, length } from '../sources/misc';
-import { add } from './add';
+import { add, add_all } from './add';
 import { integer, nativeDouble, rational } from './bignum';
 import { clockform } from './clock';
 import { Condense, yycondense } from './condense';
@@ -56,7 +56,7 @@ import {
   isnegativenumber,
   isZeroAtomOrTensor,
 } from './is';
-import { list, makeList } from './list';
+import { makeList } from './list';
 import { divide, inverse, multiply, negate } from './multiply';
 import { polar } from './polar';
 import { power } from './power';
@@ -499,256 +499,241 @@ function take_care_of_nested_radicals(p1: U): [U, boolean] {
   }
 
   if (equal(car(p1), symbol(POWER))) {
-    //console.log("ok it's a power ")
-    const base = cadr(p1);
-    const exponent = caddr(p1);
-    //console.log("possible double radical base: " + base)
-    //console.log("possible double radical exponent: " + exponent)
+    return _nestedPowerSymbol(p1);
+  }
 
-    if (
-      !isminusone(exponent) &&
-      equal(car(base), symbol(ADD)) &&
-      isfraction(exponent) &&
-      (equalq(exponent, 1, 3) || equalq(exponent, 1, 2))
-    ) {
-      //console.log("ok there is a radix with a term inside")
-      let i, innerbase, innerexponent, lowercase_a;
-      const firstTerm = cadr(base);
-      take_care_of_nested_radicals(firstTerm);
-      const secondTerm = caddr(base);
-      take_care_of_nested_radicals(secondTerm);
+  if (iscons(p1)) {
+    return _nestedCons(p1);
+  }
 
-      //console.log("possible double radical term1: " + firstTerm)
-      //console.log("possible double radical term2: " + secondTerm)
+  return [p1, false];
+}
 
-      let numberOfTerms = 0;
-      let countingTerms = base;
-      while (cdr(countingTerms) !== symbol(NIL)) {
-        numberOfTerms++;
-        countingTerms = cdr(countingTerms);
-      }
-      //console.log("number of terms: " + numberOfTerms)
-      if (numberOfTerms > 2) {
-        //console.log("too many terms under outer radix ")
-        return [p1, false];
-      }
+function _nestedPowerSymbol(p1: U): [U, boolean] {
+  //console.log("ok it's a power ")
+  const base = cadr(p1);
+  const exponent = caddr(p1);
+  //console.log("possible double radical base: " + base)
+  //console.log("possible double radical exponent: " + exponent)
 
-      // list here all the factors
-      let commonInnerExponent = null;
-      const commonBases = [];
-      const termsThatAreNotPowers = [];
-      if (ismultiply(secondTerm)) {
-        // product of factors
-        let secondTermFactor = cdr(secondTerm);
-        if (iscons(secondTermFactor)) {
-          while (iscons(secondTermFactor)) {
-            //console.log("second term factor BIS: " + car(secondTermFactor).toString())
-            const potentialPower = car(secondTermFactor);
-            if (ispower(potentialPower)) {
-              innerbase = cadr(potentialPower);
-              innerexponent = caddr(potentialPower);
-              if (equalq(innerexponent, 1, 2)) {
-                //console.log("tackling double radical 1: " + p1.toString())
-                if (commonInnerExponent == null) {
-                  commonInnerExponent = innerexponent;
-                  commonBases.push(innerbase);
-                } else {
-                  if (equal(innerexponent, commonInnerExponent)) {
-                    //console.log("common base: " + innerbase.toString())
-                    commonBases.push(innerbase);
-                  }
-                }
-              }
-              //console.log("no common bases here ")
-              //console.log("this one is a power base: " + innerbase + " , exponent: " + innerexponent)
-            } else {
-              termsThatAreNotPowers.push(potentialPower);
-            }
-            secondTermFactor = cdr(secondTermFactor);
-          }
-        }
-      } else if (ispower(secondTerm)) {
-        innerbase = cadr(secondTerm);
-        innerexponent = caddr(secondTerm);
-        if (commonInnerExponent == null && equalq(innerexponent, 1, 2)) {
-          //console.log("tackling double radical 2: " + p1.toString())
-          commonInnerExponent = innerexponent;
-          commonBases.push(innerbase);
-        }
-      }
-
-      if (commonBases.length === 0) {
-        return [p1, false];
-      }
-
-      const A = firstTerm;
-      //console.log("A: " + A.toString())
-
-      const C = commonBases.reduce(multiply, Constants.one);
-      //console.log("basis with common exponent: " + i.toString())
-      //console.log("C: " + C.toString())
-
-      const B = termsThatAreNotPowers.reduce(multiply, Constants.one);
-      //console.log("terms that are not powers: " + i.toString())
-      //console.log("B: " + B.toString())
-
-      let temp: U;
-      if (equalq(exponent, 1, 3)) {
-        const checkSize1 = divide(multiply(negate(A), C), B); // 4th coeff
-        //console.log("constant coeff " + stack[tos-1].toString())
-        const result1 = nativeDouble(yyfloat(real(checkSize1)));
-        if (Math.abs(result1) > Math.pow(2, 32)) {
-          return [p1, false];
-        }
-        const arg1c = checkSize1;
-
-        const checkSize2 = multiply(integer(3), C); // 3rd coeff
-        //console.log("next coeff " + stack[tos-1].toString())
-        const result2 = nativeDouble(yyfloat(real(checkSize2)));
-        if (Math.abs(result2) > Math.pow(2, 32)) {
-          return [p1, false];
-        }
-        const arg1b = multiply(checkSize2, symbol(SECRETX));
-
-        const checkSize3 = divide(multiply(integer(-3), A), B); // 2nd coeff
-        const result3 = nativeDouble(yyfloat(real(checkSize3)));
-        if (Math.abs(result3) > Math.pow(2, 32)) {
-          return [p1, false];
-        }
-
-        const result = add(
-          arg1c,
-          add(
-            arg1b,
-            add(
-              multiply(checkSize3, power(symbol(SECRETX), integer(2))),
-              multiply(Constants.one, power(symbol(SECRETX), integer(3)))
-            )
-          )
-        );
-        temp = result;
-      } else if (equalq(exponent, 1, 2)) {
-        const result1 = nativeDouble(yyfloat(real(C)));
-        if (Math.abs(result1) > Math.pow(2, 32)) {
-          return [p1, false];
-        }
-
-        const checkSize = divide(multiply(integer(-2), A), B);
-        const result2 = nativeDouble(yyfloat(real(checkSize)));
-        if (Math.abs(result2) > Math.pow(2, 32)) {
-          return [p1, false];
-        }
-        temp = add(
-          C,
-          add(
-            multiply(checkSize, symbol(SECRETX)),
-            multiply(Constants.one, power(symbol(SECRETX), integer(2)))
-          )
-        );
-      }
-
-      defs.recursionLevelNestedRadicalsRemoval++;
-      const r = roots(temp, symbol(SECRETX));
-      defs.recursionLevelNestedRadicalsRemoval--;
-      if (equal(r[r.length - 1], symbol(NIL))) {
-        if (DEBUG) {
-          console.log('roots bailed out because of too much recursion');
-        }
-        return [p1, false];
-      }
-
-      // exclude the solutions with radicals
-      const possibleSolutions: U[] = [];
-      for (let sol of (r[r.length - 1] as Tensor).elem) {
-        if (!Find(sol, symbol(POWER))) {
-          possibleSolutions.push(sol);
-        }
-      }
-
-      if (possibleSolutions.length === 0) {
-        return [p1, false];
-      }
-
-      const possibleRationalSolutions: U[] = [];
-      const realOfpossibleRationalSolutions: number[] = [];
-      //console.log("checking the one with maximum real part ")
-      for (i of Array.from(possibleSolutions)) {
-        const result = nativeDouble(yyfloat(real(i)));
-        possibleRationalSolutions.push(i);
-        realOfpossibleRationalSolutions.push(result);
-      }
-
-      const whichRationalSolution = realOfpossibleRationalSolutions.indexOf(
-        Math.max.apply(Math, realOfpossibleRationalSolutions)
-      );
-      const SOLUTION = possibleRationalSolutions[whichRationalSolution];
-
-      let lowercase_b: U;
-      if (equalq(exponent, 1, 3)) {
-        lowercase_b = power(
-          divide(
-            A,
-            add(
-              power(SOLUTION, integer(3)),
-              multiply(multiply(integer(3), C), SOLUTION)
-            )
-          ),
-          rational(1, 3)
-        );
-      } else if (equalq(exponent, 1, 2)) {
-        const base = divide(A, add(power(SOLUTION, integer(2)), C));
-        lowercase_b = power(base, rational(1, 2));
-      }
-      if (lowercase_b == null) {
-        return [p1, false];
-      }
-
-      lowercase_a = multiply(lowercase_b, SOLUTION);
-
-      let result: U;
-      if (equalq(exponent, 1, 3)) {
-        result = simplify(
-          add(multiply(lowercase_b, power(C, rational(1, 2))), lowercase_a)
-        );
-      } else if (equalq(exponent, 1, 2)) {
-        const possibleNewExpression = simplify(
-          add(multiply(lowercase_b, power(C, rational(1, 2))), lowercase_a)
-        );
-        const possibleNewExpressionValue = yyfloat(real(possibleNewExpression));
-        if (!isnegativenumber(possibleNewExpressionValue)) {
-          result = possibleNewExpression;
-        } else {
-          lowercase_b = negate(lowercase_b);
-          lowercase_a = negate(lowercase_a);
-          result = simplify(
-            add(multiply(lowercase_b, power(C, rational(1, 2))), lowercase_a)
-          );
-        }
-      }
-
-      return [result, true];
-    } else {
-      return [p1, false];
-    }
-  } else if (iscons(p1)) {
-    const h = defs.tos;
-    let anyRadicalSimplificationWorked = false;
-    const arr = [];
-    while (iscons(p1)) {
-      arr.push(car(p1));
-      if (!anyRadicalSimplificationWorked) {
-        let p: U;
-        [p, anyRadicalSimplificationWorked] = take_care_of_nested_radicals(
-          arr.pop()
-        );
-        arr.push(p);
-      }
-      p1 = cdr(p1);
-    }
-    return [makeList(...arr), anyRadicalSimplificationWorked];
-  } else {
+  if (
+    isminusone(exponent) ||
+    !equal(car(base), symbol(ADD)) ||
+    !isfraction(exponent) ||
+    (!equalq(exponent, 1, 3) && !equalq(exponent, 1, 2))
+  ) {
     return [p1, false];
   }
 
-  throw new Error('control flow should never reach here');
+  //console.log("ok there is a radix with a term inside")
+  const firstTerm = cadr(base);
+  take_care_of_nested_radicals(firstTerm);
+  const secondTerm = caddr(base);
+  take_care_of_nested_radicals(secondTerm);
+
+  let numberOfTerms = 0;
+  let countingTerms = base;
+  while (cdr(countingTerms) !== symbol(NIL)) {
+    numberOfTerms++;
+    countingTerms = cdr(countingTerms);
+  }
+  if (numberOfTerms > 2) {
+    return [p1, false];
+  }
+
+  // list here all the factors
+  const { commonBases, termsThatAreNotPowers } = _listAll(secondTerm);
+
+  if (commonBases.length === 0) {
+    return [p1, false];
+  }
+
+  const A = firstTerm;
+  const C = commonBases.reduce(multiply, Constants.one);
+  const B = termsThatAreNotPowers.reduce(multiply, Constants.one);
+
+  let temp: U;
+  if (equalq(exponent, 1, 3)) {
+    const checkSize1 = divide(multiply(negate(A), C), B); // 4th coeff
+    const result1 = nativeDouble(yyfloat(real(checkSize1)));
+    if (Math.abs(result1) > Math.pow(2, 32)) {
+      return [p1, false];
+    }
+
+    const checkSize2 = multiply(integer(3), C); // 3rd coeff
+    const result2 = nativeDouble(yyfloat(real(checkSize2)));
+    if (Math.abs(result2) > Math.pow(2, 32)) {
+      return [p1, false];
+    }
+    const arg1b = multiply(checkSize2, symbol(SECRETX));
+
+    const checkSize3 = divide(multiply(integer(-3), A), B); // 2nd coeff
+    const result3 = nativeDouble(yyfloat(real(checkSize3)));
+    if (Math.abs(result3) > Math.pow(2, 32)) {
+      return [p1, false];
+    }
+
+    const result = add_all([
+      checkSize1,
+      arg1b,
+      multiply(checkSize3, power(symbol(SECRETX), integer(2))),
+      multiply(Constants.one, power(symbol(SECRETX), integer(3))),
+    ]);
+    temp = result;
+  } else if (equalq(exponent, 1, 2)) {
+    const result1 = nativeDouble(yyfloat(real(C)));
+    if (Math.abs(result1) > Math.pow(2, 32)) {
+      return [p1, false];
+    }
+
+    const checkSize = divide(multiply(integer(-2), A), B);
+    const result2 = nativeDouble(yyfloat(real(checkSize)));
+    if (Math.abs(result2) > Math.pow(2, 32)) {
+      return [p1, false];
+    }
+    temp = add(
+      C,
+      add(
+        multiply(checkSize, symbol(SECRETX)),
+        multiply(Constants.one, power(symbol(SECRETX), integer(2)))
+      )
+    );
+  }
+
+  defs.recursionLevelNestedRadicalsRemoval++;
+  const r = roots(temp, symbol(SECRETX));
+  defs.recursionLevelNestedRadicalsRemoval--;
+  if (equal(r[r.length - 1], symbol(NIL))) {
+    if (DEBUG) {
+      console.log('roots bailed out because of too much recursion');
+    }
+    return [p1, false];
+  }
+
+  // exclude the solutions with radicals
+  const possibleSolutions: U[] = (r[r.length - 1] as Tensor).elem.filter(
+    (sol) => !Find(sol, symbol(POWER))
+  );
+
+  if (possibleSolutions.length === 0) {
+    return [p1, false];
+  }
+
+  const possibleRationalSolutions: U[] = [];
+  const realOfpossibleRationalSolutions: number[] = [];
+  //console.log("checking the one with maximum real part ")
+  for (const i of Array.from(possibleSolutions)) {
+    const result = nativeDouble(yyfloat(real(i)));
+    possibleRationalSolutions.push(i);
+    realOfpossibleRationalSolutions.push(result);
+  }
+
+  const whichRationalSolution = realOfpossibleRationalSolutions.indexOf(
+    Math.max.apply(Math, realOfpossibleRationalSolutions)
+  );
+  const SOLUTION = possibleRationalSolutions[whichRationalSolution];
+
+  if (!equalq(exponent, 1, 3) && !equalq(exponent, 1, 2)) {
+    return [p1, false];
+  }
+
+  if (equalq(exponent, 1, 3)) {
+    const lowercase_b = power(
+      divide(
+        A,
+        add(
+          power(SOLUTION, integer(3)),
+          multiply(multiply(integer(3), C), SOLUTION)
+        )
+      ),
+      rational(1, 3)
+    );
+    const lowercase_a = multiply(lowercase_b, SOLUTION);
+    const result = simplify(
+      add(multiply(lowercase_b, power(C, rational(1, 2))), lowercase_a)
+    );
+    return [result, true];
+  }
+
+  if (equalq(exponent, 1, 2)) {
+    const lowercase_b = power(
+      divide(A, add(power(SOLUTION, integer(2)), C)),
+      rational(1, 2)
+    );
+    const lowercase_a = multiply(lowercase_b, SOLUTION);
+    const possibleNewExpression = simplify(
+      add(multiply(lowercase_b, power(C, rational(1, 2))), lowercase_a)
+    );
+    const possibleNewExpressionValue = yyfloat(real(possibleNewExpression));
+    if (!isnegativenumber(possibleNewExpressionValue)) {
+      return [possibleNewExpression, true];
+    }
+
+    const result = simplify(
+      add(
+        multiply(negate(lowercase_b), power(C, rational(1, 2))),
+        negate(lowercase_a)
+      )
+    );
+    return [result, true];
+  }
+
+  return [null, true];
+}
+
+function _listAll(
+  secondTerm: U
+): { commonBases: U[]; termsThatAreNotPowers: U[] } {
+  let commonInnerExponent = null;
+  const commonBases: U[] = [];
+  const termsThatAreNotPowers: U[] = [];
+  if (ismultiply(secondTerm)) {
+    // product of factors
+    let secondTermFactor = cdr(secondTerm);
+    if (iscons(secondTermFactor)) {
+      while (iscons(secondTermFactor)) {
+        const potentialPower = car(secondTermFactor);
+        if (ispower(potentialPower)) {
+          const innerbase = cadr(potentialPower);
+          const innerexponent = caddr(potentialPower);
+          if (equalq(innerexponent, 1, 2)) {
+            if (commonInnerExponent == null) {
+              commonInnerExponent = innerexponent;
+              commonBases.push(innerbase);
+            } else if (equal(innerexponent, commonInnerExponent)) {
+              commonBases.push(innerbase);
+            }
+          }
+        } else {
+          termsThatAreNotPowers.push(potentialPower);
+        }
+        secondTermFactor = cdr(secondTermFactor);
+      }
+    }
+  } else if (ispower(secondTerm)) {
+    const innerbase = cadr(secondTerm);
+    const innerexponent = caddr(secondTerm);
+    if (commonInnerExponent == null && equalq(innerexponent, 1, 2)) {
+      commonInnerExponent = innerexponent;
+      commonBases.push(innerbase);
+    }
+  }
+  return { commonBases, termsThatAreNotPowers };
+}
+
+function _nestedCons(p1: U): [U, boolean] {
+  let anyRadicalSimplificationWorked = false;
+  const arr = [];
+  while (iscons(p1)) {
+    arr.push(car(p1));
+    if (!anyRadicalSimplificationWorked) {
+      let p: U;
+      [p, anyRadicalSimplificationWorked] = take_care_of_nested_radicals(
+        arr.pop()
+      );
+      arr.push(p);
+    }
+    p1 = cdr(p1);
+  }
+  return [makeList(...arr), anyRadicalSimplificationWorked];
 }
