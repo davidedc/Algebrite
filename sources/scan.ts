@@ -1,6 +1,7 @@
 import { alloc_tensor } from '../runtime/alloc';
 import {
   ADD,
+  Cons,
   Constants,
   DEBUG,
   defs,
@@ -43,7 +44,6 @@ import { moveTos, pop, push, swap, top } from '../runtime/stack';
 import { push_symbol, usr_symbol } from '../runtime/symbol';
 import { new_string } from '../sources/misc';
 import { bignum_scan_float, bignum_scan_integer } from './bignum';
-import { cons } from './cons';
 import { equaln } from './is';
 import { list } from './list';
 import { inverse, multiply, negate } from './multiply';
@@ -343,9 +343,7 @@ function scan_expression() {
 
   if (defs.tos - h > 1) {
     list(defs.tos - h);
-    push_symbol(ADD);
-    swap();
-    cons();
+    push(new Cons(symbol(ADD), pop()));
   }
 }
 
@@ -449,9 +447,7 @@ function scan_term() {
     push(Constants.one);
   } else if (defs.tos - h > 1) {
     list(defs.tos - h);
-    push_symbol(MULTIPLY);
-    swap();
-    cons();
+    push(new Cons(symbol(MULTIPLY), pop()));
   }
 }
 

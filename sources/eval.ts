@@ -194,6 +194,7 @@ import {
   convert_rational_to_double,
   double,
   push_integer,
+  integer,
   rational,
   nativeInt,
 } from './bignum';
@@ -251,7 +252,7 @@ import { Eval_laguerre } from './laguerre';
 import { Eval_lcm } from './lcm';
 import { Eval_leading } from './leading';
 import { Eval_legendre } from './legendre';
-import { list, makeList } from './list';
+import { makeList } from './list';
 import { Eval_log } from './log';
 import { Eval_lookup } from './lookup';
 import { Eval_mod } from './mod';
@@ -843,16 +844,13 @@ function Eval_dsolve(p1: U) {
 // for example, Eval(f,x,2)
 
 function Eval_Eval(p1: U) {
-  push(Eval(cadr(p1)));
+  let tmp = Eval(cadr(p1));
   p1 = cddr(p1);
   while (iscons(p1)) {
-    const newExpr = Eval(cadr(p1));
-    const oldExpr = Eval(car(p1));
-    const expr = pop();
-    push(subst(expr, oldExpr, newExpr));
+    tmp = subst(tmp, Eval(car(p1)), Eval(cadr(p1)));
     p1 = cddr(p1);
   }
-  push(Eval(pop()));
+  push(Eval(tmp));
 }
 
 // exp evaluation: it replaces itself with
@@ -894,8 +892,7 @@ function Eval_index(p1: U) {
   // look into the head of the list,
   // when evaluated it should be a tensor
   p1 = cdr(p1);
-  push(car(p1));
-  push(Eval(pop()));
+  push(Eval(car(p1)));
   const theTensor = top();
 
   if (isNumericAtom(theTensor)) {
@@ -940,18 +937,19 @@ function Eval_invg(p1: U) {
 
 function Eval_isinteger(p1: U) {
   p1 = Eval(cadr(p1));
+  const result = _isinteger(p1);
+  push(result);
+}
+
+function _isinteger(p1: U): U {
   if (isrational(p1)) {
-    const result = isinteger(p1) ? Constants.one : Constants.zero;
-    push(result);
-    return;
+    return isinteger(p1) ? Constants.one : Constants.zero;
   }
   if (isdouble(p1)) {
     const n = Math.floor(p1.d);
-    const result = n === p1.d ? Constants.one : Constants.zero;
-    push(result);
-    return;
+    return n === p1.d ? Constants.one : Constants.zero;
   }
-  push(makeList(symbol(ISINTEGER), p1));
+  return makeList(symbol(ISINTEGER), p1);
 }
 
 function Eval_number(p1: U) {
@@ -962,14 +960,9 @@ function Eval_number(p1: U) {
 }
 
 function Eval_operator(p1: U) {
-  const h = defs.tos;
-  push_symbol(OPERATOR);
-  if (iscons(p1)) {
-    p1.tail().forEach((p) => {
-      push(Eval(p));
-    });
-  }
-  list(defs.tos - h);
+  const mapped = iscons(p1) ? p1.tail().map(Eval) : [];
+  const result = makeList(symbol(OPERATOR), ...mapped);
+  push(result);
 }
 
 // quote definition
@@ -980,11 +973,8 @@ function Eval_quote(p1: U) {
 // rank definition
 function Eval_rank(p1: U) {
   p1 = Eval(cadr(p1));
-  if (istensor(p1)) {
-    push_integer(p1.tensor.ndim);
-  } else {
-    push(Constants.zero);
-  }
+  const rank = istensor(p1) ? integer(p1.tensor.ndim) : Constants.zero;
+  push(rank);
 }
 
 // Evaluates the right side and assigns the

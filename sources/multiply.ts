@@ -31,7 +31,6 @@ import {
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
 import { pop, pop_n_items, push } from '../runtime/stack';
-import { push_symbol } from '../runtime/symbol';
 import { cmp_expr } from '../sources/misc';
 import { add, subtract } from './add';
 import {
@@ -42,7 +41,6 @@ import {
   multiply_numbers,
   negate_number,
 } from './bignum';
-import { cons } from './cons';
 import { Eval } from './eval';
 import {
   equaln,
@@ -152,19 +150,8 @@ function yymultiply(p1: U, p2: U): U {
   let [p4, p6] = parse_p2(p2);
 
   while (iscons(p1) && iscons(p2)) {
-    //    if (car(p1)->gamma && car(p2)->gamma) {
-    //      combine_gammas(h)
-    //      p1 = cdr(p1)
-    //      p2 = cdr(p2)
-    //      parse_p1()
-    //      parse_p2()
-    //      continue
-    //    }
-
     if (caar(p1) === symbol(OPERATOR) && caar(p2) === symbol(OPERATOR)) {
-      push_symbol(OPERATOR);
-      append(cdar(p1), cdar(p2));
-      cons();
+      push(new Cons(symbol(OPERATOR), append(cdar(p1), cdar(p2))));
       p1 = cdr(p1);
       p2 = cdr(p2);
       [p3, p5] = parse_p1(p1);

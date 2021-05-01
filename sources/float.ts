@@ -54,14 +54,7 @@ function checkFloatHasWorkedOutCompletely(nodeToCheck) {
 }
 
 export function zzfloat(p1: U): U {
-  push(p1);
-  evalFloats(() => {
-    //p1 = pop()
-    //push(cadr(p1))
-    //push(p1)
-    push(Eval(yyfloat(Eval(pop()))));
-  });
-  return pop();
+  return evalFloats(() => Eval(yyfloat(Eval(p1))));
 }
 // zzfloat doesn't necessarily result in a double
 // , for example if there are variables. But

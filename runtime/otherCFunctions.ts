@@ -1,5 +1,4 @@
 import { stop } from './run';
-import { push } from './stack';
 import { nativeInt } from '../sources/bignum';
 import { isZeroAtomOrTensor } from '../sources/is';
 import {
@@ -15,7 +14,7 @@ import {
   U,
 } from './defs';
 import { get_binding } from './symbol';
-import { list } from '../sources/list';
+import { makeList } from '../sources/list';
 
 export function strcmp(str1: string, str2: string): Sign {
   if (str1 === str2) {
@@ -177,18 +176,18 @@ export function __range__(
 }
 
 // Append one list to another.
-export function append(p1: U, p2: U) {
+export function append(p1: U, p2: U): U {
   // from https://github.com/gbl08ma/eigenmath/blob/8be989f00f2f6f37989bb7fd2e75a83f882fdc49/src/append.cpp
-  const h = defs.tos;
+  const arr = [];
   while (iscons(p1)) {
-    push(car(p1));
+    arr.push(car(p1));
     p1 = cdr(p1);
   }
   while (iscons(p2)) {
-    push(car(p2));
+    arr.push(car(p2));
     p2 = cdr(p2);
   }
-  list(defs.tos - h);
+  return makeList(...arr);
 }
 
 export function jn(n: number, x: number): number {

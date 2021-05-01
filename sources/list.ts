@@ -1,13 +1,14 @@
 import { Cons, NIL, symbol, U } from '../runtime/defs';
-import { push } from '../runtime/stack';
-import { cons } from './cons';
+import { pop, push } from '../runtime/stack';
 
 // Create a list from n things on the stack.
 // n is an integer
 export function list(n: number) {
   push(symbol(NIL));
   for (let listIterator = 0; listIterator < n; listIterator++) {
-    cons();
+    const arg2 = pop();
+    const arg1 = pop();
+    push(new Cons(arg1, arg2));
   }
 }
 
