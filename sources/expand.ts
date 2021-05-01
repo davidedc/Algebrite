@@ -14,7 +14,7 @@ import {
   U,
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { equal } from '../sources/misc';
 import { add, subtract } from './add';
 import { integer, nativeInt } from './bignum';

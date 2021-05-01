@@ -23,7 +23,7 @@ import {
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
 import { stop } from '../runtime/run';
-import { pop, push, top } from '../runtime/stack';
+import { pop, push } from '../runtime/stack';
 import { symnum } from '../runtime/symbol';
 import { equal } from '../sources/misc';
 import { add } from './add';

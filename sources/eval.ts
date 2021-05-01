@@ -166,7 +166,6 @@ import {
   UNIT,
   YYRECT,
   ZERO,
-  noexpand,
 } from '../runtime/defs';
 import { check_esc_flag, stop } from '../runtime/run';
 import { moveTos, pop, push, top } from '../runtime/stack';

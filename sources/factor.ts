@@ -15,7 +15,7 @@ import {
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { integer } from './bignum';
 import { Eval } from './eval';
 import { factorpoly } from './factorpoly';

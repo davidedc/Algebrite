@@ -10,7 +10,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { add, subtract } from './add';
 import { integer, nativeInt } from './bignum';
 import { Eval } from './eval';
