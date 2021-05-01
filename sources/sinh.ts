@@ -23,10 +23,6 @@ export function Eval_sinh(p1: U) {
 }
 
 export function ysinh(p1: U): U {
-  return yysinh(p1);
-}
-
-function yysinh(p1: U): U {
   if (car(p1) === symbol(ARCSINH)) {
     return cadr(p1);
   }

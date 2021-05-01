@@ -37,17 +37,13 @@ import { multiply } from './multiply';
 // Transpose tensor indices
 export function Eval_transpose(p1: U) {
   const arg1 = Eval(cadr(p1));
-  let arg2: U, arg3: U;
-
-  // add default params if they
-  // have not been passed
-  if (cddr(p1) === symbol(NIL)) {
-    arg2 = Constants.one;
-    arg3 = integer(2);
-  } else {
+  let arg2: U = Constants.one;
+  let arg3: U = integer(2);
+  if (cddr(p1) !== symbol(NIL)) {
     arg2 = Eval(caddr(p1));
     arg3 = Eval(cadddr(p1));
   }
+
   push(transpose(arg1, arg2, arg3));
 }
 

@@ -4,7 +4,7 @@ import {
   car,
   cdr,
   Constants,
-  defs,
+  doexpand,
   isadd,
   iscons,
   ismultiply,
@@ -34,11 +34,7 @@ export function Eval_gcd(p1: U) {
 }
 
 export function gcd(p1: U, p2: U): U {
-  const prev_expanding = defs.expanding;
-  defs.expanding = true;
-  const result = gcd_main(p1, p2);
-  defs.expanding = prev_expanding;
-  return result;
+  return doexpand(gcd_main, p1, p2);
 }
 
 function gcd_main(p1: U, p2: U): U {

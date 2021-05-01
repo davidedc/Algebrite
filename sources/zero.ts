@@ -4,6 +4,10 @@ import { push } from '../runtime/stack';
 import { evaluate_integer } from './eval';
 
 export function Eval_zero(p1: U) {
+  push(_zero(p1));
+}
+
+function _zero(p1: U): U {
   const k: number[] = Array(MAXDIM).fill(0);
 
   let m = 1;
@@ -13,8 +17,7 @@ export function Eval_zero(p1: U) {
       const i = evaluate_integer(el);
       if (i < 1 || isNaN(i)) {
         // if the input is nonsensical just return 0
-        push(Constants.zero);
-        return;
+        return Constants.zero;
       }
       m *= i;
       k[n++] = i;
@@ -22,13 +25,12 @@ export function Eval_zero(p1: U) {
   }
 
   if (n === 0) {
-    push(Constants.zero);
-    return;
+    return Constants.zero;
   }
   p1 = alloc_tensor(m);
   p1.tensor.ndim = n;
   for (let i = 0; i < n; i++) {
     p1.tensor.dim[i] = k[i];
   }
-  push(p1);
+  return p1;
 }

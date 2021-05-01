@@ -192,14 +192,7 @@ export function transform(
 
           if (DEBUG) {
             console.log('tos before recursive transform: ' + defs.tos);
-          }
-
-          if (DEBUG) {
             console.log(`testing: ${secondTerm}`);
-          }
-          //if (secondTerm+"") == "eig(A x,transpose(A x))()"
-          //  breakpoint
-          if (DEBUG) {
             console.log(`about to try to simplify other term: ${secondTerm}`);
           }
           const [t, success] = transform(

@@ -3,7 +3,7 @@ import {
   caddr,
   cadr,
   Constants,
-  defs,
+  doexpand,
   isadd,
   ismultiply,
   ispower,
@@ -113,16 +113,10 @@ function expand(F: U, X: U): U {
 
   let result: U;
   if (istensor(C)) {
-    const prev_expanding = defs.expanding;
-    defs.expanding = true;
-    const inverse = inv(C);
-    defs.expanding = prev_expanding;
+    const inverse = doexpand(inv, C);
     result = inner(inner(inverse, B), A);
   } else {
-    const prev_expanding = defs.expanding;
-    defs.expanding = true;
-    const arg1 = divide(B, C);
-    defs.expanding = prev_expanding;
+    const arg1 = doexpand(divide, B, C);
     result = multiply(arg1, A);
   }
   return add(result, Q);
@@ -243,10 +237,7 @@ function expand_get_C(p2: U, p9: U): U {
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
       const arg2 = power(p9, integer(i));
-      const prev_expanding = defs.expanding;
-      defs.expanding = true;
-      const divided = divide(stack[j], arg2);
-      defs.expanding = prev_expanding;
+      const divided = doexpand(divide, stack[j], arg2);
       p4.tensor.elem[n * i + j] = filter(divided, p9);
     }
   }
@@ -334,10 +325,7 @@ function expand_get_CF(p2: U, p5: U, p9: U): U[] {
   if (!Find(p5, p9)) {
     return [];
   }
-  let prev_expanding = defs.expanding;
-  defs.expanding = true;
-  const p8 = trivial_divide(p2, p5);
-  defs.expanding = prev_expanding;
+  const p8 = doexpand(trivial_divide, p2, p5);
   if (ispower(p5)) {
     n = nativeInt(caddr(p5));
     p6 = cadr(p5);
@@ -350,15 +338,10 @@ function expand_get_CF(p2: U, p5: U, p9: U): U[] {
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < d; j++) {
       let arg2 = power(p6, integer(i));
-      prev_expanding = defs.expanding;
-      defs.expanding = true;
-      let arg1 = multiply(p8, arg2);
-      defs.expanding = prev_expanding;
+      let arg1 = doexpand(multiply, p8, arg2);
       arg2 = power(p9, integer(j));
-      prev_expanding = defs.expanding;
-      defs.expanding = true;
-      stack.push(multiply(arg1, arg2));
-      defs.expanding = prev_expanding;
+      const multiplied = doexpand(multiply, arg1, arg2);
+      stack.push(multiplied);
     }
   }
 
@@ -392,10 +375,7 @@ function expand_get_B(p3: U, p4: U, p9: U): U {
   p8.tensor.dim[0] = n;
   for (let i = 0; i < n; i++) {
     const arg2 = power(p9, integer(i));
-    const prev_expanding = defs.expanding;
-    defs.expanding = true;
-    const divided = divide(p3, arg2);
-    defs.expanding = prev_expanding;
+    const divided = doexpand(divide, p3, arg2);
     p8.tensor.elem[i] = filter(divided, p9);
   }
   return p8;

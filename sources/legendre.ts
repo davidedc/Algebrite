@@ -13,7 +13,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { square } from '../sources/misc';
 import { subtract } from './add';
 import { integer, rational, nativeInt } from './bignum';

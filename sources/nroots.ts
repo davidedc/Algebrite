@@ -11,7 +11,7 @@ import {
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { moveTos, pop, push, top } from '../runtime/stack';
+import { moveTos, push } from '../runtime/stack';
 import { sort_stack } from '../sources/misc';
 import { add } from './add';
 import { double } from './bignum';
@@ -29,14 +29,14 @@ const NROOTS_YMAX = 101;
 const NROOTS_DELTA = 1.0e-6;
 const NROOTS_EPSILON = 1.0e-9;
 
-function NROOTS_ABS(z: numericRootOfPolynomial) {
+function NROOTS_ABS(z: numericRootOfPolynomial): number {
   return Math.sqrt(z.r * z.r + z.i * z.i);
 }
 
 // random between -2 and 2
 const theRandom = 0.0;
 
-function NROOTS_RANDOM() {
+function NROOTS_RANDOM(): number {
   //theRandom += 0.2
   //return theRandom
   return 4.0 * Math.random() - 2.0;

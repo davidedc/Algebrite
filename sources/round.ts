@@ -20,10 +20,6 @@ export function Eval_round(p1: U) {
 }
 
 function yround(p1: U): U {
-  return yyround(p1);
-}
-
-function yyround(p1: U) {
   if (!isNumericAtom(p1)) {
     return makeList(symbol(ROUND), p1);
   }
