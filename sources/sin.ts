@@ -43,22 +43,19 @@ export function sine(p1: U): U {
 // decompose sum sin(alpha+beta) into
 // sin(alpha)*cos(beta)+sin(beta)*cos(alpha)
 function sine_of_angle_sum(p1: U): U {
-  //console.log "sin of angle sum ---- "
   let p2 = cdr(p1);
   while (iscons(p2)) {
     const B = car(p2);
     if (isnpi(B)) {
       const A = subtract(p1, B);
       return add(multiply(sine(A), cosine(B)), multiply(cosine(A), sine(B)));
-      //console.log "sin of angle sum end ---- "
     }
     p2 = cdr(p2);
   }
   return sine_of_angle(p1);
 }
-//console.log "sin of angle sum end ---- "
 
-function sine_of_angle(p1: U) {
+function sine_of_angle(p1: U): U {
   if (car(p1) === symbol(ARCSIN)) {
     return cadr(p1);
   }

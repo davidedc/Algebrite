@@ -803,6 +803,20 @@ export function noexpand<T extends any[], V>(
   }
 }
 
+// Call a function temporarily setting "expanding" to true
+export function doexpand<T extends any[], V>(
+  func: (...args: T) => V,
+  ...args: T
+): V {
+  const prev_expanding = defs.expanding;
+  defs.expanding = true;
+  try {
+    return func(...args);
+  } finally {
+    defs.expanding = prev_expanding;
+  }
+}
+
 // Call a function temporarily setting "evaluatingPolar" to true
 export function evalPolar<T extends any[], V>(
   func: (...args: T) => V,

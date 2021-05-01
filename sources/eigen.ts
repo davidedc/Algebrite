@@ -12,9 +12,9 @@ import {
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { set_binding, usr_symbol } from '../runtime/symbol';
-import { push_double } from './bignum';
+import { double } from './bignum';
 import { Eval } from './eval';
 import { yyfloat } from './float';
 import { makeList } from './list';
@@ -184,9 +184,7 @@ function EIG_check_arg(
 ):
   | { arg: Tensor<Double>; invalid?: undefined }
   | { arg?: undefined; invalid: U } {
-  push(Eval(cadr(p1)));
-
-  p1 = Eval(yyfloat(pop()));
+  p1 = Eval(yyfloat(Eval(cadr(p1))));
 
   if (!istensor(p1)) {
     return { invalid: p1 };
@@ -290,8 +288,7 @@ function eigen(op: number, p1: Tensor<Double>): [U, U] {
 
     for (let i = 0; i < EIG_N; i++) {
       for (let j = 0; j < EIG_N; j++) {
-        push_double(EIG_yydd[EIG_N * i + j]);
-        D.tensor.elem[EIG_N * i + j] = pop();
+        D.tensor.elem[EIG_N * i + j] = double(EIG_yydd[EIG_N * i + j]);
       }
     }
   }
@@ -302,8 +299,7 @@ function eigen(op: number, p1: Tensor<Double>): [U, U] {
 
     for (let i = 0; i < EIG_N; i++) {
       for (let j = 0; j < EIG_N; j++) {
-        push_double(EIG_yyqq[EIG_N * i + j]);
-        Q.tensor.elem[EIG_N * i + j] = pop();
+        Q.tensor.elem[EIG_N * i + j] = double(EIG_yyqq[EIG_N * i + j]);
       }
     }
   }

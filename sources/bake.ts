@@ -3,6 +3,7 @@ import {
   car,
   Cons,
   defs,
+  doexpand,
   FOR,
   isadd,
   iscons,
@@ -23,9 +24,10 @@ import { equaln, ispolyexpandedform, isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
 
 export function bake(p1: U): U {
-  const prev_expanding = defs.expanding;
-  defs.expanding = true;
+  return doexpand(_bake, p1);
+}
 
+function _bake(p1: U): U {
   const s = ispolyexpandedform(p1, symbol(SYMBOL_S));
   const t = ispolyexpandedform(p1, symbol(SYMBOL_T));
   const x = ispolyexpandedform(p1, symbol(SYMBOL_X));
@@ -53,7 +55,6 @@ export function bake(p1: U): U {
     result = p1;
   }
 
-  defs.expanding = prev_expanding;
   return result;
 }
 

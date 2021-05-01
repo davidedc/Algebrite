@@ -3,7 +3,7 @@ import {
   caddr,
   cadr,
   Constants,
-  defs,
+  doexpand,
   NIL,
   symbol,
   SYMBOL_X,
@@ -75,10 +75,6 @@ export function coeff(p: U, x: U): U[] {
       return coefficients;
     }
 
-    const prev_expanding = defs.expanding;
-    defs.expanding = true;
-    p = divide(p, x);
-    defs.expanding = prev_expanding;
-    //console.log("just divided: " + stack[tos-1].toString())
+    p = doexpand(divide, p, x);
   }
 }

@@ -399,7 +399,7 @@ export function Eval_integral(p1: U) {
 
   // evaluate 1st arg to get function F
   p1 = cdr(p1);
-  push(Eval(car(p1)));
+  let F = Eval(car(p1));
 
   // evaluate 2nd arg and then...
   // example    result of 2nd arg  what to do
@@ -412,21 +412,18 @@ export function Eval_integral(p1: U) {
   p1 = cdr(p1);
 
   const p2 = Eval(car(p1));
+  let N: U, X: U;
   if (p2 === symbol(NIL)) {
-    push(guess(top()));
-    push(symbol(NIL));
+    X = guess(F);
+    N = symbol(NIL);
   } else if (isNumericAtom(p2)) {
-    push(guess(top()));
-    push(p2);
+    X = guess(F);
+    N = p2;
   } else {
-    push(p2);
+    X = p2;
     p1 = cdr(p1);
-    push(Eval(car(p1)));
+    N = Eval(car(p1));
   }
-
-  let N = pop();
-  let X = pop();
-  let F = pop();
 
   while (true) {
     // N might be a symbol instead of a number
@@ -489,14 +486,14 @@ export function Eval_integral(p1: U) {
   push(F);
 }
 
-export function integral(p1: U, p2: U): U {
+export function integral(F: U, X: U): U {
   let integ: U;
-  if (isadd(p1)) {
-    integ = integral_of_sum(p1, p2);
-  } else if (ismultiply(p1)) {
-    integ = integral_of_product(p1, p2);
+  if (isadd(F)) {
+    integ = integral_of_sum(F, X);
+  } else if (ismultiply(F)) {
+    integ = integral_of_product(F, X);
   } else {
-    integ = integral_of_form(p1, p2);
+    integ = integral_of_form(F, X);
   }
   if (Find(integ, symbol(INTEGRAL))) {
     stop('integral: sorry, could not find a solution');
@@ -505,35 +502,35 @@ export function integral(p1: U, p2: U): U {
   return Eval(simplify(integ));
 }
 
-function integral_of_sum(p1: U, p2: U): U {
-  p1 = cdr(p1);
-  let temp = integral(car(p1), p2);
-  if (iscons(p1)) {
-    temp = p1.tail().reduce((a: U, b: U) => add(a, integral(b, p2)), temp);
+function integral_of_sum(F: U, X: U): U {
+  F = cdr(F);
+  let result = integral(car(F), X);
+  if (iscons(F)) {
+    result = F.tail().reduce(
+      (acc: U, b: U) => add(acc, integral(b, X)),
+      result
+    );
   }
-  return temp;
+  return result;
 }
 
-function integral_of_product(p1: U, p2: U): U {
-  const [constantExpr, variableExpr] = partition(p1, p2);
-  return multiply(constantExpr, integral_of_form(variableExpr, p2)); // multiply constant part
+function integral_of_product(F: U, X: U): U {
+  const [constantExpr, variableExpr] = partition(F, X);
+  return multiply(constantExpr, integral_of_form(variableExpr, X)); // multiply constant part
 }
 
-function integral_of_form(p1: U, p2: U): U {
-  const hc = italu_hashcode(p1, p2).toFixed(6);
+function integral_of_form(F: U, X: U): U {
+  const hc = italu_hashcode(F, X).toFixed(6);
   const tab = hashed_itab[hc];
   // console.log('hashcode('+p1+', '+p2+') = ' + hc + ' '+!!tab);
   if (!tab) {
     // breakpoint
     // italu_hashcode(p1, p2)
-    return makeList(symbol(INTEGRAL), p1, p2);
+    return makeList(symbol(INTEGRAL), F, X);
   }
-  push(p1); // free variable
-  push(p2); // input expression
-  transform(tab, false);
-  const p3 = pop();
+  const [p3, _] = transform(F, X, tab, false);
   if (p3 === symbol(NIL)) {
-    return makeList(symbol(INTEGRAL), p1, p2);
+    return makeList(symbol(INTEGRAL), F, X);
   }
   return p3;
 }

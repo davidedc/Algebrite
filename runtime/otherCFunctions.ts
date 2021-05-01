@@ -1,5 +1,5 @@
 import { stop } from './run';
-import { push, pop } from './stack';
+import { push } from './stack';
 import { nativeInt } from '../sources/bignum';
 import { isZeroAtomOrTensor } from '../sources/is';
 import {
@@ -12,6 +12,7 @@ import {
   iscons,
   car,
   cdr,
+  U,
 } from './defs';
 import { get_binding } from './symbol';
 import { list } from '../sources/list';
@@ -176,10 +177,8 @@ export function __range__(
 }
 
 // Append one list to another.
-export function append() {
+export function append(p1: U, p2: U) {
   // from https://github.com/gbl08ma/eigenmath/blob/8be989f00f2f6f37989bb7fd2e75a83f882fdc49/src/append.cpp
-  let p2 = pop();
-  let p1 = pop();
   const h = defs.tos;
   while (iscons(p1)) {
     push(car(p1));

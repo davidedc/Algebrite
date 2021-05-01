@@ -20,13 +20,14 @@ import {
   SYMBOL_B_UNDERSCORE,
   SYMBOL_X_UNDERSCORE,
   U,
+  noexpand,
 } from '../runtime/defs';
-import { moveTos, pop, push, top } from '../runtime/stack';
-import { get_binding, push_symbol, set_binding } from '../runtime/symbol';
+import { moveTos, pop, push } from '../runtime/stack';
+import { get_binding, set_binding } from '../runtime/symbol';
 import { subtract } from './add';
 import { polyform } from './bake';
 import { decomp } from './decomp';
-import { Eval, Eval_noexpand } from './eval';
+import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
 import { scan_meta } from './scan';
@@ -69,10 +70,12 @@ true is successful, false if not.
 //define B p6
 //define C p7
 
-export function transform(s: string[] | U, generalTransform: boolean) {
-  const X = pop(); // X i.e. free variable
-  const F = pop(); // F i.e. input expression
-
+export function transform(
+  F: U,
+  X: U,
+  s: string[] | U,
+  generalTransform: boolean
+): [U, boolean] {
   if (DEBUG) {
     console.log(`         !!!!!!!!!   transform on: ${F}`);
   }
@@ -84,11 +87,11 @@ export function transform(s: string[] | U, generalTransform: boolean) {
   // put constants in F(X) on the stack
   const transform_h = defs.tos;
   push(Constants.one);
-  push(polyform(F, X)); // collect coefficients of x, x^2, etc.
-  push(X);
 
-  const bookmarkTosToPrintDecomps = defs.tos - 2;
-  decomp(generalTransform);
+  const bookmarkTosToPrintDecomps = defs.tos;
+  const arg = polyform(F, X); // collect coefficients of x, x^2, etc.
+  const result = decomp(generalTransform, arg, X);
+  push(result);
   const numberOfDecomps = defs.tos - bookmarkTosToPrintDecomps;
 
   if (DEBUG) {
@@ -189,22 +192,18 @@ export function transform(s: string[] | U, generalTransform: boolean) {
 
           if (DEBUG) {
             console.log('tos before recursive transform: ' + defs.tos);
-          }
-
-          push(secondTerm);
-          push_symbol(NIL);
-          if (DEBUG) {
             console.log(`testing: ${secondTerm}`);
-          }
-          //if (secondTerm+"") == "eig(A x,transpose(A x))()"
-          //  breakpoint
-          if (DEBUG) {
             console.log(`about to try to simplify other term: ${secondTerm}`);
           }
-          const success = transform(s, generalTransform);
+          const [t, success] = transform(
+            secondTerm,
+            symbol(NIL),
+            s,
+            generalTransform
+          );
           transformationSuccessful = transformationSuccessful || success;
 
-          transformedTerms.push(pop());
+          transformedTerms.push(t);
 
           if (DEBUG) {
             console.log(
@@ -273,19 +272,12 @@ export function transform(s: string[] | U, generalTransform: boolean) {
     transformationSuccessful = true;
   } else {
     // transformations failed
-    if (generalTransform) {
-      // result = original expression
-      temp = F;
-    } else {
-      temp = symbol(NIL);
-    }
+    temp = generalTransform ? F : symbol(NIL);
   }
 
   restoreMetaBindings();
 
-  push(temp);
-
-  return transformationSuccessful;
+  return [temp, transformationSuccessful];
 }
 
 function saveMetaBindings() {
@@ -334,7 +326,6 @@ function f_equals_a(
         // skip to the next binding of metas
         continue;
       }
-      push(F); // F = A?
       if (DEBUG) {
         console.log(
           `about to evaluate template expression: ${A} binding METAA to ${get_binding(
@@ -344,18 +335,11 @@ function f_equals_a(
           )} and binding METAX to ${get_binding(symbol(METAX))}`
         );
       }
-      if (generalTransform) {
-        push(A);
-        Eval_noexpand();
-      } else {
-        push(Eval(A));
-      }
+      const arg2 = generalTransform ? noexpand(Eval, A) : Eval(A);
       if (DEBUG) {
-        console.log(`  comparing ${top()} to: ${defs.stack[defs.tos - 2]}`);
+        console.log(`  comparing ${arg2} to: ${F}`);
       }
-      const arg2 = pop();
-      const arg1 = pop();
-      temp = subtract(arg1, arg2);
+      temp = subtract(F, arg2);
       if (isZeroAtomOrTensor(temp)) {
         if (DEBUG) {
           console.log(`binding METAA to ${get_binding(symbol(METAA))}`);

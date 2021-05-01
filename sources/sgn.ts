@@ -31,11 +31,7 @@ export function Eval_sgn(p1: U) {
   push(result);
 }
 
-export function sgn(p1: U): U {
-  return yysgn(p1);
-}
-
-function yysgn(X: U): U {
+export function sgn(X: U): U {
   if (isdouble(X)) {
     if (X.d > 0) {
       return Constants.one;
@@ -63,15 +59,6 @@ function yysgn(X: U): U {
   if (isnegativeterm(X)) {
     return multiply(makeList(symbol(SGN), negate(X)), Constants.negOne);
   }
-
-  /*
-  push_integer(2)
-  push(X)
-  heaviside()
-  multiply()
-  push(Constants.negOne)
-  add()
-  */
 
   return makeList(symbol(SGN), X);
 }

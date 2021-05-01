@@ -4,6 +4,7 @@ import {
   car,
   cdr,
   defs,
+  doexpand,
   E,
   iscons,
   isNumericAtom,
@@ -196,11 +197,7 @@ function unique_f(p: U, p1: U, p2: U) {
 }
 
 export function yyexpand(p1: U): U {
-  const prev_expanding = defs.expanding;
-  defs.expanding = true;
-  const result = Eval(p1);
-  defs.expanding = prev_expanding;
-  return result;
+  return doexpand(Eval, p1);
 }
 
 export function exponential(p1: U): U {

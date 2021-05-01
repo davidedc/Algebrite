@@ -359,7 +359,7 @@ export function findDependenciesInScript(
         }
 
         try {
-          simplifyForCodeGeneration();
+          push(simplifyForCodeGeneration(pop()));
         } catch (error) {
           if (PRINTOUTRESULT) {
             console.log(error);

@@ -11,7 +11,7 @@ import {
   istensor,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { add } from './add';
 import { Condense } from './condense';
 import { Eval } from './eval';
@@ -43,7 +43,6 @@ function yyrationalize(arg: U): U {
   }
 
   // get common denominator
-  push(Constants.one);
   const commonDenominator = multiply_denominators(arg);
 
   // multiply each term by common denominator
@@ -52,7 +51,7 @@ function yyrationalize(arg: U): U {
     temp = arg
       .tail()
       .reduce(
-        (a: U, eachTerm: U) => add(a, multiply(commonDenominator, eachTerm)),
+        (acc: U, term: U) => add(acc, multiply(commonDenominator, term)),
         temp
       );
   }
@@ -63,29 +62,29 @@ function yyrationalize(arg: U): U {
 
 function multiply_denominators(p: U): U {
   if (isadd(p)) {
-    p.tail().forEach((el) => {
-      push(multiply_denominators_term(el));
-    });
-    return pop();
+    return p
+      .tail()
+      .reduce(
+        (acc: U, el: U) => multiply_denominators_term(el, acc),
+        Constants.one
+      );
   }
-  return multiply_denominators_term(p);
+  return multiply_denominators_term(p, Constants.one);
 }
 
-function multiply_denominators_term(p: U): U {
+function multiply_denominators_term(p: U, p2: U): U {
   if (ismultiply(p)) {
-    p.tail().forEach((el) => {
-      push(multiply_denominators_factor(el));
-    });
-    return pop();
+    return p
+      .tail()
+      .reduce((acc, el) => multiply_denominators_factor(el, acc), p2);
   }
 
-  return multiply_denominators_factor(p);
+  return multiply_denominators_factor(p, p2);
 }
 
-function multiply_denominators_factor(p: U): U {
-  const arg1 = pop();
+function multiply_denominators_factor(p: U, p2: U): U {
   if (!ispower(p)) {
-    return arg1;
+    return p2;
   }
 
   const arg2 = p;
@@ -94,16 +93,16 @@ function multiply_denominators_factor(p: U): U {
 
   // like x^(-2) ?
   if (isnegativenumber(p)) {
-    return __lcm(arg1, inverse(arg2));
+    return __lcm(p2, inverse(arg2));
   }
 
   // like x^(-a) ?
   if (ismultiply(p) && isnegativenumber(cadr(p))) {
-    return __lcm(arg1, inverse(arg2));
+    return __lcm(p2, inverse(arg2));
   }
 
   // no match
-  return arg1;
+  return p2;
 }
 
 function __rationalize_tensor(p1: U): U {

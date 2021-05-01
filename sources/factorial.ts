@@ -49,35 +49,23 @@ export function factorial(p1: U): U {
 // this function is not actually used, but
 // all these simplifications
 // do happen automatically via simplify
-function simplifyfactorials() {
-  noexpand(simplifyfactorials_);
+function simplifyfactorials(p1: U): U {
+  return noexpand(simplifyfactorials_, p1);
 }
 
-function simplifyfactorials_() {
-  let p1 = pop();
-
+function simplifyfactorials_(p1: U): U {
   if (isadd(p1)) {
-    const temp = p1
-      .tail()
-      .map((el) => {
-        push(el);
-        simplifyfactorials();
-        return pop();
-      })
-      .reduce(add, Constants.zero);
-    push(temp);
-    return;
+    return p1.tail().map(simplifyfactorials).reduce(add, Constants.zero);
   }
 
   if (ismultiply(p1)) {
-    sfac_product(p1);
-    return;
+    return sfac_product(p1);
   }
 
-  push(p1);
+  return p1;
 }
 
-function sfac_product(p1: U) {
+function sfac_product(p1: U): U {
   const s = defs.tos;
 
   let n = 0;
@@ -114,7 +102,7 @@ function sfac_product(p1: U) {
 
   moveTos(defs.tos - n);
 
-  push(p1);
+  return p1;
 }
 
 function sfac_product_f(s: number, a: number, b: number) {

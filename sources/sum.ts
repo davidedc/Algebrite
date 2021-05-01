@@ -23,6 +23,11 @@ import { Eval, evaluate_integer } from './eval';
 
 // leaves the sum at the top of the stack
 export function Eval_sum(p1: U) {
+  const result = _sum(p1);
+  push(result);
+}
+
+function _sum(p1: U): U {
   // 1st arg
   const body = cadr(p1);
 
@@ -35,15 +40,13 @@ export function Eval_sum(p1: U) {
   // 3rd arg (lower limit)
   const j = evaluate_integer(cadddr(p1));
   if (isNaN(j)) {
-    push(p1);
-    return;
+    return p1;
   }
 
   // 4th arg (upper limit)
   const k = evaluate_integer(caddddr(p1));
   if (isNaN(k)) {
-    push(p1);
-    return;
+    return p1;
   }
 
   // remember contents of the index
@@ -55,8 +58,8 @@ export function Eval_sum(p1: U) {
     set_binding(indexVariable, integer(i));
     temp = add(temp, Eval(body));
   }
-  push(temp);
 
   // put back the index variable to original content
   set_binding(indexVariable, p4);
+  return temp;
 }

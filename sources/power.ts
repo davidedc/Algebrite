@@ -152,6 +152,7 @@ function yypower(base: U, exponent: U): U {
     return result;
   }
 
+  let tmp: U;
   //   -1 ^ rational
   if (
     isminusone(base) &&
@@ -168,28 +169,26 @@ function yypower(base: U, exponent: U): U {
       );
     }
     if (exponent.q.a < exponent.q.b) {
-      push(makeList(symbol(POWER), base, exponent));
+      tmp = makeList(symbol(POWER), base, exponent);
     } else {
-      push(
+      tmp = makeList(
+        symbol(MULTIPLY),
+        base,
         makeList(
-          symbol(MULTIPLY),
+          symbol(POWER),
           base,
-          makeList(
-            symbol(POWER),
-            base,
-            rational(exponent.q.a.mod(exponent.q.b), exponent.q.b)
-          )
+          rational(exponent.q.a.mod(exponent.q.b), exponent.q.b)
         )
       );
       if (DEBUG_POWER) {
-        console.log(` trick applied : ${top()}`);
+        console.log(` trick applied : ${tmp}`);
       }
     }
 
     // evaluates clock form into
     // rectangular form. This seems to give
     // slightly better form to some test results.
-    const result = rect(pop());
+    const result = rect(tmp);
     if (DEBUG_POWER) {
       console.log(`   power of ${inputBase} ^ ${inputExp}: ${result}`);
     }
@@ -274,12 +273,12 @@ function yypower(base: U, exponent: U): U {
     Find(exponent, symbol(PI)) &&
     !defs.evaluatingPolar
   ) {
-    push(makeList(symbol(POWER), base, exponent));
+    let tmp = makeList(symbol(POWER), base, exponent);
     if (DEBUG_POWER) {
       console.log(`   power: turning complex exponential to rect: ${top()}`);
     }
 
-    const hopefullySimplified = rect(pop()); // put new (hopefully simplified expr) in exponent
+    const hopefullySimplified = rect(tmp); // put new (hopefully simplified expr) in exponent
     if (!Find(hopefullySimplified, symbol(PI))) {
       if (DEBUG_POWER) {
         console.log(
@@ -362,11 +361,11 @@ function yypower(base: U, exponent: U): U {
           '   power: expanding && isadd(base) && isNumericAtom(exponent) '
         );
       }
-      power_sum(n, base);
+      let result = power_sum(n, base);
       if (DEBUG_POWER) {
-        console.log(`   power of ${inputBase} ^ ${inputExp}: ${top()}`);
+        console.log(`   power of ${inputBase} ^ ${inputExp}: ${result}`);
       }
-      return pop();
+      return result;
     }
   }
 
@@ -449,11 +448,9 @@ function yypower(base: U, exponent: U): U {
         (iscomplexnumberdouble(base) && isdouble(exponent))
           ? double(Math.PI)
           : symbol(PI);
-      push(
-        multiply(
-          power(abs(base), exponent),
-          power(Constants.negOne, divide(multiply(arg(base), exponent), pi))
-        )
+      let tmp = multiply(
+        power(abs(base), exponent),
+        power(Constants.negOne, divide(multiply(arg(base), exponent), pi))
       );
 
       // if we calculate the power making use of arctan:
@@ -461,15 +458,15 @@ function yypower(base: U, exponent: U): U {
       //  * results become really hard to manipulate afterwards
       //  * we can't go back to other forms.
       // so leave the power as it is.
-      if (avoidCalculatingPowersIntoArctans && Find(top(), symbol(ARCTAN))) {
-        pop();
-        push(makeList(symbol(POWER), base, exponent));
+      if (avoidCalculatingPowersIntoArctans && Find(tmp, symbol(ARCTAN))) {
+        tmp;
+        tmp = makeList(symbol(POWER), base, exponent);
       }
 
       if (DEBUG_POWER) {
-        console.log(`   power of ${inputBase} ^ ${inputExp}: ${top()}`);
+        console.log(`   power of ${inputBase} ^ ${inputExp}: ${tmp}`);
       }
-      return pop();
+      return tmp;
     }
   }
 
@@ -528,7 +525,7 @@ function yypower(base: U, exponent: U): U {
 
 // first index is the term number 0..k-1, second index is the exponent 0..n
 //define A(i, j) frame[(i) * (n + 1) + (j)]
-function power_sum(n: number, p1: U) {
+function power_sum(n: number, p1: U): U {
   const a: number[] = [];
   // number of terms in the sum
   const k = length(p1) - 1;
@@ -550,7 +547,7 @@ function power_sum(n: number, p1: U) {
     a[i] = 0;
   }
 
-  push(multinomial_sum(k, n, a, 0, n, powers, p1, Constants.zero));
+  return multinomial_sum(k, n, a, 0, n, powers, p1, Constants.zero);
 }
 
 //-----------------------------------------------------------------------------

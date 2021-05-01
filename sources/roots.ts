@@ -57,22 +57,22 @@ const flatten = (arr: any[]) => [].concat(...arr);
 export function Eval_roots(POLY: U) {
   // A == B -> A - B
   let X = cadr(POLY);
+  let POLY1: U;
   if (car(X) === symbol(SETQ) || car(X) === symbol(TESTEQ)) {
-    push(subtract(Eval(cadr(X)), Eval(caddr(X))));
+    POLY1 = subtract(Eval(cadr(X)), Eval(caddr(X)));
   } else {
     X = Eval(X);
     if (car(X) === symbol(SETQ) || car(X) === symbol(TESTEQ)) {
-      push(subtract(Eval(cadr(X)), Eval(caddr(X))));
+      POLY1 = subtract(Eval(cadr(X)), Eval(caddr(X)));
     } else {
-      push(X);
+      POLY1 = X;
     }
   }
 
   // 2nd arg, x
   X = Eval(caddr(POLY));
 
-  const X1 = X === symbol(NIL) ? guess(top()) : X;
-  const POLY1 = pop();
+  const X1 = X === symbol(NIL) ? guess(POLY1) : X;
 
   if (!ispolyexpandedform(POLY1, X1)) {
     stop('roots: 1st argument is not a polynomial');

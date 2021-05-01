@@ -52,25 +52,17 @@ Then simplify the sum to get
 */
 // simplify factorials term-by-term
 function Eval_simfac(p1: U) {
-  push(Eval(cadr(p1)));
-  simfac();
+  const result = simfac(Eval(cadr(p1)));
+  push(result);
 }
 
 //if 1
-export function simfac() {
-  let p1 = pop();
+export function simfac(p1: U): U {
   if (isadd(p1)) {
-    const terms = p1.tail().map((term) => {
-      push(term);
-      simfac_term();
-      return pop();
-    });
-    push(add_all(terms));
-  } else {
-    push(p1);
-    simfac_term();
+    const terms = p1.tail().map(simfac_term);
+    return add_all(terms);
   }
-  return;
+  return simfac_term(p1);
 }
 
 //else
@@ -107,13 +99,10 @@ simfac(void)
 
 *endif
 */
-function simfac_term() {
-  let p1 = pop();
-
+function simfac_term(p1: U): U {
   // if not a product of factors then done
   if (!ismultiply(p1)) {
-    push(p1);
-    return;
+    return p1;
   }
 
   // push all factors
@@ -124,7 +113,7 @@ function simfac_term() {
     // do nothing
   }
 
-  push(multiply_all_noexpand(factors));
+  return multiply_all_noexpand(factors);
 }
 
 // try all pairs of factors

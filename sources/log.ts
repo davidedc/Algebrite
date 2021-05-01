@@ -34,10 +34,6 @@ export function Eval_log(p1: U) {
 }
 
 export function logarithm(p1: U): U {
-  return yylog(p1);
-}
-
-function yylog(p1: U): U {
   if (p1 === symbol(E)) {
     return Constants.one;
   }

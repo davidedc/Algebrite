@@ -23,10 +23,6 @@ export function Eval_tan(p1: U) {
 }
 
 function tangent(p1: U): U {
-  return yytangent(p1);
-}
-
-function yytangent(p1: U): U {
   if (car(p1) === symbol(ARCTAN)) {
     return cadr(p1);
   }
