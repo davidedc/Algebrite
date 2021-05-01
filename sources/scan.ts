@@ -180,7 +180,6 @@ export function scan_meta(s: string) {
   if (token === '') {
     push(symbol(NIL));
     defs.expanding = prev_expanding;
-    0;
     return;
   }
   scan_stmt();

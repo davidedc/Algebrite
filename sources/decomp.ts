@@ -14,7 +14,7 @@ import {
   U,
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
-import { pop, push, top } from '../runtime/stack';
+import { push_all, push, top } from '../runtime/stack';
 import { equal } from '../sources/misc';
 import { add_all } from './add';
 import { Eval } from './eval';
@@ -44,7 +44,7 @@ export function Eval_decomp(p1: U) {
 
   const variable = p1 === symbol(NIL) ? guess(arg) : p1;
   const result = decomp(false, arg, variable);
-  push(result);
+  push_all(result);
   list(defs.tos - h);
 }
 
@@ -63,44 +63,52 @@ function pushTryNotToDuplicate(toBePushed: U) {
   push(toBePushed);
 }
 
+function pushTryNotToDuplicateLocal(localStack: U[], item: U) {
+  if (localStack.length === 0) {
+    localStack.push(item);
+  }
+  if (equal(item, localStack[localStack.length - 1])) {
+    return;
+  }
+  localStack.push(item);
+}
+
 // returns constant expressions on the stack
-export function decomp(generalTransform: boolean, p1: U, p2: U) {
+export function decomp(generalTransform: boolean, p1: U, p2: U): U[] {
   if (DEBUG) {
     console.log(`DECOMPOSING ${p1}`);
   }
 
+  const stack = [];
   // is the entire expression constant?
   if (generalTransform) {
     if (!iscons(p1)) {
       if (DEBUG) {
         console.log(` ground thing: ${p1}`);
       }
-      pushTryNotToDuplicate(p1);
-      return pop();
+      pushTryNotToDuplicateLocal(stack, p1);
+      return stack;
     }
   } else {
     if (!Find(p1, p2)) {
       if (DEBUG) {
         console.log(' entire expression is constant');
       }
-      pushTryNotToDuplicate(p1);
-      return pop();
+      pushTryNotToDuplicateLocal(stack, p1);
+      return stack;
     }
   }
 
   // sum?
   if (isadd(p1)) {
-    decomp_sum(generalTransform, p1, p2);
-    return pop();
+    stack.push(...decomp_sum(generalTransform, p1, p2));
+    return stack;
   }
 
   // product?
   if (ismultiply(p1)) {
-    const result = decomp_product(generalTransform, p1, p2);
-    if (result) {
-      return result;
-    }
-    return pop();
+    stack.push(...decomp_product(generalTransform, p1, p2));
+    return stack;
   }
 
   // naive decomp if not sum or product
@@ -117,7 +125,7 @@ export function decomp(generalTransform: boolean, p1: U, p2: U) {
     // we need to push the subtree as well
     // as recurse to its parts
     if (generalTransform) {
-      push(car(p3));
+      stack.push(car(p3));
     }
 
     if (DEBUG) {
@@ -125,14 +133,13 @@ export function decomp(generalTransform: boolean, p1: U, p2: U) {
       console.log(`car(p3): ${car(p3)}`);
       console.log(`p2: ${p2}`);
     }
-    const result = decomp(generalTransform, car(p3), p2);
-    push(result);
+    stack.push(...decomp(generalTransform, car(p3), p2));
     p3 = cdr(p3);
   }
-  return pop();
+  return stack;
 }
 
-function decomp_sum(generalTransform: boolean, p1: U, p2: U) {
+function decomp_sum(generalTransform: boolean, p1: U, p2: U): U[] {
   if (DEBUG) {
     console.log(' decomposing the sum ');
   }
@@ -140,37 +147,26 @@ function decomp_sum(generalTransform: boolean, p1: U, p2: U) {
   // decomp terms involving x
   let p3: U = cdr(p1);
 
+  const stack = [];
   while (iscons(p3)) {
     if (Find(car(p3), p2) || generalTransform) {
-      const result = decomp(generalTransform, car(p3), p2);
-      push(result);
+      stack.push(...decomp(generalTransform, car(p3), p2));
     }
     p3 = cdr(p3);
   }
 
   // add together all constant terms
-  const constantTerms = [];
-
   p3 = cdr(p1) as Cons;
-
-  for (const t of p3) {
-    if (!Find(t, p2)) {
-      constantTerms.push(t);
-    }
-  }
-
+  const constantTerms = [...p3].filter((t) => !Find(t, p2));
   if (constantTerms.length) {
     p3 = add_all(constantTerms);
-    pushTryNotToDuplicate(p3);
-    push(negate(p3)); // need both +a, -a for some integrals
+    pushTryNotToDuplicateLocal(stack, p3);
+    stack.push(negate(p3)); // need both +a, -a for some integrals
   }
+  return stack;
 }
 
-function decomp_product(
-  generalTransform: boolean,
-  p1: U,
-  p2: U
-): U | undefined {
+function decomp_product(generalTransform: boolean, p1: U, p2: U): U[] {
   if (DEBUG) {
     console.log(' decomposing the product ');
   }
@@ -178,11 +174,10 @@ function decomp_product(
   // decomp factors involving x
 
   let p3: U = cdr(p1);
-
+  const stack = [];
   while (iscons(p3)) {
     if (Find(car(p3), p2) || generalTransform) {
-      const result = decomp(generalTransform, car(p3), p2);
-      push(result);
+      stack.push(...decomp(generalTransform, car(p3), p2));
     }
     p3 = cdr(p3);
   }
@@ -205,7 +200,7 @@ function decomp_product(
   }
 
   if (constantFactors.length > 0) {
-    return multiply_all(constantFactors);
+    stack.push(multiply_all(constantFactors));
   }
-  return undefined;
+  return stack;
 }

@@ -27,11 +27,8 @@ export function factors(p: U): U[] {
 }
 
 function term_factors(p: U): U[] {
-  const result: U[] = [];
   if (ismultiply(p)) {
-    result.push(...p.tail());
-  } else {
-    result.push(p);
+    return p.tail();
   }
-  return result;
+  return [p];
 }
