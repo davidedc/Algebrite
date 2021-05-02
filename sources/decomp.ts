@@ -14,12 +14,12 @@ import {
   U,
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
-import { push_all, push, top } from '../runtime/stack';
+import { push, top } from '../runtime/stack';
 import { equal } from '../sources/misc';
 import { add_all } from './add';
 import { Eval } from './eval';
 import { guess } from './guess';
-import { list } from './list';
+import { list, makeList } from './list';
 import { multiply_all, negate } from './multiply';
 
 // this function extract parts subtrees from a tree.
@@ -37,40 +37,20 @@ import { multiply_all, negate } from './multiply';
 // be evalled. Never called.
 export function Eval_decomp(p1: U) {
   console.log('Eval_decomp is being called!!!!!!!!!!!!!!!!!!!!');
-  const h = defs.tos;
-  push(symbol(NIL));
   const arg = Eval(cadr(p1));
   p1 = Eval(caddr(p1));
 
   const variable = p1 === symbol(NIL) ? guess(arg) : p1;
   const result = decomp(false, arg, variable);
-  push_all(result);
-  list(defs.tos - h);
-}
-
-function pushTryNotToDuplicate(toBePushed: U) {
-  if (defs.tos > 0) {
-    if (DEBUG) {
-      console.log(`comparing ${toBePushed} to: ${top()}`);
-    }
-    if (equal(toBePushed, top())) {
-      if (DEBUG) {
-        console.log(`skipping ${toBePushed} because it's already on stack `);
-      }
-      return;
-    }
-  }
-  push(toBePushed);
+  push(makeList(symbol(NIL), ...result));
 }
 
 function pushTryNotToDuplicateLocal(localStack: U[], item: U) {
-  if (localStack.length === 0) {
-    localStack.push(item);
-  }
-  if (equal(item, localStack[localStack.length - 1])) {
-    return;
+  if (localStack.length > 0 && equal(item, localStack[localStack.length - 1])) {
+    return false;
   }
   localStack.push(item);
+  return true;
 }
 
 // returns constant expressions on the stack
@@ -79,46 +59,41 @@ export function decomp(generalTransform: boolean, p1: U, p2: U): U[] {
     console.log(`DECOMPOSING ${p1}`);
   }
 
-  const stack = [];
   // is the entire expression constant?
   if (generalTransform) {
     if (!iscons(p1)) {
       if (DEBUG) {
         console.log(` ground thing: ${p1}`);
       }
-      pushTryNotToDuplicateLocal(stack, p1);
-      return stack;
+      return [p1];
     }
   } else {
     if (!Find(p1, p2)) {
       if (DEBUG) {
         console.log(' entire expression is constant');
       }
-      pushTryNotToDuplicateLocal(stack, p1);
-      return stack;
+      return [p1];
     }
   }
 
   // sum?
   if (isadd(p1)) {
-    stack.push(...decomp_sum(generalTransform, p1, p2));
-    return stack;
+    return decomp_sum(generalTransform, p1, p2);
   }
 
   // product?
   if (ismultiply(p1)) {
-    stack.push(...decomp_product(generalTransform, p1, p2));
-    return stack;
+    return decomp_product(generalTransform, p1, p2);
   }
+
+  let p3: U = cdr(p1);
 
   // naive decomp if not sum or product
   if (DEBUG) {
     console.log(' naive decomp');
-  }
-  let p3: U = cdr(p1);
-  if (DEBUG) {
     console.log(`startig p3: ${p3}`);
   }
+  const stack = [];
   while (iscons(p3)) {
     // for a general transformations,
     // we want to match any part of the tree so
@@ -172,7 +147,6 @@ function decomp_product(generalTransform: boolean, p1: U, p2: U): U[] {
   }
 
   // decomp factors involving x
-
   let p3: U = cdr(p1);
   const stack = [];
   while (iscons(p3)) {
