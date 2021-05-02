@@ -44,13 +44,8 @@ In the "for" loop i = n-1 so the recurrence relation becomes
   (i+1)*L(x,n,k) = (2*i+1-x+k)*L(x,n-1,k) - (i+k)*L(x,n-2,k)
 */
 export function Eval_laguerre(p1: U) {
-  // 1st arg
   const X = Eval(cadr(p1));
-
-  // 2nd arg
   const N = Eval(caddr(p1));
-
-  // 3rd arg
   const p2 = Eval(cadddr(p1));
   const K = p2 === symbol(NIL) ? Constants.zero : p2;
 

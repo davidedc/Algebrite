@@ -35,7 +35,6 @@ import {
   U,
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
-import { pop, push } from '../runtime/stack';
 import { equal, length } from '../sources/misc';
 import { absValFloat } from './abs';
 import { integer, nativeInt } from './bignum';
@@ -96,13 +95,8 @@ export function isZeroAtomOrTensor(
 export function isZeroLikeOrNonZeroLikeOrUndetermined(
   valueOrPredicate: U
 ): boolean | null {
-  // push the argument
-  push(valueOrPredicate);
-
-  // just like Eval but turns assignments into
-  // equality checks
-  Eval_predicate();
-  let evalledArgument = pop();
+  // just like Eval but turns assignments into equality checks
+  let evalledArgument = Eval_predicate(valueOrPredicate);
 
   // OK first check if we already have
   // a simple zero (or simple zero tensor)
@@ -159,10 +153,7 @@ export function isZeroLikeOrNonZeroLikeOrUndetermined(
   // we just did
 
   if (Find(evalledArgument, Constants.imaginaryunit)) {
-    push(absValFloat(evalledArgument));
-
-    Eval_predicate();
-    evalledArgument = pop();
+    evalledArgument = Eval_predicate(absValFloat(evalledArgument));
 
     // re-do the simple-number checks...
 

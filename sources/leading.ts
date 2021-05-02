@@ -21,11 +21,9 @@ Result
 The result is undefined if P is not a polynomial.
 */
 export function Eval_leading(p1: U) {
-  const top = Eval(cadr(p1));
-
+  const P = Eval(cadr(p1));
   p1 = Eval(caddr(p1));
-  const X = p1 === symbol(NIL) ? guess(top) : p1;
-  const P = top;
+  const X = p1 === symbol(NIL) ? guess(P) : p1;
   push(leading(P, X));
 }
 

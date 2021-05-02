@@ -9,13 +9,13 @@ import { check_tensor_dimensions } from './tensor';
 // is the object to be indexed, followed by the indices themselves.
 
 // called by Eval_index
-export function index_function(n: number) {
-  const s = defs.tos - n;
-  let p1: U = defs.stack[s] as Tensor;
+export function index_function(stack: U[]): U {
+  const s = 0;
+  let p1: U = stack[s] as Tensor;
 
   const { ndim } = p1.tensor;
 
-  const m = n - 1;
+  const m = stack.length - 1;
 
   if (m > ndim) {
     stop('too many indices for tensor');
@@ -24,7 +24,7 @@ export function index_function(n: number) {
   let k = 0;
 
   for (let i = 0; i < m; i++) {
-    const t = nativeInt(defs.stack[s + i + 1]);
+    const t = nativeInt(stack[s + i + 1]);
     if (t < 1 || t > p1.tensor.dim[i]) {
       stop('index out of range');
     }
@@ -32,9 +32,7 @@ export function index_function(n: number) {
   }
 
   if (ndim === m) {
-    moveTos(defs.tos - n);
-    push(p1.tensor.elem[k]);
-    return;
+    return p1.tensor.elem[k];
   }
 
   k = p1.tensor.dim.slice(m).reduce((a, b) => a * b, k);
@@ -53,8 +51,7 @@ export function index_function(n: number) {
   check_tensor_dimensions(p1);
   check_tensor_dimensions(p2);
 
-  moveTos(defs.tos - n);
-  push(p2);
+  return p2;
 }
 
 //-----------------------------------------------------------------------------

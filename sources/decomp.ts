@@ -5,7 +5,6 @@ import {
   cdr,
   Cons,
   DEBUG,
-  defs,
   isadd,
   iscons,
   ismultiply,
@@ -14,12 +13,12 @@ import {
   U,
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
-import { push, top } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { equal } from '../sources/misc';
 import { add_all } from './add';
 import { Eval } from './eval';
 import { guess } from './guess';
-import { list, makeList } from './list';
+import { makeList } from './list';
 import { multiply_all, negate } from './multiply';
 
 // this function extract parts subtrees from a tree.

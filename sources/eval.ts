@@ -168,11 +168,10 @@ import {
   ZERO,
 } from '../runtime/defs';
 import { check_esc_flag, stop } from '../runtime/run';
-import { moveTos, pop, push, top } from '../runtime/stack';
+import { pop, push } from '../runtime/stack';
 import {
   Eval_symbolsinfo,
   get_binding,
-  push_symbol,
   set_binding,
   symnum,
 } from '../runtime/symbol';
@@ -886,14 +885,17 @@ function Eval_hilbert(p1: U) {
 }
 
 function Eval_index(p1: U) {
-  const h = defs.tos;
+  const result = _index(p1);
+  push(result);
+}
+
+function _index(p1: U) {
   const orig = p1;
 
   // look into the head of the list,
   // when evaluated it should be a tensor
   p1 = cdr(p1);
-  push(Eval(car(p1)));
-  const theTensor = top();
+  const theTensor = Eval(car(p1));
 
   if (isNumericAtom(theTensor)) {
     stop('trying to access a scalar as a tensor');
@@ -902,27 +904,23 @@ function Eval_index(p1: U) {
   if (!istensor(theTensor)) {
     // the tensor is not allocated yet, so
     // leaving the expression unevalled
-    moveTos(h);
-    push(orig);
-    return;
+    return orig;
   }
 
-  // we examined the head of the list which
-  // was the tensor, now look into
-  // the indexes
+  const stack: U[] = [theTensor];
+  // we examined the head of the list which was the tensor,
+  // now look into the indexes
   p1 = cdr(p1);
   while (iscons(p1)) {
-    push(Eval(car(p1)));
-    if (!isintegerorintegerfloat(top())) {
-      // index with something other than
-      // an integer
-      moveTos(h);
-      push(orig);
-      return;
+    stack.push(Eval(car(p1)));
+    if (!isintegerorintegerfloat(stack[stack.length - 1])) {
+      // index with something other than an integer
+      return orig;
     }
     p1 = cdr(p1);
   }
-  index_function(defs.tos - h);
+
+  return index_function(stack);
 }
 
 function Eval_inv(p1: U) {
@@ -1132,14 +1130,12 @@ function Eval_unit(p1: U) {
 // can indeed test the value of an assignment (the
 // value is just the evaluation of the right side)
 
-export function Eval_predicate() {
-  const p1 = top();
+export function Eval_predicate(p1: U): U {
   if (car(p1) === symbol(SETQ)) {
     // replace the assignment in the
     // head with an equality test
-    pop();
-    push(makeList(symbol(TESTEQ), cadr(p1), caddr(p1)));
+    p1 = makeList(symbol(TESTEQ), cadr(p1), caddr(p1));
   }
 
-  push(Eval(pop()));
+  return Eval(p1);
 }

@@ -56,13 +56,8 @@ For m > 0
   P(x,n,m) = (-1)^m * (1-x^2)^(m/2) * d^m/dx^m P(x,n)
 */
 export function Eval_legendre(p1: U) {
-  // 1st arg
   const X = Eval(cadr(p1));
-
-  // 2nd arg
   const N = Eval(caddr(p1));
-
-  // 3rd arg (optional)
   const p2 = Eval(cadddr(p1));
   const M = p2 === symbol(NIL) ? Constants.zero : p2;
 
