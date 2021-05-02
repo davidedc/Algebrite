@@ -142,6 +142,17 @@ export class Cons extends BaseAtom {
     }
   }
 
+  public some(func: (p: U) => boolean): boolean {
+    let u: U = this;
+    while (iscons(u)) {
+      if (func(car(u))) {
+        return true;
+      }
+      u = cdr(u);
+    }
+    return false;
+  }
+
   // Return everything except the first item in the list
   public tail(): U[] {
     if (iscons(this.cons.cdr)) {

@@ -1,9 +1,7 @@
 import {
   caddr,
   cadr,
-  car,
   cdddr,
-  cdr,
   Constants,
   iscons,
   ismultiply,
@@ -33,11 +31,8 @@ export function Eval_factor(p1: U) {
 
   // more factoring?
   p1 = cdddr(p1);
-
-  while (iscons(p1)) {
-    const arg2 = Eval(car(p1));
-    temp = factor_again(temp, arg2);
-    p1 = cdr(p1);
+  if (iscons(p1)) {
+    temp = [...p1].reduce((acc: U, p: U) => factor_again(acc, Eval(p)), temp);
   }
   push(temp);
 }

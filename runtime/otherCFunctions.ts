@@ -179,13 +179,11 @@ export function __range__(
 export function append(p1: U, p2: U): U {
   // from https://github.com/gbl08ma/eigenmath/blob/8be989f00f2f6f37989bb7fd2e75a83f882fdc49/src/append.cpp
   const arr = [];
-  while (iscons(p1)) {
-    arr.push(car(p1));
-    p1 = cdr(p1);
+  if (iscons(p1)) {
+    arr.push(...p1);
   }
-  while (iscons(p2)) {
-    arr.push(car(p2));
-    p2 = cdr(p2);
+  if (iscons(p2)) {
+    arr.push(...p2);
   }
   return makeList(...arr);
 }

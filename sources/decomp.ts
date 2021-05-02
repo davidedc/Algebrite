@@ -160,8 +160,8 @@ function decomp_product(generalTransform: boolean, p1: U, p2: U): U[] {
 
   const constantFactors: U[] = [];
   while (iscons(p3)) {
-    if (!Find(car(p3), p2)) {
-      const item = car(p3);
+    const item = car(p3);
+    if (!Find(item, p2)) {
       if (
         constantFactors.length < 1 ||
         !equal(item, constantFactors[constantFactors.length - 1])

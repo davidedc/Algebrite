@@ -10,13 +10,11 @@ import { scalar_times_tensor, tensor_times_scalar } from './tensor';
 export function Eval_outer(p1: U) {
   p1 = cdr(p1);
   let temp = Eval(car(p1));
-  p1 = cdr(p1);
 
-  while (iscons(p1)) {
-    temp = outer(temp, Eval(car(p1)));
-    p1 = cdr(p1);
-  }
-  push(temp);
+  const result = iscons(p1)
+    ? p1.tail().reduce((acc: U, p: U) => outer(acc, Eval(p)), temp)
+    : temp;
+  push(result);
 }
 
 function outer(p1: U, p2: U): U {

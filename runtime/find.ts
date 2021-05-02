@@ -29,11 +29,9 @@ export function Find(p: U, q: U): boolean {
     return false;
   }
 
-  while (iscons(p)) {
-    if (Find(car(p), q)) {
-      return true;
-    }
-    p = cdr(p);
+  if (iscons(p)) {
+    const any = p.some((p1: U) => Find(p1, q));
+    if (any) return true;
   }
 
   return false;
@@ -67,11 +65,9 @@ export function findPossibleClockForm(p: U, p1: U): boolean {
     return false;
   }
 
-  while (iscons(p)) {
-    if (findPossibleClockForm(car(p), p1)) {
-      return true;
-    }
-    p = cdr(p);
+  if (iscons(p)) {
+    const any = p.some((el) => findPossibleClockForm(el, p1));
+    if (any) return true;
   }
 
   return false;
@@ -92,11 +88,9 @@ export function findPossibleExponentialForm(p: U): boolean {
     return false;
   }
 
-  while (iscons(p)) {
-    if (findPossibleExponentialForm(car(p))) {
-      return true;
-    }
-    p = cdr(p);
+  if (iscons(p)) {
+    const any = p.some(findPossibleExponentialForm);
+    if (any) return true;
   }
 
   return false;

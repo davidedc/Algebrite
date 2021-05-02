@@ -168,7 +168,7 @@ import {
   ZERO,
 } from '../runtime/defs';
 import { check_esc_flag, stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { pop, push, push_all } from '../runtime/stack';
 import {
   Eval_symbolsinfo,
   get_binding,
@@ -1062,9 +1062,8 @@ function setq_indexed(p1: U) {
   const h = defs.tos;
   push(Eval(caddr(p1)));
   let p2 = cdadr(p1);
-  while (iscons(p2)) {
-    push(Eval(car(p2)));
-    p2 = cdr(p2);
+  if (iscons(p2)) {
+    push_all([...p2].map(Eval));
   }
   set_component(defs.tos - h);
   const p3 = pop();

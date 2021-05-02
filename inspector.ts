@@ -48,11 +48,7 @@ class AtomFormatter {
         { name: 'b', value: x.q.b.toString() },
       ]);
     } else if (x.k == CONS) {
-      const items = [];
-      while (iscons(x)) {
-        items.push(car(x));
-        x = cdr(x);
-      }
+      const items = iscons(x) ? [...x] : [];
       return propertyList(items);
     } else if (x.k == TENSOR) {
       const elems = split_tensor(x, 0, 0)[1];

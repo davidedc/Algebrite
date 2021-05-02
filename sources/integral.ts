@@ -627,12 +627,12 @@ function hash_addition(terms: U, x: U): number {
 
 function hash_multiplication(terms: U, x: U): number {
   let product = 1;
-  while (iscons(terms)) {
-    const term = car(terms);
-    terms = cdr(terms);
-    if (Find(term, x)) {
-      product = product * italu_hashcode(term, x);
-    }
+  if (iscons(terms)) {
+    [...terms].forEach((term) => {
+      if (Find(term, x)) {
+        product = product * italu_hashcode(term, x);
+      }
+    });
   }
   return product;
 }

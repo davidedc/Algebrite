@@ -525,11 +525,9 @@ export function issymbolic(p: U): boolean {
   if (issymbol(p)) {
     return true;
   }
-  while (iscons(p)) {
-    if (issymbolic(car(p))) {
-      return true;
-    }
-    p = cdr(p);
+  if (iscons(p)) {
+    const any = p.some(issymbolic);
+    if (any) return true;
   }
   return false;
 }
@@ -631,11 +629,9 @@ export function isfloating(p: BaseAtom): boolean {
   if (p.k === DOUBLE || p === symbol(FLOATF)) {
     return true;
   }
-  while (iscons(p)) {
-    if (isfloating(car(p))) {
-      return true;
-    }
-    p = cdr(p);
+  if (iscons(p)) {
+    const any = p.some(isfloating);
+    if (any) return true;
   }
   return false;
 }

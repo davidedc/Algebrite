@@ -30,7 +30,7 @@ import {
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, pop_n_items, push } from '../runtime/stack';
+import { pop, pop_n_items, push, push_all } from '../runtime/stack';
 import { cmp_expr } from '../sources/misc';
 import { add, subtract } from './add';
 import {
@@ -71,10 +71,8 @@ import { append } from '../runtime/otherCFunctions';
 export function Eval_multiply(p1: U) {
   let temp = Eval(cadr(p1));
   p1 = cddr(p1);
-  while (iscons(p1)) {
-    const arg2 = Eval(car(p1));
-    temp = multiply(temp, arg2);
-    p1 = cdr(p1);
+  if (iscons(p1)) {
+    temp = [...p1].reduce((acc: U, p: U) => multiply(acc, Eval(p)), temp);
   }
   push(temp);
 }
@@ -183,15 +181,14 @@ function yymultiply(p1: U, p2: U): U {
   }
 
   // push remaining factors, if any
-  while (iscons(p1)) {
-    push(car(p1));
-    p1 = cdr(p1);
+  const remaining = [];
+  if (iscons(p1)) {
+    remaining.push(...p1);
   }
-
-  while (iscons(p2)) {
-    push(car(p2));
-    p2 = cdr(p2);
+  if (iscons(p2)) {
+    remaining.push(...p2);
   }
+  push_all(remaining);
 
   // normalize radical factors
   // example: 2*2(-1/2) -> 2^(1/2)
