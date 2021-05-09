@@ -1,34 +1,26 @@
 test_quickfactor = ->
-  i = 0
-  logout("testing quickfactor\n")
+  logout "testing quickfactor\n"
   for i in [2...10001]
     if i % 1000 == 0
       console.log i
     base = i
-    push_integer(base)
-    push_integer(1)
-    quickfactor()
+    qf = quickfactor integer(base), integer(1)
+    arr = []
     h = tos
     j = 0
-    while (base > 1)
+    while base > 1
       expo = 0
-      while (base % primetab[j] == 0)
+      while base % primetab[j] == 0
         base /= primetab[j]
         expo++
-      if (expo)
-        push_integer(primetab[j])
-        push_integer(expo)
-        quickpower()
+      if expo
+        arr.push quickpower(integer(primetab[j]), integer(expo))[0]
       j++
-    multiply_all(tos - h)
-    p2 = pop()
-    p1 = pop()
-    if (!equal(p1, p2))
-      logout("failed\n")
-      print_lisp(p1)
-      print_lisp(p2)
+    p2 = multiply_all arr
+    if !equal(qf, p2)
+      logout "failed\n"
+      logout qf
+      logout p2
       errout()
   console.log "quickfactor is ok"
-  logout("ok\n")
-
-#endif
+  logout "ok\n"

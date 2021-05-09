@@ -1,9 +1,54 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 
 
 var runtime_run = require("./runtime/run");
 var runtime_zombocom = require("./runtime/zombocom");
+
+
+var do_clearall_module  = require("./sources/clear");
+var do_clearall = do_clearall_module.do_clearall;
+
+var computeDependenciesFromAlgebra = runtime_run.computeDependenciesFromAlgebra;
+var computeResultsAndJavaScriptFromAlgebra = runtime_run.computeResultsAndJavaScriptFromAlgebra;
+var findDependenciesInScript = runtime_run.findDependenciesInScript;
+var run = runtime_run.run;
+
+var bignum_module  = require("./sources/bignum");
+var mint = bignum_module.mint;
+var setSignTo = bignum_module.setSignTo;
+var push_integer = bignum_module.push_integer;
+var pop_integer = bignum_module.pop_integer;
+var integer = bignum_module.integer;
+var madd_module  = require("./sources/madd");
+var madd = madd_module.madd;
+var msub = madd_module.msub;
+var mcmp_module  = require("./runtime/mcmp");
+var mcmp = mcmp_module.mcmp;
+var mmul_module  = require("./sources/mmul");
+var mmul = mmul_module.mmul;
+var mdiv = mmul_module.mdiv;
+var mmod = mmul_module.mmod;
+var mprime_module  = require("./sources/mprime");
+var mprime = mprime_module.mprime;
+var defs_module  = require("./runtime/defs");
+var primetab = defs_module.primetab;
+var MZERO = defs_module.MZERO;
+var MSIGN = defs_module.MSIGN;
+var tos = defs_module.tos;
+var mgcd_module  = require("./sources/mgcd");
+var mgcd = mgcd_module.mgcd;
+var mpow_module  = require("./sources/mpow");
+var mpow = mpow_module.mpow;
+var mroot_module  = require("./sources/mroot");
+var mroot = mroot_module.mroot;
+var quickfactor_module  = require("./sources/quickfactor");
+var quickfactor = quickfactor_module.quickfactor;
+var quickpower = quickfactor_module.quickpower;
+var multiply_module  = require("./sources/multiply");
+var multiply_all = multiply_module.multiply_all;
+var misc_module  = require("./sources/misc");
+var equal = misc_module.equal;
+
 
 
 var ko_tests, logout, ok_tests, run_test;
@@ -24,15 +69,15 @@ run_test = function(s) {
   i = 0;
   t = "";
   test_flag = 1;
-  runtime_run.run("clearall");
-  runtime_run.run("e=quote(e)");
+  run("clearall");
+  run("e=quote(e)");
   for (i = j = 0, ref = s.length; j < ref; i = j += 2) {
     console.log("starting example: " + s[i]);
     //alert("starting example: " + s[i])
     // document.write("starting example: " + s[i] )
     out_count = 0;
     try {
-      resultFromRun = runtime_run.run(s[i]);
+      resultFromRun = run(s[i]);
     } catch (error1) {
       error = error1;
       console.log(error);
@@ -66,7 +111,7 @@ run_test = function(s) {
 var selftest, test_low_level;
 
 test_low_level = function() {
-  runtime_run.run("clearall");
+  run("clearall");
   if (runtime_zombocom.exec("factor", "(x^2-1)").toString() === "(x-1)*(x+1)") {
     console.log("exec text ok");
   } else {
@@ -79,16 +124,16 @@ test_low_level = function() {
   test_inner();
   test_transpose();
   test_signs_in_rationals();
-  //test_madd();
-  //test_msub();
-  //test_mmul();
-  //test_mdiv();
-  //test_mmod();
-  //test_mprime();
-  //test_mgcd();
-  //test_mpow();
-  //test_mroot();
-  //test_dependencies();
+  test_madd();
+  test_msub();
+  test_mmul();
+  test_mdiv();
+  test_mmod();
+  test_mprime();
+  test_mgcd();
+  test_mpow();
+  test_mroot();
+  test_dependencies();
   test_assignments();
   test_strings();
   test_test();
@@ -180,7 +225,7 @@ selftest = function() {
   test_eigen();
   test_shape();
   mini_test();
-  //test_quickfactor();
+  test_quickfactor();
   test_integral();
   test_roots();
 };
