@@ -1,0 +1,610 @@
+
+fail dependency test 23 expected: All local dependencies:  variable f depends on: 'x, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: 'x, ; ,,f = function (x) { return ( Math.pow(x, 2) ); },f(x) = function (x) -> x^2,$$$$,,[object Object]
+
+test failed: simplify((x+1)*(x+1)/(x+1))
+expected: x+1
+obtained: (x^2+2*x+1)/(x+1)
+
+test failed: simplify((x^2+7x+6)/(x^2-5x-6))
+expected: (x+6)/(x-6)
+obtained: (x^2+7*x+6)/(x^2-5*x-6)
+
+test failed: simplify(x*(x+1)/(x+1)+1)
+expected: x+1
+obtained: (x^2+2*x+1)/(x+1)
+
+test failed: simplify((x^2-9)/(x^2+5x+6))
+expected: (x-3)/(x+2)
+obtained: (x^2-9)/(x^2+5*x+6)
+
+test failed: simplify((x^2-3x+2)/(x^2-1))
+expected: (x-2)/(x+1)
+obtained: (x^2-3*x+2)/(x^2-1)
+
+test failed: simplify((x^2-2x-15)/(x^2+x-6))
+expected: (x-5)/(x-2)
+obtained: (x^2-2*x-15)/(x^2+x-6)
+
+test failed: simplify(((3-x)*(x-1))/((x-3)*(x+1)))
+expected: (-x+1)/(x+1)
+obtained: (-x^2+4*x-3)/((x-3)*(x+1))
+
+test failed: simplify(((x-2)*(x-5))/((2-x)*(x+5)))
+expected: (-x+5)/(x+5)
+obtained: (x^2-7*x+10)/((-x+2)*(x+5))
+
+test failed: simplify((15-10x)/(8x^3-12x^2))
+expected: -5/(4*x^2)
+obtained: 5*(-2*x+3)/(8*x^3-12*x^2)
+
+test failed: simplify((3x^3-15x^2+12x)/(3x-3))
+expected: x*(x-4)
+obtained: x*(x^2-5*x+4)/(x-1)
+
+test failed: simplify((6x^2-12x)/(6x-3x^2))
+expected: -2
+obtained: (x-2)/(-1/2*x+1)
+
+test failed: simplify((2x^2+13x+20)/(2x^2+17x+30))
+expected: (x+4)/(x+6)
+obtained: (2*x^2+13*x+20)/(2*x^2+17*x+30)
+
+test failed: simplify((x^4+8x^2+7)/(3x^5-3x))
+expected: (x^2+7)/(3*x*(x^2-1))
+obtained: (x^4+8*x^2+7)/(3*x*(x^4-1))
+
+test failed: simplify((x^2+8x*k+16*k^2)/(x^2-16k^2))
+expected: (x+4*k)/(x-4*k)
+obtained: (x^2+8*k*x+16*k^2)/(x^2-16*k^2)
+
+test failed: simplify((x^2-2x-8)/(x^2-9x+20))
+expected: (x+2)/(x-5)
+obtained: (x^2-2*x-8)/(x^2-9*x+20)
+
+test failed: simplify((x^2-25)/(5x-x^2))
+expected: -1-5/x
+obtained: (x^2-25)/(x*(-x+5))
+
+test failed: simplify((x^7+2x^6+x^5)/(x^3*(x+1)^8))
+expected: x^2/((x+1)^6)
+obtained: x^2*(x^2+2*x+1)/((x+1)^8)
+
+test failed: simplify((x^2+2*x+1)/((x+1)^8))
+expected: 1/((x+1)^6)
+obtained: (x^2+2*x+1)/((x+1)^8)
+
+test failed: simplify(((x^2-5x-14)/(x^2-3x+2))*((x^2-4)/(x^2-14x+49)))
+expected: (x+2)^2/((x-7)*(x-1))
+obtained: (x^4-5*x^3-18*x^2+20*x+56)/((x^2-3*x+2)*(x^2-14*x+49))
+
+test failed: simplify(((x^2-9)/(x^2+5x+6))/((3-x)/(x+2)))
+expected: -1
+obtained: (x^3+2*x^2-9*x-18)/((-x+3)*(x^2+5*x+6))
+
+test failed: simplify((x^2+5x+4)/((x^2-1)/(x+5)))
+expected: (x^2+9*x+20)/(x-1)
+obtained: (x^3+10*x^2+29*x+20)/(x^2-1)
+
+test failed: simplify((x^2-6x-7)/(x^2-10x+21))
+expected: (x+1)/(x-3)
+obtained: (x^2-6*x-7)/(x^2-10*x+21)
+
+test failed: simplify((x^2+6x+9)/(x^2-9))
+expected: (x+3)/(x-3)
+obtained: (x^2+6*x+9)/(x^2-9)
+
+test failed: simplify((2x^2-x-28)/(20-x-x^2))
+expected: (-2*x-7)/(x+5)
+obtained: (2*x^2-x-28)/(-x^2-x+20)
+
+test failed: simplify(((x^2+5x-24)/(x^2+6x+8))*((x^2+4x+4)/(x^2-3x)))
+expected: (10+x+16/x)/(x+4)
+obtained: (x^4+9*x^3-76*x-96)/(x*(x^3+3*x^2-10*x-24))
+
+test failed: simplify(((x^2-49)/(2x^2-3x-5))/((x^2-x-42)/(x^2+7x+6)))
+expected: (x+7)/(2*x-5)
+obtained: (x^4+7*x^3-43*x^2-343*x-294)/((x^2-x-42)*(2*x^2-3*x-5))
+
+test failed: simplify(((x^2-2x-8)/(2x^2-8x-24))/((x^2-9x+20)/(x^2-11x+30)))
+expected: 1/2
+obtained: (1/2*x^4-13/2*x^3+22*x^2+14*x-120)/(x^4-13*x^3+44*x^2+28*x-240)
+
+test failed: simplify((3/(x+1))/((x+4)/(x^2+11x+10)))
+expected: 3*(x+10)/(x+4)
+obtained: 3*(x^2+11*x+10)/((x+1)*(x+4))
+
+test failed: simplify((x^3+10x^2)/(x^2+6x-40))
+expected: x^2/(x-4)
+obtained: x^2*(x+10)/(x^2+6*x-40)
+
+test failed: simplify((x^2+18x+72)/(2x^2+11x-6))
+expected: (x+12)/(2*x-1)
+obtained: (x^2+18*x+72)/(2*x^2+11*x-6)
+
+test failed: simplify((x^2-3x-28)/(49-x^2))
+expected: (-x-4)/(x+7)
+obtained: (x^2-3*x-28)/(-x^2+49)
+
+test failed: simplify((6x^2+13x+5)/(3x^2+26x+35))
+expected: (2*x+1)/(x+7)
+obtained: (6*x^2+13*x+5)/(3*x^2+26*x+35)
+
+test failed: simplify((-x^2+10x-9)/(-x^2+6x+27))
+expected: (x-1)/(x+3)
+obtained: (-x^2+10*x-9)/(-x^2+6*x+27)
+
+test failed: simplify((x-6)*(x^3+x^2-20x)/(x^4-12x^3+36x^2))
+expected: (1+x-20/x)/(x-6)
+obtained: (x^3-5*x^2-26*x+120)/(x*(x^2-12*x+36))
+
+test failed: simplify(((4x^3-x^2-3x)/(x^2-10x+25))*((10+3x-x^2)/(x^4-x^3)))
+expected: (-4-6/(x^2)-11/x)/(x-5)
+obtained: (-4*x^4+13*x^3+40*x^2-19*x-30)/(x^2*(x^3-11*x^2+35*x-25))
+
+test failed: simplify(((x^2+5x-24)/(x^2-5x+4))/((x^2+x-12)/(x-1)))
+expected: (x+8)/(x^2-16)
+obtained: (x^3+4*x^2-29*x+24)/((x^2+x-12)*(x^2-5*x+4))
+
+test failed: simplify(((6x^2+x^3-x^4)/(x^2-4))/((3x^3-9x^2)/(x^2+6x-16)))
+expected: 1/3*(-x-8)
+obtained: (-1/3*x^4-5/3*x^3+28/3*x^2+20/3*x-32)/(x^3-3*x^2-4*x+12)
+
+test failed: simplify(((3x^2+23x+14)/(x^2+4x+3))/((6x^2+13x+6)/(x^2+2x+1)))
+expected: (x^2+8*x+7)/((x+3)*(2*x+3))
+obtained: (3*x^4+29*x^3+63*x^2+51*x+14)/((x^2+4*x+3)*(6*x^2+13*x+6))
+
+test failed: simplify((5x^2-18x-8)/((x-4)/(x+6)))
+expected: 5*x^2+32*x+12
+obtained: (5*x^3+12*x^2-116*x-48)/(x-4)
+
+test failed: simplify((2/(x+4))/((6x^3+17x^2)/(x^2+3x-4)))
+expected: (x-1)/(x^2*(3*x+17/2))
+obtained: (x^2+3*x-4)/(x^2*(3*x^2+41/2*x+34))
+
+test failed: simplify(((x^2+1)/(2x^2-4x+2))+((x)/((x-1)^2))+((-x-1)/(x^2-2x+1)))
+expected: (x+1)/(2*(x-1))
+obtained: -1/(x^2-2*x+1)+1/(2*x^2-4*x+2)+x/((x-1)^2)-x/(x^2-2*x+1)+x^2/(2*(x^2-2*x+1))
+
+test failed: simplify((x/(x^2-2x+1))-(2/(x-1))+(3/(x+2)))
+expected: (2*x^2-6*x+7)/(x^3-3*x+2)
+obtained: -2/(x-1)+3/(x+2)+x/(x^2-2*x+1)
+
+test failed: simplify((2x/(x^2-9))-(1/(x+3))-(2/(x-3)))
+expected: -1/(x-3)
+obtained: -2/(x-3)-1/(x+3)+2*x/(x^2-9)
+
+test failed: simplify((4/(x+2)-(1/x)+1)*(x+2)*x)
+expected: x^2+5*x-2
+obtained: (x^3+7*x^2+8*x-4)/(x+2)
+
+test failed: simplify(((3/(x-4))+x/(2x+7))*(x-4)*(2x+7))
+expected: x^2+2*x+21
+obtained: (8*x^7+36*x^6-42*x^5-745*x^4-4620*x^3-4557*x^2+52136*x+115248)/((x-4)^2*(2*x+7)^3)
+
+test failed: simplify((x/(x^2+12x+36))-((x-8)/(x+6)))
+expected: (-x^2+3*x+48)/((x+6)^2)
+obtained: 8/(x+6)-x/(x+6)+x/(x^2+12*x+36)
+
+test failed: simplify(((x^2+14x+40)/(x^2+2x-8))*((x^2+5x-14)/(x^2+7x-30)))
+expected: (x+7)/(x-3)
+obtained: (x^4+19*x^3+96*x^2+4*x-560)/((x^2+7*x-30)*(x^2+2*x-8))
+
+test failed: simplify(1/(x^2-13x+42)+(x+1)/(x-6)-x^2/(x-7))
+expected: 1/(x-7)+x/(x-6)-x^2/(x-7)
+obtained: 1/(x-6)+1/(x^2-13*x+42)+x/(x-6)-x^2/(x-7)
+
+test failed: simplify((x+10)/((3x+8)^3)+x/((3x+8)^2))
+expected: (3*x^2+9*x+10)/((3*x+8)^3)
+obtained: (27*x^4+225*x^3+714*x^2+1056*x+640)/((3*x+8)^5)
+
+test failed: simplify((x+1)/(x-1)+6/(x-7))
+expected: (x^2-13)/((x-7)*(x-1))
+obtained: 6/(x-7)+1/(x-1)+x/(x-1)
+
+test failed: simplify(9/(x^2-4)-7x/(x^2-4x+4))
+expected: (-7*x^2-5*x-18)/((x-2)^2*(x+2))
+obtained: 9/(x^2-4)-7*x/(x^2-4*x+4)
+
+test failed: simplify((2x+1)/(4x^2-3x-7)-(x+3)/(x+1)+x/(4x-7))
+expected: x/(4*x-7)-x/(x+1)+2*(-5*x+11)/((4*x-7)*(x+1))
+obtained: 1/(4*x^2-3*x-7)-3/(x+1)+x/(4*x-7)+x/(2*x^2-3/2*x-7/2)-x/(x+1)
+
+test failed: simplify(simplify((2x+1)/(4x^2-3x-7)-(x+3)/(x+1)+x/(4x-7))*(x+1)*(4x-7))
+expected: -3*x^2-2*x+22
+obtained: (-98304*x^21+499712*x^20+1318912*x^19-10246144*x^18-1965312*x^17+81259200*x^16-33790176*x^15-369811032*x^14+430400613/2*x^13+8995284501/8*x^12-1187534997/2*x^11-19439548533/8*x^10+3280628565/4*x^9+3741085635*x^8-284690490*x^7-15547380177/4*x^6-801996426*x^5+18928900557/8*x^4+2374274469/2*x^3-4215716617/8*x^2-2115681967/4*x-443889677/4)/((4*x^2-3*x-7)^3*(4*x-7)^3*(2*x^2-3/2*x-7/2)^3*(x+1)^4)
+
+test failed: simplify(3/(6x-x^2)-x/(x^2-5x-6))
+expected: (-3-x-3/x)/((x-6)*(x+1))
+obtained: -x/(x^2-5*x-6)+1/(x*(-1/3*x+2))
+
+test failed: simplify(3/(x^2)+(x+9)/(x^2+5x)-2/(x^2+10x+25))
+expected: (15+x+75/(x^2)+75/x)/((x+5)^2)
+obtained: 3/(x^2)+1/(x+5)-2/(x^2+10*x+25)+9/(x*(x+5))
+
+test failed: gcd((x+1)*(x+1),x+1)
+expected: x+1
+obtained: 1
+
+test failed: gcd(x+1,(x+1)*(x+1))
+expected: x+1
+obtained: 1
+
+test failed: gcd(factor((x+1)*(x+1)),x+1)
+expected: x+1
+obtained: 1
+
+test failed: gcd(factor(x+1),(x+1)*(x+1))
+expected: x+1
+obtained: 1
+
+test failed: gcd((x+1)*(x+1),factor(x+1))
+expected: x+1
+obtained: 1
+
+test failed: gcd(x+1,factor((x+1)*(x+1)))
+expected: x+1
+obtained: 1
+
+test failed: gcd(factor((x+1)*(x+1)),factor(x+1))
+expected: x+1
+obtained: 1
+
+test failed: gcd(factor(x+1),factor((x+1)*(x+1)))
+expected: x+1
+obtained: 1
+
+test failed: gcd(x*(x+1)^2,x+1)
+expected: x+1
+obtained: 1
+
+test failed: gcd(x+1,x*(x+1)^2)
+expected: x+1
+obtained: 1
+
+test failed: gcd(factor(x*(x+1)^2),x+1)
+expected: x+1
+obtained: 1
+
+test failed: gcd(factor(x+1),x*(x+1)^2)
+expected: x+1
+obtained: 1
+
+test failed: gcd(x*(x+1)^2,factor(x+1))
+expected: x+1
+obtained: 1
+
+test failed: gcd(x+1,factor(x*(x+1)^2))
+expected: x+1
+obtained: 1
+
+test failed: gcd(factor(x*(x+1)^2),factor(x+1))
+expected: x+1
+obtained: 1
+
+test failed: gcd(factor(x+1),factor(x*(x+1)^2))
+expected: x+1
+obtained: 1
+
+test failed: gcd(x^2+7x+6,x^2-5x-6)
+expected: x+1
+obtained: 1
+
+test failed: gcd(x^2-5x-6,x^2+7x+6)
+expected: x+1
+obtained: 1
+
+test failed: gcd(factor(x*(x+1)),x+1)
+expected: x+1
+obtained: 1
+
+test failed: gcd(x+1,factor(x*(x+1)))
+expected: x+1
+obtained: 1
+
+test failed: gcd(factor(x*(x+1)),factor(x+1))
+expected: x+1
+obtained: 1
+
+test failed: gcd(factor(x+1),factor(x*(x+1)))
+expected: x+1
+obtained: 1
+
+test failed: gcd(x^2+3x,x^2+5x)
+expected: x
+obtained: 1
+
+test failed: gcd(x^2+5x,x^2+3x)
+expected: x
+obtained: 1
+
+test failed: gcd(6x+20,2x+10)
+expected: 2
+obtained: 1
+
+test failed: gcd(2x+10,6x+20)
+expected: 2
+obtained: 1
+
+test failed: gcd(x^3-3x^2,4x^2-5x)
+expected: x
+obtained: 1
+
+test failed: gcd(4x^2-5x,x^3-3x^2)
+expected: x
+obtained: 1
+
+test failed: gcd(x^2-9,x^2+5x+6)
+expected: x+3
+obtained: 1
+
+test failed: gcd(x^2+5x+6,x^2-9)
+expected: x+3
+obtained: 1
+
+test failed: gcd(factor(x^2-9),x^2+5x+6)
+expected: x+3
+obtained: 1
+
+test failed: gcd(factor(x^2+5x+6),x^2-9)
+expected: x+3
+obtained: 1
+
+test failed: gcd(x^2-9,factor(x^2+5x+6))
+expected: x+3
+obtained: 1
+
+test failed: gcd(x^2+5x+6,factor(x^2-9))
+expected: x+3
+obtained: 1
+
+test failed: gcd(x^2-3x+2,x^2-1)
+expected: x-1
+obtained: 1
+
+test failed: gcd(x^2-1,x^2-3x+2)
+expected: x-1
+obtained: 1
+
+test failed: gcd(factor(x^2-3x+2),x^2-1)
+expected: x-1
+obtained: 1
+
+test failed: gcd(factor(x^2-1),x^2-3x+2)
+expected: x-1
+obtained: 1
+
+test failed: gcd(x^2-3x+2,factor(x^2-1))
+expected: x-1
+obtained: 1
+
+test failed: gcd(x^2-1,factor(x^2-3x+2))
+expected: x-1
+obtained: 1
+
+test failed: gcd(x^2-2x-15,x^2+x-6)
+expected: x+3
+obtained: 1
+
+test failed: gcd(x^2+x-6,x^2-2x-15)
+expected: x+3
+obtained: 1
+
+test failed: gcd(factor(x^2-2x-15),x^2+x-6)
+expected: x+3
+obtained: 1
+
+test failed: gcd(factor(x^2+x-6),x^2-2x-15)
+expected: x+3
+obtained: 1
+
+test failed: gcd(x^2-2x-15,factor(x^2+x-6))
+expected: x+3
+obtained: 1
+
+test failed: gcd(x^2+x-6,factor(x^2-2x-15))
+expected: x+3
+obtained: 1
+
+test failed: gcd((3-x)*(x-1),(x-3)*(x+1))
+expected: x-3
+obtained: 1
+
+test failed: gcd((x-3)*(x+1),(3-x)*(x-1))
+expected: x-3
+obtained: 1
+
+test failed: gcd(factor((3-x)*(x-1)),(x-3)*(x+1))
+expected: x-3
+obtained: 1
+
+test failed: gcd(factor((x-3)*(x+1)),(3-x)*(x-1))
+expected: x-3
+obtained: 1
+
+test failed: gcd((3-x)*(x-1),factor((x-3)*(x+1)))
+expected: x-3
+obtained: 1
+
+test failed: gcd((x-3)*(x+1),factor((3-x)*(x-1)))
+expected: x-3
+obtained: 1
+
+test failed: gcd((x-2)*(x-5),(2-x)*(x+5))
+expected: x-2
+obtained: 1
+
+test failed: gcd((2-x)*(x+5),(x-2)*(x-5))
+expected: x-2
+obtained: 1
+
+test failed: gcd(factor((x-2)*(x-5)),(2-x)*(x+5))
+expected: x-2
+obtained: 1
+
+test failed: gcd(factor((2-x)*(x+5)),(x-2)*(x-5))
+expected: x-2
+obtained: 1
+
+test failed: gcd((x-2)*(x-5),factor((2-x)*(x+5)))
+expected: x-2
+obtained: 1
+
+test failed: gcd((2-x)*(x+5),factor((x-2)*(x-5)))
+expected: x-2
+obtained: 1
+
+test failed: gcd(15-10x,8x^3-12x^2)
+expected: 2*x-3
+obtained: 1
+
+test failed: gcd(8x^3-12x^2,15-10x)
+expected: 2*x-3
+obtained: 1
+
+test failed: gcd(factor(15-10x),8x^3-12x^2)
+expected: 2*x-3
+obtained: 1
+
+test failed: gcd(factor(8x^3-12x^2),15-10x)
+expected: 2*x-3
+obtained: 1
+
+test failed: gcd(15-10x,factor(8x^3-12x^2))
+expected: 2*x-3
+obtained: 1
+
+test failed: gcd(8x^3-12x^2,factor(15-10x))
+expected: 2*x-3
+obtained: 1
+
+test failed: gcd(3x^3-15x^2+12x,3x-3)
+expected: 3*x-3
+obtained: 1
+
+test failed: gcd(3x-3,3x^3-15x^2+12x)
+expected: 3*x-3
+obtained: 1
+
+test failed: gcd(factor(3x^3-15x^2+12x),3x-3)
+expected: 3*x-3
+obtained: 3
+
+test failed: gcd(factor(3x-3),3x^3-15x^2+12x)
+expected: 3*x-3
+obtained: 3
+
+test failed: gcd(3x^3-15x^2+12x,factor(3x-3))
+expected: 3*x-3
+obtained: 3
+
+test failed: gcd(3x-3,factor(3x^3-15x^2+12x))
+expected: 3*x-3
+obtained: 3
+
+test failed: gcd(6x^2-12x,6x-3x^2)
+expected: 3*x^2-6*x
+obtained: 1
+
+test failed: gcd(6x-3x^2,6x^2-12x)
+expected: 3*x^2-6*x
+obtained: 1
+
+test failed: gcd(factor(6x^2-12x),6x-3x^2)
+expected: 3*x^2-6*x
+obtained: 3*x
+
+test failed: gcd(factor(6x-3x^2),6x^2-12x)
+expected: 3*x^2-6*x
+obtained: 3*x
+
+test failed: gcd(6x^2-12x,factor(6x-3x^2))
+expected: 3*x^2-6*x
+obtained: 3*x
+
+test failed: gcd(6x-3x^2,factor(6x^2-12x))
+expected: 3*x^2-6*x
+obtained: 3*x
+
+test failed: gcd(2x^2+13x+20,2x^2+17x+30)
+expected: 2*x+5
+obtained: 1
+
+test failed: gcd(2x^2+17x+30,2x^2+13x+20)
+expected: 2*x+5
+obtained: 1
+
+test failed: gcd(factor(2x^2+13x+20),2x^2+17x+30)
+expected: 2*x+5
+obtained: 1
+
+test failed: gcd(factor(2x^2+17x+30),2x^2+13x+20)
+expected: 2*x+5
+obtained: 1
+
+test failed: gcd(2x^2+13x+20,factor(2x^2+17x+30))
+expected: 2*x+5
+obtained: 1
+
+test failed: gcd(2x^2+17x+30,factor(2x^2+13x+20))
+expected: 2*x+5
+obtained: 1
+
+test failed: gcd(x^4+8x^2+7,3x^5-3x)
+expected: x^2+1
+obtained: 1
+
+test failed: gcd(3x^5-3x,x^4+8x^2+7)
+expected: x^2+1
+obtained: 1
+
+test failed: gcd(factor(x^4+8x^2+7),3x^5-3x)
+expected: x^2+1
+obtained: 1
+
+test failed: gcd(factor(3x^5-3x),x^4+8x^2+7)
+expected: x^2+1
+obtained: 1
+
+test failed: gcd(x^4+8x^2+7,factor(3x^5-3x))
+expected: x^2+1
+obtained: 1
+
+test failed: gcd(3x^5-3x,factor(x^4+8x^2+7))
+expected: x^2+1
+obtained: 1
+
+test failed: gcd(x^2+8x*k+16*k^2,x^2-16k^2)
+expected: x+4*k
+obtained: 1
+
+test failed: gcd(x^2-16k^2,x^2+8x*k+16*k^2)
+expected: x+4*k
+obtained: 1
+
+test failed: gcd(factor(x^2+8x*k+16*k^2),x^2-16k^2)
+expected: x+4*k
+obtained: 1
+
+test failed: gcd(factor(x^2-16k^2),x^2+8x*k+16*k^2)
+expected: x+4*k
+obtained: 1
+
+test failed: gcd(x^2+8x*k+16*k^2,factor(x^2-16k^2))
+expected: x+4*k
+obtained: 1
+
+test failed: gcd(x^2-16k^2,factor(x^2+8x*k+16*k^2))
+expected: x+4*k
+obtained: 1
+
+test failed: gcd(factor(x^2+8x*k+16*k^2),factor(x^2-16k^2))
+expected: x+4*k
+obtained: 1
+
+test failed: gcd(factor(x^2-16k^2),factor(x^2+8x*k+16*k^2))
+expected: x+4*k
+obtained: 1
+
+test failed: roots(x+y+a,z)
+expected: Stop: roots: 1st argument is not a polynomial in the variable z
+obtained: Stop: roots: 1st argument is not a polynomial
