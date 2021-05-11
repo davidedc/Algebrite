@@ -89,7 +89,7 @@ run_test([
   "-x-y",
 
   "roots(x+y+a,z)",
-  "Stop: roots: 1st argument is not a polynomial",
+  "Stop: roots: 1st argument is not a polynomial in the variable z",
 
   "clearall",
   "",

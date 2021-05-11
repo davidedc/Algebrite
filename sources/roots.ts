@@ -75,7 +75,7 @@ export function Eval_roots(POLY: U) {
   const X1 = X === symbol(NIL) ? guess(POLY1) : X;
 
   if (!ispolyexpandedform(POLY1, X1)) {
-    stop('roots: 1st argument is not a polynomial');
+    stop('roots: 1st argument is not a polynomial in the variable ' + X1);
   }
 
   push_all(roots(POLY1, X1));
