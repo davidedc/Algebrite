@@ -526,8 +526,7 @@ export function issymbolic(p: U): boolean {
     return true;
   }
   if (iscons(p)) {
-    const any = p.some(issymbolic);
-    if (any) return true;
+    return [...p].some(issymbolic);
   }
   return false;
 }
@@ -630,9 +629,9 @@ export function isfloating(p: BaseAtom): boolean {
     return true;
   }
   if (iscons(p)) {
-    const any = p.some(isfloating);
-    if (any) return true;
+    return [...p].some(isfloating);
   }
+
   return false;
 }
 

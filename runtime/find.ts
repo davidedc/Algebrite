@@ -1,3 +1,4 @@
+import { truncate } from 'fs/promises';
 import { equaln, isimaginaryunit, isinteger } from '../sources/is';
 import { equal } from '../sources/misc';
 import {
@@ -30,8 +31,7 @@ export function Find(p: U, q: U): boolean {
   }
 
   if (iscons(p)) {
-    const any = p.some((p1: U) => Find(p1, q));
-    if (any) return true;
+    return [...p].some((p1: U) => Find(p1, q));
   }
 
   return false;
@@ -66,8 +66,7 @@ export function findPossibleClockForm(p: U, p1: U): boolean {
   }
 
   if (iscons(p)) {
-    const any = p.some((el) => findPossibleClockForm(el, p1));
-    if (any) return true;
+    return [...p].some((el) => findPossibleClockForm(el, p1));
   }
 
   return false;
@@ -89,8 +88,7 @@ export function findPossibleExponentialForm(p: U): boolean {
   }
 
   if (iscons(p)) {
-    const any = p.some(findPossibleExponentialForm);
-    if (any) return true;
+    return [...p].some(findPossibleExponentialForm);
   }
 
   return false;
