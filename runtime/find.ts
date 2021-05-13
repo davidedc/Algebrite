@@ -1,11 +1,8 @@
-import { truncate } from 'fs/promises';
 import { equaln, isimaginaryunit, isinteger } from '../sources/is';
 import { equal } from '../sources/misc';
 import {
   caddr,
   cadr,
-  car,
-  cdr,
   Constants,
   E,
   iscons,
