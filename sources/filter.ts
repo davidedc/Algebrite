@@ -10,7 +10,7 @@ import {
   U,
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { add } from './add';
 import { Eval } from './eval';
 

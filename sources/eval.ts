@@ -166,14 +166,12 @@ import {
   UNIT,
   YYRECT,
   ZERO,
-  noexpand,
 } from '../runtime/defs';
 import { check_esc_flag, stop } from '../runtime/run';
-import { moveTos, pop, push, top } from '../runtime/stack';
+import { pop, push, push_all } from '../runtime/stack';
 import {
   Eval_symbolsinfo,
   get_binding,
-  push_symbol,
   set_binding,
   symnum,
 } from '../runtime/symbol';
@@ -195,6 +193,7 @@ import {
   convert_rational_to_double,
   double,
   push_integer,
+  integer,
   rational,
   nativeInt,
 } from './bignum';
@@ -252,7 +251,7 @@ import { Eval_laguerre } from './laguerre';
 import { Eval_lcm } from './lcm';
 import { Eval_leading } from './leading';
 import { Eval_legendre } from './legendre';
-import { list, makeList } from './list';
+import { makeList } from './list';
 import { Eval_log } from './log';
 import { Eval_lookup } from './lookup';
 import { Eval_mod } from './mod';
@@ -844,16 +843,13 @@ function Eval_dsolve(p1: U) {
 // for example, Eval(f,x,2)
 
 function Eval_Eval(p1: U) {
-  push(Eval(cadr(p1)));
+  let tmp = Eval(cadr(p1));
   p1 = cddr(p1);
   while (iscons(p1)) {
-    const newExpr = Eval(cadr(p1));
-    const oldExpr = Eval(car(p1));
-    const expr = pop();
-    push(subst(expr, oldExpr, newExpr));
+    tmp = subst(tmp, Eval(car(p1)), Eval(cadr(p1)));
     p1 = cddr(p1);
   }
-  push(Eval(pop()));
+  push(Eval(tmp));
 }
 
 // exp evaluation: it replaces itself with
@@ -889,15 +885,17 @@ function Eval_hilbert(p1: U) {
 }
 
 function Eval_index(p1: U) {
-  const h = defs.tos;
+  const result = _index(p1);
+  push(result);
+}
+
+function _index(p1: U) {
   const orig = p1;
 
   // look into the head of the list,
   // when evaluated it should be a tensor
   p1 = cdr(p1);
-  push(car(p1));
-  push(Eval(pop()));
-  const theTensor = top();
+  const theTensor = Eval(car(p1));
 
   if (isNumericAtom(theTensor)) {
     stop('trying to access a scalar as a tensor');
@@ -906,27 +904,23 @@ function Eval_index(p1: U) {
   if (!istensor(theTensor)) {
     // the tensor is not allocated yet, so
     // leaving the expression unevalled
-    moveTos(h);
-    push(orig);
-    return;
+    return orig;
   }
 
-  // we examined the head of the list which
-  // was the tensor, now look into
-  // the indexes
+  const stack: U[] = [theTensor];
+  // we examined the head of the list which was the tensor,
+  // now look into the indexes
   p1 = cdr(p1);
   while (iscons(p1)) {
-    push(Eval(car(p1)));
-    if (!isintegerorintegerfloat(top())) {
-      // index with something other than
-      // an integer
-      moveTos(h);
-      push(orig);
-      return;
+    stack.push(Eval(car(p1)));
+    if (!isintegerorintegerfloat(stack[stack.length - 1])) {
+      // index with something other than an integer
+      return orig;
     }
     p1 = cdr(p1);
   }
-  index_function(defs.tos - h);
+
+  return index_function(stack);
 }
 
 function Eval_inv(p1: U) {
@@ -941,18 +935,19 @@ function Eval_invg(p1: U) {
 
 function Eval_isinteger(p1: U) {
   p1 = Eval(cadr(p1));
+  const result = _isinteger(p1);
+  push(result);
+}
+
+function _isinteger(p1: U): U {
   if (isrational(p1)) {
-    const result = isinteger(p1) ? Constants.one : Constants.zero;
-    push(result);
-    return;
+    return isinteger(p1) ? Constants.one : Constants.zero;
   }
   if (isdouble(p1)) {
     const n = Math.floor(p1.d);
-    const result = n === p1.d ? Constants.one : Constants.zero;
-    push(result);
-    return;
+    return n === p1.d ? Constants.one : Constants.zero;
   }
-  push(makeList(symbol(ISINTEGER), p1));
+  return makeList(symbol(ISINTEGER), p1);
 }
 
 function Eval_number(p1: U) {
@@ -963,14 +958,9 @@ function Eval_number(p1: U) {
 }
 
 function Eval_operator(p1: U) {
-  const h = defs.tos;
-  push_symbol(OPERATOR);
-  if (iscons(p1)) {
-    p1.tail().forEach((p) => {
-      push(Eval(p));
-    });
-  }
-  list(defs.tos - h);
+  const mapped = iscons(p1) ? p1.tail().map(Eval) : [];
+  const result = makeList(symbol(OPERATOR), ...mapped);
+  push(result);
 }
 
 // quote definition
@@ -981,11 +971,8 @@ function Eval_quote(p1: U) {
 // rank definition
 function Eval_rank(p1: U) {
   p1 = Eval(cadr(p1));
-  if (istensor(p1)) {
-    push_integer(p1.tensor.ndim);
-  } else {
-    push(Constants.zero);
-  }
+  const rank = istensor(p1) ? integer(p1.tensor.ndim) : Constants.zero;
+  push(rank);
 }
 
 // Evaluates the right side and assigns the
@@ -1075,9 +1062,8 @@ function setq_indexed(p1: U) {
   const h = defs.tos;
   push(Eval(caddr(p1)));
   let p2 = cdadr(p1);
-  while (iscons(p2)) {
-    push(Eval(car(p2)));
-    p2 = cdr(p2);
+  if (iscons(p2)) {
+    push_all([...p2].map(Eval));
   }
   set_component(defs.tos - h);
   const p3 = pop();
@@ -1143,14 +1129,12 @@ function Eval_unit(p1: U) {
 // can indeed test the value of an assignment (the
 // value is just the evaluation of the right side)
 
-export function Eval_predicate() {
-  const p1 = top();
+export function Eval_predicate(p1: U): U {
   if (car(p1) === symbol(SETQ)) {
     // replace the assignment in the
     // head with an equality test
-    pop();
-    push(makeList(symbol(TESTEQ), cadr(p1), caddr(p1)));
+    p1 = makeList(symbol(TESTEQ), cadr(p1), caddr(p1));
   }
 
-  push(Eval(pop()));
+  return Eval(p1);
 }

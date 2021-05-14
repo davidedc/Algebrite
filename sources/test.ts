@@ -14,7 +14,7 @@ import {
   symbol,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { subtract } from './add';
 import { Eval } from './eval';
 import { yyfloat } from './float';
@@ -28,6 +28,9 @@ import { simplify } from './simplify';
 // Works like a switch statement. Could also be used for piecewise
 // functions? TODO should probably be called "switch"?
 export function Eval_test(p1: U) {
+  push(_test(p1));
+}
+function _test(p1: U): U {
   const orig = p1;
   p1 = cdr(p1);
   while (iscons(p1)) {
@@ -35,8 +38,7 @@ export function Eval_test(p1: U) {
     // last argument becomes the default case
     // i.e. the one without a test.
     if (cdr(p1) === symbol(NIL)) {
-      push(Eval(car(p1))); // default case
-      return;
+      return Eval(car(p1)); // default case
     }
 
     const checkResult = isZeroLikeOrNonZeroLikeOrUndetermined(car(p1));
@@ -46,12 +48,10 @@ export function Eval_test(p1: U) {
       // anything about the result of the
       // overall test, so we must bail
       // with the unevalled test
-      push(orig);
-      return;
+      return orig;
     } else if (checkResult) {
       // test succesful, we found out output
-      push(Eval(cadr(p1)));
-      return;
+      return Eval(cadr(p1));
     } else {
       // test unsuccessful, continue to the
       // next pair of test,value
@@ -61,7 +61,7 @@ export function Eval_test(p1: U) {
 
   // no test matched and there was no
   // catch-all case, so we return zero.
-  push(Constants.zero);
+  return Constants.zero;
 }
 
 // we test A==B by first subtracting and checking if we symbolically

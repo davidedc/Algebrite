@@ -42,6 +42,8 @@ export function divisors(p: U): U {
   return p1;
 }
 
+const flatten = (arr: U[][]): U[] => [].concat(...arr);
+
 export function ydivisors(p1: U) {
   const stack: U[] = [];
   // push all of the term's factors
@@ -55,14 +57,14 @@ export function ydivisors(p1: U) {
       stack.push(...factor_small_number(nativeInt(car(p1))));
       p1 = cdr(p1);
     }
-    while (iscons(p1)) {
-      const p2 = car(p1);
-      if (ispower(p2)) {
-        stack.push(cadr(p2), caddr(p2));
-      } else {
-        stack.push(p2, Constants.one);
-      }
-      p1 = cdr(p1);
+    if (iscons(p1)) {
+      const mapped = [...p1].map((p2) => {
+        if (ispower(p2)) {
+          return [cadr(p2), caddr(p2)];
+        }
+        return [p2, Constants.one];
+      });
+      stack.push(...flatten(mapped));
     }
   } else if (ispower(p1)) {
     stack.push(cadr(p1), caddr(p1));

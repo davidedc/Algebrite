@@ -100,14 +100,8 @@ function isSimpleRoot(k: U[]): boolean {
 
 function normalisedCoeff(poly: U, x: U): U[] {
   const miniStack = coeff(poly, x);
-  miniStack.reverse();
-  const divideBy = miniStack[0];
-
-  const result = [];
-  for (let i = miniStack.length - 1; i >= 0; i--) {
-    result.push(divide(miniStack[i], divideBy));
-  }
-  return result;
+  const divideBy = miniStack[miniStack.length - 1];
+  return miniStack.map((item) => divide(item, divideBy));
 }
 
 export function roots(POLY: U, X: U): (U | Tensor)[] {

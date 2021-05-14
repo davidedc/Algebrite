@@ -14,7 +14,7 @@ import {
   U,
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { equal } from '../sources/misc';
 import { add, subtract } from './add';
 import { integer, nativeInt } from './bignum';
@@ -74,10 +74,7 @@ function expand(F: U, X: U): U {
     );
   }
 
-  // B = numerator
   let B = numerator(F);
-
-  // A = denominator
   let A = denominator(F);
 
   [A, B] = remove_negative_exponents(A, B, X);
@@ -103,9 +100,7 @@ function expand(F: U, X: U): U {
   }
 
   // A = factor(A)
-  //console.log("expand - to be factored: " + p2)
   A = factorpoly(A, X);
-  //console.log("expand - factored to: " + p2)
 
   let C = expand_get_C(A, X);
   B = expand_get_B(B, C, X);

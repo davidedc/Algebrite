@@ -33,10 +33,6 @@ export function Eval_erf(p1: U) {
 }
 
 function yerf(p1: U): U {
-  return yyerf(p1);
-}
-
-function yyerf(p1: U): U {
   if (isdouble(p1)) {
     return double(1.0 - erfc(p1.d));
   }

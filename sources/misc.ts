@@ -159,11 +159,7 @@ export function cmp_expr(p1: U, p2: U): Sign {
 }
 
 export function length(p: BaseAtom) {
-  let n = 0;
-  while (iscons(p)) {
-    p = cdr(p);
-    n++;
-  }
+  const n = iscons(p) ? [...p].length : 0;
   return n;
 }
 

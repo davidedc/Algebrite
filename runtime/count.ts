@@ -1,13 +1,14 @@
 import { equal } from '../sources/misc';
 import { car, cdr, iscons, istensor, Sym, U } from './defs';
+
+const sum = (arr: number[]): number =>
+  arr.reduce((a: number, b: number) => a + b, 0);
+
 export function count(p: U) {
   let n: number;
   if (iscons(p)) {
-    n = 0;
-    while (iscons(p)) {
-      n += count(car(p)) + 1;
-      p = cdr(p);
-    }
+    const items = [...p];
+    n = sum(items.map(count)) + items.length;
   } else {
     n = 1;
   }
@@ -21,15 +22,11 @@ export function count(p: U) {
 export function countOccurrencesOfSymbol(needle: Sym, p: U) {
   let n = 0;
   if (iscons(p)) {
-    while (iscons(p)) {
-      n += countOccurrencesOfSymbol(needle, car(p));
-      p = cdr(p);
-    }
-  } else {
-    if (equal(needle, p)) {
-      n = 1;
-    }
+    n = sum([...p].map((el) => countOccurrencesOfSymbol(needle, el)));
+  } else if (equal(needle, p)) {
+    n = 1;
   }
+
   return n;
 }
 
@@ -43,10 +40,8 @@ export function countsize(p: U) {
       n += count(p.tensor.elem[i]);
     }
   } else if (iscons(p)) {
-    while (iscons(p)) {
-      n += count(car(p)) + 1;
-      p = cdr(p);
-    }
+    const items = [...p];
+    n = sum(items.map(count)) + items.length;
   } else {
     n = 1;
   }

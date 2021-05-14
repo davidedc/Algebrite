@@ -1,5 +1,5 @@
 import { cadr, car, cddr, cdr, iscons, U } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { subtract } from './add';
 import { Eval } from './eval';
 import { integral } from './integral';

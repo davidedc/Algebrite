@@ -41,10 +41,6 @@ export function Eval_cosh(p1: U) {
 }
 
 export function ycosh(p1: U): U {
-  return yycosh(p1);
-}
-
-function yycosh(p1: U): U {
   if (car(p1) === symbol(ARCCOSH)) {
     return cadr(p1);
   }

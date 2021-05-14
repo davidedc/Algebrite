@@ -369,9 +369,8 @@ function f9(p1: U): U {
   }
   let p2 = cdr(p1);
   let temp: U = Constants.zero;
-  while (iscons(p2)) {
-    temp = add(temp, simplify(car(p2)));
-    p2 = cdr(p2);
+  if (iscons(p2)) {
+    temp = [...p2].reduce((acc: U, p: U) => add(acc, simplify(p)), temp);
   }
   p2 = temp;
   if (count(p2) < count(p1)) {
@@ -724,16 +723,16 @@ function _listAll(
 function _nestedCons(p1: U): [U, boolean] {
   let anyRadicalSimplificationWorked = false;
   const arr = [];
-  while (iscons(p1)) {
-    arr.push(car(p1));
-    if (!anyRadicalSimplificationWorked) {
-      let p: U;
-      [p, anyRadicalSimplificationWorked] = take_care_of_nested_radicals(
-        arr.pop()
-      );
-      arr.push(p);
-    }
-    p1 = cdr(p1);
+  if (iscons(p1)) {
+    const items = Array.from(p1).map((p) => {
+      if (!anyRadicalSimplificationWorked) {
+        let p2: U;
+        [p2, anyRadicalSimplificationWorked] = take_care_of_nested_radicals(p);
+        return p2;
+      }
+      return p;
+    });
+    arr.push(...items);
   }
   return [makeList(...arr), anyRadicalSimplificationWorked];
 }

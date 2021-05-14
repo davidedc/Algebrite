@@ -2,7 +2,6 @@ import {
   ADD,
   car,
   Cons,
-  defs,
   doexpand,
   FOR,
   isadd,

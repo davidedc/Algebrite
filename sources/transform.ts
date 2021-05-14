@@ -22,7 +22,7 @@ import {
   U,
   noexpand,
 } from '../runtime/defs';
-import { moveTos, pop, push } from '../runtime/stack';
+import { pop } from '../runtime/stack';
 import { get_binding, set_binding } from '../runtime/symbol';
 import { subtract } from './add';
 import { polyform } from './bake';
@@ -80,26 +80,17 @@ export function transform(
     console.log(`         !!!!!!!!!   transform on: ${F}`);
   }
 
-  saveMetaBindings();
+  const state = saveMetaBindings();
 
   set_binding(symbol(METAX), X);
 
-  // put constants in F(X) on the stack
-  const transform_h = defs.tos;
-  push(Constants.one);
-
-  const bookmarkTosToPrintDecomps = defs.tos;
   const arg = polyform(F, X); // collect coefficients of x, x^2, etc.
   const result = decomp(generalTransform, arg, X);
-  push(result);
-  const numberOfDecomps = defs.tos - bookmarkTosToPrintDecomps;
 
   if (DEBUG) {
-    console.log(`  ${numberOfDecomps} decomposed elements ====== `);
-    for (let i = 0; i < numberOfDecomps; i++) {
-      console.log(
-        `  decomposition element ${i}: ${defs.stack[defs.tos - 1 - i]}`
-      );
+    console.log(`  ${result.length} decomposed elements ====== `);
+    for (let i = 0; i < result.length; i++) {
+      console.log(`  decomposition element ${i}: ${result[i]}`);
     }
   }
 
@@ -155,23 +146,12 @@ export function transform(
       B = cadr(p1);
       const C = cddr(p1);
 
-      /*
-      A = p1.tensor.elem[0]
-      B = p1.tensor.elem[1]
-      for i in [2..(p1.tensor.elem.length-1)]
-        push p1.tensor.elem[i]
-      list(p1.tensor.elem.length - 2)
-      C = pop()
-      */
-
-      if (f_equals_a(transform_h, generalTransform, F, A, C)) {
-        // successful transformation,
-        // transformed result is in p6
+      if (f_equals_a([Constants.one, ...result], generalTransform, F, A, C)) {
+        // successful transformation, transformed result is in p6
         transformationSuccessful = true;
       } else {
-        // the match failed but perhaps we can match
-        // something lower down in the tree, so
-        // let's recurse the tree
+        // the match failed but perhaps we can match something lower down in
+        // the tree, so let's recurse the tree
 
         if (DEBUG) {
           console.log(`p3 at this point: ${F}`);
@@ -242,18 +222,10 @@ export function transform(
         B = caddr(temp);
         const p7 = cdddr(temp);
 
-        /*
-        p5 = p1.tensor.elem[0]
-        p6 = p1.tensor.elem[1]
-        for i in [2..(p1.tensor.elem.length-1)]
-          push p1.tensor.elem[i]
-        list(p1.tensor.elem.length - 2)
-        p7 = pop()
-        */
-
-        if (f_equals_a(transform_h, generalTransform, F, p5, p7)) {
-          // there is a successful transformation,
-          // transformed result is in p6
+        if (
+          f_equals_a([Constants.one, ...result], generalTransform, F, p5, p7)
+        ) {
+          // there is a successful transformation, transformed result is in p6
           transformationSuccessful = true;
           break;
         }
@@ -261,52 +233,52 @@ export function transform(
     }
   }
 
-  moveTos(transform_h);
+  const temp = transformationSuccessful
+    ? Eval(B)
+    : generalTransform
+    ? F
+    : symbol(NIL);
 
-  let temp: U;
-  if (transformationSuccessful) {
-    //console.log "transformation successful"
-    // a transformation was successful
-    temp = Eval(B);
-    //console.log "...into: " + p1
-    transformationSuccessful = true;
-  } else {
-    // transformations failed
-    temp = generalTransform ? F : symbol(NIL);
-  }
-
-  restoreMetaBindings();
+  restoreMetaBindings(state);
 
   return [temp, transformationSuccessful];
 }
 
-function saveMetaBindings() {
-  push(get_binding(symbol(METAA)));
-  push(get_binding(symbol(METAB)));
-  push(get_binding(symbol(METAX)));
+interface TransformState {
+  METAA: U;
+  METAB: U;
+  METAX: U;
 }
 
-function restoreMetaBindings() {
-  set_binding(symbol(METAX), pop());
-  set_binding(symbol(METAB), pop());
-  set_binding(symbol(METAA), pop());
+function saveMetaBindings(): TransformState {
+  return {
+    METAA: get_binding(symbol(METAA)),
+    METAB: get_binding(symbol(METAB)),
+    METAX: get_binding(symbol(METAX)),
+  };
+}
+
+function restoreMetaBindings(state: TransformState) {
+  set_binding(symbol(METAX), state.METAX);
+  set_binding(symbol(METAB), state.METAB);
+  set_binding(symbol(METAA), state.METAA);
 }
 
 // search for a METAA and METAB such that F = A
 function f_equals_a(
-  h: number,
+  stack: U[],
   generalTransform: boolean,
   F: U,
   A: U,
   C: U
 ): boolean {
-  for (let fea_i = h; fea_i < defs.tos; fea_i++) {
-    set_binding(symbol(METAA), defs.stack[fea_i]);
+  for (const fea_i of stack) {
+    set_binding(symbol(METAA), fea_i);
     if (DEBUG) {
       console.log(`  binding METAA to ${get_binding(symbol(METAA))}`);
     }
-    for (let fea_j = h; fea_j < defs.tos; fea_j++) {
-      set_binding(symbol(METAB), defs.stack[fea_j]);
+    for (const fea_j of stack) {
+      set_binding(symbol(METAB), fea_j);
       if (DEBUG) {
         console.log(`  binding METAB to ${get_binding(symbol(METAB))}`);
       }
@@ -322,10 +294,11 @@ function f_equals_a(
       }
 
       if (iscons(temp)) {
-        // conditions are not met,
-        // skip to the next binding of metas
+        // conditions are not met, skip to the next binding of metas
         continue;
       }
+      const arg2 = generalTransform ? noexpand(Eval, A) : Eval(A);
+
       if (DEBUG) {
         console.log(
           `about to evaluate template expression: ${A} binding METAA to ${get_binding(
@@ -334,13 +307,9 @@ function f_equals_a(
             symbol(METAB)
           )} and binding METAX to ${get_binding(symbol(METAX))}`
         );
-      }
-      const arg2 = generalTransform ? noexpand(Eval, A) : Eval(A);
-      if (DEBUG) {
         console.log(`  comparing ${arg2} to: ${F}`);
       }
-      temp = subtract(F, arg2);
-      if (isZeroAtomOrTensor(temp)) {
+      if (isZeroAtomOrTensor(subtract(F, arg2))) {
         if (DEBUG) {
           console.log(`binding METAA to ${get_binding(symbol(METAA))}`);
           console.log(`binding METAB to ${get_binding(symbol(METAB))}`);

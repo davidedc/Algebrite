@@ -20,12 +20,12 @@ import {
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { push } from '../runtime/stack';
 import { add, subtract } from './add';
 import { Eval } from './eval';
 import { inv } from './inv';
 import { isnegativeterm, isZeroAtomOrTensor } from './is';
-import { list, makeList } from './list';
+import { makeList } from './list';
 import { multiply, negate } from './multiply';
 import { scalar_times_tensor, tensor_times_scalar } from './tensor';
 

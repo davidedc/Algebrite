@@ -141,15 +141,19 @@ Compute eigenvalues of m. See "eigen" for more info.
 
 */
 export function Eval_eigenval(p1: U) {
+  const result = _eigenval(p1);
+  push(result);
+}
+
+function _eigenval(p1: U) {
   const { arg, invalid } = EIG_check_arg(p1);
   if (invalid) {
-    push(makeList(symbol(EIGENVAL), invalid));
-    return;
+    return makeList(symbol(EIGENVAL), invalid);
   }
 
   let [p2, p3] = eigen(EIGENVAL, arg);
 
-  push(p2);
+  return p2;
 }
 
 /* eigenvec =====================================================================
@@ -168,15 +172,17 @@ Compute eigenvectors of m. See "eigen" for more info.
 
 */
 export function Eval_eigenvec(p1: U) {
+  const result = _eigenvec(p1);
+  push(result);
+}
+
+function _eigenvec(p1: U) {
   const { arg, invalid } = EIG_check_arg(p1);
   if (invalid) {
-    push(makeList(symbol(EIGENVEC), invalid));
-    return;
+    return makeList(symbol(EIGENVEC), invalid);
   }
-
   let [_, p3] = eigen(EIGENVEC, arg);
-
-  push(p3);
+  return p3;
 }
 
 function EIG_check_arg(

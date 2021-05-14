@@ -18,15 +18,15 @@ export function partition(p1: U, p2: U): [U, U] {
   let p4: U = p3;
 
   p1 = cdr(p1);
-
-  while (iscons(p1)) {
-    if (Find(car(p1), p2)) {
-      p4 = multiply(p4, car(p1));
-    } else {
-      p3 = multiply(p3, car(p1));
-    }
-    p1 = cdr(p1);
+  if (!iscons(p1)) {
+    return [p3, p4];
   }
-
+  for (const p of p1) {
+    if (Find(p, p2)) {
+      p4 = multiply(p4, p);
+    } else {
+      p3 = multiply(p3, p);
+    }
+  }
   return [p3, p4];
 }

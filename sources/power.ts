@@ -459,7 +459,6 @@ function yypower(base: U, exponent: U): U {
       //  * we can't go back to other forms.
       // so leave the power as it is.
       if (avoidCalculatingPowersIntoArctans && Find(tmp, symbol(ARCTAN))) {
-        tmp;
         tmp = makeList(symbol(POWER), base, exponent);
       }
 
@@ -470,27 +469,12 @@ function yypower(base: U, exponent: U): U {
     }
   }
 
-  //
-  //push(base)
-  //abs()
-  //push(exponent)
-  //power()
-  //push(symbol(E))
-  //push(base)
-  //arg()
-  //push(exponent)
-  //multiply()
-  //push(imaginaryunit)
-  //multiply()
-  //power()
-  //multiply()
-  //
-
-  if (simplify_polar(exponent)) {
+  const polarResult = simplify_polar(exponent);
+  if (polarResult !== undefined) {
     if (DEBUG_POWER) {
       console.log('   power: using simplify_polar');
     }
-    return pop();
+    return polarResult;
   }
 
   const result = makeList(symbol(POWER), base, exponent);
@@ -611,24 +595,20 @@ function multinomial_sum(
 
 // exp(n/2 i pi) ?
 // clobbers p3
-function simplify_polar(exponent: U) {
+function simplify_polar(exponent: U): U | undefined {
   let n = isquarterturn(exponent);
   switch (n) {
     case 0:
       // do nothing
       break;
     case 1:
-      push(Constants.one);
-      return 1;
+      return Constants.one;
     case 2:
-      push(Constants.negOne);
-      return 1;
+      return Constants.negOne;
     case 3:
-      push(Constants.imaginaryunit);
-      return 1;
+      return Constants.imaginaryunit;
     case 4:
-      push(negate(Constants.imaginaryunit));
-      return 1;
+      return negate(Constants.imaginaryunit);
   }
 
   if (isadd(exponent)) {
@@ -643,7 +623,7 @@ function simplify_polar(exponent: U) {
     let arg1: U;
     switch (n) {
       case 0:
-        return 0;
+        return undefined;
       case 1:
         arg1 = Constants.one;
         break;
@@ -657,9 +637,8 @@ function simplify_polar(exponent: U) {
         arg1 = negate(Constants.imaginaryunit);
         break;
     }
-    push(multiply(arg1, exponential(subtract(exponent, car(p3)))));
-    return 1;
+    return multiply(arg1, exponential(subtract(exponent, car(p3))));
   }
 
-  return 0;
+  return undefined;
 }

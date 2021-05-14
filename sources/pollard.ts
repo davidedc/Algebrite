@@ -1,5 +1,6 @@
 import bigInt from 'big-integer';
 import {
+  Cons,
   Constants,
   defs,
   MEQUAL,
@@ -12,12 +13,9 @@ import {
 } from '../runtime/defs';
 import { mcmp } from '../runtime/mcmp';
 import { stop } from '../runtime/run';
-import { pop, swap, push } from '../runtime/stack';
-import { push_symbol } from '../runtime/symbol';
 import { mint, setSignTo } from './bignum';
-import { cons } from './cons';
 import { equaln } from './is';
-import { list, makeList } from './list';
+import { makeList } from './list';
 import { madd, msub } from './madd';
 import { mgcd } from './mgcd';
 import { mdiv, mdivrem, mmod, mmul } from './mmul';
@@ -32,43 +30,44 @@ export function factor_number(p1: Num): U {
   if (equaln(p1, 0) || equaln(p1, 1) || equaln(p1, -1)) {
     return p1;
   }
-
   n_factor_number = p1.q.a;
 
-  const h = defs.tos;
-
-  factor_a();
-
-  if (defs.tos - h > 1) {
-    list(defs.tos - h);
-    push_symbol(MULTIPLY);
-    swap();
-    cons();
+  const factors = factor_a();
+  if (factors.length === 0) {
+    //
   }
-  return pop();
+  if (factors.length === 1) {
+    return factors[0];
+  }
+  if (factors.length > 1) {
+    return new Cons(symbol(MULTIPLY), makeList(...factors));
+  }
 }
 
 // factor using table look-up, then switch to rho method if necessary
 // From TAOCP Vol. 2 by Knuth, p. 380 (Algorithm A)
-function factor_a() {
+function factor_a(): U[] {
+  const result: U[] = [];
+
   if (n_factor_number.isNegative()) {
     n_factor_number = setSignTo(n_factor_number, 1);
-    push(Constants.negOne);
+    result.push(Constants.negOne);
   }
 
   for (let k = 0; k < 10000; k++) {
-    try_kth_prime(k);
-
+    result.push(...try_kth_prime(k));
     // if n_factor_number is 1 then we're done
     if (n_factor_number.compare(1) === 0) {
-      return;
+      return result;
     }
   }
 
-  factor_b();
+  result.push(...factor_b());
+  return result;
 }
 
-function try_kth_prime(k: number) {
+function try_kth_prime(k: number): U[] {
+  const result: U[] = [];
   let q: bigInt.BigInteger;
 
   const d = mint(primetab[k]);
@@ -76,14 +75,14 @@ function try_kth_prime(k: number) {
   let count = 0;
   while (true) {
     // if n_factor_number is 1 then we're done
-    let r: bigInt.BigInteger;
     if (n_factor_number.compare(1) === 0) {
       if (count) {
-        push_factor(d, count);
+        result.push(_factor(d, count));
       }
-      return;
+      return result;
     }
 
+    let r: bigInt.BigInteger;
     [q, r] = Array.from(mdivrem(n_factor_number, d));
 
     // continue looping while remainder is zero
@@ -96,19 +95,21 @@ function try_kth_prime(k: number) {
   }
 
   if (count) {
-    push_factor(d, count);
+    result.push(_factor(d, count));
   }
 
   // q = n_factor_number/d, hence if q < d then
   // n_factor_number < d^2 so n_factor_number is prime
   if (mcmp(q, d) === -1) {
-    push_factor(n_factor_number, 1);
+    result.push(_factor(n_factor_number, 1));
     n_factor_number = mint(1);
   }
+  return result;
 }
 
 // From TAOCP Vol. 2 by Knuth, p. 385 (Algorithm B)
-function factor_b() {
+function factor_b(): U[] {
+  const result: U[] = [];
   const bigint_one = mint(1);
   let x = mint(5);
   let xprime = mint(2);
@@ -118,9 +119,8 @@ function factor_b() {
 
   while (true) {
     if (mprime(n_factor_number)) {
-      push_factor(n_factor_number, 1);
-      0;
-      return;
+      result.push(_factor(n_factor_number, 1));
+      return result;
     }
 
     while (true) {
@@ -149,11 +149,10 @@ function factor_b() {
         continue;
       }
 
-      push_factor(g, 1);
+      result.push(_factor(g, 1));
 
       if (mcmp(g, n_factor_number) === 0) {
-        -1;
-        return;
+        return result;
       }
 
       // n_factor_number = n_factor_number / g
@@ -173,10 +172,10 @@ function factor_b() {
   }
 }
 
-function push_factor(d: bigInt.BigInteger, count: number) {
+function _factor(d: bigInt.BigInteger, count: number): U {
   let factor: U = new Num(d);
   if (count > 1) {
     factor = makeList(symbol(POWER), factor, new Num(mint(count)));
   }
-  push(factor);
+  return factor;
 }

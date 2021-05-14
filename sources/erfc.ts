@@ -20,10 +20,6 @@ export function Eval_erfc(p1: U) {
 }
 
 function yerfc(p1: U): U {
-  return yyerfc(p1);
-}
-
-function yyerfc(p1: U): U {
   if (isdouble(p1)) {
     const d = erfc(p1.d);
     return double(d);
