@@ -23,6 +23,9 @@ import { divide, multiply } from './multiply';
 import { power } from './power';
 
 // Greatest common denominator
+// can also be run on polynomials, however
+// it works only on the integers and it works
+// by factoring the polynomials (not Euclidean algorithm)
 export function Eval_gcd(p1: U) {
   p1 = cdr(p1);
   let result = Eval(car(p1));
