@@ -308,7 +308,7 @@ export function isposint(
 
 // --------------------------------------
 
-export function isunivarpolyfactoredorexpandedform(p: U, x?: U): U | false {
+export function isunivarpolyfactoredorexpandedform(p: U, x?: U): U {
   if (x == null) {
     x = guess(p);
   }
@@ -323,7 +323,7 @@ export function isunivarpolyfactoredorexpandedform(p: U, x?: U): U | false {
   ) {
     return x;
   } else {
-    return false;
+    return;
   }
 }
 
