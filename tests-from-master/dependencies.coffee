@@ -220,10 +220,13 @@ test_dependencies = ->
   testResult = findDependenciesInScript('f(x) = x * x')
   if testResult[0] == "All local dependencies:  variable f depends on: 'x, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: 'x, ; " and
     testResult[1] == "" and
-    testResult[2] == "f = function (x) { return ( x*x ); }"
+    testResult[2] == "f = function (x) { return ( Math.pow(x, 2) ); }"
       console.log "ok dependency test"
   else
       console.log "fail dependency test 23 expected: " + testResult
+      console.log "testResult[0]: " + testResult[0]
+      console.log "testResult[1]: " + testResult[1]
+      console.log "testResult[2]: " + testResult[2]
 
   do_clearall()
 

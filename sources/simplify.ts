@@ -53,11 +53,11 @@ import {
   isfraction,
   isimaginaryunit,
   isminusone,
-  isnegativenumber,
+  isnegativenumber, isone,
   isZeroAtomOrTensor,
 } from './is';
 import { makeList } from './list';
-import { divide, inverse, multiply, negate } from './multiply';
+import { divide, inverse, multiply, multiply_noexpand, negate } from './multiply';
 import { polar } from './polar';
 import { power } from './power';
 import { rationalize } from './rationalize';
@@ -68,6 +68,10 @@ import { simfac } from './simfac';
 import { check_tensor_dimensions } from './tensor';
 import { transform } from './transform';
 import { transpose } from './transpose';
+import { denominator } from "./denominator";
+import { areunivarpolysfactoredorexpandedform, gcd } from "./gcd";
+import { factor } from "./factor";
+import { numerator } from "./numerator";
 
 export function Eval_simplify(p1: U) {
   const arg = runUserDefinedSimplifications(cadr(p1));
@@ -230,6 +234,7 @@ export function simplify(p1: U): U {
   }
 
   [p1] = simplify_rectToClock(p1);
+  p1 = simplify_rational_expressions(p1);
 
   return p1;
 }
@@ -364,20 +369,66 @@ function f5(p1: U): U {
 
 // if it's a sum then try to simplify each term
 function f9(p1: U): U {
+
   if (!isadd(p1)) {
     return p1;
   }
+
   let p2 = cdr(p1);
-  let temp: U = Constants.zero;
   if (iscons(p2)) {
-    temp = [...p2].reduce((acc: U, p: U) => add(acc, simplify(p)), temp);
+    p2 = [...p2].reduce((acc: U, p: U) =>
+        simplify_rational_expressions(
+          add(acc,simplify(p))
+        )
+      , Constants.zero);
   }
-  p2 = temp;
+
   if (count(p2) < count(p1)) {
     p1 = p2;
   }
   return p1;
 }
+
+function simplify_rational_expressions(p1: U): U {
+  var denom, num, p2, polyVar, theGCD;
+
+  denom = denominator(p1);
+  if (isone(denom)) {
+    return p1;
+  }
+  num = numerator(p1);
+  if (isone(num)) {
+    return p1;
+  }
+  if (!(polyVar = areunivarpolysfactoredorexpandedform(num, denom))) {
+    return p1;
+  }
+
+  theGCD = factor(gcd(num, denom), polyVar);
+  if (isone(theGCD)) {
+    return p1;
+  }
+
+  let factoredNum:U = factor(num, polyVar);
+  let theGCDInverse:U = inverse(theGCD);
+  let multipliedNoeExpandNum:U = multiply_noexpand(factoredNum, theGCDInverse);
+  let simplifiedNum:U = simplify(multipliedNoeExpandNum);
+
+  let factoredDenom:U = factor(denom, polyVar);
+  let multipliedNoeExpandDenom:U = multiply_noexpand(factoredDenom, theGCDInverse);
+  let simplifiedDenom:U = simplify(multipliedNoeExpandDenom);
+
+  let numDividedDenom:U = divide(simplifiedNum, simplifiedDenom);
+
+  p2 = Condense(numDividedDenom);
+
+  if (count(p2) < count(p1)) {
+    return p2;
+  }
+  else {
+    return p1;
+  }
+};
 
 // things like 6*(cos(2/9*pi)+i*sin(2/9*pi))
 // where we have sin and cos, those might start to
