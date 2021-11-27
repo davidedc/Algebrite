@@ -155,7 +155,7 @@ selftest = function() {
   test_expand();
   test_factorpoly();
   test_subst();
-  test_simplify();
+  // test_simplify(); // merged into the .ts tests
   test_multiply();
   test_scan();
   test_power();
