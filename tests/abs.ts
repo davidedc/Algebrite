@@ -143,6 +143,9 @@ run_test([
   'abs([2,3,4])',
   '29^(1/2)',
 
+  'abs(a*b)',
+  'abs(a)*abs(b)',
+
   'abs(a/b)',
   'abs(a)/abs(b)',
 

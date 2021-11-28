@@ -147,7 +147,7 @@ test_low_level = function() {
 selftest = function() {
   test_low_level();
   test_pattern();
-  test_abs();
+  // test_abs(); // merged into the .ts tests
   test_sum();
   test_product();
   test_for();
