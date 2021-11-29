@@ -162,7 +162,7 @@ selftest = function() {
   test_factor_number();
   test_tensor();
   test_bake();
-  test_adj();
+  // test_adj(); // merged into the .ts tests
   test_arg();
   test_approxratio();
   test_besselj();
