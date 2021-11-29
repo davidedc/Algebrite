@@ -5,7 +5,9 @@ bazel-out
 
 **/.DS_Store
 
-dist
+dist/*
+!dist/bin
+dist/bin/*
 !dist/bin/algebrite.js
 !dist/bin/algebrite.bundle-for-browser.js
 !dist/bin/index.js
