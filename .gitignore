@@ -3,6 +3,4 @@ build
 dist
 bazel-out
 .idea
-sources/.DS_Store
-runtime/.DS_Store
-.DS_Store
+**/.DS_Store
