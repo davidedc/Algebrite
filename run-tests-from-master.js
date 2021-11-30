@@ -164,7 +164,7 @@ selftest = function() {
   test_bake();
   // test_adj(); // merged into the .ts tests
   test_arg();
-  test_approxratio();
+  // test_approxratio(); // merged into the .ts tests
   test_besselj();
   test_bessely();
   test_ceiling();
