@@ -18,6 +18,14 @@ ts_project(
     deps = ["@npm//big-integer", "@npm//@types/node"],
 )
 
+copy_to_bin(
+    name="copy_browser_main",
+    srcs=["sources/browser_main.js"],
+)
+
+# recommendation online seems to be to NOT minify NPM packages, because they are
+# loaded "locally" and they are part of larger pipelines that usually
+# minify things "down the line"
 esbuild(
     name="algebrite",
     deps=[":tsc"],
@@ -32,16 +40,53 @@ esbuild(
     visibility=["//visibility:public"],
 )
 
-copy_to_bin(
-    name="copy_browser_main",
-    srcs=["sources/browser_main.js"],
+# let's also copy the sourcemaps. They are only loaded when opening the dev tools
+# and they actually show the original code file-by-file, which could be useful
+genrule(
+    name="copy-to-dist-bundle-for-browser-min",
+    srcs = ["algebrite.bundle-for-browser-min.js"],
+    outs = ["copy-to-dist-bundle-for-browser-min.txt"],
+    cmd = "echo 'done' > $(OUTS) && cd dist && cp bin/algebrite.bundle-for-browser-min.js . && cp bin/algebrite.bundle-for-browser-min.js.map .",
+    local = 1,  # required
+)
+
+genrule(
+    name="copy-to-dist-bundle-for-browser",
+    srcs = ["algebrite.bundle-for-browser.js"],
+    outs = ["copy-to-dist-bundle-for-browser.txt"],
+    cmd = "echo 'done' > $(OUTS) && cd dist && cp bin/algebrite.bundle-for-browser.js .",
+    local = 1,  # required
+)
+
+genrule(
+    name="copy-to-dist-index-runtime-sources",
+    srcs = ["index.js"],
+    outs = ["copy-to-dist-index-runtime-sources.txt"],
+    cmd = "echo 'done' > $(OUTS) && cd dist && cp bin/index.js index.js && cp -r bin/runtime . && cp -r bin/sources .",
+    local = 1,  # required
+)
+
+
+
+esbuild(
+    name="algebrite.bundle-for-browser-min",
+    deps=[":tsc"],
+    entry_point = ":copy_browser_main",
+    minify = True,
+    target = "safari13,chrome87,firefox85",
+    tool = select({
+        "@bazel_tools//src/conditions:darwin": "@esbuild_darwin//:bin/esbuild",
+        "@bazel_tools//src/conditions:windows": "@esbuild_windows//:esbuild.exe",
+        "@bazel_tools//src/conditions:linux_x86_64": "@esbuild_linux//:bin/esbuild",
+    }),
+    visibility=["//visibility:public"],
 )
 
 esbuild(
     name="algebrite.bundle-for-browser",
     deps=[":tsc"],
     entry_point = ":copy_browser_main",
-    minify = True,
+    minify = False,
     target = "safari13,chrome87,firefox85",
     tool = select({
         "@bazel_tools//src/conditions:darwin": "@esbuild_darwin//:bin/esbuild",
@@ -57,7 +102,19 @@ pkg_npm(
     deps = [
         ":tsc",
         ":algebrite",
+        ":algebrite.bundle-for-browser-min",
         ":algebrite.bundle-for-browser",
+
+        # We want to commit the key deliverables to the repo,
+        # so we want to copy these in the dist folder (the dist
+        # folder is a plain folder, while the dist/bin folder
+        # -where bazel puts its outputs- is a symbolic link
+        # to cryptic paths that we can't commit to the repo).
+        ":copy-to-dist-bundle-for-browser-min",
+        ":copy-to-dist-bundle-for-browser",
+        # this is for the so called "module" npm deliverable
+        # see https://stackoverflow.com/questions/42708484/what-is-the-module-package-json-field-for
+        ":copy-to-dist-index-runtime-sources",
     ]
 )
 
