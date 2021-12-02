@@ -46,7 +46,7 @@ genrule(
     name="copy-to-dist-bundle-for-browser-min",
     srcs = ["algebrite.bundle-for-browser-min.js"],
     outs = ["copy-to-dist-bundle-for-browser-min.txt"],
-    cmd = "echo 'done' > $(OUTS) && cd dist && cp bin/algebrite.bundle-for-browser-min.js . && cp bin/algebrite.bundle-for-browser-min.js.map .",
+    cmd = "echo 'done' > $(OUTS) ; cd dist ; rm algebrite.bundle-for-browser-min.js ; rm algebrite.bundle-for-browser-min.js.map ; cp bin/algebrite.bundle-for-browser-min.js . ; cp bin/algebrite.bundle-for-browser-min.js.map .",
     local = 1,  # required
 )
 
@@ -54,7 +54,7 @@ genrule(
     name="copy-to-dist-bundle-for-browser",
     srcs = ["algebrite.bundle-for-browser.js"],
     outs = ["copy-to-dist-bundle-for-browser.txt"],
-    cmd = "echo 'done' > $(OUTS) && cd dist && cp bin/algebrite.bundle-for-browser.js .",
+    cmd = "echo 'done' > $(OUTS) ; cd dist ; rm algebrite.bundle-for-browser.js ; cp bin/algebrite.bundle-for-browser.js .",
     local = 1,  # required
 )
 
@@ -62,7 +62,7 @@ genrule(
     name="copy-to-dist-index-runtime-sources",
     srcs = ["index.js"],
     outs = ["copy-to-dist-index-runtime-sources.txt"],
-    cmd = "echo 'done' > $(OUTS) && cd dist && cp bin/index.js index.js && cp -r bin/runtime . && cp -r bin/sources .",
+    cmd = "echo 'done' > $(OUTS) ; cd dist ; rm -rf index.js ; rm -rf runtime ; rm -rf sources ; cp bin/index.js index.js ; cp -r bin/runtime . ; cp -r bin/sources .",
     local = 1,  # required
 )
 
