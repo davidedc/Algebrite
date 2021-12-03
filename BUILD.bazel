@@ -1,0 +1,1040 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_project")
+load("@npm//@bazel/esbuild:index.bzl", "esbuild")
+load("gen_tests.bzl", "gen_tests")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test", "pkg_npm", "copy_to_bin")
+
+# Allow any ts_library rules in this workspace to reference the config
+# Note: if you move the tsconfig.json file to a subdirectory, you can add an alias() here instead
+#   so that ts_library rules still use it by default.
+#   See https://www.npmjs.com/package/@bazel/typescript#installation
+exports_files(
+    ["tsconfig.json"],
+    visibility = [":__subpackages__"],
+)
+
+ts_project(
+    name = "tsc",
+    tsconfig = "tsconfig.json",
+    deps = ["@npm//big-integer", "@npm//@types/node"],
+)
+
+copy_to_bin(
+    name="copy_browser_main",
+    srcs=["sources/browser_main.js"],
+)
+
+# recommendation online seems to be to NOT minify NPM packages, because they are
+# loaded "locally" and they are part of larger pipelines that usually
+# minify things "down the line"
+esbuild(
+    name="algebrite",
+    deps=[":tsc"],
+    entry_point = "index.ts",
+    platform = "node",
+    external = ["big-integer"],
+    tool = select({
+        "@bazel_tools//src/conditions:darwin": "@esbuild_darwin//:bin/esbuild",
+        "@bazel_tools//src/conditions:windows": "@esbuild_windows//:esbuild.exe",
+        "@bazel_tools//src/conditions:linux_x86_64": "@esbuild_linux//:bin/esbuild",
+    }),
+    visibility=["//visibility:public"],
+)
+
+# let's also copy the sourcemaps. They are only loaded when opening the dev tools
+# and they actually show the original code file-by-file, which could be useful
+genrule(
+    name="copy-to-dist-bundle-for-browser-min",
+    srcs = ["algebrite.bundle-for-browser-min.js"],
+    outs = ["copy-to-dist-bundle-for-browser-min.txt"],
+    cmd = "echo 'done' > $(OUTS) ; cd dist ; rm -f algebrite.bundle-for-browser-min.js ; rm -f algebrite.bundle-for-browser-min.js.map ; cp bin/algebrite.bundle-for-browser-min.js . ; cp bin/algebrite.bundle-for-browser-min.js.map .",
+    local = 1,  # required
+)
+
+genrule(
+    name="copy-to-dist-bundle-for-browser",
+    srcs = ["algebrite.bundle-for-browser.js"],
+    outs = ["copy-to-dist-bundle-for-browser.txt"],
+    cmd = "echo 'done' > $(OUTS) ; cd dist ; rm -f algebrite.bundle-for-browser.js ; cp bin/algebrite.bundle-for-browser.js .",
+    local = 1,  # required
+)
+
+genrule(
+    name="copy-to-dist-index-runtime-sources",
+    srcs = ["index.js"],
+    outs = ["copy-to-dist-index-runtime-sources.txt"],
+    cmd = "echo 'done' > $(OUTS) ; cd dist ; rm -rf index.js ; rm -rf runtime ; rm -rf sources ; cp bin/index.js index.js ; cp -r bin/runtime . ; cp -r bin/sources .",
+    local = 1,  # required
+)
+
+
+
+esbuild(
+    name="algebrite.bundle-for-browser-min",
+    deps=[":tsc"],
+    entry_point = ":copy_browser_main",
+    minify = True,
+    target = "safari13,chrome87,firefox85",
+    tool = select({
+        "@bazel_tools//src/conditions:darwin": "@esbuild_darwin//:bin/esbuild",
+        "@bazel_tools//src/conditions:windows": "@esbuild_windows//:esbuild.exe",
+        "@bazel_tools//src/conditions:linux_x86_64": "@esbuild_linux//:bin/esbuild",
+    }),
+    visibility=["//visibility:public"],
+)
+
+esbuild(
+    name="algebrite.bundle-for-browser",
+    deps=[":tsc"],
+    entry_point = ":copy_browser_main",
+    minify = False,
+    target = "safari13,chrome87,firefox85",
+    tool = select({
+        "@bazel_tools//src/conditions:darwin": "@esbuild_darwin//:bin/esbuild",
+        "@bazel_tools//src/conditions:windows": "@esbuild_windows//:esbuild.exe",
+        "@bazel_tools//src/conditions:linux_x86_64": "@esbuild_linux//:bin/esbuild",
+    }),
+    visibility=["//visibility:public"],
+)
+
+pkg_npm(
+    name="npm",
+    srcs = ["package.json"],
+    deps = [
+        ":tsc",
+        ":algebrite",
+        ":algebrite.bundle-for-browser-min",
+        ":algebrite.bundle-for-browser",
+
+        # We want to commit the key deliverables to the repo,
+        # so we want to copy these in the dist folder (the dist
+        # folder is a plain folder, while the dist/bin folder
+        # -where bazel puts its outputs- is a symbolic link
+        # to cryptic paths that we can't commit to the repo).
+        ":copy-to-dist-bundle-for-browser-min",
+        ":copy-to-dist-bundle-for-browser",
+        # this is for the so called "module" npm deliverable
+        # see https://stackoverflow.com/questions/42708484/what-is-the-module-package-json-field-for
+        ":copy-to-dist-index-runtime-sources",
+    ]
+)
+
+nodejs_test(
+    name = "test_zero",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/zero.ts",
+)
+
+nodejs_test(
+    name = "test_transpose",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/transpose.ts",
+)
+
+nodejs_test(
+    name = "test_test",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/test.ts",
+)
+
+nodejs_test(
+    name = "test_tensor",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/tensor.ts",
+)
+
+nodejs_test(
+    name = "test_taylor",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/taylor.ts",
+)
+
+nodejs_test(
+    name = "test_tanh",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/tanh.ts",
+)
+
+nodejs_test(
+    name = "test_tan",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/tan.ts",
+)
+
+nodejs_test(
+    name = "test_sum",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/sum.ts",
+)
+
+nodejs_test(
+    name = "test_subst",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/subst.ts",
+)
+
+nodejs_test(
+    name = "test_strings",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/strings.ts",
+)
+
+nodejs_test(
+    name = "test_sinh",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/sinh.ts",
+)
+
+nodejs_test(
+    name = "test_sin",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/sin.ts",
+)
+
+nodejs_test(
+    name = "test_simplify",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/simplify.ts",
+)
+
+nodejs_test(
+    name = "test_shape",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/shape.ts",
+)
+
+nodejs_test(
+    name = "test_sgn",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/sgn.ts",
+)
+
+nodejs_test(
+    name = "test_scan",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/scan.ts",
+)
+
+nodejs_test(
+    name = "test_round",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/round.ts",
+)
+
+nodejs_test(
+    name = "test_roots",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    shard_count = 16,
+    entry_point = ":tests/roots.ts",
+)
+
+nodejs_test(
+    name = "test_roots_slow",
+    timeout = "long",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/roots_slow.ts",
+    tags = ["manual"],
+)
+
+nodejs_test(
+    name = "test_rect",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/rect.ts",
+)
+
+nodejs_test(
+    name = "test_real",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/real.ts",
+)
+
+nodejs_test(
+    name = "test_rationalize",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/rationalize.ts",
+)
+
+nodejs_test(
+    name = "test_quotient",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/quotient.ts",
+)
+
+nodejs_test(
+    name = "test_quickfactor",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/quickfactor.ts",
+)
+
+nodejs_test(
+    name = "test_product",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/product.ts",
+)
+
+nodejs_test(
+    name = "test_printlatex",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/printlatex.ts",
+)
+
+nodejs_test(
+    name = "test_power",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/power.ts",
+)
+
+nodejs_test(
+    name = "test_polar",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/polar.ts",
+)
+
+nodejs_test(
+    name = "test_pattern",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/pattern.ts",
+)
+
+nodejs_test(
+    name = "test_outer",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/outer.ts",
+)
+
+nodejs_test(
+    name = "test_numerator",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/numerator.ts",
+)
+
+nodejs_test(
+    name = "test_nroots",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/nroots.ts",
+)
+
+nodejs_test(
+    name = "test_multiply",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/multiply.ts",
+)
+
+nodejs_test(
+    name = "test_mroot",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/mroot.ts",
+)
+
+nodejs_test(
+    name = "test_mprime",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/mprime.ts",
+)
+
+nodejs_test(
+    name = "test_mpow",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/mpow.ts",
+)
+
+nodejs_test(
+    name = "test_mod",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/mod.ts",
+)
+
+nodejs_test(
+    name = "test_mmul",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/mmul.ts",
+)
+
+nodejs_test(
+    name = "test_mixedprint",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/mixedprint.ts",
+)
+
+nodejs_test(
+    name = "test_mini-test",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/mini-test.ts",
+)
+
+nodejs_test(
+    name = "test_mgcd",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/mgcd.ts",
+)
+
+nodejs_test(
+    name = "test_madd",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/madd.ts",
+)
+
+nodejs_test(
+    name = "test_log",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/log.ts",
+)
+
+nodejs_test(
+    name = "test_legendre",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/legendre.ts",
+)
+
+nodejs_test(
+    name = "test_lcm",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/lcm.ts",
+)
+
+nodejs_test(
+    name = "test_laguerre",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/laguerre.ts",
+)
+
+nodejs_test(
+    name = "test_isprime",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/isprime.ts",
+)
+
+nodejs_test(
+    name = "test_inv",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/inv.ts",
+)
+
+nodejs_test(
+    name = "test_integral",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/integral.ts",
+)
+
+nodejs_test(
+    name = "test_inner",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/inner.ts",
+)
+
+nodejs_test(
+    name = "test_index",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/index.ts",
+)
+
+nodejs_test(
+    name = "test_imag",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/imag.ts",
+)
+
+nodejs_test(
+    name = "test_hermite",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/hermite.ts",
+)
+
+nodejs_test(
+    name = "test_gcd",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/gcd.ts",
+)
+
+nodejs_test(
+    name = "test_gamma",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/gamma.ts",
+)
+
+nodejs_test(
+    name = "test_for",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/for.ts",
+)
+
+nodejs_test(
+    name = "test_floor",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/floor.ts",
+)
+
+nodejs_test(
+    name = "test_float",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/float.ts",
+)
+
+nodejs_test(
+    name = "test_factorpoly",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/factorpoly.ts",
+)
+
+nodejs_test(
+    name = "test_factor",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/factor.ts",
+)
+
+nodejs_test(
+    name = "test_expsin",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/expsin.ts",
+)
+
+nodejs_test(
+    name = "test_expcos",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/expcos.ts",
+)
+
+nodejs_test(
+    name = "test_expand",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/expand.ts",
+)
+
+nodejs_test(
+    name = "test_exp",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/exp.ts",
+)
+
+nodejs_test(
+    name = "test_erfc",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/erfc.ts",
+)
+
+nodejs_test(
+    name = "test_erf",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/erf.ts",
+)
+
+nodejs_test(
+    name = "test_eigen",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/eigen.ts",
+)
+
+nodejs_test(
+    name = "test_divisors",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/divisors.ts",
+)
+
+nodejs_test(
+    name = "test_dirac",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/dirac.ts",
+)
+
+nodejs_test(
+    name = "test_derivative",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/derivative.ts",
+)
+
+nodejs_test(
+    name = "test_dependencies",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/dependencies.ts",
+)
+
+nodejs_test(
+    name = "test_denominator",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/denominator.ts",
+)
+
+nodejs_test(
+    name = "test_defint",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/defint.ts",
+)
+
+nodejs_test(
+    name = "test_cosh",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/cosh.ts",
+)
+
+nodejs_test(
+    name = "test_cos",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/cos.ts",
+)
+
+nodejs_test(
+    name = "test_contract",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/contract.ts",
+)
+
+nodejs_test(
+    name = "test_condense",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/condense.ts",
+)
+
+nodejs_test(
+    name = "test_cofactor",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/cofactor.ts",
+)
+
+nodejs_test(
+    name = "test_coeff",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/coeff.ts",
+)
+
+nodejs_test(
+    name = "test_clock",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/clock.ts",
+)
+
+nodejs_test(
+    name = "test_clearall",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/clearall.ts",
+)
+
+nodejs_test(
+    name = "test_circexp",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/circexp.ts",
+)
+
+nodejs_test(
+    name = "test_choose",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/choose.ts",
+)
+
+nodejs_test(
+    name = "test_check",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/check.ts",
+)
+
+nodejs_test(
+    name = "test_ceiling",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/ceiling.ts",
+)
+
+nodejs_test(
+    name = "test_binomial",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/binomial.ts",
+)
+
+nodejs_test(
+    name = "test_bignum",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/bignum.ts",
+)
+
+nodejs_test(
+    name = "test_bessely",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/bessely.ts",
+)
+
+nodejs_test(
+    name = "test_besselj",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/besselj.ts",
+)
+
+nodejs_test(
+    name = "test_bake",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/bake.ts",
+)
+
+nodejs_test(
+    name = "test_assignments",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/assignments.ts",
+)
+
+nodejs_test(
+    name = "test_arg",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/arg.ts",
+)
+
+nodejs_test(
+    name = "test_arctanh",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/arctanh.ts",
+)
+
+nodejs_test(
+    name = "test_arctan",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/arctan.ts",
+)
+
+nodejs_test(
+    name = "test_arcsinh",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/arcsinh.ts",
+)
+
+nodejs_test(
+    name = "test_arcsin",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/arcsin.ts",
+)
+
+nodejs_test(
+    name = "test_arccosh",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/arccosh.ts",
+)
+
+nodejs_test(
+    name = "test_arccos",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/arccos.ts",
+)
+
+nodejs_test(
+    name = "test_approxratio",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/approxratio.ts",
+)
+
+nodejs_test(
+    name = "test_adj",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/adj.ts",
+)
+
+nodejs_test(
+    name = "test_abs",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/abs.ts",
+)
+
+nodejs_test(
+    name = "test_det",
+    data = [
+        ":tsc",
+        "@npm//big-integer",
+    ],
+    entry_point = ":tests/det.ts",
+)

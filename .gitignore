@@ -1,8 +1,17 @@
 node_modules
+bazel-out
+.idea
 
+**/.DS_Store
 
-tests/.DS_Store
+dist/*
+!dist/algebrite.js
+!dist/algebrite.bundle-for-browser-min.js
+!dist/algebrite.bundle-for-browser.js
+!dist/index.js
 
-dist/.DS_Store
+!dist/runtime
+!dist/sources
 
-.DS_Store
+!dist/runtime/*
+!dist/sources/*
