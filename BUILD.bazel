@@ -46,7 +46,7 @@ genrule(
     name="copy-to-dist-bundle-for-browser-min",
     srcs = ["algebrite.bundle-for-browser-min.js"],
     outs = ["copy-to-dist-bundle-for-browser-min.txt"],
-    cmd = "echo 'done' > $(OUTS) ; cd dist ; rm algebrite.bundle-for-browser-min.js ; rm algebrite.bundle-for-browser-min.js.map ; cp bin/algebrite.bundle-for-browser-min.js . ; cp bin/algebrite.bundle-for-browser-min.js.map .",
+    cmd = "echo 'done' > $(OUTS) ; cd dist ; rm -f algebrite.bundle-for-browser-min.js ; rm -f algebrite.bundle-for-browser-min.js.map ; cp bin/algebrite.bundle-for-browser-min.js . ; cp bin/algebrite.bundle-for-browser-min.js.map .",
     local = 1,  # required
 )
 
@@ -54,7 +54,7 @@ genrule(
     name="copy-to-dist-bundle-for-browser",
     srcs = ["algebrite.bundle-for-browser.js"],
     outs = ["copy-to-dist-bundle-for-browser.txt"],
-    cmd = "echo 'done' > $(OUTS) ; cd dist ; rm algebrite.bundle-for-browser.js ; cp bin/algebrite.bundle-for-browser.js .",
+    cmd = "echo 'done' > $(OUTS) ; cd dist ; rm -f algebrite.bundle-for-browser.js ; cp bin/algebrite.bundle-for-browser.js .",
     local = 1,  # required
 )
 
