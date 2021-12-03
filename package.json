@@ -38,12 +38,10 @@
     "big-integer": "^1.6.32"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.10.4",
-    "jscodeshift": "^0.10.0",
-    "typescript": "^3.9.6",
     "@bazel/bazelisk": "latest",
     "@bazel/buildifier": "latest",
     "@bazel/esbuild": "^4.4.6",
-    "@bazel/typescript": "4.4.6"
+    "@bazel/typescript": "4.4.6",
+    "typescript": "^3.9.6"
   }
 }
