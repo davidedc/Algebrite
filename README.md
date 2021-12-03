@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/algebrite.svg)](https://badge.fury.io/js/algebrite)
 
-Algebrite is a Javascript library for symbolic mathematics (technically, CoffeeScript) designed to be comprehensible and easily extensible.
+Algebrite is a Javascript (Typescript) library for symbolic mathematics designed to be comprehensible and easily extensible.
 
 
 ```js
@@ -32,33 +32,33 @@ The cons objects have a `toString` method which converts it into a pretty-print 
 
 # How to build
 
-For node use:
+For a build to run tests:
 
-1. make sure npm is installed
+1. make sure npm and bazel are installed
 2. ```npm install```
-3. ```npm run build```
+3. ```bazel build algebrite```
 
-To debug things, better use the debugger from Chrome, so build for the browser like so:
+
+The bazel build system tends to be smart and cache things. You can do a thorough clean by:
+```bazel clean; rm -rf ./dist/*```
+
+The so called "npm build" does a build for npm and browser:
 
 1. make sure npm is installed
-2. make sure browserify is installed
-3. ```npm install```
-4. ```npm run build-for-browser```
-5. open ```index.html```
+2. make sure bazel is installed
+3. ```bazel build npm```
+4. open ```index.html```
 
 # How to test
 
 For full tests:
 
-```
-npm test
-```
+```bazel test :all```
 
-For the subset of tests in run-micro-tests.coffee:
+or, if caches get in the way:
 
-```
-npm run microtest
-```
+```bazel test :all --cache_test_results=no```
+
 
 # Contribute
 please take a look at the [contributing](https://github.com/davidedc/Algebrite/blob/master/contributing.md) file.
