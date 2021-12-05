@@ -34,3 +34,11 @@ npm_install(
 load("@build_bazel_rules_nodejs//toolchains/esbuild:esbuild_repositories.bzl", "esbuild_repositories")
 
 esbuild_repositories(npm_repository = "npm")
+
+load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories")
+
+# M1 Macs require Node 16+
+node_repositories(
+    package_json = ["//:package.json"],
+    node_version = "16.6.2",
+)

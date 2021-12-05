@@ -34,30 +34,30 @@ The cons objects have a `toString` method which converts it into a pretty-print 
 
 For a build to run tests:
 
-1. make sure npm and bazel are installed
+1. make sure npm is installed, then:
 2. ```npm install```
-3. ```bazel build algebrite```
+3. ```bazelisk build algebrite```
 
+(```bazelisk``` is the launcher for the ```bazel``` build system). The bazel build system tends to be smart and cache things. You can do a thorough clean by:
 
-The bazel build system tends to be smart and cache things. You can do a thorough clean by:
-```bazel clean; rm -rf ./dist/*```
+```bazelisk clean; rm -rf ./dist/*```
 
 The so called "npm build" does a build for npm and browser:
 
-1. make sure npm is installed
-2. make sure bazel is installed
-3. ```bazel build npm```
+1. make sure npm is installed, then:
+2. ```npm install``` (if you didn't run this already)
+3. ```bazelisk build npm```
 4. open ```index.html```
 
 # How to test
 
 For full tests:
 
-```bazel test :all```
+```bazelisk test :all```
 
 or, if caches get in the way:
 
-```bazel test :all --cache_test_results=no```
+```bazelisk test :all --cache_test_results=no```
 
 
 # Contribute
