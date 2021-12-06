@@ -1103,10 +1103,10 @@
           var digits = toBase(range, BASE).value;
           var result = [], restricted = true;
           for (var i2 = 0; i2 < digits.length; i2++) {
-            var top = restricted ? digits[i2] : BASE;
+            var top = restricted ? digits[i2] + (i2 + 1 < digits.length ? digits[i2 + 1] / BASE : 0) : BASE;
             var digit = truncate(usedRNG() * top);
             result.push(digit);
-            if (digit < top)
+            if (digit < digits[i2])
               restricted = false;
           }
           return low.add(Integer.fromArray(result, BASE, false));
@@ -1373,9 +1373,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/runtime/mcmp.js
+  // bazel-out/darwin_arm64-fastbuild/bin/runtime/mcmp.js
   var require_mcmp = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/runtime/mcmp.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/runtime/mcmp.js"(exports) {
       "use strict";
       var __importDefault = exports && exports.__importDefault || function(mod) {
         return mod && mod.__esModule ? mod : { "default": mod };
@@ -1390,9 +1390,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/index.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/index.js
   var require_sources = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/index.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/index.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.set_component = exports.index_function = void 0;
@@ -1500,9 +1500,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/runtime/count.js
+  // bazel-out/darwin_arm64-fastbuild/bin/runtime/count.js
   var require_count = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/runtime/count.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/runtime/count.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.countsize = exports.countOccurrencesOfSymbol = exports.count = void 0;
@@ -1548,9 +1548,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/runtime/symbol.js
+  // bazel-out/darwin_arm64-fastbuild/bin/runtime/symbol.js
   var require_symbol = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/runtime/symbol.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/runtime/symbol.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.collectUserSymbols = exports.clear_symbols = exports.push_symbol = exports.symnum = exports.get_binding = exports.set_binding = exports.get_printname = exports.usr_symbol = exports.std_symbol = exports.Eval_symbolsinfo = void 0;
@@ -1725,9 +1725,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/list.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/list.js
   var require_list = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/list.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/list.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.makeList = exports.list = void 0;
@@ -1753,9 +1753,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/sin.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/sin.js
   var require_sin = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/sin.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/sin.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.sine = exports.Eval_sin = void 0;
@@ -1847,9 +1847,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/cos.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/cos.js
   var require_cos = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/cos.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/cos.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.cosine = exports.Eval_cos = void 0;
@@ -1941,9 +1941,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/dpow.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/dpow.js
   var require_dpow = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/dpow.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/dpow.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.dpow = void 0;
@@ -1976,9 +1976,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/factorial.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/factorial.js
   var require_factorial = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/factorial.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/factorial.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.factorial = void 0;
@@ -2001,9 +2001,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/mpow.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/mpow.js
   var require_mpow = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/mpow.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/mpow.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.mpow = void 0;
@@ -2014,9 +2014,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/mroot.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/mroot.js
   var require_mroot = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/mroot.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/mroot.js"(exports) {
       "use strict";
       var __importDefault = exports && exports.__importDefault || function(mod) {
         return mod && mod.__esModule ? mod : { "default": mod };
@@ -2064,9 +2064,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/gcd.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/gcd.js
   var require_gcd = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/gcd.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/gcd.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.areunivarpolysfactoredorexpandedform = exports.gcd = exports.Eval_gcd = void 0;
@@ -2222,9 +2222,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/lcm.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/lcm.js
   var require_lcm = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/lcm.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/lcm.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.lcm = exports.Eval_lcm = void 0;
@@ -2252,9 +2252,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/filter.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/filter.js
   var require_filter = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/filter.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/filter.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.filter = exports.Eval_filter = void 0;
@@ -2303,9 +2303,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/subst.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/subst.js
   var require_subst = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/subst.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/subst.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.subst = void 0;
@@ -2340,9 +2340,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/coeff.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/coeff.js
   var require_coeff = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/coeff.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/coeff.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.coeff = exports.Eval_coeff = void 0;
@@ -2382,9 +2382,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/condense.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/condense.js
   var require_condense = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/condense.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/condense.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.yycondense = exports.Condense = exports.Eval_condense = void 0;
@@ -2418,9 +2418,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/divisors.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/divisors.js
   var require_divisors = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/divisors.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/divisors.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.ydivisors = exports.divisors = void 0;
@@ -2525,9 +2525,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/rationalize.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/rationalize.js
   var require_rationalize = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/rationalize.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/rationalize.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.rationalize = exports.Eval_rationalize = void 0;
@@ -2608,9 +2608,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/numerator.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/numerator.js
   var require_numerator = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/numerator.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/numerator.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.numerator = exports.Eval_numerator = void 0;
@@ -2645,9 +2645,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/print2d.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/print2d.js
   var require_print2d = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/print2d.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/print2d.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.print2dascii = void 0;
@@ -3473,9 +3473,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/scan.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/scan.js
   var require_scan = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/scan.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/scan.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.scan_meta = exports.scan = void 0;
@@ -4206,9 +4206,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/print.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/print.js
   var require_print = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/print.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/print.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.print_list = exports.print_expr = exports.printline = exports.collectLatexStringFromReturnValue = exports.print_str = exports.Eval_printlist = exports.Eval_printhuman = exports.Eval_printlatex = exports.Eval_printcomputer = exports.Eval_print2dascii = exports.Eval_print = void 0;
@@ -5529,9 +5529,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/quotient.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/quotient.js
   var require_quotient = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/quotient.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/quotient.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.divpoly = exports.Eval_quotient = void 0;
@@ -5575,9 +5575,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/rect.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/rect.js
   var require_rect = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/rect.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/rect.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.rect = exports.Eval_rect = void 0;
@@ -5647,9 +5647,9 @@
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/factorpoly.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/factorpoly.js
   var require_factorpoly = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/factorpoly.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/factorpoly.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.factorpoly = void 0;
@@ -5975,9 +5975,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/guess.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/guess.js
   var require_guess = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/guess.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/guess.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.guess = void 0;
@@ -6002,9 +6002,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/madd.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/madd.js
   var require_madd = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/madd.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/madd.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.msub = exports.madd = void 0;
@@ -6019,9 +6019,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/mgcd.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/mgcd.js
   var require_mgcd = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/mgcd.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/mgcd.js"(exports) {
       "use strict";
       var __importDefault = exports && exports.__importDefault || function(mod) {
         return mod && mod.__esModule ? mod : { "default": mod };
@@ -6036,9 +6036,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/mmul.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/mmul.js
   var require_mmul = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/mmul.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/mmul.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.mdivrem = exports.mmod = exports.mdiv = exports.mmul = void 0;
@@ -6062,9 +6062,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/mprime.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/mprime.js
   var require_mprime = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/mprime.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/mprime.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.mprime = void 0;
@@ -6075,9 +6075,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/pollard.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/pollard.js
   var require_pollard = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/pollard.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/pollard.js"(exports) {
       "use strict";
       var __importDefault = exports && exports.__importDefault || function(mod) {
         return mod && mod.__esModule ? mod : { "default": mod };
@@ -6212,9 +6212,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/factor.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/factor.js
   var require_factor = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/factor.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/factor.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.factor_small_number = exports.factor = exports.Eval_factor = void 0;
@@ -6298,9 +6298,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/quickfactor.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/quickfactor.js
   var require_quickfactor = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/quickfactor.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/quickfactor.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.quickpower = exports.quickfactor = void 0;
@@ -6342,9 +6342,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/qpow.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/qpow.js
   var require_qpow = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/qpow.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/qpow.js"(exports) {
       "use strict";
       var __importDefault = exports && exports.__importDefault || function(mod) {
         return mod && mod.__esModule ? mod : { "default": mod };
@@ -6449,9 +6449,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/power.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/power.js
   var require_power = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/power.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/power.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.power = exports.Eval_power = void 0;
@@ -6806,9 +6806,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/multiply.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/multiply.js
   var require_multiply = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/multiply.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/multiply.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.negate_noexpand = exports.negate = exports.reciprocate = exports.inverse = exports.divide = exports.multiply_all_noexpand = exports.multiply_all = exports.multiply_noexpand = exports.multiply = exports.Eval_multiply = void 0;
@@ -7103,9 +7103,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/denominator.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/denominator.js
   var require_denominator = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/denominator.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/denominator.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.denominator = exports.Eval_denominator = void 0;
@@ -7140,9 +7140,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/arctan.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/arctan.js
   var require_arctan = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/arctan.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/arctan.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.arctan = exports.Eval_arctan = void 0;
@@ -7196,9 +7196,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/imag.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/imag.js
   var require_imag = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/imag.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/imag.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.imag = exports.Eval_imag = void 0;
@@ -7233,9 +7233,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/real.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/real.js
   var require_real = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/real.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/real.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.real = exports.Eval_real = void 0;
@@ -7260,9 +7260,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/arg.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/arg.js
   var require_arg = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/arg.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/arg.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.arg = exports.Eval_arg = void 0;
@@ -7348,9 +7348,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/clock.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/clock.js
   var require_clock = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/clock.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/clock.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.clockform = exports.Eval_clock = void 0;
@@ -7383,9 +7383,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/polar.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/polar.js
   var require_polar = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/polar.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/polar.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.polar = exports.Eval_polar = void 0;
@@ -7410,9 +7410,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/conj.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/conj.js
   var require_conj = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/conj.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/conj.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.conjugate = exports.Eval_conj = void 0;
@@ -7440,9 +7440,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/float.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/float.js
   var require_float = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/float.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/float.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.yyfloat = exports.zzfloat = exports.Eval_float = void 0;
@@ -7492,9 +7492,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/det.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/det.js
   var require_det = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/det.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/det.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.determinant = exports.det = void 0;
@@ -7618,9 +7618,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/cofactor.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/cofactor.js
   var require_cofactor = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/cofactor.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/cofactor.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.cofactor = exports.Eval_cofactor = void 0;
@@ -7667,9 +7667,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/adj.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/adj.js
   var require_adj = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/adj.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/adj.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.adj = exports.Eval_adj = void 0;
@@ -7705,9 +7705,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/inv.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/inv.js
   var require_inv = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/inv.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/inv.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.invg = exports.inv = void 0;
@@ -7819,9 +7819,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/inner.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/inner.js
   var require_inner = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/inner.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/inner.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.inner = exports.Eval_inner = void 0;
@@ -8009,9 +8009,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/roots.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/roots.js
   var require_roots = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/roots.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/roots.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.roots = exports.Eval_roots = void 0;
@@ -8369,9 +8369,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/simfac.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/simfac.js
   var require_simfac = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/simfac.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/simfac.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.simfac = void 0;
@@ -8464,9 +8464,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/decomp.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/decomp.js
   var require_decomp = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/decomp.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/decomp.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.decomp = exports.Eval_decomp = void 0;
@@ -8593,9 +8593,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/transform.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/transform.js
   var require_transform = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/transform.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/transform.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.transform = void 0;
@@ -8756,9 +8756,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/transpose.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/transpose.js
   var require_transpose = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/transpose.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/transpose.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.transpose = exports.Eval_transpose = void 0;
@@ -8880,9 +8880,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/simplify.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/simplify.js
   var require_simplify = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/simplify.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/simplify.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.simplify_trig = exports.simplify = exports.simplifyForCodeGeneration = exports.Eval_simplify = void 0;
@@ -9403,9 +9403,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/abs.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/abs.js
   var require_abs = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/abs.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/abs.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.absval = exports.abs = exports.absValFloat = exports.Eval_abs = void 0;
@@ -9567,9 +9567,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/approxratio.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/approxratio.js
   var require_approxratio = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/approxratio.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/approxratio.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.testApprox = exports.approxAll = exports.approxRationalsOfLogs = exports.approxRadicals = exports.Eval_approxratio = void 0;
@@ -10694,9 +10694,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/arccos.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/arccos.js
   var require_arccos = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/arccos.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/arccos.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_arccos = void 0;
@@ -10752,9 +10752,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/arccosh.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/arccosh.js
   var require_arccosh = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/arccosh.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/arccosh.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_arccosh = void 0;
@@ -10789,9 +10789,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/arcsin.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/arcsin.js
   var require_arcsin = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/arcsin.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/arcsin.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_arcsin = void 0;
@@ -10847,9 +10847,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/arcsinh.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/arcsinh.js
   var require_arcsinh = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/arcsinh.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/arcsinh.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_arcsinh = void 0;
@@ -10880,9 +10880,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/arctanh.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/arctanh.js
   var require_arctanh = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/arctanh.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/arctanh.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_arctanh = void 0;
@@ -10917,9 +10917,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/besselj.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/besselj.js
   var require_besselj = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/besselj.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/besselj.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.besselj = exports.Eval_besselj = void 0;
@@ -10979,9 +10979,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/bessely.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/bessely.js
   var require_bessely = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/bessely.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/bessely.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.bessely = exports.Eval_bessely = void 0;
@@ -11017,9 +11017,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/binomial.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/binomial.js
   var require_binomial = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/binomial.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/binomial.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_binomial = void 0;
@@ -11060,9 +11060,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/ceiling.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/ceiling.js
   var require_ceiling = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/ceiling.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/ceiling.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_ceiling = void 0;
@@ -11101,9 +11101,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/choose.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/choose.js
   var require_choose = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/choose.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/choose.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_choose = void 0;
@@ -11141,9 +11141,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/expcos.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/expcos.js
   var require_expcos = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/expcos.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/expcos.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.expcos = exports.Eval_expcos = void 0;
@@ -11166,9 +11166,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/expsin.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/expsin.js
   var require_expsin = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/expsin.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/expsin.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.expsin = exports.Eval_expsin = void 0;
@@ -11191,9 +11191,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/circexp.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/circexp.js
   var require_circexp = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/circexp.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/circexp.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_circexp = void 0;
@@ -11250,9 +11250,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/runtime/init.js
+  // bazel-out/darwin_arm64-fastbuild/bin/runtime/init.js
   var require_init = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/runtime/init.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/runtime/init.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.defn = exports.init = void 0;
@@ -11513,9 +11513,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/pattern.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/pattern.js
   var require_pattern = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/pattern.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/pattern.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_patternsinfo = exports.Eval_clearpatterns = exports.do_clearPatterns = exports.Eval_pattern = exports.Eval_silentpattern = void 0;
@@ -11598,9 +11598,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/clear.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/clear.js
   var require_clear = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/clear.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/clear.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_clear = exports.clearRenamedVariablesToAvoidBindingToExternalScope = exports.do_clearall = exports.Eval_clearall = void 0;
@@ -11658,9 +11658,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/contract.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/contract.js
   var require_contract = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/contract.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/contract.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_contract = void 0;
@@ -11754,9 +11754,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/cosh.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/cosh.js
   var require_cosh = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/cosh.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/cosh.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.ycosh = exports.Eval_cosh = void 0;
@@ -11791,9 +11791,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/define.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/define.js
   var require_define = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/define.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/define.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_function_reference = exports.define_user_function = void 0;
@@ -11825,9 +11825,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/dirac.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/dirac.js
   var require_dirac = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/dirac.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/dirac.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.dirac = exports.Eval_dirac = void 0;
@@ -11874,9 +11874,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/hermite.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/hermite.js
   var require_hermite = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/hermite.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/hermite.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.hermite = void 0;
@@ -11914,9 +11914,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/log.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/log.js
   var require_log = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/log.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/log.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.logarithm = exports.Eval_log = void 0;
@@ -11963,9 +11963,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/sgn.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/sgn.js
   var require_sgn = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/sgn.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/sgn.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.sgn = exports.Eval_sgn = void 0;
@@ -12014,9 +12014,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/sinh.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/sinh.js
   var require_sinh = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/sinh.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/sinh.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.ysinh = exports.Eval_sinh = void 0;
@@ -12051,9 +12051,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/derivative.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/derivative.js
   var require_derivative = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/derivative.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/derivative.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.derivative = exports.Eval_derivative = void 0;
@@ -12389,9 +12389,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/partition.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/partition.js
   var require_partition = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/partition.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/partition.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.partition = void 0;
@@ -12418,9 +12418,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/integral.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/integral.js
   var require_integral = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/integral.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/integral.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.make_hashed_itab = exports.integral = exports.Eval_integral = void 0;
@@ -13085,9 +13085,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/defint.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/defint.js
   var require_defint = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/defint.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/defint.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_defint = void 0;
@@ -13118,9 +13118,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/degree.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/degree.js
   var require_degree = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/degree.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/degree.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.degree = exports.Eval_degree = void 0;
@@ -13158,9 +13158,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/eigen.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/eigen.js
   var require_eigen = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/eigen.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/eigen.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_eigenvec = exports.Eval_eigenval = exports.Eval_eigen = void 0;
@@ -13343,9 +13343,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/erfc.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/erfc.js
   var require_erfc = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/erfc.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/erfc.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.erfc = exports.Eval_erfc = void 0;
@@ -13386,9 +13386,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/erf.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/erf.js
   var require_erf = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/erf.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/erf.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_erf = void 0;
@@ -13420,9 +13420,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/factors.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/factors.js
   var require_factors = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/factors.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/factors.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.factors = void 0;
@@ -13446,9 +13446,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/expand.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/expand.js
   var require_expand = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/expand.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/expand.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_expand = void 0;
@@ -13668,9 +13668,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/floor.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/floor.js
   var require_floor = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/floor.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/floor.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_floor = void 0;
@@ -13709,9 +13709,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/for.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/for.js
   var require_for = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/for.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/for.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_for = void 0;
@@ -13748,9 +13748,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/gamma.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/gamma.js
   var require_gamma = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/gamma.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/gamma.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_gamma = void 0;
@@ -13800,9 +13800,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/hilbert.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/hilbert.js
   var require_hilbert = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/hilbert.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/hilbert.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.hilbert = void 0;
@@ -13828,9 +13828,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/isprime.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/isprime.js
   var require_isprime = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/isprime.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/isprime.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_isprime = void 0;
@@ -13853,9 +13853,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/laguerre.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/laguerre.js
   var require_laguerre = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/laguerre.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/laguerre.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_laguerre = void 0;
@@ -13898,9 +13898,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/leading.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/leading.js
   var require_leading = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/leading.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/leading.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_leading = void 0;
@@ -13926,9 +13926,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/legendre.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/legendre.js
   var require_legendre = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/legendre.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/legendre.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_legendre = void 0;
@@ -14004,9 +14004,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/lookup.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/lookup.js
   var require_lookup = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/lookup.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/lookup.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_lookup = void 0;
@@ -14024,9 +14024,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/mod.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/mod.js
   var require_mod = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/mod.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/mod.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_mod = void 0;
@@ -14073,9 +14073,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/nroots.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/nroots.js
   var require_nroots = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/nroots.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/nroots.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_nroots = void 0;
@@ -14262,9 +14262,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/outer.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/outer.js
   var require_outer = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/outer.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/outer.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_outer = void 0;
@@ -14314,9 +14314,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/prime.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/prime.js
   var require_prime = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/prime.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/prime.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_prime = void 0;
@@ -14341,9 +14341,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/product.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/product.js
   var require_product = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/product.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/product.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_product = void 0;
@@ -14389,9 +14389,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/round.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/round.js
   var require_round = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/round.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/round.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_round = void 0;
@@ -14423,9 +14423,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/shape.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/shape.js
   var require_shape = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/shape.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/shape.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_shape = void 0;
@@ -14460,9 +14460,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/sum.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/sum.js
   var require_sum = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/sum.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/sum.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_sum = void 0;
@@ -14504,9 +14504,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/tan.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/tan.js
   var require_tan = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/tan.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/tan.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_tan = void 0;
@@ -14570,9 +14570,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/tanh.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/tanh.js
   var require_tanh = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/tanh.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/tanh.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_tanh = void 0;
@@ -14606,9 +14606,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/taylor.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/taylor.js
   var require_taylor = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/taylor.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/taylor.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_taylor = void 0;
@@ -14660,9 +14660,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/test.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/test.js
   var require_test = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/test.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/test.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_or = exports.Eval_and = exports.Eval_not = exports.Eval_testlt = exports.Eval_testle = exports.Eval_testgt = exports.Eval_testge = exports.Eval_testeq = exports.Eval_test = void 0;
@@ -14868,9 +14868,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/userfunc.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/userfunc.js
   var require_userfunc = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/userfunc.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/userfunc.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_user_function = void 0;
@@ -14996,9 +14996,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/zero.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/zero.js
   var require_zero = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/zero.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/zero.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_zero = void 0;
@@ -15037,9 +15037,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/eval.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/eval.js
   var require_eval = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/eval.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/eval.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.Eval_predicate = exports.Eval = exports.evaluate_integer = void 0;
@@ -15711,9 +15711,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/add.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/add.js
   var require_add = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/add.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/add.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.subtract = exports.add_all = exports.add = exports.Eval_add = void 0;
@@ -15921,9 +15921,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/tensor.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/tensor.js
   var require_tensor = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/tensor.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/tensor.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.copy_tensor = exports.power_tensor = exports.compare_tensors = exports.d_tensor_scalar = exports.d_scalar_tensor = exports.d_tensor_tensor = exports.is_square_matrix = exports.check_tensor_dimensions = exports.scalar_times_tensor = exports.tensor_times_scalar = exports.tensor_plus_tensor = exports.Eval_tensor = void 0;
@@ -16159,9 +16159,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/runtime/alloc.js
+  // bazel-out/darwin_arm64-fastbuild/bin/runtime/alloc.js
   var require_alloc = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/runtime/alloc.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/runtime/alloc.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.alloc_tensor = void 0;
@@ -16179,9 +16179,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/misc.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/misc.js
   var require_misc = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/misc.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/misc.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.sort = exports.sort_stack = exports.square = exports.exponential = exports.yyexpand = exports.length = exports.cmp_expr = exports.sign = exports.lessp = exports.equal = exports.zero_matrix = exports.new_string = void 0;
@@ -16319,9 +16319,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/runtime/find.js
+  // bazel-out/darwin_arm64-fastbuild/bin/runtime/find.js
   var require_find = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/runtime/find.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/runtime/find.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.findPossibleExponentialForm = exports.findPossibleClockForm = exports.Find = void 0;
@@ -16393,9 +16393,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/is.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/is.js
   var require_is = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/is.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/is.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.isnpi = exports.isquarterturn = exports.isimaginaryunit = exports.isfloating = exports.isMinusSqrtThreeOverTwo = exports.isSqrtThreeOverTwo = exports.isminusoneoversqrttwo = exports.isoneoversqrttwo = exports.isminusoneovertwo = exports.isoneovertwo = exports.equalq = exports.equaln = exports.isfraction = exports.isoneover = exports.isNumberOneOverSomething = exports.isintegerfactor = exports.issymbolic = exports.isnegative = exports.iseveninteger = exports.iscomplexnumber = exports.iscomplexnumberdouble = exports.isimaginarynumber = exports.isnegativeterm = exports.ispolyexpandedform = exports.isunivarpolyfactoredorexpandedform = exports.isposint = exports.isnonnegativeinteger = exports.isintegerorintegerfloat = exports.isinteger = exports.isone = exports.isminusone = exports.isplusone = exports.isplustwo = exports.ispositivenumber = exports.isnegativenumber = exports.isZeroLikeOrNonZeroLikeOrUndetermined = exports.isZeroAtomOrTensor = exports.isZeroAtom = void 0;
@@ -16869,9 +16869,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/runtime/otherCFunctions.js
+  // bazel-out/darwin_arm64-fastbuild/bin/runtime/otherCFunctions.js
   var require_otherCFunctions = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/runtime/otherCFunctions.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/runtime/otherCFunctions.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.yn = exports.jn = exports.append = exports.__range__ = exports.isalnumorunderscore = exports.isalpha = exports.isdigit = exports.isspace = exports.clear_term = exports.doubleToReasonableString = exports.strcmp = void 0;
@@ -16995,9 +16995,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/qadd.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/qadd.js
   var require_qadd = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/qadd.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/qadd.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.qadd = void 0;
@@ -17025,9 +17025,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/qdiv.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/qdiv.js
   var require_qdiv = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/qdiv.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/qdiv.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.qdiv = void 0;
@@ -17053,9 +17053,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/qmul.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/qmul.js
   var require_qmul = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/qmul.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/qmul.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.qmul = void 0;
@@ -17077,9 +17077,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/bignum.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/bignum.js
   var require_bignum = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/bignum.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/bignum.js"(exports) {
       "use strict";
       var __importDefault = exports && exports.__importDefault || function(mod) {
         return mod && mod.__esModule ? mod : { "default": mod };
@@ -17435,9 +17435,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/bake.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/bake.js
   var require_bake = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/sources/bake.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/sources/bake.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.polyform = exports.bake = void 0;
@@ -17525,9 +17525,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/runtime/run.js
+  // bazel-out/darwin_arm64-fastbuild/bin/runtime/run.js
   var require_run = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/runtime/run.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/runtime/run.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.computeResultsAndJavaScriptFromAlgebra = exports.computeDependenciesFromAlgebra = exports.check_esc_flag = exports.top_level_eval = exports.check_stack = exports.run = exports.findDependenciesInScript = exports.stop = void 0;
@@ -18168,9 +18168,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/runtime/stack.js
+  // bazel-out/darwin_arm64-fastbuild/bin/runtime/stack.js
   var require_stack = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/runtime/stack.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/runtime/stack.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.dupl = exports.swap = exports.restore = exports.save = exports.pop_n_items = exports.pop = exports.top = exports.moveTos = exports.push_all = exports.push = void 0;
@@ -18288,9 +18288,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/runtime/defs.js
+  // bazel-out/darwin_arm64-fastbuild/bin/runtime/defs.js
   var require_defs = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/runtime/defs.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/runtime/defs.js"(exports) {
       "use strict";
       var __importDefault = exports && exports.__importDefault || function(mod) {
         return mod && mod.__esModule ? mod : { "default": mod };
@@ -18969,9 +18969,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/runtime/zombocom.js
+  // bazel-out/darwin_arm64-fastbuild/bin/runtime/zombocom.js
   var require_zombocom = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/runtime/zombocom.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/runtime/zombocom.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.exec = exports.parse = void 0;
@@ -19041,9 +19041,9 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/index.js
+  // bazel-out/darwin_arm64-fastbuild/bin/index.js
   var require_bin = __commonJS({
-    "bazel-out/darwin-fastbuild/bin/index.js"(exports) {
+    "bazel-out/darwin_arm64-fastbuild/bin/index.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var defs_1 = require_defs();
@@ -19287,7 +19287,7 @@ FACTOR=${p8}`);
     }
   });
 
-  // bazel-out/darwin-fastbuild/bin/sources/browser_main.js
+  // bazel-out/darwin_arm64-fastbuild/bin/sources/browser_main.js
   var import__ = __toModule(require_bin());
   globalThis.Algebrite = import__.default;
 })();
