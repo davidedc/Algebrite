@@ -214,12 +214,12 @@ selftest = function() {
   test_sinh();
   test_cosh();
   test_tanh();
-  test_arcsin();
-  test_arcsinh();
-  test_arccos();
-  test_arccosh();
-  test_arctan();
-  test_arctanh();
+  // test_arcsin(); // merged into the .ts tests
+  // test_arcsinh(); // merged into the .ts tests
+  // test_arccos(); // merged into the .ts tests
+  // test_arccosh(); // merged into the .ts tests
+  // test_arctan(); // merged into the .ts tests
+  // test_arctanh(); // merged into the .ts tests
   test_index();
   test_isprime();
   test_eigen();
