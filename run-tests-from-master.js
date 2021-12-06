@@ -163,7 +163,7 @@ selftest = function() {
   test_tensor();
   test_bake();
   // test_adj(); // merged into the .ts tests
-  test_arg();
+  // test_arg(); // merged into the .ts tests
   // test_approxratio(); // merged into the .ts tests
   test_besselj();
   test_bessely();

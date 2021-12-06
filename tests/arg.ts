@@ -31,8 +31,7 @@ run_test([
 ]);
 
 // check when not assuming real variables ----------
-run_test(
-  [
+run_test([
     'assumeRealVariables = 0',
     '',
 
@@ -54,12 +53,13 @@ run_test(
     // but arg(1+i) - arg(-1-i) gives -pi instead
     // "arg(-a)",
     // "-pi+arg(a)",
-  ],
-  'assumeRealVariables = 0: '
-);
 
-run_test(
-  [
+    'assumeRealVariables = 1',
+    '',
+
+]);
+
+run_test([
     'assumeRealVariables = 1',
     '',
     // --------------------------------------------------
@@ -105,6 +105,4 @@ run_test(
 
     'arg((-1)^(1/6))',
     '1/6*pi',
-  ],
-  'assumeRealVariables = 1'
-);
+]);
