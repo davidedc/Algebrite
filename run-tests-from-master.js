@@ -134,7 +134,7 @@ test_low_level = function() {
   test_mpow();
   test_mroot();
   test_dependencies();
-  test_assignments();
+  // test_assignments(); // merged into the .ts tests
   test_strings();
   test_test();
   return test_check();
@@ -161,11 +161,11 @@ selftest = function() {
   test_power();
   test_factor_number();
   test_tensor();
-  test_bake();
+  // test_bake(); // merged into the .ts tests
   // test_adj(); // merged into the .ts tests
   // test_arg(); // merged into the .ts tests
   // test_approxratio(); // merged into the .ts tests
-  test_besselj();
+  // test_besselj(); // merged into the .ts tests
   test_bessely();
   test_ceiling();
   test_choose();
