@@ -117,7 +117,7 @@ test_low_level = function() {
   } else {
     console.log("exec text failed");
   }
-  test_clearall();
+  // test_clearall(); // merged into the .ts tests
   test_inv();
   test_printlatex();
   test_mixedprint();
@@ -137,7 +137,8 @@ test_low_level = function() {
   // test_assignments(); // merged into the .ts tests
   test_strings();
   test_test();
-  return test_check();
+  // test_check(); // merged into the .ts tests
+  return
 };
 
 // use the window.selftest version
@@ -166,13 +167,13 @@ selftest = function() {
   // test_arg(); // merged into the .ts tests
   // test_approxratio(); // merged into the .ts tests
   // test_besselj(); // merged into the .ts tests
-  test_bessely();
-  test_ceiling();
-  test_choose();
-  test_circexp();
-  test_clock();
-  test_cofactor();
-  test_condense();
+  // test_bessely(); // merged into the .ts tests
+  // test_ceiling(); // merged into the .ts tests
+  // test_choose(); // merged into the .ts tests
+  // test_circexp(); // merged into the .ts tests
+  // test_clock(); // merged into the .ts tests
+  // test_cofactor(); // merged into the .ts tests
+  // test_condense(); // merged into the .ts tests
   test_contract();
   test_defint();
   test_denominator();
@@ -205,9 +206,9 @@ selftest = function() {
   test_hermite();
   test_laguerre();
   test_legendre();
-  test_binomial();
+  //test_binomial(); // merged into the .ts tests
   test_divisors();
-  test_coeff();
+  // test_coeff(); // merged into the .ts tests
   test_sin();
   test_cos();
   test_tan();
