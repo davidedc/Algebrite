@@ -174,7 +174,7 @@ selftest = function() {
   // test_clock(); // merged into the .ts tests
   // test_cofactor(); // merged into the .ts tests
   // test_condense(); // merged into the .ts tests
-  test_contract();
+  // test_contract(); // merged into the .ts tests
   test_defint();
   test_denominator();
   test_derivative();
