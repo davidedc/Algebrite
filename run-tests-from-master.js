@@ -210,7 +210,7 @@ selftest = function() {
   test_divisors();
   // test_coeff(); // merged into the .ts tests
   test_sin();
-  test_cos();
+  // test_cos(); // merged into the .ts tests
   test_tan();
   test_sinh();
   test_cosh();
