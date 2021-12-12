@@ -175,7 +175,7 @@ selftest = function() {
   // test_cofactor(); // merged into the .ts tests
   // test_condense(); // merged into the .ts tests
   // test_contract(); // merged into the .ts tests
-  test_defint();
+  // test_defint(); // merged into the .ts tests
   test_denominator();
   test_derivative();
   test_dirac();
@@ -213,7 +213,7 @@ selftest = function() {
   // test_cos(); // merged into the .ts tests
   test_tan();
   test_sinh();
-  test_cosh();
+  // test_cosh(); // merged into the .ts tests
   test_tanh();
   // test_arcsin(); // merged into the .ts tests
   // test_arcsinh(); // merged into the .ts tests
