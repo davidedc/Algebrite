@@ -176,7 +176,7 @@ selftest = function() {
   // test_condense(); // merged into the .ts tests
   // test_contract(); // merged into the .ts tests
   // test_defint(); // merged into the .ts tests
-  test_denominator();
+  // test_denominator(); // merged into the .ts tests
   test_derivative();
   test_dirac();
   test_erf();
