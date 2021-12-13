@@ -1,59 +1,8 @@
 test_dependencies = ->
-  do_clearall()
-
-  testResult = findDependenciesInScript('1')
-  if testResult[0] == "All local dependencies: . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively: " and
-    testResult[1] == "1" and
-    testResult[2] == ""
-      console.log "ok dependency test"
-  else
-      console.log "fail dependency test 1 expected: " + testResult
 
   do_clearall()
 
-  # check that floats in code are expressed with maximum precision -------------------
-  testResult = findDependenciesInScript('a = float(1/3)')
-  if testResult[0] == "All local dependencies:  variable a depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: ; " and
-    testResult[1] == "" and
-    testResult[2] == "a = 0.3333333333333333;"
-      console.log "ok dependency test"
-  else
-      console.log "fail dependency test 2 expected: " + testResult
-
-  do_clearall()
-
-  testResult = findDependenciesInScript('a = float(10^50)')
-  if testResult[0] == "All local dependencies:  variable a depends on: ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable a depends on: ; " and
-    testResult[1] == "" and
-    testResult[2] == "a = 1e+50;"
-      console.log "ok dependency test"
-  else
-      console.log "fail dependency test 3 expected: " + testResult
-
-  do_clearall()
-
-  testResult = findDependenciesInScript('f = x+1\n g = f\n h = g\n f = g')
-  if testResult[0] == "All local dependencies:  variable f depends on: x, g, ;  variable g depends on: f, ;  variable h depends on: g, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: x, ;  f --> g -->  ... then f again,  variable g depends on: x, ;  g --> f -->  ... then g again,  variable h depends on: x, ;  h --> g --> f -->  ... then g again, " and
-    testResult[1] == "" and
-    testResult[2] == "// f is part of a cyclic dependency, no code generated.\n// g is part of a cyclic dependency, no code generated.\n// h is part of a cyclic dependency, no code generated."
-  else
-      console.log "fail dependency test 4 expected: " + testResult
-
-  do_clearall()
-
-  if findDependenciesInScript('f = x+1\n g = f + y\n h = g')[0] == "All local dependencies:  variable f depends on: x, ;  variable g depends on: f, y, ;  variable h depends on: g, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: x, ;  variable g depends on: x, y, ;  variable h depends on: x, y, ; "
-    console.log "ok dependency test"
-  else
-    console.log "fail dependency test 5"
-
-  do_clearall()
-
-  if findDependenciesInScript('g = h(x,y)')[0] == "All local dependencies:  variable g depends on: h, x, y, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable g depends on: h, x, y, ; "
-    console.log "ok dependency test"
-  else
-    console.log "fail dependency test 6"
-
-  do_clearall()
+  # test n here maps to test n-1 in the .ts
 
   if findDependenciesInScript('f(x,y) = k')[0] == "All local dependencies:  variable f depends on: 'x, 'y, k, ; . Symbols with reassignments: . Symbols in expressions without assignments: . All dependencies recursively:  variable f depends on: 'x, 'y, k, ; "
     console.log "ok dependency test"
