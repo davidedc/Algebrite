@@ -602,19 +602,29 @@ test('40', t => {
   );
   t.is(3, testResult.affectsVariables.length);
   t.is(3, testResult.affectedBy.length);
+  t.is(true, testResult.affectsVariables.includes("c"));
+  t.is(true, testResult.affectsVariables.includes("a"));
+  t.is(true, testResult.affectsVariables.includes("PATTERN_DEPENDENCY"));
+  t.is(true, testResult.affectedBy.includes("d"));
+  t.is(true, testResult.affectedBy.includes("a"));
+  t.is(true, testResult.affectedBy.includes("PATTERN_DEPENDENCY"));
 });
 
 test('41', t => {
   const testResult = computeDependenciesFromAlgebra('PCA(M) = eig(Mᵀ⋅M)');
   t.is(1, testResult.affectsVariables.length);
-  t.is(-1, testResult.affectsVariables.indexOf('PATTERN_DEPENDENCY'));
   t.is(1, testResult.affectedBy.length);
+  t.is(true, testResult.affectsVariables.includes("PCA"));
+  t.is(false, testResult.affectsVariables.includes("PATTERN_DEPENDENCY"));
+  t.is(true, testResult.affectedBy.includes("PATTERN_DEPENDENCY"));
 });
 
 test('42', t => {
   const testResult = computeDependenciesFromAlgebra('pattern(a_ᵀ⋅a_, cov(a_))');
   t.is(1, testResult.affectsVariables.length);
   t.is(1, testResult.affectedBy.length);
+  t.is(true, testResult.affectsVariables.includes("PATTERN_DEPENDENCY"));
+  t.is(true, testResult.affectedBy.includes("PATTERN_DEPENDENCY"));
 });
 
 test('43', t => {
@@ -648,6 +658,7 @@ test('44', t => {
 test('45', t => {
   computeResultsAndJavaScriptFromAlgebra('PCA(M) = eig(Mᵀ⋅M)');
   const testResult = run('symbolsinfo');
+  t.is(false, testResult.includes('AVOID_BINDING_TO_EXTERNAL_SCOPE_VALUE'));
 });
 
 test('46', t => {
@@ -736,6 +747,7 @@ test('51', t => {
   // b we have an arbitrary non-trivial function
   // on b, maybe even symbolic e.g. the round
   // of the root of by = 6, i.e. round(root(by-6,y))
+  // TODO wouldn't (a)[b] work just as well?
   const testResult = computeResultsAndJavaScriptFromAlgebra('x = a[b]');
 
   t.is('x = function (a, b) { return ( a[b] ); }', testResult.code);
@@ -751,7 +763,7 @@ test('51', t => {
 
 test('52', t => {
   const testResult = computeResultsAndJavaScriptFromAlgebra('x = a ⋅ b');
-
+  // TODO is it really needed to wrap it in a function like this?
   t.is('x = function (a, b) { return ( dot(a, b) ); }', testResult.code);
   t.is('$$x(a, b) = a \\cdot b$$', testResult.latexResult);
   t.is('$$x(a, b) = a \\cdot b$$', testResult.result);

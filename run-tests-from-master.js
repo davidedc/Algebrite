@@ -133,7 +133,7 @@ test_low_level = function() {
   test_mgcd();
   test_mpow();
   test_mroot();
-  test_dependencies();
+  // test_dependencies(); // merged into the .ts tests
   // test_assignments(); // merged into the .ts tests
   test_strings();
   test_test();
