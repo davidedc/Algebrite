@@ -206,8 +206,8 @@ selftest = function() {
   test_hermite();
   test_laguerre();
   test_legendre();
-  //test_binomial(); // merged into the .ts tests
-  test_divisors();
+  // test_binomial(); // merged into the .ts tests
+  // test_divisors(); // merged into the .ts tests
   // test_coeff(); // merged into the .ts tests
   test_sin();
   // test_cos(); // merged into the .ts tests
