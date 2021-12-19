@@ -223,7 +223,7 @@ selftest = function() {
   // test_arctanh(); // merged into the .ts tests
   test_index();
   test_isprime();
-  test_eigen();
+  // test_eigen(); // merged into the .ts tests
   test_shape();
   mini_test();
   test_quickfactor();
