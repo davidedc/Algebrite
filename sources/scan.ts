@@ -31,7 +31,7 @@ import {
   TESTLE,
   TESTLT,
   TRANSPOSE,
-  transpose_unicode,
+  transpose_unicode, U,
 } from '../runtime/defs';
 import {
   isalnumorunderscore,
@@ -942,16 +942,16 @@ function scan_tensor() {
 
   //console.log "scanning the next statement"
   scan_stmt();
+  const elements = [pop()];
 
-  let n = 1;
   while (token === ',') {
     get_next_token();
     scan_stmt();
-    n++;
+    elements.push(pop());
   }
 
   //console.log "building tensor with elements number: " + n
-  build_tensor(n);
+  push(build_tensor(elements));
 
   if (token !== ']') {
     scan_error('] expected');
@@ -996,19 +996,16 @@ function scan_error(errmsg: string) {
 // (a,b) and (c,d) would be on the stack.
 
 // takes an integer
-function build_tensor(n: number) {
-  const p2 = alloc_tensor(n);
+function build_tensor(elements:U[]) {
+  const p2 = alloc_tensor(elements.length);
   p2.tensor.ndim = 1;
-  p2.tensor.dim[0] = n;
-  for (let i = 0; i < n; i++) {
-    p2.tensor.elem[i] = defs.stack[defs.tos - n + i];
+  p2.tensor.dim[0] = elements.length;
+  for (let i = 0; i < elements.length; i++) {
+    p2.tensor.elem[i] = elements[i];
   }
 
   check_tensor_dimensions(p2);
-
-  moveTos(defs.tos - n);
-
-  push(p2);
+  return p2;
 }
 
 function get_next_token() {
