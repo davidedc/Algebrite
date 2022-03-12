@@ -18,7 +18,6 @@ import {
   istranspose,
   MAXDIM,
   NIL,
-  symbol,
   TRANSPOSE,
   U,
   SYMBOL_IDENTITY_MATRIX,
@@ -33,6 +32,7 @@ import { inner } from './inner';
 import { isplusone, isplustwo, isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
 import { multiply } from './multiply';
+import {symbol} from "../runtime/symbol";
 
 // Transpose tensor indices
 export function Eval_transpose(p1: U) {

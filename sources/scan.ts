@@ -24,7 +24,6 @@ import {
   predefinedSymbolsInGlobalScope_doNotTrackInDependencies,
   QUOTE,
   SETQ,
-  symbol,
   TESTEQ,
   TESTGE,
   TESTGT,
@@ -41,7 +40,7 @@ import {
 } from '../runtime/otherCFunctions';
 import { stop } from '../runtime/run';
 import { moveTos, pop, push, swap, top } from '../runtime/stack';
-import { push_symbol, usr_symbol } from '../runtime/symbol';
+import {push_symbol, symbol, usr_symbol} from '../runtime/symbol';
 import { new_string } from '../sources/misc';
 import { bignum_scan_float, bignum_scan_integer } from './bignum';
 import { equaln } from './is';

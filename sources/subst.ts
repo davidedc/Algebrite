@@ -5,12 +5,12 @@ import {
   iscons,
   istensor,
   NIL,
-  symbol,
   U,
   Cons,
 } from '../runtime/defs';
 import { equal } from '../sources/misc';
 import { check_tensor_dimensions } from './tensor';
+import {symbol} from "../runtime/symbol";
 
 /*
   Substitute new expr for old expr in expr.

@@ -12,7 +12,6 @@ import {
   MULTIPLY,
   PI,
   POWER,
-  symbol,
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
@@ -21,6 +20,7 @@ import { bignum_float, double } from './bignum';
 import { Eval } from './eval';
 import { makeList } from './list';
 import { copy_tensor } from './tensor';
+import {symbol} from "../runtime/symbol";
 
 export function Eval_float(p1: U) {
   evalFloats(() => {

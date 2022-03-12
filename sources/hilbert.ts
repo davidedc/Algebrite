@@ -1,8 +1,9 @@
-import { HILBERT, symbol, U } from '../runtime/defs';
+import { HILBERT, U } from '../runtime/defs';
 import { zero_matrix } from '../sources/misc';
 import { integer, nativeInt } from './bignum';
 import { makeList } from './list';
 import { inverse } from './multiply';
+import {symbol} from "../runtime/symbol";
 
 //-----------------------------------------------------------------------------
 //

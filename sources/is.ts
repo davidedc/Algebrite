@@ -27,7 +27,6 @@ import {
   NUM,
   Num,
   PI,
-  symbol,
   SYMBOL_X,
   SYMBOL_Y,
   SYMBOL_Z,
@@ -42,6 +41,7 @@ import { Eval_predicate } from './eval';
 import { zzfloat } from './float';
 import { guess } from './guess';
 import { multiply } from './multiply';
+import {symbol} from "../runtime/symbol";
 
 const DEBUG_IS = false;
 

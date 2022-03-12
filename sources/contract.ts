@@ -7,7 +7,6 @@ import {
   Constants,
   istensor,
   NIL,
-  symbol,
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
@@ -16,6 +15,7 @@ import { add } from './add';
 import { integer, nativeInt } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
+import {symbol} from "../runtime/symbol";
 
 /* contract =====================================================================
 

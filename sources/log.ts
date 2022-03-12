@@ -7,7 +7,6 @@ import {
   ismultiply,
   ispower,
   LOG,
-  symbol,
   U,
 } from '../runtime/defs';
 import { push } from '../runtime/stack';
@@ -19,6 +18,7 @@ import { equaln, isfraction, isnegativenumber } from './is';
 import { makeList } from './list';
 import { multiply, negate } from './multiply';
 import { numerator } from './numerator';
+import {symbol} from "../runtime/symbol";
 
 // Natural logarithm.
 //

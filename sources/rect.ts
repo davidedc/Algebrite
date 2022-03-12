@@ -7,7 +7,6 @@ import {
   ismultiply,
   issymbol,
   SIN,
-  symbol,
   U,
   YYRECT,
 } from '../runtime/defs';
@@ -17,7 +16,7 @@ import {
   findPossibleExponentialForm,
 } from '../runtime/find';
 import { pop, push } from '../runtime/stack';
-import { get_binding } from '../runtime/symbol';
+import {get_binding, symbol} from '../runtime/symbol';
 import { abs } from './abs';
 import { add } from './add';
 import { arg } from './arg';

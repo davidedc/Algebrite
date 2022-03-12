@@ -13,11 +13,10 @@ import {
   ispower,
   issymbol,
   PI,
-  symbol,
   U,
 } from '../runtime/defs';
 import { push } from '../runtime/stack';
-import { get_binding } from '../runtime/symbol';
+import {get_binding, symbol} from '../runtime/symbol';
 import { add, subtract } from './add';
 import { arctan } from './arctan';
 import { denominator } from './denominator';

@@ -7,7 +7,6 @@ import {
   iscons,
   SIN,
   SINH,
-  symbol,
   TAN,
   TANH,
   TENSOR,
@@ -22,6 +21,7 @@ import { expcos } from './expcos';
 import { expsin } from './expsin';
 import { divide, multiply, negate } from './multiply';
 import { copy_tensor } from './tensor';
+import {symbol} from "../runtime/symbol";
 
 /* circexp =====================================================================
 

@@ -18,13 +18,12 @@ import {
   POWER,
   SQRT,
   Sym,
-  symbol,
   U,
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
 import { stop } from '../runtime/run';
 import { pop, push } from '../runtime/stack';
-import { symnum } from '../runtime/symbol';
+import {get_printname, symbol} from '../runtime/symbol';
 import { equal } from '../sources/misc';
 import { add } from './add';
 import { push_double, nativeInt } from './bignum';
@@ -542,21 +541,21 @@ function integral_of_form(F: U, X: U): U {
 // The first two values are from the ITALU paper.
 // The others are just arbitrary constants.
 const hashcode_values = {
-  x: 0.95532,
-  constexp: 1.43762,
-  constant: 1.14416593629414332,
-  constbase: 1.20364122304218824,
-  sin: 1.73305482518303221,
-  arcsin: 1.6483368529465804,
-  cos: 1.058672123686340116,
-  arccos: 1.8405225918106694,
-  tan: 1.12249437762925064,
-  arctan: 1.1297397925394962,
-  sinh: 1.8176164926060078,
-  cosh: 1.9404934661708022,
-  tanh: 1.6421307715103121,
-  log: 1.47744370135492387,
-  erf: 1.0825269225702916,
+  'x': 0.95532,
+  'constexp': 1.43762,
+  'constant': 1.14416593629414332,
+  'constbase': 1.20364122304218824,
+  'sin': 1.73305482518303221,
+  'arcsin': 1.6483368529465804,
+  'cos': 1.058672123686340116,
+  'arccos': 1.8405225918106694,
+  'tan': 1.12249437762925064,
+  'arctan': 1.1297397925394962,
+  'sinh': 1.8176164926060078,
+  'cosh': 1.9404934661708022,
+  'tanh': 1.6421307715103121,
+  'log': 1.47744370135492387,
+  'erf': 1.0825269225702916,
 };
 
 function italu_hashcode(u: U, x: U): number {
@@ -567,7 +566,8 @@ function italu_hashcode(u: U, x: U): number {
       return hashcode_values.constant;
     }
   } else if (iscons(u)) {
-    switch (symnum(car(u))) {
+    const sym = car(u);
+    switch (issymbol(sym) && sym.printname) {
       case ADD:
         return hash_addition(cdr(u), x);
       case MULTIPLY:
@@ -629,9 +629,9 @@ function hash_multiplication(terms: U, x: U): number {
   let product = 1;
   if (iscons(terms)) {
     [...terms].forEach((term) => {
-      if (Find(term, x)) {
-        product = product * italu_hashcode(term, x);
-      }
+    if (Find(term, x)) {
+      product = product * italu_hashcode(term, x);
+    }
     });
   }
   return product;

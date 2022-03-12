@@ -10,7 +10,6 @@ import {
   NIL,
   SECRETX,
   SIN,
-  symbol,
   U,
 } from '../runtime/defs';
 import { push } from '../runtime/stack';
@@ -25,6 +24,7 @@ import { divide, multiply, negate } from './multiply';
 import { power } from './power';
 import { sine } from './sin';
 import { subst } from './subst';
+import {symbol} from "../runtime/symbol";
 
 /*
  Legendre function

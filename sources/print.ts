@@ -76,7 +76,6 @@ import {
   SUM,
   Sym,
   SYM,
-  symbol,
   TAN,
   Tensor,
   TEST,
@@ -89,7 +88,7 @@ import {
   UNIT,
 } from '../runtime/defs';
 import { pop, push } from '../runtime/stack';
-import { get_binding, get_printname, set_binding } from '../runtime/symbol';
+import {get_binding, get_printname, set_binding, symbol} from '../runtime/symbol';
 import { lessp } from '../sources/misc';
 import { absval } from './abs';
 import { mp_denominator, mp_numerator, print_number } from './bignum';
@@ -210,7 +209,7 @@ function _print(p: U, passedPrintMode: string): string {
   return accumulator;
 }
 
-function rememberPrint(theString: string, theTypeOfPrint: number) {
+function rememberPrint(theString: string, theTypeOfPrint: string) {
   scan('"' + theString + '"');
   const parsedString = pop();
   set_binding(symbol(theTypeOfPrint), parsedString);

@@ -11,7 +11,6 @@ import {
   PI,
   POWER,
   SIN,
-  symbol,
   U,
 } from '../runtime/defs';
 import { push } from '../runtime/stack';
@@ -27,6 +26,7 @@ import {
 } from './is';
 import { makeList } from './list';
 import { multiply } from './multiply';
+import {symbol} from "../runtime/symbol";
 
 /* arcsin =====================================================================
 

@@ -12,7 +12,6 @@ import {
   ispower,
   isrational,
   MULTIPLY,
-  symbol,
   U,
 } from '../runtime/defs';
 import { push } from '../runtime/stack';
@@ -23,9 +22,9 @@ import { Eval } from './eval';
 import { isnegativenumber, isunivarpolyfactoredorexpandedform } from './is';
 import { divide, multiply } from './multiply';
 import { power } from './power';
-import { factorpoly } from "./factorpoly";
-import { makeList } from "./list";
-
+import {symbol} from "../runtime/symbol";
+import { factorpoly } from './factorpoly';
+import { makeList } from './list';
 
 // Greatest common denominator
 // can also be run on polynomials, however

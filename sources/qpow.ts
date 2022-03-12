@@ -1,5 +1,5 @@
 import bigInt from 'big-integer';
-import { Constants, Num, POWER, symbol, U } from '../runtime/defs';
+import { Constants, Num, POWER, U } from '../runtime/defs';
 import { stop } from '../runtime/run';
 import { add, subtract } from './add';
 import {
@@ -25,6 +25,7 @@ import { mpow } from './mpow';
 import { mroot } from './mroot';
 import { multiply, negate } from './multiply';
 import { quickfactor } from './quickfactor';
+import {symbol} from "../runtime/symbol";
 
 // Rational power function
 export function qpow(base: Num, expo: Num): U {

@@ -1,4 +1,4 @@
-import { car, cdr, Constants, NIL, symbol, TAYLOR, U } from '../runtime/defs';
+import { car, cdr, Constants, NIL, TAYLOR, U } from '../runtime/defs';
 import { pop, push, top } from '../runtime/stack';
 import { add, subtract } from './add';
 import { integer, nativeInt } from './bignum';
@@ -10,6 +10,7 @@ import { isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
 import { divide, multiply } from './multiply';
 import { subst } from './subst';
+import {symbol} from "../runtime/symbol";
 
 /*
 Taylor expansion of a function

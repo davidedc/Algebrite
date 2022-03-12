@@ -1,10 +1,7 @@
 import bigInt from 'big-integer';
-import { moveTos } from './stack';
-import {
-  collectLatexStringFromReturnValue,
-  print_expr,
-} from '../sources/print';
-import { symnum } from './symbol';
+import {moveTos} from './stack';
+import {collectLatexStringFromReturnValue, print_expr,} from '../sources/print';
+import {symbol} from './symbol';
 
 export function breakpoint() {}
 
@@ -216,6 +213,8 @@ export class Sym extends BaseAtom {
   constructor(public printname: string) {
     super();
   }
+
+  public keyword:(p1:Cons)=>void;
 }
 
 export type U = Cons | Num | Double | Str | Tensor | Sym;
@@ -233,201 +232,199 @@ export const SYM = 5;
 // standard functions first, then nil, then everything else
 
 let counter = 0;
-export const ABS = counter++;
-export const ADD = counter++;
-export const ADJ = counter++;
-export const AND = counter++;
-export const APPROXRATIO = counter++;
-export const ARCCOS = counter++;
-export const ARCCOSH = counter++;
-export const ARCSIN = counter++;
-export const ARCSINH = counter++;
-export const ARCTAN = counter++;
-export const ARCTANH = counter++;
-export const ARG = counter++;
-export const ATOMIZE = counter++;
-export const BESSELJ = counter++;
-export const BESSELY = counter++;
-export const BINDING = counter++;
-export const BINOMIAL = counter++;
-export const CEILING = counter++;
-export const CHECK = counter++;
-export const CHOOSE = counter++;
-export const CIRCEXP = counter++;
-export const CLEAR = counter++;
-export const CLEARALL = counter++;
-export const CLEARPATTERNS = counter++;
-export const CLOCK = counter++;
-export const COEFF = counter++;
-export const COFACTOR = counter++;
-export const CONDENSE = counter++;
-export const CONJ = counter++;
-export const CONTRACT = counter++;
-export const COS = counter++;
-export const COSH = counter++;
-export const DECOMP = counter++;
-export const DEFINT = counter++;
-export const DEGREE = counter++;
-export const DENOMINATOR = counter++;
-export const DERIVATIVE = counter++;
-export const DET = counter++;
-export const DIM = counter++;
-export const DIRAC = counter++;
-export const DIVISORS = counter++;
-export const DO = counter++;
-export const DOT = counter++;
-export const DRAW = counter++;
-export const DSOLVE = counter++;
-export const EIGEN = counter++;
-export const EIGENVAL = counter++;
-export const EIGENVEC = counter++;
-export const ERF = counter++;
-export const ERFC = counter++;
-export const EVAL = counter++;
-export const EXP = counter++;
-export const EXPAND = counter++;
-export const EXPCOS = counter++;
-export const EXPSIN = counter++;
-export const FACTOR = counter++;
-export const FACTORIAL = counter++;
-export const FACTORPOLY = counter++;
-export const FILTER = counter++;
-export const FLOATF = counter++;
-export const FLOOR = counter++;
-export const FOR = counter++;
-export const FUNCTION = counter++;
-export const GAMMA = counter++;
-export const GCD = counter++;
-export const HERMITE = counter++;
-export const HILBERT = counter++;
-export const IMAG = counter++;
-export const INDEX = counter++;
-export const INNER = counter++;
-export const INTEGRAL = counter++;
-export const INV = counter++;
-export const INVG = counter++;
-export const ISINTEGER = counter++;
-export const ISPRIME = counter++;
-export const LAGUERRE = counter++;
-//  LAPLACE = counter++
-export const LCM = counter++;
-export const LEADING = counter++;
-export const LEGENDRE = counter++;
-export const LOG = counter++;
-export const LOOKUP = counter++;
-export const MOD = counter++;
-export const MULTIPLY = counter++;
-export const NOT = counter++;
-export const NROOTS = counter++;
-export const NUMBER = counter++;
-export const NUMERATOR = counter++;
-export const OPERATOR = counter++;
-export const OR = counter++;
-export const OUTER = counter++;
-export const PATTERN = counter++;
-export const PATTERNSINFO = counter++;
-export const POLAR = counter++;
-export const POWER = counter++;
-export const PRIME = counter++;
-export const PRINT_LEAVE_E_ALONE = counter++;
-export const PRINT_LEAVE_X_ALONE = counter++;
-export const PRINT = counter++;
-export const PRINT2DASCII = counter++;
-export const PRINTFULL = counter++;
-export const PRINTLATEX = counter++;
-export const PRINTLIST = counter++;
-export const PRINTPLAIN = counter++;
-export const PRODUCT = counter++;
-export const QUOTE = counter++;
-export const QUOTIENT = counter++;
-export const RANK = counter++;
-export const RATIONALIZE = counter++;
-export const REAL = counter++;
-export const ROUND = counter++;
-export const YYRECT = counter++;
-export const ROOTS = counter++;
-export const SETQ = counter++;
-export const SGN = counter++;
-export const SILENTPATTERN = counter++;
-export const SIMPLIFY = counter++;
-export const SIN = counter++;
-export const SINH = counter++;
-export const SHAPE = counter++;
-export const SQRT = counter++;
-export const STOP = counter++;
-export const SUBST = counter++;
-export const SUM = counter++;
-export const SYMBOLSINFO = counter++;
-export const TAN = counter++;
-export const TANH = counter++;
-export const TAYLOR = counter++;
-export const TEST = counter++;
-export const TESTEQ = counter++;
-export const TESTGE = counter++;
-export const TESTGT = counter++;
-export const TESTLE = counter++;
-export const TESTLT = counter++;
-export const TRANSPOSE = counter++;
-export const UNIT = counter++;
-export const ZERO = counter++;
+export const ABS = 'abs';
+export const ADD = 'add';
+export const ADJ = 'adj';
+export const AND = 'and';
+export const APPROXRATIO = 'approxratio';
+export const ARCCOS = 'arccos';
+export const ARCCOSH = 'arccosh';
+export const ARCSIN = 'arcsin';
+export const ARCSINH = 'arcsinh';
+export const ARCTAN = 'arctan';
+export const ARCTANH = 'arctanh';
+export const ARG = 'arg';
+export const ATOMIZE = 'atomize';
+export const BESSELJ = 'besselj';
+export const BESSELY = 'bessely';
+export const BINDING = 'binding';
+export const BINOMIAL = 'binomial';
+export const CEILING = 'ceiling';
+export const CHECK = 'check';
+export const CHOOSE = 'choose';
+export const CIRCEXP = 'circexp';
+export const CLEAR = 'clear';
+export const CLEARALL = 'clearall';
+export const CLEARPATTERNS = 'clearpatterns';
+export const CLOCK = 'clock';
+export const COEFF = 'coeff';
+export const COFACTOR = 'cofactor';
+export const CONDENSE = 'condense';
+export const CONJ = 'conj';
+export const CONTRACT = 'contract';
+export const COS = 'cos';
+export const COSH = 'cosh';
+export const DECOMP = 'decomp';
+export const DEFINT = 'defint';
+export const DEGREE = 'deg';
+export const DENOMINATOR = 'denominator';
+export const DERIVATIVE = 'derivative';
+export const DET = 'det';
+export const DIM = 'dim';
+export const DIRAC = 'dirac';
+export const DIVISORS = 'divisors';
+export const DO = 'do';
+export const DOT = 'dot';
+export const DRAW = 'draw';
+export const DSOLVE = 'dsolve';
+export const EIGEN = 'eigen';
+export const EIGENVAL = 'eigenval';
+export const EIGENVEC = 'eigenvec';
+export const ERF = 'erf';
+export const ERFC = 'erfc';
+export const EVAL = 'eval';
+export const EXP = 'exp';
+export const EXPAND = 'expand';
+export const EXPCOS = 'expcos';
+export const EXPSIN = 'expsin';
+export const FACTOR = 'factor';
+export const FACTORIAL = 'factorial';
+export const FACTORPOLY = 'factorpoly';
+export const FILTER = 'filter';
+export const FLOATF = 'float';
+export const FLOOR = 'floor';
+export const FOR = 'for';
+export const FUNCTION = 'function';
+export const GAMMA = 'Gamma';
+export const GCD = 'gcd';
+export const HERMITE = 'hermite';
+export const HILBERT = 'hilbert';
+export const IMAG = 'imag';
+export const INDEX = 'component';
+export const INNER = 'inner';
+export const INTEGRAL = 'integral';
+export const INV = 'inv';
+export const INVG = 'invg';
+export const ISINTEGER = 'isinteger';
+export const ISPRIME = 'isprime';
+export const LAGUERRE = 'laguerre';
+//  LAPLACE = 
+export const LCM = 'lcm';
+export const LEADING = 'leading';
+export const LEGENDRE = 'legendre';
+export const LOG = 'log';
+export const LOOKUP = 'lookup';
+export const MOD = 'mod';
+export const MULTIPLY = 'multiply';
+export const NOT = 'not';
+export const NROOTS = 'nroots';
+export const NUMBER = 'number';
+export const NUMERATOR = 'numerator';
+export const OPERATOR = 'operator';
+export const OR = 'or';
+export const OUTER = 'outer';
+export const PATTERN = 'pattern';
+export const PATTERNSINFO = 'patternsinfo';
+export const POLAR = 'polar';
+export const POWER = 'power';
+export const PRIME = 'prime';
+export const PRINT_LEAVE_E_ALONE = 'printLeaveEAlone';
+export const PRINT_LEAVE_X_ALONE = 'printLeaveXAlone';
+export const PRINT = 'print';
+export const PRINT2DASCII = 'print2dascii';
+export const PRINTFULL = 'printcomputer';
+export const PRINTLATEX = 'printlatex';
+export const PRINTLIST = 'printlist';
+export const PRINTPLAIN = 'printhuman';
+export const PRODUCT = 'product';
+export const QUOTE = 'quote';
+export const QUOTIENT = 'quotient';
+export const RANK = 'rank';
+export const RATIONALIZE = 'rationalize';
+export const REAL = 'real';
+export const ROUND = 'round';
+export const YYRECT = 'rect';
+export const ROOTS = 'roots';
+export const SETQ = 'equals';
+export const SGN = 'sgn';
+export const SILENTPATTERN = 'silentpattern';
+export const SIMPLIFY = 'simplify';
+export const SIN = 'sin';
+export const SINH = 'sinh';
+export const SHAPE = 'shape';
+export const SQRT = 'sqrt';
+export const STOP = 'stop';
+export const SUBST = 'subst';
+export const SUM = 'sum';
+export const SYMBOLSINFO = 'symbolsinfo';
+export const TAN = 'tan';
+export const TANH = 'tanh';
+export const TAYLOR = 'taylor';
+export const TEST = 'test';
+export const TESTEQ = 'testeq';
+export const TESTGE = 'testge';
+export const TESTGT = 'testgt';
+export const TESTLE = 'testle';
+export const TESTLT = 'testlt';
+export const TRANSPOSE = 'transpose';
+export const UNIT = 'unit';
+export const ZERO = 'zero';
 
 // ALL THE SYMBOLS ABOVE NIL ARE KEYWORDS,
 // WHICH MEANS THAT USER CANNOT REDEFINE THEM
-export const NIL = counter++; // nil goes here, after standard functions
-export const LAST = counter++;
+export const NIL = 'nil'; // nil goes here, after standard functions
+export const LAST = 'last';
 
-export const LAST_PRINT = counter++;
-export const LAST_2DASCII_PRINT = counter++;
-export const LAST_FULL_PRINT = counter++;
-export const LAST_LATEX_PRINT = counter++;
-export const LAST_LIST_PRINT = counter++;
-export const LAST_PLAIN_PRINT = counter++;
+export const LAST_PRINT = 'lastprint';
+export const LAST_2DASCII_PRINT = 'last2dasciiprint';
+export const LAST_FULL_PRINT = 'lastfullprint';
+export const LAST_LATEX_PRINT = 'lastlatexprint';
+export const LAST_LIST_PRINT = 'lastlistprint';
+export const LAST_PLAIN_PRINT = 'lastplainprint';
 
-export const AUTOEXPAND = counter++;
-export const BAKE = counter++;
-export const ASSUME_REAL_VARIABLES = counter++;
-export const TRACE = counter++;
-export const FORCE_FIXED_PRINTOUT = counter++;
-export const MAX_FIXED_PRINTOUT_DIGITS = counter++;
+export const AUTOEXPAND = 'autoexpand';
+export const BAKE = 'bake';
+export const ASSUME_REAL_VARIABLES = 'assumeRealVariables';
+export const TRACE = 'trace';
+export const FORCE_FIXED_PRINTOUT = 'forceFixedPrintout';
+export const MAX_FIXED_PRINTOUT_DIGITS = 'maxFixedPrintoutDigits';
 
-export const YYE = counter++;
+export const YYE = '~'; // tilde so sort puts it after other symbols
 
-export const DRAWX = counter++; // special purpose internal symbols
-export const METAA = counter++;
-export const METAB = counter++;
-export const METAX = counter++;
-export const SECRETX = counter++;
+export const DRAWX = '$DRAWX'; // special purpose internal symbols
+export const METAA = '$METAA';
+export const METAB = '$METAB';
+export const METAX = '$METAX';
+export const SECRETX = '$SECRETX';
 
-export const VERSION = counter++;
+export const VERSION = 'version';
 
-export const PI = counter++;
-export const SYMBOL_A = counter++;
-export const SYMBOL_B = counter++;
-export const SYMBOL_C = counter++;
-export const SYMBOL_D = counter++;
-export const SYMBOL_I = counter++;
-export const SYMBOL_J = counter++;
-export const SYMBOL_N = counter++;
-export const SYMBOL_R = counter++;
-export const SYMBOL_S = counter++;
-export const SYMBOL_T = counter++;
-export const SYMBOL_X = counter++;
-export const SYMBOL_Y = counter++;
-export const SYMBOL_Z = counter++;
-export const SYMBOL_IDENTITY_MATRIX = counter++;
+export const PI = 'pi';
+export const SYMBOL_A = 'a';
+export const SYMBOL_B = 'b';
+export const SYMBOL_C = 'c';
+export const SYMBOL_D = 'd';
+export const SYMBOL_I = 'i';
+export const SYMBOL_J = 'j';
+export const SYMBOL_N = 'n';
+export const SYMBOL_R = 'r';
+export const SYMBOL_S = 's';
+export const SYMBOL_T = 't';
+export const SYMBOL_X = 'x';
+export const SYMBOL_Y = 'y';
+export const SYMBOL_Z = 'z';
+export const SYMBOL_IDENTITY_MATRIX = 'I';
 
-export const SYMBOL_A_UNDERSCORE = counter++;
-export const SYMBOL_B_UNDERSCORE = counter++;
-export const SYMBOL_X_UNDERSCORE = counter++;
+export const SYMBOL_A_UNDERSCORE = 'a_';
+export const SYMBOL_B_UNDERSCORE = 'b_';
+export const SYMBOL_X_UNDERSCORE = 'x_';
 
-export const C1 = counter++;
-export const C2 = counter++;
-export const C3 = counter++;
-export const C4 = counter++;
-export const C5 = counter++;
-export const C6 = counter++;
-
-const USR_SYMBOLS = counter++; // this must be last
+export const C1 = '$C1';
+export const C2 = '$C2';
+export const C3 = '$C3';
+export const C4 = '$C4';
+export const C5 = '$C5';
+export const C6 = '$C6';
 
 export const E = YYE;
 
@@ -506,23 +503,12 @@ let draw_flag = false;
 export const mtotal = 0;
 export const logbuf = '';
 
-// will contain the variable names
-export const symtab: Sym[] = [];
-// will contain the contents of the variable
-// in the corresponding position in symtab array
-export const binding: U[] = [];
-export const isSymbolReclaimable: boolean[] = [];
-
 const arglist = []; // will contain U
 
 const draw_stop_return = null; // extern jmp_buf ?????
 
 export const transpose_unicode = 7488;
 export const dotprod_unicode = 183;
-
-export function symbol(x: number): Sym {
-  return symtab[x];
-}
 
 export function iscons(p: BaseAtom): p is Cons {
   return p.k === CONS;
@@ -576,10 +562,6 @@ export function isNumericAtomOrTensor(p: U): p is NumbericTensor {
 
 export function issymbol(p: U): p is Sym {
   return p.k === SYM;
-}
-
-export function iskeyword(p: U): boolean {
-  return issymbol(p) && symnum(p) < NIL;
 }
 
 export function car(p: BaseAtom): U {

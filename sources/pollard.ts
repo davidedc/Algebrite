@@ -8,11 +8,12 @@ import {
   Num,
   POWER,
   primetab,
-  symbol,
   U,
 } from '../runtime/defs';
 import { mcmp } from '../runtime/mcmp';
 import { stop } from '../runtime/run';
+import { pop, swap, push } from '../runtime/stack';
+import {push_symbol, symbol} from '../runtime/symbol';
 import { mint, setSignTo } from './bignum';
 import { equaln } from './is';
 import { makeList } from './list';

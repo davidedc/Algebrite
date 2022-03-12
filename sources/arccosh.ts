@@ -5,7 +5,6 @@ import {
   Constants,
   COSH,
   isdouble,
-  symbol,
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
@@ -14,6 +13,7 @@ import { double } from './bignum';
 import { Eval } from './eval';
 import { isplusone } from './is';
 import { makeList } from './list';
+import {symbol} from "../runtime/symbol";
 
 /* arccosh =====================================================================
 

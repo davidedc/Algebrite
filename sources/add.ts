@@ -14,7 +14,6 @@ import {
   NIL,
   Num,
   Sign,
-  symbol,
   U,
 } from '../runtime/defs';
 import { check_esc_flag } from '../runtime/run';
@@ -27,6 +26,7 @@ import { makeList } from './list';
 import { multiply, negate } from './multiply';
 import { print_list } from './print';
 import { tensor_plus_tensor } from './tensor';
+import {symbol} from "../runtime/symbol";
 
 /*
  Symbolic addition

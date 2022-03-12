@@ -3,7 +3,6 @@ import {
   HERMITE,
   issymbol,
   SECRETX,
-  symbol,
   U,
 } from '../runtime/defs';
 import { subtract } from './add';
@@ -12,6 +11,7 @@ import { Eval } from './eval';
 import { makeList } from './list';
 import { multiply } from './multiply';
 import { subst } from './subst';
+import {symbol} from "../runtime/symbol";
 
 //-----------------------------------------------------------------------------
 //

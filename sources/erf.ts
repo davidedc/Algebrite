@@ -1,4 +1,4 @@
-import { cadr, Constants, ERF, isdouble, symbol, U } from '../runtime/defs';
+import { cadr, Constants, ERF, isdouble, U } from '../runtime/defs';
 import { push } from '../runtime/stack';
 import { double } from './bignum';
 import { erfc } from './erfc';
@@ -6,6 +6,7 @@ import { Eval } from './eval';
 import { isnegativeterm, isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
 import { negate } from './multiply';
+import {symbol} from "../runtime/symbol";
 
 /* erf =====================================================================
 

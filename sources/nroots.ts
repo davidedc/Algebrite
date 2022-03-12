@@ -7,7 +7,6 @@ import {
   defs,
   isdouble,
   NIL,
-  symbol,
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
@@ -23,6 +22,7 @@ import { imag } from './imag';
 import { ispolyexpandedform } from './is';
 import { multiply } from './multiply';
 import { real } from './real';
+import {symbol} from "../runtime/symbol";
 
 // find the roots of a polynomial numerically
 const NROOTS_YMAX = 101;

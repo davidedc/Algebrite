@@ -4,7 +4,6 @@ import {
   cadr,
   Constants,
   isdouble,
-  symbol,
   U,
 } from '../runtime/defs';
 import { push } from '../runtime/stack';
@@ -15,6 +14,7 @@ import { makeList } from './list';
 import { multiply, negate } from './multiply';
 import { power } from './power';
 import { yn } from '../runtime/otherCFunctions';
+import {symbol} from "../runtime/symbol";
 
 /* bessely =====================================================================
 

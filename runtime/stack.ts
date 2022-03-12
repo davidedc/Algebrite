@@ -1,5 +1,6 @@
 import { stop } from './run';
-import { breakpoint, DEBUG, defs, NIL, symbol, TOS, U } from './defs';
+import { breakpoint, DEBUG, defs, NIL, TOS, U } from './defs';
+import {symbol} from "./symbol";
 //   _______
 //  |  | <- stack
 //  |  |

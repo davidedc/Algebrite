@@ -9,7 +9,6 @@ import {
   ispower,
   istensor,
   NIL,
-  symbol,
   Tensor,
   U,
 } from '../runtime/defs';
@@ -33,6 +32,7 @@ import { numerator } from './numerator';
 import { power } from './power';
 import { divpoly } from './quotient';
 import { copy_tensor } from './tensor';
+import {symbol} from "../runtime/symbol";
 
 // Partial fraction expansion
 //

@@ -11,7 +11,6 @@ import {
   ispower,
   POWER,
   SIN,
-  symbol,
   TAN,
   U,
 } from '../runtime/defs';
@@ -25,6 +24,7 @@ import { equaln, equalq, isnegative, isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
 import { multiply, negate } from './multiply';
 import { numerator } from './numerator';
+import {symbol} from "../runtime/symbol";
 
 /* arctan =====================================================================
 

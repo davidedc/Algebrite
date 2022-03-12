@@ -12,7 +12,6 @@ import {
   NIL,
   SECRETX,
   SETQ,
-  symbol,
   Tensor,
   TESTEQ,
   U,
@@ -36,6 +35,7 @@ import {
 import { divide, multiply, negate } from './multiply';
 import { power } from './power';
 import { simplify } from './simplify';
+import {symbol} from "../runtime/symbol";
 
 const log = {
   debug: (str: string) => {

@@ -26,7 +26,6 @@ import {
   iscons,
   isdouble,
   isfactorial,
-  iskeyword,
   ismultiply,
   isNumericAtom,
   ispower,
@@ -37,7 +36,6 @@ import {
   NUM,
   STR,
   SYM,
-  symbol,
   TENSOR,
   version,
   cadar,
@@ -58,8 +56,8 @@ import { init } from './runtime/init';
 import { pop, push, restore, save, swap, dupl } from './runtime/stack';
 import {
   collectUserSymbols,
-  get_binding,
-  set_binding,
+  get_binding, iskeyword,
+  set_binding, symbol,
   usr_symbol,
 } from './runtime/symbol';
 import { exec, parse } from './runtime/zombocom';

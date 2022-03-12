@@ -1,4 +1,4 @@
-import { caddr, cadr, NIL, symbol, U } from '../runtime/defs';
+import { caddr, cadr, NIL, U } from '../runtime/defs';
 import { push } from '../runtime/stack';
 import { degree } from './degree';
 import { Eval } from './eval';
@@ -6,6 +6,7 @@ import { filter } from './filter';
 import { guess } from './guess';
 import { divide } from './multiply';
 import { power } from './power';
+import {symbol} from "../runtime/symbol";
 
 /*
  Return the leading coefficient of a polynomial.

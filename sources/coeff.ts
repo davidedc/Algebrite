@@ -5,7 +5,6 @@ import {
   Constants,
   doexpand,
   NIL,
-  symbol,
   SYMBOL_X,
   U,
 } from '../runtime/defs';
@@ -17,6 +16,7 @@ import { filter } from './filter';
 import { divide } from './multiply';
 import { power } from './power';
 import { subst } from './subst';
+import {symbol} from "../runtime/symbol";
 
 /* coeff =====================================================================
 

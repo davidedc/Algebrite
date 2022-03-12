@@ -4,7 +4,6 @@ import {
   car,
   Constants,
   isdouble,
-  symbol,
   TAN,
   U,
 } from '../runtime/defs';
@@ -15,6 +14,7 @@ import { isnegative } from './is';
 import { makeList } from './list';
 import { divide, multiply, negate } from './multiply';
 import { power } from './power';
+import {symbol} from "../runtime/symbol";
 
 // Tangent function of numerical and symbolic arguments
 export function Eval_tan(p1: U) {

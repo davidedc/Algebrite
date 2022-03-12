@@ -8,9 +8,9 @@ import {
   iscons,
   ispower,
   istensor,
-  symbol,
   U,
 } from './defs';
+import {symbol} from "./symbol";
 
 // returns true if expr p contains expr q, otherwise returns false
 export function Find(p: U, q: U): boolean {

@@ -3,7 +3,6 @@ import {
   DET,
   isNumericAtom,
   Sign,
-  symbol,
   Tensor,
   U,
 } from '../runtime/defs';
@@ -14,6 +13,7 @@ import { integer } from './bignum';
 import { makeList } from './list';
 import { divide, multiply, negate } from './multiply';
 import { is_square_matrix } from './tensor';
+import {symbol} from "../runtime/symbol";
 
 /* det =====================================================================
 

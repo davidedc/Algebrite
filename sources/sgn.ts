@@ -6,7 +6,6 @@ import {
   MSIGN,
   MZERO,
   SGN,
-  symbol,
   U,
 } from '../runtime/defs';
 import { push } from '../runtime/stack';
@@ -17,6 +16,7 @@ import { makeList } from './list';
 import { mmul } from './mmul';
 import { multiply, negate } from './multiply';
 import { power } from './power';
+import {symbol} from "../runtime/symbol";
 
 //-----------------------------------------------------------------------------
 //

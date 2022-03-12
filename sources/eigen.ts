@@ -7,19 +7,20 @@ import {
   isdouble,
   istensor,
   NIL,
-  symbol,
   Tensor,
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
 import { push } from '../runtime/stack';
-import { set_binding, usr_symbol } from '../runtime/symbol';
+import {set_binding, symbol, usr_symbol} from '../runtime/symbol';
 import { double } from './bignum';
 import { Eval } from './eval';
 import { yyfloat } from './float';
 import { makeList } from './list';
 import { print_str } from './print';
 import { copy_tensor } from './tensor';
+
+type EIGENOP = typeof EIGEN|typeof EIGENVAL|typeof EIGENVEC;
 
 /* eigen =====================================================================
 
@@ -239,7 +240,7 @@ function eigIsDoubleTensor(p1: Tensor): p1 is Tensor<Double> {
 //      p3    eigenvectors
 //
 //-----------------------------------------------------------------------------
-function eigen(op: number, p1: Tensor<Double>): [U, U] {
+function eigen(op: EIGENOP, p1: Tensor<Double>): [U, U] {
   // malloc working vars
 
   //EIG_yydd = (double *) malloc(n * n * sizeof (double))

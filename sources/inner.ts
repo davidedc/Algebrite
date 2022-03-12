@@ -14,7 +14,6 @@ import {
   istensor,
   MAXDIM,
   NIL,
-  symbol,
   SYMBOL_IDENTITY_MATRIX,
   Tensor,
   U,
@@ -28,6 +27,7 @@ import { isnegativeterm, isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
 import { multiply, negate } from './multiply';
 import { scalar_times_tensor, tensor_times_scalar } from './tensor';
+import {symbol} from "../runtime/symbol";
 
 /* dot =====================================================================
 

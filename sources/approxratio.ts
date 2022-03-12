@@ -8,7 +8,6 @@ import {
   DOUBLE,
   iscons,
   istensor,
-  symbol,
   U,
 } from '../runtime/defs';
 import { push } from '../runtime/stack';
@@ -16,6 +15,7 @@ import { integer, rational } from './bignum';
 import { zzfloat } from './float';
 import { makeList } from './list';
 import { check_tensor_dimensions } from './tensor';
+import {symbol} from "../runtime/symbol";
 
 /*
  Guesses a rational for each float in the passed expression

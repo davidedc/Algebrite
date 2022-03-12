@@ -8,7 +8,6 @@ import {
   NIL,
   POWER,
   Sign,
-  symbol,
   Sym,
   Tensor,
   U,
@@ -25,6 +24,7 @@ import { inv } from './inv';
 import { isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
 import { multiply } from './multiply';
+import {symbol} from "../runtime/symbol";
 
 //(docs are generated from top-level comments, keep an eye on the formatting!)
 

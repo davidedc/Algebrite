@@ -6,12 +6,11 @@ import {
   iscons,
   NIL,
   PATTERN,
-  symbol,
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
 import { pop, push } from '../runtime/stack';
-import { push_symbol } from '../runtime/symbol';
+import {push_symbol, symbol} from '../runtime/symbol';
 import { equal, new_string } from '../sources/misc';
 import { makeList } from './list';
 import { print_list } from './print';

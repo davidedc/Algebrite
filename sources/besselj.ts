@@ -9,7 +9,6 @@ import {
   MSIGN,
   NUM,
   PI,
-  symbol,
   U,
 } from '../runtime/defs';
 import { push } from '../runtime/stack';
@@ -23,6 +22,7 @@ import { divide, multiply, negate } from './multiply';
 import { power } from './power';
 import { sine } from './sin';
 import { jn } from '../runtime/otherCFunctions';
+import {symbol} from "../runtime/symbol";
 
 /* besselj =====================================================================
 

@@ -31,12 +31,11 @@ import {
   Sign,
   Str,
   Sym,
-  symbol,
   Tensor,
   U,
 } from '../runtime/defs';
 import { doubleToReasonableString } from '../runtime/otherCFunctions';
-import { get_printname } from '../runtime/symbol';
+import {get_printname, symbol} from '../runtime/symbol';
 import { absval } from './abs';
 import { mp_denominator, mp_numerator } from './bignum';
 import { isfraction, isminusone, isnegativenumber, isplusone } from './is';

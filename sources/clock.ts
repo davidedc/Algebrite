@@ -1,10 +1,11 @@
-import { cadr, Constants, POWER, symbol, U } from '../runtime/defs';
+import { cadr, Constants, POWER, U } from '../runtime/defs';
 import { push } from '../runtime/stack';
 import { abs } from './abs';
 import { arg } from './arg';
 import { Eval } from './eval';
 import { makeList } from './list';
 import { divide, multiply } from './multiply';
+import {symbol} from "../runtime/symbol";
 
 /*
  Convert complex z to clock form

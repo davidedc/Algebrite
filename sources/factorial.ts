@@ -10,7 +10,6 @@ import {
   ismultiply,
   ispower,
   NIL,
-  symbol,
   U,
   noexpand,
 } from '../runtime/defs';
@@ -21,6 +20,7 @@ import { integer, bignum_factorial, nativeInt } from './bignum';
 import { makeList } from './list';
 import { multiply } from './multiply';
 import { power } from './power';
+import {symbol} from "../runtime/symbol";
 
 export function factorial(p1: U): U {
   const n = nativeInt(p1);

@@ -12,7 +12,6 @@ import {
   ismultiply,
   ispower,
   NIL,
-  symbol,
   U,
 } from '../runtime/defs';
 import { pop, push } from '../runtime/stack';
@@ -22,6 +21,7 @@ import { Eval } from './eval';
 import { factorial } from './factorial';
 import { equaln, isminusone, isplusone } from './is';
 import { multiply_all_noexpand, reciprocate } from './multiply';
+import {symbol} from "../runtime/symbol";
 
 /*
  Simplify factorials

@@ -11,7 +11,6 @@ import {
   NIL,
   NUM,
   Sign,
-  symbol,
   U,
 } from '../runtime/defs';
 import { push } from '../runtime/stack';
@@ -23,6 +22,7 @@ import {
   isZeroLikeOrNonZeroLikeOrUndetermined,
 } from './is';
 import { simplify } from './simplify';
+import {symbol} from "../runtime/symbol";
 
 // If the number of args is odd then the last arg is the default result.
 // Works like a switch statement. Could also be used for piecewise

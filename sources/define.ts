@@ -8,12 +8,11 @@ import {
   FUNCTION,
   issymbol,
   NIL,
-  symbol,
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
 import { push } from '../runtime/stack';
-import { push_symbol, set_binding } from '../runtime/symbol';
+import {push_symbol, set_binding, symbol} from '../runtime/symbol';
 import { Eval } from './eval';
 import { makeList } from './list';
 

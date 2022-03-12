@@ -27,12 +27,11 @@ import {
   PI,
   POWER,
   SIN,
-  symbol,
   U,
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
 import { pop, push, top } from '../runtime/stack';
-import { get_binding } from '../runtime/symbol';
+import {get_binding, symbol} from '../runtime/symbol';
 import { equal, exponential, length, sign } from '../sources/misc';
 import { abs } from './abs';
 import { add, subtract } from './add';

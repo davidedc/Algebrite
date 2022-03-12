@@ -11,7 +11,6 @@ import {
   ispower,
   istensor,
   PI,
-  symbol,
   Tensor,
   U,
 } from '../runtime/defs';
@@ -45,6 +44,7 @@ import { power } from './power';
 import { real } from './real';
 import { rect } from './rect';
 import { simplify, simplify_trig } from './simplify';
+import {symbol} from "../runtime/symbol";
 
 //(docs are generated from top-level comments, keep an eye on the formatting!)
 

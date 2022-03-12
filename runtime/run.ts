@@ -1,7 +1,6 @@
 import { moveTos, pop, push, top } from './stack';
 import { bake } from '../sources/bake';
 import {
-  clearRenamedVariablesToAvoidBindingToExternalScope,
   do_clearall,
 } from '../sources/clear';
 import { Eval } from '../sources/eval';
@@ -32,7 +31,6 @@ import {
   PRINTOUTRESULT,
   reset_after_error,
   Sym,
-  symbol,
   SYMBOL_I,
   SYMBOL_J,
   TOS,
@@ -41,9 +39,10 @@ import {
 } from './defs';
 import { init } from './init';
 import {
+  clearRenamedVariablesToAvoidBindingToExternalScope,
   collectUserSymbols,
   get_binding,
-  set_binding,
+  set_binding, symbol,
   usr_symbol,
 } from './symbol';
 
@@ -987,7 +986,7 @@ export function check_esc_flag() {
 function clearAlgebraEnvironment() {
   let p1: U, p6: U;
   let do_clearallResult;
-  [do_clearallResult, p1, p6] = do_clearall();
+  do_clearallResult = do_clearall();
   //console.log "CLEARING clearAlgebraEnvironment ============================================================="
   return do_clearallResult;
 }
@@ -1024,7 +1023,7 @@ export function computeDependenciesFromAlgebra(codeFromAlgebraBlock) {
         ')\n';
     }
 
-    [p1, p6] = do_clearall();
+    do_clearall();
     codeFromAlgebraBlock =
       userSimplificationsInProgramForm + codeFromAlgebraBlock;
     if (DEBUG) {
@@ -1109,7 +1108,7 @@ export function computeResultsAndJavaScriptFromAlgebra(codeFromAlgebraBlock) {
         ')\n';
     }
 
-    [p1, p6] = do_clearall();
+    do_clearall();
     codeFromAlgebraBlock =
       userSimplificationsInProgramForm + codeFromAlgebraBlock;
     if (DEBUG) {

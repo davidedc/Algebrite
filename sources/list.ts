@@ -1,5 +1,6 @@
-import { Cons, NIL, symbol, U } from '../runtime/defs';
+import { Cons, NIL, U } from '../runtime/defs';
 import { pop, push } from '../runtime/stack';
+import {symbol} from "../runtime/symbol";
 
 // Create a list from n things on the stack.
 // n is an integer

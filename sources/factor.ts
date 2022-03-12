@@ -9,7 +9,6 @@ import {
   NIL,
   Num,
   primetab,
-  symbol,
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
@@ -21,6 +20,7 @@ import { guess } from './guess';
 import { isinteger } from './is';
 import { multiply_all_noexpand } from './multiply';
 import { factor_number } from './pollard';
+import {symbol} from "../runtime/symbol";
 
 // factor a polynomial or integer
 export function Eval_factor(p1: U) {

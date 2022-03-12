@@ -26,11 +26,11 @@ import {
   Num,
   OPERATOR,
   POWER,
-  symbol,
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
 import { pop, pop_n_items, push, push_all } from '../runtime/stack';
+import { symbol} from '../runtime/symbol';
 import { cmp_expr } from '../sources/misc';
 import { add, subtract } from './add';
 import {

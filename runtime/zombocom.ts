@@ -3,9 +3,9 @@ import { pop, push } from './stack';
 import { push_double, push_integer } from '../sources/bignum';
 import { list } from '../sources/list';
 import { scan } from '../sources/scan';
-import { BaseAtom, defs, NIL, reset_after_error, symbol, U } from './defs';
+import { BaseAtom, defs, NIL, reset_after_error, U } from './defs';
 import { init } from './init';
-import { get_binding, usr_symbol } from './symbol';
+import {get_binding, symbol, usr_symbol} from './symbol';
 if (!defs.inited) {
   defs.inited = true;
   init();

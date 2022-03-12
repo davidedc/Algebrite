@@ -7,7 +7,6 @@ import {
   LAGUERRE,
   NIL,
   SECRETX,
-  symbol,
   U,
 } from '../runtime/defs';
 import { push } from '../runtime/stack';
@@ -17,6 +16,7 @@ import { Eval } from './eval';
 import { makeList } from './list';
 import { divide, multiply } from './multiply';
 import { subst } from './subst';
+import {symbol} from "../runtime/symbol";
 
 /*
  Laguerre function

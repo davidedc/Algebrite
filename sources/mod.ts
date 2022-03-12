@@ -5,7 +5,6 @@ import {
   isNumericAtom,
   MOD,
   Num,
-  symbol,
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
@@ -15,6 +14,7 @@ import { Eval } from './eval';
 import { isinteger, isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
 import { mmod } from './mmul';
+import {symbol} from "../runtime/symbol";
 
 export function Eval_mod(p1: U) {
   const arg2 = Eval(caddr(p1));

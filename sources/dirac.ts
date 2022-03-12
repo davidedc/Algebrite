@@ -7,7 +7,6 @@ import {
   ispower,
   isrational,
   MZERO,
-  symbol,
   U,
 } from '../runtime/defs';
 import { push } from '../runtime/stack';
@@ -16,6 +15,7 @@ import { isnegativeterm } from './is';
 import { makeList } from './list';
 import { mmul } from './mmul';
 import { negate } from './multiply';
+import {symbol} from "../runtime/symbol";
 
 //-----------------------------------------------------------------------------
 //

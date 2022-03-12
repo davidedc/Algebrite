@@ -4,7 +4,6 @@ import {
   cadr,
   Constants,
   NIL,
-  symbol,
   SYMBOL_X,
   U,
 } from '../runtime/defs';
@@ -15,6 +14,7 @@ import { coeff } from './coeff';
 import { Eval } from './eval';
 import { divide, multiply } from './multiply';
 import { power } from './power';
+import {symbol} from "../runtime/symbol";
 
 // Divide polynomials
 export function Eval_quotient(p1: U) {

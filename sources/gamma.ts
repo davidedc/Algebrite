@@ -8,7 +8,6 @@ import {
   isrational,
   MEQUAL,
   Num,
-  symbol,
   U,
 } from '../runtime/defs';
 import { push } from '../runtime/stack';
@@ -20,6 +19,7 @@ import { makeList } from './list';
 import { divide, multiply, negate } from './multiply';
 import { power } from './power';
 import { sine } from './sin';
+import {symbol} from "../runtime/symbol";
 
 //-----------------------------------------------------------------------------
 //

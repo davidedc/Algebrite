@@ -4,7 +4,6 @@ import {
   car,
   Constants,
   isdouble,
-  symbol,
   TANH,
   U,
 } from '../runtime/defs';
@@ -14,6 +13,7 @@ import { double } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
+import {symbol} from "../runtime/symbol";
 
 /* arctanh =====================================================================
 

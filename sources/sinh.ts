@@ -5,7 +5,6 @@ import {
   Constants,
   isdouble,
   SINH,
-  symbol,
   U,
 } from '../runtime/defs';
 import { push } from '../runtime/stack';
@@ -13,6 +12,7 @@ import { double } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
+import {symbol} from "../runtime/symbol";
 
 //            exp(x) - exp(-x)
 //  sinh(x) = ----------------

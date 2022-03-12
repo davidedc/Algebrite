@@ -12,14 +12,13 @@ import {
   isstr,
   issymbol,
   istensor,
-  symbol,
   SYMBOL_D,
   Tensor,
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
 import { pop, push } from '../runtime/stack';
-import { get_binding } from '../runtime/symbol';
+import {get_binding, symbol} from '../runtime/symbol';
 import { Eval_derivative } from './derivative';
 import { Eval } from './eval';
 import { list, makeList } from './list';

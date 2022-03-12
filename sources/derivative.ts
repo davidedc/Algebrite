@@ -34,7 +34,6 @@ import {
   SIN,
   SINH,
   Sym,
-  symbol,
   TAN,
   TANH,
   U,
@@ -65,6 +64,7 @@ import { sine } from './sin';
 import { ysinh } from './sinh';
 import { subst } from './subst';
 import { d_scalar_tensor, d_tensor_scalar, d_tensor_tensor } from './tensor';
+import {symbol} from "../runtime/symbol";
 
 // derivative
 

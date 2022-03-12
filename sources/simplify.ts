@@ -31,7 +31,6 @@ import {
   POWER,
   SECRETX,
   SIN,
-  symbol,
   Tensor,
   TRANSPOSE,
   U,
@@ -39,7 +38,7 @@ import {
 import { Find } from '../runtime/find';
 import { stop } from '../runtime/run';
 import { pop, push } from '../runtime/stack';
-import { get_binding } from '../runtime/symbol';
+import { get_binding, symbol } from '../runtime/symbol';
 import { equal, length } from '../sources/misc';
 import { add, add_all } from './add';
 import { integer, nativeDouble, rational } from './bignum';
@@ -95,73 +94,73 @@ function runUserDefinedSimplifications(p: U): U {
     return p;
   }
 
-  if (DEBUG) {
+    if (DEBUG) {
     console.log(`runUserDefinedSimplifications passed: ${p}`);
   }
   let F1 = noexpand(Eval, p);
   if (DEBUG) {
     console.log(`runUserDefinedSimplifications after eval no expanding: ${F1}`);
-    console.log('patterns to be checked: ');
+      console.log('patterns to be checked: ');
     for (const simplification of Array.from(
       defs.userSimplificationsInListForm
     )) {
       console.log(`...${simplification}`);
+      }
     }
-  }
 
-  let atLeastOneSuccessInRouldOfRulesApplications = true;
-  let numberOfRulesApplications = 0;
+    let atLeastOneSuccessInRouldOfRulesApplications = true;
+    let numberOfRulesApplications = 0;
 
-  while (
-    atLeastOneSuccessInRouldOfRulesApplications &&
-    numberOfRulesApplications < MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES
-  ) {
-    atLeastOneSuccessInRouldOfRulesApplications = false;
-    numberOfRulesApplications++;
-    for (const eachSimplification of Array.from(
-      defs.userSimplificationsInListForm
-    )) {
-      let success = true;
-      let eachConsecutiveRuleApplication = 0;
-      while (
-        success &&
-        eachConsecutiveRuleApplication <
-          MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE
-      ) {
-        eachConsecutiveRuleApplication++;
-        if (DEBUG) {
-          console.log(
+    while (
+      atLeastOneSuccessInRouldOfRulesApplications &&
+      numberOfRulesApplications < MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES
+    ) {
+      atLeastOneSuccessInRouldOfRulesApplications = false;
+      numberOfRulesApplications++;
+      for (const eachSimplification of Array.from(
+        defs.userSimplificationsInListForm
+      )) {
+        let success = true;
+        let eachConsecutiveRuleApplication = 0;
+        while (
+          success &&
+          eachConsecutiveRuleApplication <
+            MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE
+        ) {
+          eachConsecutiveRuleApplication++;
+          if (DEBUG) {
+            console.log(
             `simplify - tos: ${defs.tos} checking pattern: ${eachSimplification} on: ${F1}`
+            );
+          }
+        [F1, success] = transform(F1, symbol(NIL), eachSimplification, true);
+          if (success) {
+            atLeastOneSuccessInRouldOfRulesApplications = true;
+          }
+          if (DEBUG) {
+          console.log(`p1 at this stage of simplification: ${F1}`);
+          }
+        }
+        if (
+          eachConsecutiveRuleApplication ===
+          MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE
+        ) {
+          stop(
+            `maximum application of single transformation rule exceeded: ${eachSimplification}`
           );
         }
-        [F1, success] = transform(F1, symbol(NIL), eachSimplification, true);
-        if (success) {
-          atLeastOneSuccessInRouldOfRulesApplications = true;
-        }
-        if (DEBUG) {
-          console.log(`p1 at this stage of simplification: ${F1}`);
-        }
-      }
-      if (
-        eachConsecutiveRuleApplication ===
-        MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE
-      ) {
-        stop(
-          `maximum application of single transformation rule exceeded: ${eachSimplification}`
-        );
       }
     }
-  }
 
   if (numberOfRulesApplications === MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES) {
-    stop('maximum application of all transformation rules exceeded ');
-  }
+      stop('maximum application of all transformation rules exceeded ');
+    }
 
-  if (DEBUG) {
-    console.log(`METAX = ${get_binding(symbol(METAX))}`);
-    console.log(`METAA = ${get_binding(symbol(METAA))}`);
-    console.log(`METAB = ${get_binding(symbol(METAB))}`);
-  }
+    if (DEBUG) {
+      console.log(`METAX = ${get_binding(symbol(METAX))}`);
+      console.log(`METAA = ${get_binding(symbol(METAA))}`);
+      console.log(`METAB = ${get_binding(symbol(METAB))}`);
+    }
   return F1;
 }
 
@@ -560,143 +559,143 @@ function take_care_of_nested_radicals(p1: U): [U, boolean] {
 }
 
 function _nestedPowerSymbol(p1: U): [U, boolean] {
-  //console.log("ok it's a power ")
-  const base = cadr(p1);
-  const exponent = caddr(p1);
-  //console.log("possible double radical base: " + base)
-  //console.log("possible double radical exponent: " + exponent)
+    //console.log("ok it's a power ")
+    const base = cadr(p1);
+    const exponent = caddr(p1);
+    //console.log("possible double radical base: " + base)
+    //console.log("possible double radical exponent: " + exponent)
 
-  if (
+    if (
     isminusone(exponent) ||
     !equal(car(base), symbol(ADD)) ||
     !isfraction(exponent) ||
     (!equalq(exponent, 1, 3) && !equalq(exponent, 1, 2))
-  ) {
+    ) {
     return [p1, false];
   }
 
-  //console.log("ok there is a radix with a term inside")
-  const firstTerm = cadr(base);
+      //console.log("ok there is a radix with a term inside")
+      const firstTerm = cadr(base);
   take_care_of_nested_radicals(firstTerm);
-  const secondTerm = caddr(base);
+      const secondTerm = caddr(base);
   take_care_of_nested_radicals(secondTerm);
 
-  let numberOfTerms = 0;
-  let countingTerms = base;
-  while (cdr(countingTerms) !== symbol(NIL)) {
-    numberOfTerms++;
-    countingTerms = cdr(countingTerms);
-  }
-  if (numberOfTerms > 2) {
+      let numberOfTerms = 0;
+      let countingTerms = base;
+      while (cdr(countingTerms) !== symbol(NIL)) {
+        numberOfTerms++;
+        countingTerms = cdr(countingTerms);
+      }
+      if (numberOfTerms > 2) {
     return [p1, false];
-  }
+      }
 
-  // list here all the factors
+      // list here all the factors
   const { commonBases, termsThatAreNotPowers } = _listAll(secondTerm);
 
-  if (commonBases.length === 0) {
+      if (commonBases.length === 0) {
     return [p1, false];
-  }
+      }
 
-  const A = firstTerm;
-  const C = commonBases.reduce(multiply, Constants.one);
-  const B = termsThatAreNotPowers.reduce(multiply, Constants.one);
+      const A = firstTerm;
+      const C = commonBases.reduce(multiply, Constants.one);
+      const B = termsThatAreNotPowers.reduce(multiply, Constants.one);
 
   let temp: U;
-  if (equalq(exponent, 1, 3)) {
+      if (equalq(exponent, 1, 3)) {
     const checkSize1 = divide(multiply(negate(A), C), B); // 4th coeff
     const result1 = nativeDouble(yyfloat(real(checkSize1)));
-    if (Math.abs(result1) > Math.pow(2, 32)) {
+        if (Math.abs(result1) > Math.pow(2, 32)) {
       return [p1, false];
-    }
+        }
 
     const checkSize2 = multiply(integer(3), C); // 3rd coeff
     const result2 = nativeDouble(yyfloat(real(checkSize2)));
-    if (Math.abs(result2) > Math.pow(2, 32)) {
+        if (Math.abs(result2) > Math.pow(2, 32)) {
       return [p1, false];
-    }
+        }
     const arg1b = multiply(checkSize2, symbol(SECRETX));
 
     const checkSize3 = divide(multiply(integer(-3), A), B); // 2nd coeff
     const result3 = nativeDouble(yyfloat(real(checkSize3)));
-    if (Math.abs(result3) > Math.pow(2, 32)) {
+        if (Math.abs(result3) > Math.pow(2, 32)) {
       return [p1, false];
-    }
+        }
 
     const result = add_all([
       checkSize1,
-      arg1b,
+              arg1b,
       multiply(checkSize3, power(symbol(SECRETX), integer(2))),
       multiply(Constants.one, power(symbol(SECRETX), integer(3))),
     ]);
     temp = result;
-  } else if (equalq(exponent, 1, 2)) {
+      } else if (equalq(exponent, 1, 2)) {
     const result1 = nativeDouble(yyfloat(real(C)));
-    if (Math.abs(result1) > Math.pow(2, 32)) {
+        if (Math.abs(result1) > Math.pow(2, 32)) {
       return [p1, false];
-    }
+        }
 
     const checkSize = divide(multiply(integer(-2), A), B);
-    const result2 = nativeDouble(yyfloat(real(checkSize)));
-    if (Math.abs(result2) > Math.pow(2, 32)) {
+        const result2 = nativeDouble(yyfloat(real(checkSize)));
+        if (Math.abs(result2) > Math.pow(2, 32)) {
       return [p1, false];
-    }
+        }
     temp = add(
       C,
-      add(
+          add(
         multiply(checkSize, symbol(SECRETX)),
         multiply(Constants.one, power(symbol(SECRETX), integer(2)))
-      )
-    );
-  }
+          )
+        );
+      }
 
-  defs.recursionLevelNestedRadicalsRemoval++;
+      defs.recursionLevelNestedRadicalsRemoval++;
   const r = roots(temp, symbol(SECRETX));
-  defs.recursionLevelNestedRadicalsRemoval--;
+      defs.recursionLevelNestedRadicalsRemoval--;
   if (equal(r[r.length - 1], symbol(NIL))) {
-    if (DEBUG) {
-      console.log('roots bailed out because of too much recursion');
-    }
+        if (DEBUG) {
+          console.log('roots bailed out because of too much recursion');
+        }
     return [p1, false];
-  }
+      }
 
-  // exclude the solutions with radicals
+      // exclude the solutions with radicals
   const possibleSolutions: U[] = (r[r.length - 1] as Tensor).elem.filter(
     (sol) => !Find(sol, symbol(POWER))
   );
 
-  if (possibleSolutions.length === 0) {
+      if (possibleSolutions.length === 0) {
     return [p1, false];
-  }
+      }
 
-  const possibleRationalSolutions: U[] = [];
-  const realOfpossibleRationalSolutions: number[] = [];
-  //console.log("checking the one with maximum real part ")
+      const possibleRationalSolutions: U[] = [];
+      const realOfpossibleRationalSolutions: number[] = [];
+      //console.log("checking the one with maximum real part ")
   for (const i of Array.from(possibleSolutions)) {
-    const result = nativeDouble(yyfloat(real(i)));
-    possibleRationalSolutions.push(i);
-    realOfpossibleRationalSolutions.push(result);
-  }
+        const result = nativeDouble(yyfloat(real(i)));
+        possibleRationalSolutions.push(i);
+        realOfpossibleRationalSolutions.push(result);
+      }
 
-  const whichRationalSolution = realOfpossibleRationalSolutions.indexOf(
-    Math.max.apply(Math, realOfpossibleRationalSolutions)
-  );
-  const SOLUTION = possibleRationalSolutions[whichRationalSolution];
+      const whichRationalSolution = realOfpossibleRationalSolutions.indexOf(
+        Math.max.apply(Math, realOfpossibleRationalSolutions)
+      );
+      const SOLUTION = possibleRationalSolutions[whichRationalSolution];
 
   if (!equalq(exponent, 1, 3) && !equalq(exponent, 1, 2)) {
     return [p1, false];
   }
 
-  if (equalq(exponent, 1, 3)) {
+      if (equalq(exponent, 1, 3)) {
     const lowercase_b = power(
-      divide(
-        A,
-        add(
-          power(SOLUTION, integer(3)),
-          multiply(multiply(integer(3), C), SOLUTION)
-        )
-      ),
-      rational(1, 3)
+            divide(
+              A,
+              add(
+                power(SOLUTION, integer(3)),
+                multiply(multiply(integer(3), C), SOLUTION)
+              )
+            ),
+            rational(1, 3)
     );
     const lowercase_a = multiply(lowercase_b, SOLUTION);
     const result = simplify(
@@ -709,13 +708,13 @@ function _nestedPowerSymbol(p1: U): [U, boolean] {
     const lowercase_b = power(
       divide(A, add(power(SOLUTION, integer(2)), C)),
       rational(1, 2)
-    );
+        );
     const lowercase_a = multiply(lowercase_b, SOLUTION);
-    const possibleNewExpression = simplify(
-      add(multiply(lowercase_b, power(C, rational(1, 2))), lowercase_a)
-    );
-    const possibleNewExpressionValue = yyfloat(real(possibleNewExpression));
-    if (!isnegativenumber(possibleNewExpressionValue)) {
+        const possibleNewExpression = simplify(
+          add(multiply(lowercase_b, power(C, rational(1, 2))), lowercase_a)
+        );
+        const possibleNewExpressionValue = yyfloat(real(possibleNewExpression));
+        if (!isnegativenumber(possibleNewExpressionValue)) {
       return [possibleNewExpression, true];
     }
 
@@ -723,8 +722,8 @@ function _nestedPowerSymbol(p1: U): [U, boolean] {
       add(
         multiply(negate(lowercase_b), power(C, rational(1, 2))),
         negate(lowercase_a)
-      )
-    );
+            )
+          );
     return [result, true];
   }
 
@@ -754,7 +753,7 @@ function _listAll(
               commonBases.push(innerbase);
             }
           }
-        } else {
+    } else {
           termsThatAreNotPowers.push(potentialPower);
         }
         secondTermFactor = cdr(secondTermFactor);
@@ -772,7 +771,7 @@ function _listAll(
 }
 
 function _nestedCons(p1: U): [U, boolean] {
-  let anyRadicalSimplificationWorked = false;
+    let anyRadicalSimplificationWorked = false;
   const arr = [];
   if (iscons(p1)) {
     const items = Array.from(p1).map((p) => {

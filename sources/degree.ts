@@ -6,7 +6,6 @@ import {
   isNumericAtom,
   ispower,
   NIL,
-  symbol,
   U,
 } from '../runtime/defs';
 import { push } from '../runtime/stack';
@@ -14,6 +13,7 @@ import { equal, lessp } from '../sources/misc';
 import { Eval } from './eval';
 import { guess } from './guess';
 import { isZeroAtomOrTensor } from './is';
+import {symbol} from "../runtime/symbol";
 
 /* deg =====================================================================
 

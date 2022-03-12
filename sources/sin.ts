@@ -9,7 +9,6 @@ import {
   iscons,
   isdouble,
   SIN,
-  symbol,
   U,
 } from '../runtime/defs';
 import { push } from '../runtime/stack';
@@ -21,6 +20,7 @@ import { isnegative, isnpi } from './is';
 import { makeList } from './list';
 import { divide, multiply, negate } from './multiply';
 import { power } from './power';
+import {symbol} from "../runtime/symbol";
 
 // Sine function of numerical and symbolic arguments
 export function Eval_sin(p1: U) {

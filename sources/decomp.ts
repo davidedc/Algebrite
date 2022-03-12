@@ -9,7 +9,6 @@ import {
   iscons,
   ismultiply,
   NIL,
-  symbol,
   U,
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
@@ -20,6 +19,7 @@ import { Eval } from './eval';
 import { guess } from './guess';
 import { makeList } from './list';
 import { multiply_all, negate } from './multiply';
+import {symbol} from "../runtime/symbol";
 
 // this function extract parts subtrees from a tree.
 // It is used in two
