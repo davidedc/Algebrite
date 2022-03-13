@@ -4,22 +4,21 @@ import {
   car,
   cdr,
   Cons,
-  DEBUG,
-  isadd,
+  DEBUG, isadd,
   iscons,
   ismultiply,
   NIL,
-  U,
+  U
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
 import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { equal } from '../sources/misc';
 import { add_all } from './add';
 import { Eval } from './eval';
 import { guess } from './guess';
 import { makeList } from './list';
 import { multiply_all, negate } from './multiply';
-import {symbol} from "../runtime/symbol";
 
 // this function extract parts subtrees from a tree.
 // It is used in two

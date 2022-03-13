@@ -1,8 +1,6 @@
 import { alloc_tensor } from '../runtime/alloc';
 import {
-  ADD,
-  Cons,
-  Constants,
+  ADD, Constants,
   DEBUG,
   defs,
   dotprod_unicode,
@@ -23,28 +21,24 @@ import {
   POWER,
   predefinedSymbolsInGlobalScope_doNotTrackInDependencies,
   QUOTE,
-  SETQ, Str,
+  SETQ,
+  Str,
   TESTEQ,
   TESTGE,
   TESTGT,
   TESTLE,
   TESTLT,
   TRANSPOSE,
-  transpose_unicode, U,
+  transpose_unicode,
+  U
 } from '../runtime/defs';
-import {
-  isalnumorunderscore,
-  isalpha,
-  isdigit,
-  isspace,
-} from '../runtime/otherCFunctions';
+import { isalnumorunderscore, isalpha, isdigit, isspace } from '../runtime/otherCFunctions';
 import { stop } from '../runtime/run';
-import { moveTos, pop, push, swap, top } from '../runtime/stack';
-import {push_symbol, symbol, usr_symbol} from '../runtime/symbol';
-import { new_string } from '../sources/misc';
+import { top } from '../runtime/stack';
+import { symbol, usr_symbol } from '../runtime/symbol';
 import { bignum_scan_float, bignum_scan_integer } from './bignum';
 import { equaln } from './is';
-import {list, makeList} from './list';
+import { makeList } from './list';
 import { inverse, multiply, negate } from './multiply';
 import { check_tensor_dimensions } from './tensor';
 
@@ -167,7 +161,7 @@ export function scan(s: string): [number, U] {
   return [token_str - input_str, expr];
 }
 
-export function scan_meta(s: string):U {
+export function scan_meta(s: string): U {
   scanned = s;
   meta_mode = 1;
   const prev_expanding = defs.expanding;
@@ -184,8 +178,8 @@ export function scan_meta(s: string):U {
   return stmt;
 }
 
-function scan_stmt():U {
-  let result:U = scan_relation();
+function scan_stmt(): U {
+  let result: U = scan_relation();
 
   let assignmentIsOfQuotedType = false;
 
@@ -203,7 +197,7 @@ function scan_stmt():U {
 
     get_next_token();
 
-    let rhs:U = scan_relation();
+    let rhs: U = scan_relation();
 
     // if it's a := then add a quote
     if (assignmentIsOfQuotedType) {
@@ -259,9 +253,9 @@ function scan_stmt():U {
   return result;
 }
 
-function scan_relation():U {
-  let result:U = scan_expression();
-  let rhs:U;
+function scan_relation(): U {
+  let result: U = scan_expression();
+  let rhs: U;
   switch (token) {
     case T_EQ:
       get_next_token();
@@ -291,8 +285,8 @@ function scan_relation():U {
   return result;
 }
 
-function scan_expression():U {
-  const terms:U[]=[symbol(ADD)];
+function scan_expression(): U {
+  const terms: U[] = [symbol(ADD)];
 
   switch (token) {
     case '+':
@@ -356,18 +350,18 @@ function is_factor(): boolean {
   return false;
 }
 
-function simplify_1_in_products(factors:U[]) {
+function simplify_1_in_products(factors: U[]) {
   if (
     factors.length > 0 &&
-    isrational(factors[factors.length-1]) &&
-    equaln(factors[factors.length-1], 1)
+    isrational(factors[factors.length - 1]) &&
+    equaln(factors[factors.length - 1], 1)
   ) {
     factors.pop();
   }
 }
 
 // calculate away consecutive constants
-function multiply_consecutive_constants(factors:U[]) {
+function multiply_consecutive_constants(factors: U[]) {
   if (
     factors.length > 1 &&
     isNumericAtom(factors[factors.length - 2]) &&
@@ -379,7 +373,7 @@ function multiply_consecutive_constants(factors:U[]) {
   }
 }
 
-function scan_term():U {
+function scan_term(): U {
   let results = [scan_factor()];
 
   if (parse_time_simplifications) {
@@ -421,7 +415,7 @@ function scan_term():U {
   return makeList(symbol(MULTIPLY), ...results);
 }
 
-function scan_power(lhs:U):U {
+function scan_power(lhs: U): U {
   if (token === '^') {
     get_next_token();
     return makeList(symbol(POWER), lhs, scan_factor());
@@ -429,10 +423,10 @@ function scan_power(lhs:U):U {
   return lhs;
 }
 
-function scan_index(lhs:U):U {
+function scan_index(lhs: U): U {
   //console.log "[ as index"
   get_next_token();
-  const items:U[] = [symbol(INDEX), lhs, scan_expression()];
+  const items: U[] = [symbol(INDEX), lhs, scan_expression()];
   while (token === ',') {
     get_next_token();
     items.push(scan_expression());
@@ -444,12 +438,12 @@ function scan_index(lhs:U):U {
   return makeList(...items);
 }
 
-function scan_factor():U {
+function scan_factor(): U {
   //console.log "scan_factor token: " + token
 
   let firstFactorIsNumber = false;
 
-  let result:U;
+  let result: U;
 
   if (token === '(') {
     result = scan_subexpr();
@@ -567,11 +561,11 @@ function addSymbolLeftOfAssignment(theSymbol: string) {
   }
 }
 
-function scan_symbol():U {
+function scan_symbol(): U {
   if (token !== T_SYMBOL) {
     scan_error('symbol expected');
   }
-  let result:U;
+  let result: U;
   if (meta_mode && typeof token_buf == 'string' && token_buf.length === 1) {
     switch (token_buf[0]) {
       case 'a':
@@ -623,20 +617,20 @@ function scan_symbol():U {
   return result;
 }
 
-function scan_string():U {
+function scan_string(): U {
   const result = new Str(token_buf);
   get_next_token();
   return result;
 }
 
-function scan_function_call_with_function_name():U {
+function scan_function_call_with_function_name(): U {
   if (DEBUG) {
     console.log('-- scan_function_call_with_function_name start');
   }
   let n = 1; // the parameter number as we scan parameters
   const p = usr_symbol(token_buf);
 
-  const fcall:U[]=[p];
+  const fcall: U[] = [p];
   const functionName = token_buf;
   if (
     functionName === 'roots' ||
@@ -671,9 +665,9 @@ function scan_function_call_with_function_name():U {
           (x) =>
             !new RegExp(
               'roots_' +
-                (functionInvokationsScanningStack.length - 1) +
-                '_' +
-                token_buf
+              (functionInvokationsScanningStack.length - 1) +
+              '_' +
+              token_buf
             ).test(x)
         );
         skipRootVariableToBeSolved = true;
@@ -689,9 +683,9 @@ function scan_function_call_with_function_name():U {
           (x) =>
             !new RegExp(
               'sum_' +
-                (functionInvokationsScanningStack.length - 1) +
-                '_' +
-                token_buf
+              (functionInvokationsScanningStack.length - 1) +
+              '_' +
+              token_buf
             ).test(x)
         );
         skipRootVariableToBeSolved = true;
@@ -707,9 +701,9 @@ function scan_function_call_with_function_name():U {
           (x) =>
             !new RegExp(
               'product_' +
-                (functionInvokationsScanningStack.length - 1) +
-                '_' +
-                token_buf
+              (functionInvokationsScanningStack.length - 1) +
+              '_' +
+              token_buf
             ).test(x)
         );
         skipRootVariableToBeSolved = true;
@@ -725,9 +719,9 @@ function scan_function_call_with_function_name():U {
           (x) =>
             !new RegExp(
               'for_' +
-                (functionInvokationsScanningStack.length - 1) +
-                '_' +
-                token_buf
+              (functionInvokationsScanningStack.length - 1) +
+              '_' +
+              token_buf
             ).test(x)
         );
         skipRootVariableToBeSolved = true;
@@ -743,9 +737,9 @@ function scan_function_call_with_function_name():U {
           (x) =>
             !new RegExp(
               'defint_' +
-                (functionInvokationsScanningStack.length - 1) +
-                '_' +
-                token_buf
+              (functionInvokationsScanningStack.length - 1) +
+              '_' +
+              token_buf
             ).test(x)
         );
         skipRootVariableToBeSolved = true;
@@ -844,7 +838,7 @@ function scan_function_call_with_function_name():U {
   return makeList(...fcall);
 }
 
-function scan_function_call_without_function_name(lhs:U):U {
+function scan_function_call_without_function_name(lhs: U): U {
   if (DEBUG) {
     console.log('-- scan_function_call_without_function_name start');
   }
@@ -855,7 +849,7 @@ function scan_function_call_without_function_name(lhs:U):U {
   // a tensor element access in that case)
   const func = makeList(symbol(EVAL), lhs)
 
-  const fcall:U[] = [func];
+  const fcall: U[] = [func];
 
   get_next_token(); // left paren
   scanningParameters.push(true);
@@ -882,7 +876,7 @@ function scan_function_call_without_function_name(lhs:U):U {
 }
 
 // scan subexpression
-function scan_subexpr():U {
+function scan_subexpr(): U {
   const n = 0;
   if (token !== '(') {
     scan_error('( expected');
@@ -896,7 +890,7 @@ function scan_subexpr():U {
   return result;
 }
 
-function scan_tensor():U {
+function scan_tensor(): U {
   if (token !== '[') {
     scan_error('[ expected');
   }
@@ -904,7 +898,7 @@ function scan_tensor():U {
   get_next_token();
 
   //console.log "scanning the next statement"
-  const elements:U[] = [scan_stmt()];
+  const elements: U[] = [scan_stmt()];
 
   while (token === ',') {
     token = get_next_token();
@@ -921,7 +915,7 @@ function scan_tensor():U {
   return result;
 }
 
-function scan_error(errmsg: string):never {
+function scan_error(errmsg: string): never {
   defs.errorMessage = '';
 
   // try not to put question mark on orphan line
@@ -958,7 +952,7 @@ function scan_error(errmsg: string):never {
 // (a,b) and (c,d) would be on the stack.
 
 // takes an integer
-function build_tensor(elements:U[]) {
+function build_tensor(elements: U[]) {
   const p2 = alloc_tensor(elements.length);
   p2.tensor.ndim = 1;
   p2.tensor.dim[0] = elements.length;
