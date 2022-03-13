@@ -566,13 +566,13 @@ export function defn() {
 
   for (let defn_i = 0; defn_i < defn_str.length; defn_i++) {
     const definitionOfInterest = defn_str[defn_i];
-    scan(definitionOfInterest);
+    const [,def] = scan(definitionOfInterest);
     if (DEBUG) {
       console.log(`... evaling ${definitionOfInterest}`);
       console.log('top of stack:');
-      console.log(print_list(top()));
+      console.log(print_list(def));
     }
-    Eval(pop());
+    Eval(def);
   }
 
   // restore the symbol dependencies as they were before.

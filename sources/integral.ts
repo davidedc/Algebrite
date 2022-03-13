@@ -668,8 +668,7 @@ function hash_power(base: U, power: U, x: U): number {
 export function make_hashed_itab(): { [index: string]: number[] } {
   const tab = {};
   for (let s of Array.from(itab)) {
-    scan_meta(s);
-    const f = pop();
+    const f = scan_meta(s);
     const u = cadr(f);
     const h = italu_hashcode(u, symbol(METAX));
     const key = h.toFixed(6);

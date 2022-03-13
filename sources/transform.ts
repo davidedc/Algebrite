@@ -214,8 +214,7 @@ export function transform(
         }
       }
       if (eachTransformEntry) {
-        scan_meta(eachTransformEntry as string);
-        const temp = pop();
+        const temp = scan_meta(eachTransformEntry as string);
 
         const p5 = cadr(temp);
         B = caddr(temp);

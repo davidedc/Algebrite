@@ -393,7 +393,7 @@ export function nativeInt(p1: U): number {
   return n;
 }
 
-export function bignum_scan_integer(s: string): void {
+export function bignum_scan_integer(s: string): U {
   let scounter = 0;
 
   const sign_ = s[scounter];
@@ -410,11 +410,11 @@ export function bignum_scan_integer(s: string): void {
   if (sign_ === '-') {
     p1 = negate(p1);
   }
-  push(p1);
+  return p1;
 }
 
 export function bignum_scan_float(s: string) {
-  push_double(parseFloat(s));
+  return double(parseFloat(s));
 }
 
 // gives the capability of printing the unsigned

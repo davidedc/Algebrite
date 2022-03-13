@@ -210,8 +210,7 @@ function _print(p: U, passedPrintMode: string): string {
 }
 
 function rememberPrint(theString: string, theTypeOfPrint: string) {
-  scan('"' + theString + '"');
-  const parsedString = pop();
+  const [,parsedString] = scan('"' + theString + '"');
   set_binding(symbol(theTypeOfPrint), parsedString);
 }
 

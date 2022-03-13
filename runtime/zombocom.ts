@@ -1,7 +1,7 @@
 import { check_stack, top_level_eval } from './run';
 import { pop, push } from './stack';
-import { push_double, push_integer } from '../sources/bignum';
-import { list } from '../sources/list';
+import {double, integer, push_double, push_integer} from '../sources/bignum';
+import {list, makeList} from '../sources/list';
 import { scan } from '../sources/scan';
 import { BaseAtom, defs, NIL, reset_after_error, U } from './defs';
 import { init } from './init';
@@ -11,30 +11,29 @@ if (!defs.inited) {
   init();
 }
 
-function parse_internal(argu: string | number | U | any) {
+function parse_internal(argu: string | number | U):U {
   if (typeof argu === 'string') {
-    scan(argu);
-    // now its in the stack
+    const [,u] = scan(argu);
+    return u;
   } else if (typeof argu === 'number') {
     if (argu % 1 === 0) {
-      push_integer(argu);
+      return integer(argu);
     } else {
-      push_double(argu);
+      return double(argu);
     }
-  } else if (argu instanceof BaseAtom) {
+  } else if (typeof argu.k === 'number') {
     // hey look its a U
-    push(argu as U);
+    return argu;
   } else {
     console.warn('unknown argument type', argu);
-    push(symbol(NIL));
+    return symbol(NIL);
   }
 }
 
 export function parse(argu: string | number | U | any) {
   let data: U;
   try {
-    parse_internal(argu);
-    data = pop();
+    data = parse_internal(argu);
     check_stack();
   } catch (error) {
     reset_after_error();
@@ -46,19 +45,11 @@ export function parse(argu: string | number | U | any) {
 // exec handles the running ia JS of all the algebrite
 // functions. The function name is passed in "name" and
 // the corresponding function is pushed at the top of the stack
-export function exec(name: string, ...argus: (string | number | U | any)[]) {
+export function exec(name: string, ...argus: (string | number | U)[]) {
   let result: U;
   const fn = get_binding(usr_symbol(name));
   check_stack();
-  push(fn);
-
-  for (let argu of Array.from(argus)) {
-    parse_internal(argu);
-  }
-
-  list(1 + argus.length);
-
-  const p1 = pop();
+  const p1 = makeList(fn, ...argus.map(parse_internal));
   push(p1);
 
   try {

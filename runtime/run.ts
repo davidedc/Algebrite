@@ -146,11 +146,10 @@ export function findDependenciesInScript(
       if (DEBUG) {
         console.log('findDependenciesInScript: scanning');
       }
-      n = scan(stringToBeParsed.substring(indexOfPartRemainingToBeParsed));
+      [n] = scan(stringToBeParsed.substring(indexOfPartRemainingToBeParsed));
       if (DEBUG) {
         console.log('scanned');
       }
-      pop();
       check_stack();
     } catch (error) {
       if (PRINTOUTRESULT) {
@@ -727,8 +726,7 @@ export function run(
     try {
       defs.errorMessage = '';
       check_stack();
-      n = scan(stringToBeRun.substring(indexOfPartRemainingToBeParsed));
-      p1 = pop();
+      [n, p1] = scan(stringToBeRun.substring(indexOfPartRemainingToBeParsed));
       check_stack();
     } catch (error) {
       if (PRINTOUTRESULT) {
