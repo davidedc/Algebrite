@@ -1,5 +1,5 @@
-import { index_function, set_component } from '.';
-import { alloc_tensor } from '../runtime/alloc';
+import {index_function, set_component} from '.';
+import {alloc_tensor} from '../runtime/alloc';
 import {
   breakpoint,
   caadr,
@@ -21,35 +21,35 @@ import {
   Sym, TENSOR,
   Tensor, TESTEQ, U
 } from '../runtime/defs';
-import { check_esc_flag, stop } from '../runtime/run';
+import {check_esc_flag, stop} from '../runtime/run';
 import { pop, push } from '../runtime/stack';
 import {
   get_binding, iskeyword, set_binding, symbol
 } from '../runtime/symbol';
-import { exponential } from '../sources/misc';
+import {exponential} from '../sources/misc';
 import {
   convert_rational_to_double,
   double, integer, nativeInt, push_integer, rational
 } from './bignum';
-import { define_user_function } from './define';
-import { det } from './det';
-import { divisors } from './divisors';
-import { factorial } from './factorial';
-import { factorpoly } from './factorpoly';
-import { hermite } from './hermite';
-import { hilbert } from './hilbert';
-import { inv, invg } from './inv';
+import {define_user_function} from './define';
+import {det} from './det';
+import {divisors} from './divisors';
+import {factorial} from './factorial';
+import {factorpoly} from './factorpoly';
+import {hermite} from './hermite';
+import {hilbert} from './hilbert';
+import {inv, invg} from './inv';
 import {
   isfloating,
   isinteger,
   isintegerorintegerfloat,
   isZeroLikeOrNonZeroLikeOrUndetermined
 } from './is';
-import { makeList } from './list';
-import { power } from './power';
-import { subst } from './subst';
-import { check_tensor_dimensions, Eval_tensor } from './tensor';
-import { Eval_user_function } from './userfunc';
+import {makeList} from './list';
+import {power} from './power';
+import {subst} from './subst';
+import {check_tensor_dimensions, Eval_tensor} from './tensor';
+import {Eval_user_function} from './userfunc';
 
 export function evaluate_integer(p: U): number {
   return nativeInt(Eval(p));
@@ -609,4 +609,12 @@ export function Eval_predicate(p1: U): U {
   }
 
   return Eval(p1);
+}
+
+export function *evalList(p1:U) {
+  if (iscons(p1)) {
+    for (const el of p1) {
+      yield Eval(el);
+    }
+  }
 }
