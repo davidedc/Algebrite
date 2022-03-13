@@ -1,22 +1,6 @@
 import { index_function, set_component } from '.';
 import { alloc_tensor } from '../runtime/alloc';
 import {
-  ABS,
-  ADD,
-  ADJ,
-  AND,
-  APPROXRATIO,
-  ARCCOS,
-  ARCCOSH,
-  ARCSIN,
-  ARCSINH,
-  ARCTAN,
-  ARCTANH,
-  ARG,
-  BESSELJ,
-  BESSELY,
-  BINDING,
-  BINOMIAL,
   breakpoint,
   caadr,
   cadadr,
@@ -26,286 +10,46 @@ import {
   car,
   cdadr,
   cddr,
-  cdr,
-  CEILING,
-  CHECK,
-  CHOOSE,
-  CIRCEXP,
-  CLEAR,
-  CLEARALL,
-  CLEARPATTERNS,
-  CLOCK,
-  COEFF,
-  COFACTOR,
-  CONDENSE,
-  CONJ,
-  CONS,
+  cdr, CONS,
   Cons,
-  Constants,
-  CONTRACT,
-  COS,
-  COSH,
-  DEBUG,
-  DECOMP,
-  DEFINT,
-  defs,
-  DEGREE,
-  DENOMINATOR,
-  DERIVATIVE,
-  DET,
-  DIM,
-  DIRAC,
-  DIVISORS,
-  DO,
-  DOT,
-  DOUBLE,
-  EIGEN,
-  EIGENVAL,
-  EIGENVEC,
-  ERF,
-  ERFC,
-  EVAL,
-  EXP,
-  EXPAND,
-  EXPCOS,
-  EXPSIN,
-  FACTOR,
-  FACTORIAL,
-  FACTORPOLY,
-  FILTER,
-  FLOATF,
-  FLOOR,
-  FOR,
-  FUNCTION,
-  GAMMA,
-  GCD,
-  HERMITE,
-  HILBERT,
-  IMAG,
-  INDEX,
-  INNER,
-  INTEGRAL,
-  INV,
-  INVG,
-  iscons,
+  Constants, DEBUG, defs, DOUBLE, EVAL, INDEX, iscons,
   isdouble,
   ISINTEGER,
-  isNumericAtom,
-  ISPRIME,
-  isrational,
+  isNumericAtom, isrational,
   issymbol,
-  istensor,
-  LAGUERRE,
-  LAST,
-  LCM,
-  LEADING,
-  LEGENDRE,
-  LOG,
-  LOOKUP,
-  MOD,
-  MULTIPLY,
-  NIL,
-  NOT,
-  NROOTS,
-  NUM,
-  NUMBER,
-  NUMERATOR,
-  OPERATOR,
-  OR,
-  OUTER,
-  PATTERN,
-  PATTERNSINFO,
-  PI,
-  POLAR,
-  POWER,
-  PRIME,
-  PRINT,
-  PRINT2DASCII,
-  PRINTFULL,
-  PRINTLATEX,
-  PRINTLIST,
-  PRINTPLAIN,
-  PRODUCT,
-  QUOTE,
-  QUOTIENT,
-  RANK,
-  RATIONALIZE,
-  REAL,
-  ROOTS,
-  ROUND,
-  SETQ,
-  SGN,
-  SHAPE,
-  SILENTPATTERN,
-  SIMPLIFY,
-  SIN,
-  SINH,
-  SQRT,
-  STOP,
-  STR,
-  SUBST,
-  SUM,
-  SYM,
-  Sym,
-  SYMBOLSINFO,
-  TAN,
-  TANH,
-  TAYLOR,
-  TENSOR,
-  Tensor,
-  TEST,
-  TESTEQ,
-  TESTGE,
-  TESTGT,
-  TESTLE,
-  TESTLT,
-  TRANSPOSE,
-  U,
-  UNIT,
-  YYRECT,
-  ZERO,
+  istensor, LAST, NIL, NUM, OPERATOR, PI, SETQ, STR, SYM,
+  Sym, TENSOR,
+  Tensor, TESTEQ, U
 } from '../runtime/defs';
 import { check_esc_flag, stop } from '../runtime/run';
-import { pop, push, push_all } from '../runtime/stack';
+import { pop, push } from '../runtime/stack';
 import {
-  Eval_symbolsinfo,
-  get_binding, iskeyword,
-  push_symbol,
-  set_binding, symbol,
+  get_binding, iskeyword, set_binding, symbol
 } from '../runtime/symbol';
 import { exponential } from '../sources/misc';
-import { Eval_abs } from './abs';
-import { Eval_add } from './add';
-import { Eval_adj } from './adj';
-import { Eval_approxratio } from './approxratio';
-import { Eval_arccos } from './arccos';
-import { Eval_arccosh } from './arccosh';
-import { Eval_arcsin } from './arcsin';
-import { Eval_arcsinh } from './arcsinh';
-import { Eval_arctan } from './arctan';
-import { Eval_arctanh } from './arctanh';
-import { Eval_arg } from './arg';
-import { Eval_besselj } from './besselj';
-import { Eval_bessely } from './bessely';
 import {
   convert_rational_to_double,
-  double,
-  push_integer,
-  integer,
-  rational,
-  nativeInt,
+  double, integer, nativeInt, push_integer, rational
 } from './bignum';
-import { Eval_binomial } from './binomial';
-import { Eval_ceiling } from './ceiling';
-import { Eval_choose } from './choose';
-import { Eval_circexp } from './circexp';
-import { Eval_clear, Eval_clearall } from './clear';
-import { Eval_clock } from './clock';
-import { Eval_coeff } from './coeff';
-import { Eval_cofactor } from './cofactor';
-import { Eval_condense } from './condense';
-import { Eval_conj } from './conj';
-import { Eval_contract } from './contract';
-import { Eval_cos } from './cos';
-import { Eval_cosh } from './cosh';
-import { Eval_decomp } from './decomp';
-import { define_user_function, Eval_function_reference } from './define';
-import { Eval_defint } from './defint';
-import { Eval_degree } from './degree';
-import { Eval_denominator } from './denominator';
-import { Eval_derivative } from './derivative';
+import { define_user_function } from './define';
 import { det } from './det';
-import { Eval_dirac } from './dirac';
 import { divisors } from './divisors';
-import { Eval_eigen, Eval_eigenval, Eval_eigenvec } from './eigen';
-import { Eval_erf } from './erf';
-import { Eval_erfc } from './erfc';
-import { Eval_expand } from './expand';
-import { Eval_expcos } from './expcos';
-import { Eval_expsin } from './expsin';
-import { Eval_factor } from './factor';
 import { factorial } from './factorial';
 import { factorpoly } from './factorpoly';
-import { Eval_filter } from './filter';
-import { Eval_float } from './float';
-import { Eval_floor } from './floor';
-import { Eval_for } from './for';
-import { Eval_gamma } from './gamma';
-import { Eval_gcd } from './gcd';
 import { hermite } from './hermite';
 import { hilbert } from './hilbert';
-import { Eval_imag } from './imag';
-import { Eval_inner } from './inner';
-import { Eval_integral } from './integral';
 import { inv, invg } from './inv';
 import {
   isfloating,
   isinteger,
   isintegerorintegerfloat,
-  isZeroLikeOrNonZeroLikeOrUndetermined,
+  isZeroLikeOrNonZeroLikeOrUndetermined
 } from './is';
-import { Eval_isprime } from './isprime';
-import { Eval_laguerre } from './laguerre';
-import { Eval_lcm } from './lcm';
-import { Eval_leading } from './leading';
-import { Eval_legendre } from './legendre';
 import { makeList } from './list';
-import { Eval_log } from './log';
-import { Eval_lookup } from './lookup';
-import { Eval_mod } from './mod';
-import { Eval_multiply } from './multiply';
-import { Eval_nroots } from './nroots';
-import { Eval_numerator } from './numerator';
-import { Eval_outer } from './outer';
-import {
-  Eval_clearpatterns,
-  Eval_pattern,
-  Eval_patternsinfo,
-  Eval_silentpattern,
-} from './pattern';
-import { Eval_polar } from './polar';
-import { Eval_power, power } from './power';
-import { Eval_prime } from './prime';
-import {
-  Eval_print,
-  Eval_print2dascii,
-  Eval_printcomputer,
-  Eval_printhuman,
-  Eval_printlatex,
-  Eval_printlist,
-} from './print';
-import { Eval_product } from './product';
-import { Eval_quotient } from './quotient';
-import { Eval_rationalize } from './rationalize';
-import { Eval_real } from './real';
-import { Eval_rect } from './rect';
-import { Eval_roots } from './roots';
-import { Eval_round } from './round';
-import { Eval_sgn } from './sgn';
-import { Eval_shape } from './shape';
-import { Eval_simplify } from './simplify';
-import { Eval_sin } from './sin';
-import { Eval_sinh } from './sinh';
+import { power } from './power';
 import { subst } from './subst';
-import { Eval_sum } from './sum';
-import { Eval_tan } from './tan';
-import { Eval_tanh } from './tanh';
-import { Eval_taylor } from './taylor';
 import { check_tensor_dimensions, Eval_tensor } from './tensor';
-import {
-  Eval_and,
-  Eval_not,
-  Eval_or,
-  Eval_test,
-  Eval_testeq,
-  Eval_testge,
-  Eval_testgt,
-  Eval_testle,
-  Eval_testlt,
-} from './test';
-import { Eval_transpose } from './transpose';
 import { Eval_user_function } from './userfunc';
-import { Eval_zero } from './zero';
 
 export function evaluate_integer(p: U): number {
   return nativeInt(Eval(p));

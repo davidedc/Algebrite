@@ -10,7 +10,7 @@ import {
   iscons,
   U,
 } from './defs';
-import { get_binding, symbol } from './symbol';
+import {get_binding, symbol} from './symbol';
 import { makeList } from '../sources/list';
 
 export function strcmp(str1: string, str2: string): Sign {

@@ -1,4 +1,3 @@
-import { loadavg } from 'os';
 import { alloc_tensor } from '../runtime/alloc';
 import {
   caddr,
@@ -17,7 +16,7 @@ import {
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push, push_all, top } from '../runtime/stack';
+import { push, top } from '../runtime/stack';
 import { sort } from '../sources/misc';
 import { absValFloat } from './abs';
 import { add, add_all, subtract } from './add';
@@ -78,7 +77,7 @@ export function Eval_roots(POLY: U) {
     stop('roots: 1st argument is not a polynomial in the variable ' + X1);
   }
 
-  push_all(roots(POLY1, X1));
+  push(roots(POLY1, X1));
 }
 
 function hasImaginaryCoeff(k: U[]): boolean {
@@ -104,13 +103,13 @@ function normalisedCoeff(poly: U, x: U): U[] {
   return miniStack.map((item) => divide(item, divideBy));
 }
 
-export function roots(POLY: U, X: U): (U | Tensor)[] {
+export function roots(POLY: U, X: U): U {
   // the simplification of nested radicals uses "roots", which in turn uses
   // simplification of nested radicals. Usually there is no problem, one level
   // of recursion does the job. Beyond that, we probably got stuck in a
   // strange case of infinite recursion, so bail out and return NIL.
   if (defs.recursionLevelNestedRadicalsRemoval > 1) {
-    return [symbol(NIL)];
+    return symbol(NIL);
   }
 
   log.debug(`checking if ${top()} is a case of simple roots`);
@@ -135,16 +134,17 @@ export function roots(POLY: U, X: U): (U | Tensor)[] {
     stop('roots: the polynomial is not factorable, try nroots');
   }
   if (n === 1) {
-    return results;
+    return results[0];
   }
   sort(results);
-  POLY = alloc_tensor(n);
-  POLY.tensor.ndim = 1;
-  POLY.tensor.dim[0] = n;
+  const tensor = alloc_tensor(n);
+  tensor.tensor.ndim = 1;
+  tensor.tensor.dim[0] = n;
   for (let i = 0; i < n; i++) {
-    POLY.tensor.elem[i] = results[i];
+    tensor.tensor.elem[i] = results[i];
   }
-  return [POLY];
+  console.log(`roots returning ${tensor}`);
+  return tensor;
 }
 
 // ok to generate these roots take a look at their form
@@ -502,7 +502,7 @@ function _solveDegree4Biquadratic(A: U, B: U, C: U, D: U, E: U): U[] {
       add(multiply(C, symbol(SECRETX)), E)
     ),
     symbol(SECRETX)
-  )[0] as Tensor;
+  ) as Tensor;
 
   const results = [];
   for (const sol of biquadraticSolutions.tensor.elem) {
@@ -541,7 +541,7 @@ function _solveDegree4ZeroB(A: U, B: U, C: U, D: U, E: U): U[] {
 
   log.debug(`resolventCubic: ${top()}`);
 
-  const resolventCubicSolutions = roots(arg1, symbol(SECRETX))[0] as Tensor;
+  const resolventCubicSolutions = roots(arg1, symbol(SECRETX)) as Tensor;
   log.debug(`resolventCubicSolutions: ${resolventCubicSolutions}`);
 
   let R_m = null;
@@ -640,7 +640,7 @@ function _solveDegree4NonzeroB(A: U, B: U, C: U, D: U, E: U): U[] {
   const r_q_x_2 = multiply(R_p, power(symbol(SECRETX), integer(2)));
   const r_q_x = multiply(R_q, symbol(SECRETX));
   const simplified = simplify(add_all([four_x_4, r_q_x_2, r_q_x, R_r]));
-  const depressedSolutions = roots(simplified, symbol(SECRETX))[0] as Tensor;
+  const depressedSolutions = roots(simplified, symbol(SECRETX)) as Tensor;
 
   log.debug(`p for depressed quartic: ${R_p}`);
   log.debug(`q for depressed quartic: ${R_q}`);

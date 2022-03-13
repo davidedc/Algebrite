@@ -2,7 +2,7 @@ import { lcm } from './lcm';
 import { Constants, DEBUG, defs, issymbol, noexpand, U } from '../runtime/defs';
 import { Find } from '../runtime/find';
 import { stop } from '../runtime/run';
-import { moveTos, pop, push, push_all } from '../runtime/stack';
+import { pop, push } from '../runtime/stack';
 import { equal } from '../sources/misc';
 import { add, subtract } from './add';
 import { integer, rational } from './bignum';
