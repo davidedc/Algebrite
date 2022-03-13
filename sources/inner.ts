@@ -27,7 +27,7 @@ import { isnegativeterm, isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
 import { multiply, negate } from './multiply';
 import { scalar_times_tensor, tensor_times_scalar } from './tensor';
-import {symbol} from "../runtime/symbol";
+import { symbol } from "../runtime/symbol";
 
 /* dot =====================================================================
 
@@ -206,21 +206,12 @@ export function Eval_inner(p1: U) {
 
   // now rebuild the arguments, just using the
   // refined operands
-  //console.log "rebuilding the argument ----"
-
   if (operands.length === 0) {
     push(symbol(SYMBOL_IDENTITY_MATRIX));
     return;
   }
-
-  p1 = makeList(symbol(INNER), ...operands);
-
-  p1 = cdr(p1);
-  let result = Eval(car(p1));
-  if (iscons(p1)) {
-    result = p1.tail().reduce((acc: U, p: U) => inner(acc, Eval(p)), result);
-  }
-  push(result);
+  operands = operands.map(Eval);
+  push(operands.reduce(inner));
 }
 
 // inner definition
