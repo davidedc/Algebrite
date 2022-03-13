@@ -39,7 +39,7 @@ import { Find } from '../runtime/find';
 import { stop } from '../runtime/run';
 import { pop, push } from '../runtime/stack';
 import { get_binding, symbol } from '../runtime/symbol';
-import { equal, length } from '../sources/misc';
+import { equal, length } from './misc';
 import { add, add_all } from './add';
 import { integer, nativeDouble, rational } from './bignum';
 import { clockform } from './clock';
@@ -214,7 +214,7 @@ export function simplify(p1: U): U {
   p1 = f4(p1);
   p1 = f5(p1);
   p1 = f9(p1);
-  [p1] = simplify_polarRect(p1);
+  p1 = simplify_polarRect(p1);
   if (do_simplify_nested_radicals) {
     let simplify_nested_radicalsResult: boolean;
     [simplify_nested_radicalsResult, p1] = simplify_nested_radicals(p1);
@@ -232,7 +232,7 @@ export function simplify(p1: U): U {
     }
   }
 
-  [p1] = simplify_rectToClock(p1);
+  p1 = simplify_rectToClock(p1);
   p1 = simplify_rational_expressions(p1);
 
   return p1;
@@ -432,12 +432,12 @@ function simplify_rational_expressions(p1: U): U {
 // things like 6*(cos(2/9*pi)+i*sin(2/9*pi))
 // where we have sin and cos, those might start to
 // look better in clock form i.e.  6*(-1)^(2/9)
-function simplify_rectToClock(p1: U): [U] {
+function simplify_rectToClock(p1: U): U {
   let p2: U;
   //breakpoint
 
   if (!Find(p1, symbol(SIN)) && !Find(p1, symbol(COS))) {
-    return [p1];
+    return p1;
   }
 
   p2 = clockform(Eval(p1)); // put new (hopefully simplified expr) in p2
@@ -449,10 +449,10 @@ function simplify_rectToClock(p1: U): [U] {
   if (count(p2) < count(p1)) {
     p1 = p2;
   }
-  return [p1];
+  return p1;
 }
 
-function simplify_polarRect(p1: U): [U] {
+function simplify_polarRect(p1: U): U {
   const tmp = polarRectAMinusOneBase(p1);
 
   const p2 = Eval(tmp); // put new (hopefully simplified expr) in p2
@@ -460,7 +460,7 @@ function simplify_polarRect(p1: U): [U] {
   if (count(p2) < count(p1)) {
     p1 = p2;
   }
-  return [p1];
+  return p1;
 }
 
 function polarRectAMinusOneBase(p1: U): U {
@@ -475,19 +475,11 @@ function polarRectAMinusOneBase(p1: U): U {
     const exponent = polarRectAMinusOneBase(caddr(p1));
     // try to simplify it using polar and rect
     return rect(polar(power(base, exponent)));
+  } else if (iscons(p1)) {
+    return p1.map(polarRectAMinusOneBase);
+  } else {
+    return p1;
   }
-  if (iscons(p1)) {
-    const arr = [];
-    while (iscons(p1)) {
-      //console.log("recursing on: " + car(p1).toString())
-      arr.push(polarRectAMinusOneBase(car(p1)));
-      //console.log("...transformed into: " + stack[tos-1].toString())
-      p1 = cdr(p1);
-    }
-
-    return makeList(...arr);
-  }
-  return p1;
 }
 
 function nterms(p: U) {
