@@ -636,7 +636,7 @@ function _index(p1: U) {
     return orig;
   }
 
-  const stack: U[] = [theTensor];
+  const stack: U[] = [];
   // we examined the head of the list which was the tensor,
   // now look into the indexes
   p1 = cdr(p1);
@@ -649,7 +649,7 @@ function _index(p1: U) {
     p1 = cdr(p1);
   }
 
-  return index_function(stack);
+  return index_function(theTensor, stack);
 }
 
 export function Eval_inv(p1: U) {
@@ -788,14 +788,13 @@ function setq_indexed(p1: U) {
     //   existingMatrix[index] = something
     stop('indexed assignment: expected a symbol name');
   }
-  const h = defs.tos;
-  push(Eval(caddr(p1)));
+  const lvalue = Eval(caddr(p1));
+  let args:U[] = [];
   let p2 = cdadr(p1);
   if (iscons(p2)) {
-    push_all([...p2].map(Eval));
+    args = ([...p2].map(Eval));
   }
-  set_component(defs.tos - h);
-  const p3 = pop();
+  const p3 = set_component(lvalue, ...args);
   set_binding(p4, p3);
   push(symbol(NIL));
 }
