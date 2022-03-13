@@ -53,7 +53,7 @@ import {
 } from './runtime/defs';
 import { Find } from './runtime/find';
 import { init } from './runtime/init';
-import { pop, push, restore, save, swap, dupl } from './runtime/stack';
+import { pop, push } from './runtime/stack';
 import {
   collectUserSymbols,
   get_binding, iskeyword,
@@ -172,10 +172,6 @@ $.equal = equal;
 $.length = length;
 $.scan = scan;
 $.Find = Find;
-$.dupl = dupl;
-$.swap = swap;
-$.restore = restore;
-$.save = save;
 $.push = push;
 $.pop = pop;
 $.get_binding = get_binding;

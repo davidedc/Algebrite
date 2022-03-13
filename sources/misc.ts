@@ -203,22 +203,6 @@ export function square(p1: U): U {
   return power(p1, integer(2));
 }
 
-//__cmp = (p1, p2) ->
-//  return cmp_expr(p1, p2)
-
-// n an integer
-export function sort_stack(n: number) {
-  //qsort(stack + tos - n, n, sizeof (U *), __cmp)
-
-  const h = defs.tos - n;
-  const subsetOfStack = defs.stack.slice(h, h + n);
-  subsetOfStack.sort(cmp_expr);
-  defs.stack = defs.stack
-    .slice(0, h)
-    .concat(subsetOfStack)
-    .concat(defs.stack.slice(h + n));
-}
-
 export function sort(arr: U[]): void {
   arr.sort(cmp_expr);
 }

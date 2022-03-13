@@ -1,27 +1,18 @@
-import { alloc_tensor } from '../runtime/alloc';
-import {
-  caddr,
-  cadr,
-  Constants,
-  DEBUG,
-  defs,
-  isdouble,
-  NIL,
-  U,
-} from '../runtime/defs';
-import { stop } from '../runtime/run';
-import { moveTos, pop, push, top } from '../runtime/stack';
-import {cmp_expr, sort_stack} from '../sources/misc';
-import { add } from './add';
-import { double } from './bignum';
-import { coeff } from './coeff';
-import { Eval } from './eval';
-import { yyfloat } from './float';
-import { guess } from './guess';
-import { imag } from './imag';
-import { ispolyexpandedform } from './is';
-import { multiply } from './multiply';
-import { real } from './real';
+import {alloc_tensor} from '../runtime/alloc';
+import {caddr, cadr, Constants, DEBUG, defs, isdouble, NIL, U,} from '../runtime/defs';
+import {stop} from '../runtime/run';
+import {pop, push, top} from '../runtime/stack';
+import {cmp_expr} from '../sources/misc';
+import {add} from './add';
+import {double} from './bignum';
+import {coeff} from './coeff';
+import {Eval} from './eval';
+import {yyfloat} from './float';
+import {guess} from './guess';
+import {imag} from './imag';
+import {ispolyexpandedform} from './is';
+import {multiply} from './multiply';
+import {real} from './real';
 import {symbol} from "../runtime/symbol";
 
 // find the roots of a polynomial numerically

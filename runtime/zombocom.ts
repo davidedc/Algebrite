@@ -1,11 +1,12 @@
-import { check_stack, top_level_eval } from './run';
-import { pop, push } from './stack';
-import {double, integer, push_double, push_integer} from '../sources/bignum';
-import {list, makeList} from '../sources/list';
-import { scan } from '../sources/scan';
-import { BaseAtom, defs, NIL, reset_after_error, U } from './defs';
-import { init } from './init';
+import {check_stack, top_level_eval} from './run';
+import {pop, push} from './stack';
+import {double, integer} from '../sources/bignum';
+import {makeList} from '../sources/list';
+import {scan} from '../sources/scan';
+import {defs, NIL, reset_after_error, U} from './defs';
+import {init} from './init';
 import {get_binding, symbol, usr_symbol} from './symbol';
+
 if (!defs.inited) {
   defs.inited = true;
   init();

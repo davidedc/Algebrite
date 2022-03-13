@@ -1,15 +1,7 @@
-import { stop } from './run';
-import { nativeInt } from '../sources/bignum';
-import { isZeroAtomOrTensor } from '../sources/is';
-import {
-  defs,
-  FORCE_FIXED_PRINTOUT,
-  MAX_FIXED_PRINTOUT_DIGITS,
-  PRINTMODE_LATEX,
-  Sign,
-  iscons,
-  U,
-} from './defs';
+import {stop} from './run';
+import {nativeInt} from '../sources/bignum';
+import {isZeroAtomOrTensor} from '../sources/is';
+import {defs, FORCE_FIXED_PRINTOUT, iscons, MAX_FIXED_PRINTOUT_DIGITS, PRINTMODE_LATEX, Sign, U,} from './defs';
 import {get_binding, symbol} from './symbol';
 import { makeList } from '../sources/list';
 
