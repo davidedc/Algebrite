@@ -1,26 +1,15 @@
 import bigInt from 'big-integer';
-import {
-  Cons,
-  Constants,
-  defs,
-  MEQUAL,
-  MULTIPLY,
-  Num,
-  POWER,
-  primetab,
-  U,
-} from '../runtime/defs';
-import { mcmp } from '../runtime/mcmp';
-import { stop } from '../runtime/run';
-import { pop, swap, push } from '../runtime/stack';
-import {push_symbol, symbol} from '../runtime/symbol';
-import { mint, setSignTo } from './bignum';
-import { equaln } from './is';
+import {Constants, defs, MEQUAL, MULTIPLY, Num, POWER, primetab, U,} from '../runtime/defs';
+import {mcmp} from '../runtime/mcmp';
+import {stop} from '../runtime/run';
+import {symbol} from '../runtime/symbol';
+import {mint, setSignTo} from './bignum';
+import {equaln} from './is';
 import { makeList } from './list';
-import { madd, msub } from './madd';
-import { mgcd } from './mgcd';
-import { mdiv, mdivrem, mmod, mmul } from './mmul';
-import { mprime } from './mprime';
+import {madd, msub} from './madd';
+import {mgcd} from './mgcd';
+import {mdiv, mdivrem, mmod, mmul} from './mmul';
+import {mprime} from './mprime';
 
 // Factor using the Pollard rho method
 
@@ -34,15 +23,10 @@ export function factor_number(p1: Num): U {
   n_factor_number = p1.q.a;
 
   const factors = factor_a();
-  if (factors.length === 0) {
-    //
-  }
-  if (factors.length === 1) {
+  if (factors.length == 1) {
     return factors[0];
   }
-  if (factors.length > 1) {
-    return new Cons(symbol(MULTIPLY), makeList(...factors));
-  }
+  return makeList(symbol(MULTIPLY), ...factors);
 }
 
 // factor using table look-up, then switch to rho method if necessary
