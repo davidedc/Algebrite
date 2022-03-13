@@ -350,37 +350,31 @@ function get_factor_from_real_root(
     console.log(`POLY=${p1}`);
   }
 
-  const h = defs.tos;
+  const an = ydivisors(polycoeff[factpoly_expo]);
 
-  const an = defs.tos;
-  push_all(ydivisors(polycoeff[factpoly_expo]));
-  const nan = defs.tos - an;
-
-  const a0 = defs.tos;
-  push_all(ydivisors(polycoeff[0]));
-  const na0 = defs.tos - a0;
+  const a0 = ydivisors(polycoeff[0]);
 
   if (DEBUG) {
     console.log('divisors of base term');
-    for (let i = 0; i < na0; i++) {
-      console.log(`, ${defs.stack[a0 + i]}`);
+    for (let i = 0; i < a0.length; i++) {
+      console.log(`, ${a0[i]}`);
     }
     console.log('divisors of leading term');
-    for (let i = 0; i < nan; i++) {
-      console.log(`, ${defs.stack[an + i]}`);
+    for (let i = 0; i < an.length; i++) {
+      console.log(`, ${an[i]}`);
     }
   }
 
   // try roots
-  for (let rootsTries_i = 0; rootsTries_i < nan; rootsTries_i++) {
-    for (let rootsTries_j = 0; rootsTries_j < na0; rootsTries_j++) {
+  for (let rootsTries_i = 0; rootsTries_i < an.length; rootsTries_i++) {
+    for (let rootsTries_j = 0; rootsTries_j < a0.length; rootsTries_j++) {
       //if DEBUG then console.log "nan: " + nan + " na0: " + na0 + " i: " + rootsTries_i + " j: " + rootsTries_j
-      p4 = defs.stack[an + rootsTries_i];
-      p5 = defs.stack[a0 + rootsTries_j];
+      p4 = an[rootsTries_i];
+      p5 = a0[rootsTries_j];
 
       p3 = negate(divide(p5, p4));
 
-      [p6] = Evalpoly(p3, polycoeff, factpoly_expo);
+      p6 = Evalpoly(p3, polycoeff, factpoly_expo);
 
       if (DEBUG) {
         console.log(
@@ -389,7 +383,6 @@ function get_factor_from_real_root(
       }
 
       if (isZeroAtomOrTensor(p6)) {
-        moveTos(h);
         if (DEBUG) {
           console.log('get_factor_from_real_root returning true');
         }
@@ -400,7 +393,7 @@ function get_factor_from_real_root(
 
       p3 = negate(p3);
 
-      [p6] = Evalpoly(p3, polycoeff, factpoly_expo);
+      p6 = Evalpoly(p3, polycoeff, factpoly_expo);
 
       if (DEBUG) {
         console.log(
@@ -409,7 +402,6 @@ function get_factor_from_real_root(
       }
 
       if (isZeroAtomOrTensor(p6)) {
-        moveTos(h);
         if (DEBUG) {
           console.log('get_factor_from_real_root returning true');
         }
@@ -417,8 +409,6 @@ function get_factor_from_real_root(
       }
     }
   }
-
-  moveTos(h);
 
   if (DEBUG) {
     console.log('get_factor_from_real_root returning false');
@@ -447,8 +437,6 @@ function get_factor_from_complex_root(
     console.log(`complex root finding for POLY=${p1}`);
   }
 
-  const h = defs.tos;
-
   // trying -1^(2/3) which generates a polynomial in Z
   // generates x^2 + 2x + 1
   p4 = rect(power(Constants.negOne, rational(2, 3)));
@@ -456,13 +444,11 @@ function get_factor_from_complex_root(
     console.log(`complex root finding: trying with ${p4}`);
   }
   p3 = p4;
-  push(p3);
-  [p6] = Evalpoly(p3, polycoeff, factpoly_expo);
+  p6 = Evalpoly(p3, polycoeff, factpoly_expo);
   if (DEBUG) {
     console.log(`complex root finding result: ${p6}`);
   }
   if (isZeroAtomOrTensor(p6)) {
-    moveTos(h);
     if (DEBUG) {
       console.log('get_factor_from_complex_root returning true');
     }
@@ -477,13 +463,11 @@ function get_factor_from_complex_root(
     console.log(`complex root finding: trying with ${p4}`);
   }
   p3 = p4;
-  push(p3);
-  [p6] = Evalpoly(p3, polycoeff, factpoly_expo);
+  p6 = Evalpoly(p3, polycoeff, factpoly_expo);
   if (DEBUG) {
     console.log(`complex root finding result: ${p6}`);
   }
   if (isZeroAtomOrTensor(p6)) {
-    moveTos(h);
     if (DEBUG) {
       console.log('get_factor_from_complex_root returning true');
     }
@@ -504,13 +488,10 @@ function get_factor_from_complex_root(
 
       const p3 = p4;
 
-      push(p3);
-
-      const [p6] = Evalpoly(p3, polycoeff, factpoly_expo);
+      const p6 = Evalpoly(p3, polycoeff, factpoly_expo);
 
       //console.log("complex root finding result: " + p6)
       if (isZeroAtomOrTensor(p6)) {
-        moveTos(h);
         if (DEBUG) {
           console.log(`found complex root: ${p6}`);
         }
@@ -518,8 +499,6 @@ function get_factor_from_complex_root(
       }
     }
   }
-
-  moveTos(h);
 
   if (DEBUG) {
     console.log('get_factor_from_complex_root returning false');
@@ -557,7 +536,7 @@ function yydivpoly(p4: U, p5: U, polycoeff: U[], factpoly_expo: number) {
 }
 //console.log print_list(p6)
 
-function Evalpoly(p3: U, polycoeff: U[], factpoly_expo: number): [U] {
+function Evalpoly(p3: U, polycoeff: U[], factpoly_expo: number): U {
   let temp: U = Constants.zero;
   for (let i = factpoly_expo; i >= 0; i--) {
     if (DEBUG) {
@@ -566,6 +545,5 @@ function Evalpoly(p3: U, polycoeff: U[], factpoly_expo: number): [U] {
     }
     temp = add(multiply(temp, p3), polycoeff[i]);
   }
-  const p6 = temp;
-  return [p6];
+  return temp;
 }
