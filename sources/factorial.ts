@@ -65,51 +65,41 @@ function simplifyfactorials_(p1: U): U {
   return p1;
 }
 
-function sfac_product(p1: U): U {
-  const s = defs.tos;
-
-  let n = 0;
+function sfac_product(p1: U) {
+  let terms:U[]=[];
   if (iscons(p1)) {
-    p1.tail().forEach((p) => {
-      push(p);
-      n++;
-    });
+    terms = p1.tail();
   }
 
-  for (let i = 0; i < n - 1; i++) {
-    if (defs.stack[s + i] === symbol(NIL)) {
+  for (let i = 0; i < terms.length; i++) {
+    if (terms[i] === symbol(NIL)) {
       continue;
     }
-    for (let j = i + 1; j < n; j++) {
-      if (defs.stack[s + j] === symbol(NIL)) {
+    for (let j = i + 1; j < terms.length; j++) {
+      if (terms[j] === symbol(NIL)) {
         continue;
       }
-      sfac_product_f(s, i, j);
+      sfac_product_f(terms, i, j);
     }
   }
 
-  push(Constants.one);
+  let result:U = Constants.one;
 
-  for (let i = 0; i < n; i++) {
-    if (defs.stack[s + i] === symbol(NIL)) {
+  for (let i = 0; i < terms.length; i++) {
+    if (terms[i] === symbol(NIL)) {
       continue;
     }
-    const arg1 = pop();
-    push(multiply(arg1, defs.stack[s + i]));
+    result = multiply(result, terms[i]);
   }
 
-  p1 = pop();
-
-  moveTos(defs.tos - n);
-
-  return p1;
+  return result;
 }
 
-function sfac_product_f(s: number, a: number, b: number) {
+function sfac_product_f(s: U[], a: number, b: number) {
   let p3: U, p4: U;
 
-  let p1 = defs.stack[s + a];
-  let p2 = defs.stack[s + b];
+  let p1 = s[a];
+  let p2 = s[b];
 
   if (ispower(p1)) {
     p3 = caddr(p1);
@@ -152,7 +142,7 @@ function sfac_product_f(s: number, a: number, b: number) {
     for (let i = 1; i <= n; i++) {
       temp3 = multiply(temp3, power(add(cadr(p2), integer(i)), p3));
     }
-    defs.stack[s + a] = temp3;
-    defs.stack[s + b] = symbol(NIL);
+    s[a] = temp3;
+    s[b] = symbol(NIL);
   }
 }
