@@ -2,7 +2,6 @@ import { lcm } from './lcm';
 import { Constants, DEBUG, defs, issymbol, noexpand, U } from '../runtime/defs';
 import { Find } from '../runtime/find';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
 import { equal } from '../sources/misc';
 import { add, subtract } from './add';
 import { integer, rational } from './bignum';
@@ -239,12 +238,7 @@ function yyfactorpoly(p1: U, p2: U): U {
               `so just returning previousFactorisation times dividend: ${previousFactorisation} * ${dividend}`
             );
           }
-          push(previousFactorisation);
-
-          const arg2 = noexpand(yycondense, dividend);
-
-          const arg1 = pop();
-          return multiply_noexpand(arg1, arg2);
+          return multiply_noexpand(previousFactorisation, noexpand(yycondense, dividend));
         }
 
         //console.log("result: (still to be factored) " + remainingPoly)

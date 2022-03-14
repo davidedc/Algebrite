@@ -22,11 +22,10 @@ import {
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
 import { stop } from '../runtime/run';
-import { pop, push, top } from '../runtime/stack';
 import { symbol } from '../runtime/symbol';
 import { equal } from '../sources/misc';
 import { add } from './add';
-import { nativeInt, push_double } from './bignum';
+import { double, nativeInt } from './bignum';
 import { derivative } from './derivative';
 import { Eval } from './eval';
 import { guess } from './guess';
@@ -577,8 +576,7 @@ function italu_hashcode(u: U, x: U): number {
       case EXP:
         return hash_power(symbol(E), cadr(u), x);
       case SQRT:
-        push_double(0.5);
-        var half = pop();
+        var half = double(0.5);
         return hash_power(cadr(u), half, x);
       default:
         return hash_function(u, x);

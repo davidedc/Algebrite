@@ -13,7 +13,6 @@ import {
   U,
   noexpand,
 } from '../runtime/defs';
-import { moveTos, pop, push } from '../runtime/stack';
 import { yyexpand } from '../sources/misc';
 import { add, subtract } from './add';
 import { integer, bignum_factorial, nativeInt } from './bignum';

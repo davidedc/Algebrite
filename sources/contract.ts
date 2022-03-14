@@ -10,10 +10,9 @@ import {
   U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
 import { symbol } from "../runtime/symbol";
 import { add } from './add';
-import { integer, nativeInt, push_integer } from './bignum';
+import { integer, nativeInt } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
 
@@ -134,7 +133,7 @@ function contract(p1: U, p2: U, p3: U): U {
 
   if (nelem === 1) {
     return b[0];
-}
+  }
 
   return p2;
 }

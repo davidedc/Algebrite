@@ -11,7 +11,6 @@ import {
   U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
 import { set_binding, symbol, usr_symbol } from '../runtime/symbol';
 import { double } from './bignum';
 import { Eval } from './eval';
