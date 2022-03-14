@@ -1,5 +1,4 @@
 import { caddr, cadr, NIL, U } from '../runtime/defs';
-import { top } from '../runtime/stack';
 import { symbol } from "../runtime/symbol";
 import { degree } from './degree';
 import { Eval } from './eval';

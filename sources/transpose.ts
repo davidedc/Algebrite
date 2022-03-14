@@ -23,7 +23,6 @@ import {
   U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
 import { symbol } from "../runtime/symbol";
 import { equal } from '../sources/misc';
 import { add } from './add';

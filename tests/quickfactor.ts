@@ -10,7 +10,6 @@ test('quickfactor', t => {
     let base = i;
     const qf = quickfactor(integer(base), integer(1));
     const arr: U[] = [];
-    const h = defs.tos;
     let j = 0;
     while (base > 1) {
       let expo = 0;
@@ -23,8 +22,8 @@ test('quickfactor', t => {
       }
       j++;
     }
-    defs.p2 = multiply_all(arr);
-    defs.p1 = qf;
-    t.is(true, equal(defs.p1, defs.p2), `${defs.p1} != ${defs.p2}`);
+    let p2 = multiply_all(arr);
+    let p1 = qf;
+    t.is(true, equal(p1, p2), `${p1} != ${p2}`);
   }
 });

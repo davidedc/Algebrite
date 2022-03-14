@@ -34,7 +34,6 @@ import {
   U
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
-import { pop, push } from '../runtime/stack';
 import { symbol } from "../runtime/symbol";
 import { equal, length } from '../sources/misc';
 import { absValFloat } from './abs';

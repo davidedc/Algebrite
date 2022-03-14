@@ -6,7 +6,6 @@ import {
   Tensor,
   U,
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
 import { equal } from '../sources/misc';
 import { add } from './add';
 import { integer } from './bignum';

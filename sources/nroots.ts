@@ -1,7 +1,6 @@
 import { alloc_tensor } from '../runtime/alloc';
 import { caddr, cadr, Constants, DEBUG, defs, isdouble, NIL, U } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { top } from '../runtime/stack';
 import { symbol } from "../runtime/symbol";
 import { cmp_expr } from '../sources/misc';
 import { add } from './add';
@@ -60,9 +59,6 @@ export function Eval_nroots(p1: U) {
   if (!ispolyexpandedform(p1, p2)) {
     stop('nroots: polynomial?');
   }
-
-  // mark the stack
-  const h = defs.tos;
 
   // get the coefficients
   const cs = coeff(p1, p2);

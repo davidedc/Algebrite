@@ -1,5 +1,4 @@
 import { car, cdr, Constants, NIL, TAYLOR, U } from '../runtime/defs';
-import { top } from '../runtime/stack';
 import { symbol } from "../runtime/symbol";
 import { add, subtract } from './add';
 import { integer, nativeInt } from './bignum';

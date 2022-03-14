@@ -32,15 +32,14 @@ import {
   transpose_unicode,
   U
 } from '../runtime/defs';
-import { isalnumorunderscore, isalpha, isdigit, isspace } from '../runtime/otherCFunctions';
-import { stop } from '../runtime/run';
-import { top } from '../runtime/stack';
-import { symbol, usr_symbol } from '../runtime/symbol';
-import { bignum_scan_float, bignum_scan_integer } from './bignum';
-import { equaln } from './is';
-import { makeList } from './list';
-import { inverse, multiply, negate } from './multiply';
-import { check_tensor_dimensions } from './tensor';
+import {isalnumorunderscore, isalpha, isdigit, isspace,} from '../runtime/otherCFunctions';
+import {stop} from '../runtime/run';
+import {symbol, usr_symbol} from '../runtime/symbol';
+import {bignum_scan_float, bignum_scan_integer} from './bignum';
+import {equaln} from './is';
+import {makeList} from './list';
+import {inverse, multiply, negate} from './multiply';
+import {check_tensor_dimensions} from './tensor';
 
 // This scanner uses the recursive descent method.
 //
@@ -870,7 +869,7 @@ function scan_function_call_without_function_name(lhs: U): U {
   get_next_token();
 
   if (DEBUG) {
-    console.log(`-- scan_function_call_without_function_name end: ${top()}`);
+    console.log(`-- scan_function_call_without_function_name end: ${fcall[fcall.length-1]}`);
   }
   return makeList(...fcall);
 }

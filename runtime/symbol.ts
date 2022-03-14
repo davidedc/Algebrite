@@ -1,7 +1,6 @@
 import { countsize } from './count';
 import { BaseAtom, car, cdr, Cons, iscons, issymbol, istensor, NIL, Str, Sym, SYM, U } from './defs';
 import { stop } from './run';
-import { push } from './stack';
 
 // The symbol table is a simple array of struct U.
 
@@ -173,11 +172,6 @@ function is_usr_symbol(p: U): boolean {
     return false;
   }
   return /^[abcdjnrstxyz]_?$/.test(p.printname) || !keywordScope.has(p);
-}
-
-// push indexed symbol
-export function push_symbol(k: string) {
-  push(symbol(k));
 }
 
 // total clearout of symbol table

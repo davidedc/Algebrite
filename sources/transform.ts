@@ -21,7 +21,6 @@ import {
   U,
   noexpand,
 } from '../runtime/defs';
-import { pop } from '../runtime/stack';
 import { get_binding, set_binding, symbol } from '../runtime/symbol';
 import { subtract } from './add';
 import { polyform } from './bake';
@@ -170,7 +169,6 @@ export function transform(
           restTerm = cdr(restTerm);
 
           if (DEBUG) {
-            console.log('tos before recursive transform: ' + defs.tos);
             console.log(`testing: ${secondTerm}`);
             console.log(`about to try to simplify other term: ${secondTerm}`);
           }

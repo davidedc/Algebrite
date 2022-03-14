@@ -1,5 +1,4 @@
 import {check_stack, top_level_eval} from './run';
-import {pop, push} from './stack';
 import {double, integer} from '../sources/bignum';
 import {makeList} from '../sources/list';
 import {scan} from '../sources/scan';
@@ -51,11 +50,9 @@ export function exec(name: string, ...argus: (string | number | U)[]) {
   const fn = get_binding(usr_symbol(name));
   check_stack();
   const p1 = makeList(fn, ...argus.map(parse_internal));
-  push(p1);
 
   try {
-    top_level_eval();
-    result = pop();
+    result = top_level_eval(p1);
     check_stack();
   } catch (error) {
     reset_after_error();

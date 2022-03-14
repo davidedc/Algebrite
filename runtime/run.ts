@@ -1,4 +1,3 @@
-import { moveTos, pop, push, top } from './stack';
 import { bake } from '../sources/bake';
 import {
   do_clearall,
@@ -33,7 +32,6 @@ import {
   Sym,
   SYMBOL_I,
   SYMBOL_J,
-  TOS,
   transpose_unicode,
   U,
 } from './defs';
@@ -59,8 +57,6 @@ export function stop(s: string): never {
   const message = defs.errorMessage;
 
   defs.errorMessage = '';
-  moveTos(0);
-
   throw new Error(message);
 }
 
@@ -319,7 +315,7 @@ export function findDependenciesInScript(
         // Note that the variable
         // will still point to un-simplified structures,
         // we only simplify the generated code.
-        push(get_binding(usr_symbol(key)));
+        let v = get_binding(usr_symbol(key));
 
         // Since we go and simplify all variables we meet,
         // we have to replace each variable passed as a parameter
@@ -349,15 +345,15 @@ export function findDependenciesInScript(
             );
             replacementsFrom.push(originalUserSymbol);
             replacementsTo.push(newUserSymbol);
-            push(subst(pop(), originalUserSymbol, newUserSymbol));
+            v = subst(v, originalUserSymbol, newUserSymbol);
             if (DEBUG) {
-              console.log(`after substitution: ${top()}`);
+              console.log(`after substitution: ${v}`);
             }
           }
         }
 
         try {
-          push(simplifyForCodeGeneration(pop()));
+          v = simplifyForCodeGeneration(v);
         } catch (error) {
           if (PRINTOUTRESULT) {
             console.log(error);
@@ -373,19 +369,17 @@ export function findDependenciesInScript(
           indexOfEachReplacement++
         ) {
           //console.log "replacing back " + replacementsTo[indexOfEachReplacement] + " into: " + replacementsFrom[indexOfEachReplacement]
-          push(
-            subst(
-              pop(),
-              replacementsTo[indexOfEachReplacement],
-              replacementsFrom[indexOfEachReplacement]
-            )
+          v = subst(
+            v,
+            replacementsTo[indexOfEachReplacement],
+            replacementsFrom[indexOfEachReplacement]
           );
         }
 
         clearRenamedVariablesToAvoidBindingToExternalScope();
 
         if (defs.errorMessage === '') {
-          const toBePrinted = pop();
+          const toBePrinted = v;
 
           // we have to get all the variables used on the right side
           // here. I.e. to print the arguments it's better to look at the
@@ -760,16 +754,13 @@ export function run(
 
     indexOfPartRemainingToBeParsed += n;
 
-    push(p1);
-    //breakpoint
     let errorWhileExecution = false;
     try {
       defs.stringsEmittedByUserPrintouts = '';
-      top_level_eval();
+      p2 = top_level_eval(p1);
       //console.log "emitted string after top_level_eval(): >" + stringsEmittedByUserPrintouts + "<"
       //console.log "allReturnedPlainStrings string after top_level_eval(): >" + allReturnedPlainStrings + "<"
 
-      p2 = pop();
       check_stack();
 
       if (isstr(p2)) {
@@ -895,14 +886,6 @@ export function run(
 }
 
 export function check_stack() {
-  if (defs.tos !== 0) {
-    breakpoint;
-    stop('stack error');
-  }
-  if (defs.frame !== TOS) {
-    breakpoint;
-    stop('frame error');
-  }
   if (defs.chainOfUserSymbolsNotFunctionsBeingEvaluated.length !== 0) {
     breakpoint;
     stop('symbols evaluation still ongoing?');
@@ -919,9 +902,9 @@ export function check_stack() {
 
 // cannot reference symbols yet
 
-// returns nil on stack if no result to print
+// returns nil if no result to print
 
-export function top_level_eval() {
+export function top_level_eval(expr:U) {
   if (DEBUG) {
     console.log('#### top level eval');
   }
@@ -932,22 +915,20 @@ export function top_level_eval() {
 
   defs.expanding = !isZeroAtomOrTensor(get_binding(shouldAutoexpand));
 
-  const originalArgument = top();
-  push(Eval(pop()));
-  let evalledArgument = top();
+  const originalArgument = expr;
+  let evalledArgument = Eval(expr);
 
   // "draw", "for" and "setq" return "nil", there is no result to print
   if (evalledArgument === symbol(NIL)) {
-    return;
+    return evalledArgument;
   }
 
   // update "last" to contain the last result
   set_binding(symbol(LAST), evalledArgument);
 
   if (!isZeroAtomOrTensor(get_binding(symbol(BAKE)))) {
-    const baked = bake(pop());
+    const baked = bake(evalledArgument);
     evalledArgument = baked;
-    push(baked);
   }
 
   // If user asked explicitly asked to evaluate "i" or "j" and
@@ -958,15 +939,16 @@ export function top_level_eval() {
       originalArgument === symbol(SYMBOL_J)) &&
     isimaginaryunit(evalledArgument)
   ) {
-    return;
+    return evalledArgument;
     // In all other cases, replace all instances of (-1)^(1/2) in the result
     // with the symbol "i" or "j" depending on which one
     // represents the imaginary unit
   } else if (isimaginaryunit(get_binding(symbol(SYMBOL_J)))) {
-    push(subst(pop(), Constants.imaginaryunit, symbol(SYMBOL_J)));
+    return subst(evalledArgument, Constants.imaginaryunit, symbol(SYMBOL_J));
   } else if (isimaginaryunit(get_binding(symbol(SYMBOL_I)))) {
-    push(subst(pop(), Constants.imaginaryunit, symbol(SYMBOL_I)));
+    return subst(evalledArgument, Constants.imaginaryunit, symbol(SYMBOL_I));
   }
+  return evalledArgument;
 }
 
 export function check_esc_flag() {

@@ -1,5 +1,4 @@
 import bigInt from 'big-integer';
-import {moveTos} from './stack';
 import {collectLatexStringFromReturnValue, print_expr,} from '../sources/print';
 import {symbol} from './symbol';
 
@@ -55,30 +54,11 @@ class Defs {
   // Currently not used.
   public called_from_Algebra_block = false;
 
-  // top of stack
-  public tos = 0;
-
   public expanding = false;
   public evaluatingAsFloats = false;
   public evaluatingPolar = false;
   public esc_flag = false;
   public trigmode: 0 | 1 | 2 = 0;
-
-  // will contain *U
-  public stack: (U | undefined | null)[] = [];
-
-  public frame = 0;
-
-  public p0?: U;
-  public p1?: U;
-  public p2?: U;
-  public p3?: U;
-  public p4?: U;
-  public p5?: U;
-  public p6?: U;
-  public p7?: U;
-  public p8?: U;
-  public p9?: U;
 
   public out_count = 0;
   public test_flag = false;
@@ -428,12 +408,6 @@ export const C6 = '$C6';
 
 export const E = YYE;
 
-// TOS cannot be arbitrarily large because the OS seg faults on deep recursion.
-// For example, a circular evaluation like x=x+1 can cause a seg fault.
-// At this setting (100,000) the evaluation stack overruns before seg fault.
-
-export const TOS = 100000;
-
 export const MAXPRIMETAB = 10000;
 export const MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES = 5;
 export const MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE = 10;
@@ -730,10 +704,8 @@ export function MEQUAL(p: bigInt.BigInteger, n: number): boolean {
 }
 
 export function reset_after_error() {
-  moveTos(0);
-  defs.esc_flag = false;
+    defs.esc_flag = false;
   draw_flag = false;
-  defs.frame = TOS;
   defs.evaluatingAsFloats = false;
   defs.evaluatingPolar = false;
 }

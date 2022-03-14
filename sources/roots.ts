@@ -16,7 +16,6 @@ import {
   U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push, top } from '../runtime/stack';
 import { symbol } from "../runtime/symbol";
 import { cmp_expr, sort } from '../sources/misc';
 import { absValFloat } from './abs';
@@ -106,7 +105,7 @@ export function roots(POLY: U, X: U): U {
     return symbol(NIL);
   }
 
-  log.debug(`checking if ${top()} is a case of simple roots`);
+  log.debug(`checking if ${POLY} is a case of simple roots`);
 
   const k = normalisedCoeff(POLY, X);
 
@@ -319,7 +318,7 @@ function _solveDegree3(A: U, B: U, C: U, D: U): U[] {
 
       const R_4_DELTA03 = multiply(power(R_DELTA0, integer(3)), integer(4));
 
-  const R_DELTA0_toBeCheckedIfZero = absValFloat(simplify(R_DELTA0));
+      const R_DELTA0_toBeCheckedIfZero = absValFloat(simplify(R_DELTA0));
 
   const R_determinant = absValFloat(
         simplify(
@@ -358,7 +357,7 @@ function _solveDegree3(A: U, B: U, C: U, D: U): U[] {
         R_C = simplify(
           power(multiply(add(arg1, R_DELTA1), rational(1, 2)), rational(1, 3))
         );
-    const R_C_simplified_toCheckIfZero = absValFloat(simplify(R_C));
+        const R_C_simplified_toCheckIfZero = absValFloat(simplify(R_C));
 
     log.debug(`cubic: C: ${R_C}`);
     log.debug(`cubic: C as absval and float: ${R_C_simplified_toCheckIfZero}`);
@@ -533,7 +532,7 @@ function _solveDegree4ZeroB(A: U, B: U, C: U, D: U, E: U): U[] {
             )
           );
 
-  log.debug(`resolventCubic: ${top()}`);
+  log.debug(`resolventCubic: ${arg1}`);
 
   const resolventCubicSolutions = roots(arg1, symbol(SECRETX)) as Tensor;
   log.debug(`resolventCubicSolutions: ${resolventCubicSolutions}`);
@@ -639,7 +638,6 @@ function _solveDegree4NonzeroB(A: U, B: U, C: U, D: U, E: U): U[] {
   log.debug(`p for depressed quartic: ${R_p}`);
   log.debug(`q for depressed quartic: ${R_q}`);
   log.debug(`r for depressed quartic: ${R_r}`);
-  log.debug(`tos 4 ${defs.tos}`);
   log.debug(`4 * x^4: ${four_x_4}`);
   log.debug(`R_p * x^2: ${r_q_x_2}`);
   log.debug(`R_q * x: ${r_q_x}`);

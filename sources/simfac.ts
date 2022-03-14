@@ -9,7 +9,6 @@ import {
   ismultiply,
   ispower, U
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
 import { symbol } from "../runtime/symbol";
 import { equal } from '../sources/misc';
 import { add, add_all, subtract } from './add';

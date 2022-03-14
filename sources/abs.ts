@@ -20,7 +20,6 @@ import {
   findPossibleExponentialForm
 } from '../runtime/find';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
 import { symbol } from "../runtime/symbol";
 import { exponential } from '../sources/misc';
 import { add } from './add';

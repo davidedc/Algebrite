@@ -8,7 +8,6 @@ import {
   U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
 import { get_binding, set_binding, symbol } from '../runtime/symbol';
 import { integer, nativeInt } from './bignum';
 import { Eval, evaluate_integer } from './eval';

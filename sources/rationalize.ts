@@ -10,7 +10,6 @@ import {
   istensor,
   U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
 import { add } from './add';
 import { Condense } from './condense';
 import { Eval } from './eval';

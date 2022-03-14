@@ -40,7 +40,6 @@ import {
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
 import { stop } from '../runtime/run';
-import { top } from '../runtime/stack';
 import { symbol } from "../runtime/symbol";
 import { equal, exponential, length, lessp } from '../sources/misc';
 import { add, add_all, subtract } from './add';
