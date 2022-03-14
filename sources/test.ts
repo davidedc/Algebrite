@@ -11,26 +11,22 @@ import {
   NIL,
   NUM,
   Sign,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { subtract } from './add';
 import { Eval } from './eval';
 import { yyfloat } from './float';
 import {
   isZeroAtomOrTensor,
-  isZeroLikeOrNonZeroLikeOrUndetermined,
+  isZeroLikeOrNonZeroLikeOrUndetermined
 } from './is';
 import { simplify } from './simplify';
-import {symbol} from "../runtime/symbol";
 
 // If the number of args is odd then the last arg is the default result.
 // Works like a switch statement. Could also be used for piecewise
 // functions? TODO should probably be called "switch"?
 export function Eval_test(p1: U) {
-  push(_test(p1));
-}
-function _test(p1: U): U {
   const orig = p1;
   p1 = cdr(p1);
   while (iscons(p1)) {
@@ -83,11 +79,9 @@ export function Eval_testeq(p1: U) {
   // that here and down below.
   let checkResult = isZeroLikeOrNonZeroLikeOrUndetermined(subtractionResult);
   if (checkResult) {
-    push(Constants.zero);
-    return;
+    return Constants.zero;
   } else if (checkResult != null && !checkResult) {
-    push(Constants.one);
-    return;
+    return Constants.one;
   }
 
   // we didn't get a simple numeric result but
@@ -99,17 +93,15 @@ export function Eval_testeq(p1: U) {
 
   checkResult = isZeroLikeOrNonZeroLikeOrUndetermined(subtractionResult);
   if (checkResult) {
-    push(Constants.zero);
-    return;
+    return Constants.zero;
   } else if (checkResult != null && !checkResult) {
-    push(Constants.one);
-    return;
+    return Constants.one;
   }
 
   // if we didn't get to a number then we
   // don't know whether the quantities are
   // different so do nothing
-  push(orig);
+  return orig;
 }
 
 // Relational operators expect a numeric result for operand difference.
@@ -118,14 +110,13 @@ export function Eval_testge(p1: U) {
   const comparison = cmp_args(p1);
 
   if (comparison == null) {
-    push(orig);
-    return;
+    return orig;
   }
 
   if (comparison >= 0) {
-    push(Constants.one);
+    return Constants.one;
   } else {
-    push(Constants.zero);
+    return Constants.zero;
   }
 }
 
@@ -134,14 +125,13 @@ export function Eval_testgt(p1: U) {
   const comparison = cmp_args(p1);
 
   if (comparison == null) {
-    push(orig);
-    return;
+    return orig;
   }
 
   if (comparison > 0) {
-    push(Constants.one);
+    return Constants.one;
   } else {
-    push(Constants.zero);
+    return Constants.zero;
   }
 }
 
@@ -150,14 +140,13 @@ export function Eval_testle(p1: U) {
   const comparison = cmp_args(p1);
 
   if (comparison == null) {
-    push(orig);
-    return;
+    return orig;
   }
 
   if (comparison <= 0) {
-    push(Constants.one);
+    return Constants.one;
   } else {
-    push(Constants.zero);
+    return Constants.zero;
   }
 }
 
@@ -166,14 +155,13 @@ export function Eval_testlt(p1: U) {
   const comparison = cmp_args(p1);
 
   if (comparison == null) {
-    push(orig);
-    return;
+    return orig;
   }
 
   if (comparison < 0) {
-    push(Constants.one);
+    return Constants.one;
   } else {
-    push(Constants.zero);
+    return Constants.zero;
   }
 }
 
@@ -183,13 +171,13 @@ export function Eval_not(p1: U) {
   const checkResult = isZeroLikeOrNonZeroLikeOrUndetermined(cadr(p1));
   if (checkResult == null) {
     // inconclusive test on predicate
-    push(wholeAndExpression);
+    return wholeAndExpression;
   } else if (checkResult) {
     // true -> false
-    push(Constants.zero);
+    return Constants.zero;
   } else {
     // false -> true
-    push(Constants.one);
+    return Constants.one;
   }
 }
 
@@ -237,8 +225,7 @@ export function Eval_and(p1: U) {
       andPredicates = cdr(andPredicates);
     } else if (!checkResult) {
       // found a false, enough to falsify everything and return
-      push(Constants.zero);
-      return;
+      return Constants.zero;
     }
   }
 
@@ -249,9 +236,9 @@ export function Eval_and(p1: U) {
   // If all the predicates were known, then we can conclude
   // that the test returns true.
   if (somePredicateUnknown) {
-    push(wholeAndExpression);
+    return wholeAndExpression;
   } else {
-    push(Constants.one);
+    return Constants.one;
   }
 }
 
@@ -280,8 +267,7 @@ export function Eval_or(p1: U) {
       orPredicates = cdr(orPredicates);
     } else if (checkResult) {
       // found a true, enough to return true
-      push(Constants.one);
-      return;
+      return Constants.one;
     } else if (!checkResult) {
       // found a false, move on to the next predicate
       orPredicates = cdr(orPredicates);
@@ -295,9 +281,9 @@ export function Eval_or(p1: U) {
   // If all the predicates were known, then we can conclude
   // that the test returns false.
   if (somePredicateUnknown) {
-    push(wholeOrExpression);
+    return wholeOrExpression;
   } else {
-    push(Constants.zero);
+    return Constants.zero;
   }
 }
 

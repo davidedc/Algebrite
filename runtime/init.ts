@@ -1,10 +1,118 @@
-import { version } from './defs';
-import { pop, top } from './stack';
+import { Eval_abs } from '../sources/abs';
+import { Eval_add } from '../sources/add';
+import { Eval_adj } from '../sources/adj';
+import { Eval_approxratio } from '../sources/approxratio';
+import { Eval_arccos } from '../sources/arccos';
+import { Eval_arccosh } from '../sources/arccosh';
+import { Eval_arcsin } from '../sources/arcsin';
+import { Eval_arcsinh } from '../sources/arcsinh';
+import { Eval_arctan } from '../sources/arctan';
+import { Eval_arctanh } from '../sources/arctanh';
+import { Eval_arg } from '../sources/arg';
+import { Eval_besselj } from '../sources/besselj';
+import { Eval_bessely } from '../sources/bessely';
 import { integer, rational } from '../sources/bignum';
-import { Eval, Eval_binding, Eval_check, Eval_det, Eval_dim, Eval_divisors, Eval_do, Eval_Eval, Eval_exp, Eval_factorial, Eval_factorpoly, Eval_hermite, Eval_hilbert, Eval_index, Eval_inv, Eval_invg, Eval_isinteger, Eval_number, Eval_operator, Eval_quote, Eval_rank, Eval_setq, Eval_sqrt, Eval_stop, Eval_subst, Eval_unit } from '../sources/eval';
+import { Eval_binomial } from '../sources/binomial';
+import { Eval_ceiling } from '../sources/ceiling';
+import { Eval_choose } from '../sources/choose';
+import { Eval_circexp } from '../sources/circexp';
+import { Eval_clear, Eval_clearall } from '../sources/clear';
+import { Eval_clock } from '../sources/clock';
+import { Eval_coeff } from '../sources/coeff';
+import { Eval_cofactor } from '../sources/cofactor';
+import { Eval_condense } from '../sources/condense';
+import { Eval_conj } from '../sources/conj';
+import { Eval_contract } from '../sources/contract';
+import { Eval_cos } from '../sources/cos';
+import { Eval_cosh } from '../sources/cosh';
+import { Eval_decomp } from '../sources/decomp';
+import { Eval_function_reference } from '../sources/define';
+import { Eval_defint } from '../sources/defint';
+import { Eval_degree } from '../sources/degree';
+import { Eval_denominator } from '../sources/denominator';
+import { Eval_derivative } from '../sources/derivative';
+import { Eval_dirac } from '../sources/dirac';
+import { Eval_eigen, Eval_eigenval, Eval_eigenvec } from '../sources/eigen';
+import { Eval_erf } from '../sources/erf';
+import { Eval_erfc } from '../sources/erfc';
+import {
+  Eval, Eval_binding,
+  Eval_check,
+  Eval_det,
+  Eval_dim,
+  Eval_divisors,
+  Eval_do,
+  Eval_Eval,
+  Eval_exp,
+  Eval_factorial,
+  Eval_factorpoly,
+  Eval_hermite,
+  Eval_hilbert,
+  Eval_index,
+  Eval_inv,
+  Eval_invg,
+  Eval_isinteger,
+  Eval_number,
+  Eval_operator,
+  Eval_quote,
+  Eval_rank,
+  Eval_setq,
+  Eval_sqrt,
+  Eval_stop,
+  Eval_subst,
+  Eval_unit
+} from '../sources/eval';
+import { Eval_expand } from '../sources/expand';
+import { Eval_expcos } from '../sources/expcos';
+import { Eval_expsin } from '../sources/expsin';
+import { Eval_factor } from '../sources/factor';
+import { Eval_filter } from '../sources/filter';
+import { Eval_float } from '../sources/float';
+import { Eval_floor } from '../sources/floor';
+import { Eval_for } from '../sources/for';
+import { Eval_gamma } from '../sources/gamma';
+import { Eval_gcd } from '../sources/gcd';
+import { Eval_imag } from '../sources/imag';
+import { Eval_inner } from '../sources/inner';
+import { Eval_integral } from '../sources/integral';
+import { Eval_isprime } from '../sources/isprime';
+import { Eval_laguerre } from '../sources/laguerre';
+import { Eval_lcm } from '../sources/lcm';
+import { Eval_leading } from '../sources/leading';
+import { Eval_legendre } from '../sources/legendre';
 import { makeList } from '../sources/list';
+import { Eval_log } from '../sources/log';
+import { Eval_lookup } from '../sources/lookup';
+import { Eval_mod } from '../sources/mod';
+import { Eval_multiply } from '../sources/multiply';
+import { Eval_nroots } from '../sources/nroots';
+import { Eval_numerator } from '../sources/numerator';
+import { Eval_outer } from '../sources/outer';
+import { Eval_clearpatterns, Eval_pattern, Eval_patternsinfo, Eval_silentpattern } from '../sources/pattern';
+import { Eval_polar } from '../sources/polar';
+import { Eval_power } from '../sources/power';
+import { Eval_prime } from '../sources/prime';
 import { Eval_print, Eval_print2dascii, Eval_printcomputer, Eval_printhuman, Eval_printlatex, Eval_printlist, print_list } from '../sources/print';
+import { Eval_product } from '../sources/product';
+import { Eval_quotient } from '../sources/quotient';
+import { Eval_rationalize } from '../sources/rationalize';
+import { Eval_real } from '../sources/real';
+import { Eval_rect } from '../sources/rect';
+import { Eval_roots } from '../sources/roots';
+import { Eval_round } from '../sources/round';
 import { scan } from '../sources/scan';
+import { Eval_sgn } from '../sources/sgn';
+import { Eval_shape } from '../sources/shape';
+import { Eval_simplify } from '../sources/simplify';
+import { Eval_sin } from '../sources/sin';
+import { Eval_sinh } from '../sources/sinh';
+import { Eval_sum } from '../sources/sum';
+import { Eval_tan } from '../sources/tan';
+import { Eval_tanh } from '../sources/tanh';
+import { Eval_taylor } from '../sources/taylor';
+import { Eval_and, Eval_not, Eval_or, Eval_test, Eval_testeq, Eval_testge, Eval_testgt, Eval_testle, Eval_testlt } from '../sources/test';
+import { Eval_transpose } from '../sources/transpose';
+import { Eval_zero } from '../sources/zero';
 import {
   ABS,
   ADD,
@@ -117,7 +225,6 @@ import {
   NIL,
   NOT,
   NROOTS,
-  NSYM,
   NUMBER,
   NUMERATOR,
   OPERATOR,
@@ -158,7 +265,6 @@ import {
   STOP,
   SUBST,
   SUM,
-  Sym,
   SYMBOLSINFO,
   SYMBOL_A,
   SYMBOL_A_UNDERSCORE,
@@ -188,98 +294,14 @@ import {
   TESTLT,
   TRACE,
   TRANSPOSE,
-  U,
   UNIT,
+  version,
   VERSION,
   YYE,
   YYRECT,
-  ZERO,
+  ZERO
 } from './defs';
-import {Eval_symbolsinfo, reset_symbols, std_symbol, symbol} from './symbol';
-import { Eval_abs } from '../sources/abs';
-import { Eval_add } from '../sources/add';
-import { Eval_adj } from '../sources/adj';
-import { Eval_and, Eval_not, Eval_or, Eval_test, Eval_testeq, Eval_testge, Eval_testgt, Eval_testle, Eval_testlt } from '../sources/test';
-import { Eval_arccos } from '../sources/arccos';
-import { Eval_approxratio } from '../sources/approxratio';
-import { Eval_arccosh } from '../sources/arccosh';
-import { Eval_arcsin } from '../sources/arcsin';
-import { Eval_arcsinh } from '../sources/arcsinh';
-import { Eval_arctan } from '../sources/arctan';
-import { Eval_arctanh } from '../sources/arctanh';
-import { Eval_arg } from '../sources/arg';
-import { Eval_besselj } from '../sources/besselj';
-import { Eval_bessely } from '../sources/bessely';
-import { Eval_binomial } from '../sources/binomial';
-import { Eval_ceiling } from '../sources/ceiling';
-import { Eval_choose } from '../sources/choose';
-import { Eval_circexp } from '../sources/circexp';
-import { Eval_clear, Eval_clearall } from '../sources/clear';
-import { Eval_clock } from '../sources/clock';
-import { Eval_coeff } from '../sources/coeff';
-import { Eval_cofactor } from '../sources/cofactor';
-import { Eval_condense } from '../sources/condense';
-import { Eval_conj } from '../sources/conj';
-import { Eval_contract } from '../sources/contract';
-import { Eval_cos } from '../sources/cos';
-import { Eval_cosh } from '../sources/cosh';
-import { Eval_decomp } from '../sources/decomp';
-import { Eval_function_reference } from '../sources/define';
-import { Eval_defint } from '../sources/defint';
-import { Eval_degree } from '../sources/degree';
-import { Eval_denominator } from '../sources/denominator';
-import { Eval_derivative } from '../sources/derivative';
-import { Eval_dirac } from '../sources/dirac';
-import { Eval_eigen, Eval_eigenval, Eval_eigenvec } from '../sources/eigen';
-import { Eval_erf } from '../sources/erf';
-import { Eval_erfc } from '../sources/erfc';
-import { Eval_expand } from '../sources/expand';
-import { Eval_expcos } from '../sources/expcos';
-import { Eval_expsin } from '../sources/expsin';
-import { Eval_factor } from '../sources/factor';
-import { Eval_filter } from '../sources/filter';
-import { Eval_float } from '../sources/float';
-import { Eval_floor } from '../sources/floor';
-import { Eval_for } from '../sources/for';
-import { Eval_gamma } from '../sources/gamma';
-import { Eval_gcd } from '../sources/gcd';
-import { Eval_imag } from '../sources/imag';
-import { Eval_inner } from '../sources/inner';
-import { Eval_integral } from '../sources/integral';
-import { Eval_isprime } from '../sources/isprime';
-import { Eval_laguerre } from '../sources/laguerre';
-import { Eval_lcm } from '../sources/lcm';
-import { Eval_leading } from '../sources/leading';
-import { Eval_legendre } from '../sources/legendre';
-import { Eval_log } from '../sources/log';
-import { Eval_lookup } from '../sources/lookup';
-import { Eval_mod } from '../sources/mod';
-import { Eval_multiply } from '../sources/multiply';
-import { Eval_nroots } from '../sources/nroots';
-import { Eval_numerator } from '../sources/numerator';
-import { Eval_outer } from '../sources/outer';
-import { Eval_clearpatterns, Eval_pattern, Eval_patternsinfo, Eval_silentpattern } from '../sources/pattern';
-import { Eval_polar } from '../sources/polar';
-import { Eval_power } from '../sources/power';
-import { Eval_prime } from '../sources/prime';
-import { Eval_product } from '../sources/product';
-import { Eval_quotient } from '../sources/quotient';
-import { Eval_rationalize } from '../sources/rationalize';
-import { Eval_real } from '../sources/real';
-import { Eval_rect } from '../sources/rect';
-import { Eval_roots } from '../sources/roots';
-import { Eval_round } from '../sources/round';
-import { Eval_sgn } from '../sources/sgn';
-import { Eval_shape } from '../sources/shape';
-import { Eval_simplify } from '../sources/simplify';
-import { Eval_sin } from '../sources/sin';
-import { Eval_sinh } from '../sources/sinh';
-import { Eval_sum } from '../sources/sum';
-import { Eval_tan } from '../sources/tan';
-import { Eval_tanh } from '../sources/tanh';
-import { Eval_taylor } from '../sources/taylor';
-import { Eval_transpose } from '../sources/transpose';
-import { Eval_zero } from '../sources/zero';
+import { Eval_symbolsinfo, reset_symbols, std_symbol, symbol } from './symbol';
 
 let init_flag = 0;
 
@@ -520,7 +542,7 @@ export function defn() {
   std_symbol(FORCE_FIXED_PRINTOUT);
   std_symbol(MAX_FIXED_PRINTOUT_DIGITS);
 
-  std_symbol(YYE); 
+  std_symbol(YYE);
 
   std_symbol(DRAWX); // special purpose internal symbols
   std_symbol(METAA);
@@ -566,7 +588,7 @@ export function defn() {
 
   for (let defn_i = 0; defn_i < defn_str.length; defn_i++) {
     const definitionOfInterest = defn_str[defn_i];
-    const [,def] = scan(definitionOfInterest);
+    const [, def] = scan(definitionOfInterest);
     if (DEBUG) {
       console.log(`... evaling ${definitionOfInterest}`);
       console.log('top of stack:');

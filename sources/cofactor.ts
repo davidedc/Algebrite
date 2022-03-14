@@ -1,6 +1,6 @@
 import { cadddr, caddr, cadr, Tensor, U } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
+import { nativeInt } from './bignum';
 import { determinant } from './det';
 import { Eval, evaluate_integer } from './eval';
 import { negate } from './multiply';
@@ -38,7 +38,7 @@ export function Eval_cofactor(p1: U) {
   if (j < 1 || j > n) {
     stop('cofactor: 3rd arg: column index expected');
   }
-  push(cofactor(p2, n, i - 1, j - 1));
+  return cofactor(p2, n, i - 1, j - 1);
 }
 
 export function cofactor(p: Tensor<U>, n: number, row: number, col: number): U {

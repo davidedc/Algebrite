@@ -6,12 +6,12 @@ import {
   Constants,
   DEBUG,
   issymbol,
-  U,
+  U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
 import { push, top } from '../runtime/stack';
 import { get_binding, set_binding } from '../runtime/symbol';
-import { integer } from './bignum';
+import { integer, nativeInt } from './bignum';
 import { Eval, evaluate_integer } from './eval';
 import { multiply } from './multiply';
 
@@ -36,15 +36,13 @@ export function Eval_product(p1: U) {
   // 3rd arg (lower limit)
   const j = evaluate_integer(cadddr(p1));
   if (isNaN(j)) {
-    push(p1);
-    return;
+    return p1;
   }
 
   // 4th arg (upper limit)
   const k = evaluate_integer(caddddr(p1));
   if (isNaN(k)) {
-    push(p1);
-    return;
+    return p1;
   }
 
   // remember contents of the index
@@ -64,8 +62,8 @@ export function Eval_product(p1: U) {
       console.log(`product - result: ${top()}`);
     }
   }
-  push(temp);
 
   // put back the index variable to original content
   set_binding(indexVariable, oldIndexVariableValue);
+  return temp;
 }

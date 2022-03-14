@@ -3,15 +3,15 @@ import {
   HERMITE,
   issymbol,
   SECRETX,
-  U,
+  U
 } from '../runtime/defs';
+import { symbol } from "../runtime/symbol";
 import { subtract } from './add';
 import { integer, nativeInt } from './bignum';
 import { Eval } from './eval';
 import { makeList } from './list';
 import { multiply } from './multiply';
 import { subst } from './subst';
-import {symbol} from "../runtime/symbol";
 
 //-----------------------------------------------------------------------------
 //

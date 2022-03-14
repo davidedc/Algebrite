@@ -1,18 +1,15 @@
 import {
   cadr,
-  car,
-  COS,
-  COSH,
-  Constants,
-  iscons,
+  car, Constants, COS,
+  COSH, iscons,
   SIN,
   SINH,
   TAN,
   TANH,
   TENSOR,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { exponential } from '../sources/misc';
 import { add, subtract } from './add';
 import { integer, rational } from './bignum';
@@ -21,7 +18,6 @@ import { expcos } from './expcos';
 import { expsin } from './expsin';
 import { divide, multiply, negate } from './multiply';
 import { copy_tensor } from './tensor';
-import {symbol} from "../runtime/symbol";
 
 /* circexp =====================================================================
 
@@ -41,7 +37,7 @@ Returns expression x with circular and hyperbolic functions converted to exponen
 */
 export function Eval_circexp(p1: U) {
   const result = circexp(Eval(cadr(p1)));
-  push(Eval(result));
+  return Eval(result);
 }
 
 function circexp(p1: U): U {

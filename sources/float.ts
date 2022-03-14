@@ -12,20 +12,18 @@ import {
   MULTIPLY,
   PI,
   POWER,
-  U,
+  U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { bignum_float, double } from './bignum';
 import { Eval } from './eval';
 import { makeList } from './list';
 import { copy_tensor } from './tensor';
-import {symbol} from "../runtime/symbol";
 
 export function Eval_float(p1: U) {
-  evalFloats(() => {
-    const result = Eval(yyfloat(Eval(cadr(p1))));
-    push(result);
+  return evalFloats(() => {
+    return Eval(yyfloat(Eval(cadr(p1))));
   });
 }
 
@@ -54,7 +52,15 @@ function checkFloatHasWorkedOutCompletely(nodeToCheck) {
 }
 
 export function zzfloat(p1: U): U {
-  return evalFloats(() => Eval(yyfloat(Eval(p1))));
+  evalFloats(() => {
+    //p1 = pop()
+    //push(cadr(p1))
+    //push(p1)
+    p1 = Eval(p1);
+    p1 = yyfloat(p1);
+    p1 = Eval(p1); // normalize
+  });
+  return p1;
 }
 // zzfloat doesn't necessarily result in a double
 // , for example if there are variables. But

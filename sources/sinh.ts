@@ -5,21 +5,19 @@ import {
   Constants,
   isdouble,
   SINH,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { double } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
-import {symbol} from "../runtime/symbol";
 
 //            exp(x) - exp(-x)
 //  sinh(x) = ----------------
 //                   2
 export function Eval_sinh(p1: U) {
-  const result = ysinh(Eval(cadr(p1)));
-  push(result);
+  return ysinh(Eval(cadr(p1)));
 }
 
 export function ysinh(p1: U): U {

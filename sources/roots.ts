@@ -1,4 +1,4 @@
-import {alloc_tensor} from '../runtime/alloc';
+import { alloc_tensor } from '../runtime/alloc';
 import {
   caddr,
   cadr,
@@ -13,28 +13,23 @@ import {
   SETQ,
   Tensor,
   TESTEQ,
-  U,
+  U
 } from '../runtime/defs';
-import {stop} from '../runtime/run';
-import { push, top } from '../runtime/stack';
-import { sort } from '../sources/misc';
-import {absValFloat} from './abs';
-import {add, add_all, subtract} from './add';
-import {integer, rational} from './bignum';
-import {coeff} from './coeff';
-import {Eval} from './eval';
-import {factorpoly} from './factorpoly';
-import {guess} from './guess';
-import {
-  iscomplexnumber,
-  ispolyexpandedform,
-  isposint,
-  isZeroAtomOrTensor,
-} from './is';
-import {divide, multiply, negate} from './multiply';
-import {power} from './power';
-import {simplify} from './simplify';
-import {symbol} from "../runtime/symbol";
+import { stop } from '../runtime/run';
+import { pop, push, top } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
+import { cmp_expr, sort } from '../sources/misc';
+import { absValFloat } from './abs';
+import { add, add_all, subtract } from './add';
+import { integer, rational } from './bignum';
+import { coeff } from './coeff';
+import { Eval } from './eval';
+import { factorpoly } from './factorpoly';
+import { guess } from './guess';
+import { iscomplexnumber, ispolyexpandedform, isposint, isZeroAtomOrTensor } from './is';
+import { divide, multiply, negate } from './multiply';
+import { power } from './power';
+import { simplify } from './simplify';
 
 const log = {
   debug: (str: string) => {
@@ -77,14 +72,13 @@ export function Eval_roots(POLY: U) {
     stop('roots: 1st argument is not a polynomial in the variable ' + X1);
   }
 
-  push(roots(POLY1, X1));
+  return roots(POLY1, X1);
 }
 
 function hasImaginaryCoeff(k: U[]): boolean {
   return k.some((c) => iscomplexnumber(c));
 }
 
-// polycoeff = tos
 // k[0]      Coefficient of x^0
 // k[n-1]    Coefficient of x^(n-1)
 function isSimpleRoot(k: U[]): boolean {

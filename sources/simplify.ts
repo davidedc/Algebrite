@@ -37,9 +37,8 @@ import {
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { pop, push, top } from '../runtime/stack';
 import { get_binding, symbol } from '../runtime/symbol';
-import { equal, length } from './misc';
 import { add, add_all } from './add';
 import { integer, nativeDouble, rational } from './bignum';
 import { clockform } from './clock';
@@ -56,7 +55,14 @@ import {
   isZeroAtomOrTensor,
 } from './is';
 import { makeList } from './list';
-import { divide, inverse, multiply, multiply_noexpand, negate } from './multiply';
+import { equal, length } from './misc';
+import {
+  divide,
+  inverse,
+  multiply,
+  multiply_noexpand,
+  negate
+} from './multiply';
 import { polar } from './polar';
 import { power } from './power';
 import { rationalize } from './rationalize';
@@ -74,8 +80,7 @@ import { numerator } from "./numerator";
 
 export function Eval_simplify(p1: U) {
   const arg = runUserDefinedSimplifications(cadr(p1));
-  const result = simplify(Eval(arg));
-  push(result);
+  return simplify(Eval(arg));
 }
 
 function runUserDefinedSimplifications(p: U): U {

@@ -10,12 +10,12 @@ import {
   NIL,
   SECRETX,
   SIN,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { square } from '../sources/misc';
 import { subtract } from './add';
-import { integer, rational, nativeInt } from './bignum';
+import { integer, nativeInt, rational } from './bignum';
 import { cosine } from './cos';
 import { derivative } from './derivative';
 import { Eval } from './eval';
@@ -24,7 +24,6 @@ import { divide, multiply, negate } from './multiply';
 import { power } from './power';
 import { sine } from './sin';
 import { subst } from './subst';
-import {symbol} from "../runtime/symbol";
 
 /*
  Legendre function
@@ -61,7 +60,7 @@ export function Eval_legendre(p1: U) {
   const p2 = Eval(cadddr(p1));
   const M = p2 === symbol(NIL) ? Constants.zero : p2;
 
-  push(legendre(X, N, M));
+  return legendre(X, N, M);
 }
 
 function legendre(X: U, N: U, M: U): U {
@@ -80,8 +79,8 @@ function __legendre(X: U, N: U, M: U): U {
   if (issymbol(X)) {
     result = __legendre2(n, m, X);
   } else {
-    const expr = __legendre2(n, m, symbol(SECRETX));
-    result = Eval(subst(expr, symbol(SECRETX), X));
+      const expr = __legendre2(n, m, symbol(SECRETX));
+      result = Eval(subst(expr, symbol(SECRETX), X));
   }
   result = __legendre3(result, m, X) || result;
   return result;

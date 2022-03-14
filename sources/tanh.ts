@@ -5,21 +5,19 @@ import {
   Constants,
   isdouble,
   TANH,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { double } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
-import {symbol} from "../runtime/symbol";
 
 //             exp(2 x) - 1
 //  tanh(x) = --------------
 //             exp(2 x) + 1
 export function Eval_tanh(p1: U) {
-  const result = tanh(Eval(cadr(p1)));
-  push(result);
+  return tanh(Eval(cadr(p1)));
 }
 
 function tanh(p1: U): U {

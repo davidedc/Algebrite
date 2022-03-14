@@ -1,5 +1,5 @@
-import {index_function, set_component} from '.';
-import {alloc_tensor} from '../runtime/alloc';
+import { index_function, set_component } from '.';
+import { alloc_tensor } from '../runtime/alloc';
 import {
   breakpoint,
   caadr,
@@ -17,39 +17,40 @@ import {
   ISINTEGER,
   isNumericAtom, isrational,
   issymbol,
-  istensor, LAST, NIL, NUM, OPERATOR, PI, SETQ, STR, SYM,
-  Sym, TENSOR,
-  Tensor, TESTEQ, U
+  istensor,
+  LAST,
+  NIL,
+  noexpand,
+  NUM,
+  OPERATOR,
+  PI,
+  SETQ,
+  STR,
+  SYM,
+  Sym,
+  TENSOR,
+  Tensor,
+  TESTEQ,
+  U
 } from '../runtime/defs';
-import {check_esc_flag, stop} from '../runtime/run';
-import { pop, push } from '../runtime/stack';
-import {
-  get_binding, iskeyword, set_binding, symbol
-} from '../runtime/symbol';
-import {exponential} from '../sources/misc';
-import {
-  convert_rational_to_double,
-  double, integer, nativeInt, push_integer, rational
-} from './bignum';
-import {define_user_function} from './define';
-import {det} from './det';
-import {divisors} from './divisors';
-import {factorial} from './factorial';
-import {factorpoly} from './factorpoly';
-import {hermite} from './hermite';
-import {hilbert} from './hilbert';
-import {inv, invg} from './inv';
-import {
-  isfloating,
-  isinteger,
-  isintegerorintegerfloat,
-  isZeroLikeOrNonZeroLikeOrUndetermined
-} from './is';
-import {makeList} from './list';
-import {power} from './power';
-import {subst} from './subst';
-import {check_tensor_dimensions, Eval_tensor} from './tensor';
-import {Eval_user_function} from './userfunc';
+import { check_esc_flag, stop } from '../runtime/run';
+import { get_binding, iskeyword, set_binding, symbol } from '../runtime/symbol';
+import { convert_rational_to_double, double, integer, nativeInt, rational } from './bignum';
+import { define_user_function } from './define';
+import { det } from './det';
+import { divisors } from './divisors';
+import { factorial } from './factorial';
+import { factorpoly } from './factorpoly';
+import { hermite } from './hermite';
+import { hilbert } from './hilbert';
+import { inv, invg } from './inv';
+import { isfloating, isinteger, isintegerorintegerfloat, isZeroLikeOrNonZeroLikeOrUndetermined } from './is';
+import { makeList } from './list';
+import { exponential } from './misc';
+import { power } from './power';
+import { subst } from './subst';
+import { check_tensor_dimensions, Eval_tensor } from './tensor';
+import { Eval_user_function } from './userfunc';
 
 export function evaluate_integer(p: U): number {
   return nativeInt(Eval(p));
@@ -72,40 +73,32 @@ export function Eval(p1: U): U {
     defs.evaluatingAsFloats = true;
   }
 
-  let result: U;
-  switch (p1.k) {
-    case CONS:
-      Eval_cons(p1);
-      result = pop();
-      break;
-    case NUM:
-      result = defs.evaluatingAsFloats
-        ? double(convert_rational_to_double(p1))
-        : p1;
-      break;
-    case DOUBLE:
-    case STR:
-      result = p1;
-      break;
-    case TENSOR:
-      Eval_tensor(p1);
-      result = pop();
-      break;
-    case SYM:
-      Eval_sym(p1);
-      result = pop();
-      break;
-    default:
-      stop('atom?');
+  try {
+    switch (p1.k) {
+      case CONS:
+        return Eval_cons(p1);
+      case NUM:
+        return defs.evaluatingAsFloats
+          ? double(convert_rational_to_double(p1))
+          : p1;
+      case DOUBLE:
+      case STR:
+        return p1;
+      case TENSOR:
+        return Eval_tensor(p1);
+      case SYM:
+        return Eval_sym(p1);
+      default:
+        stop('atom?');
+    }
+  } finally {
+    if (willEvaluateAsFloats) {
+      defs.evaluatingAsFloats = false;
+    }
   }
-
-  if (willEvaluateAsFloats) {
-    defs.evaluatingAsFloats = false;
-  }
-  return result;
 }
 
-export function Eval_sym(p1: Sym) {
+export function Eval_sym(p1: Sym): U {
   // note that function calls are not processed here
   // because, since they have an argument (at least an empty one)
   // they are actually CONs, which is a branch of the
@@ -116,20 +109,16 @@ export function Eval_sym(p1: Sym) {
   // at the binding array, because keywords
   // are not redefinable.
   if (iskeyword(p1)) {
-    push(Eval(makeList(p1, symbol(LAST))));
-    return;
+    return Eval(makeList(p1, symbol(LAST)));
   } else if (p1 === symbol(PI) && defs.evaluatingAsFloats) {
-    push(Constants.piAsDouble);
-    return;
+    return Constants.piAsDouble;
   }
 
   // Evaluate symbol's binding
-  const p2 = get_binding(p1);
+  let p2 = get_binding(p1);
   if (DEBUG) {
     console.log(`looked up: ${p1} which contains: ${p2}`);
   }
-
-  push(p2);
 
   // differently from standard Lisp,
   // here the evaluation is not
@@ -166,13 +155,14 @@ export function Eval_sym(p1: Sym) {
 
     defs.chainOfUserSymbolsNotFunctionsBeingEvaluated.push(p1);
 
-    push(Eval(pop()));
+    p2 = Eval(p2);
 
     defs.chainOfUserSymbolsNotFunctionsBeingEvaluated.pop();
   }
+  return p2;
 }
 
-export function Eval_cons(p1: Cons) {
+export function Eval_cons(p1: Cons): U {
   const cons_head = car(p1);
 
   // normally the cons_head is a symbol,
@@ -185,8 +175,7 @@ export function Eval_cons(p1: Cons) {
   // In those cases, we find an EVAL here,
   // so we proceed to EVAL
   if (car(cons_head) === symbol(EVAL)) {
-    Eval_user_function(p1);
-    return;
+    return Eval_user_function(p1);
   }
 
   // If we didn't fall in the EVAL case above
@@ -203,7 +192,7 @@ export function Eval_cons(p1: Cons) {
 }
 
 export function Eval_binding(p1: U) {
-  push(get_binding(cadr(p1)));
+  return get_binding(cadr(p1));
 }
 
 /* check =====================================================================
@@ -235,16 +224,16 @@ export function Eval_check(p1: U) {
   if (checkResult == null) {
     // returned null: unknown result
     // leave the whole check unevalled
-    push(p1);
+    return p1;
   } else {
     // returned true or false -> 1 or 0
-    push_integer(Number(checkResult));
+    return integer(Number(checkResult));
   }
 }
 
 export function Eval_det(p1: U) {
   const arg = Eval(cadr(p1)) as Tensor;
-  push(det(arg));
+  return det(arg);
 }
 
 /* dim =====================================================================
@@ -267,16 +256,16 @@ export function Eval_dim(p1: U) {
   const p2 = Eval(cadr(p1));
   const n = iscons(cddr(p1)) ? evaluate_integer(caddr(p1)) : 1;
   if (!istensor(p2)) {
-    push(Constants.one); // dim of scalar is 1
+    return Constants.one; // dim of scalar is 1
   } else if (n < 1 || n > p2.tensor.ndim) {
-    push(p1);
+    return p1;
   } else {
-    push_integer(p2.tensor.dim[n - 1]);
+    return integer(p2.tensor.dim[n - 1]);
   }
 }
 
 export function Eval_divisors(p1: U) {
-  push(divisors(Eval(cadr(p1))));
+  return divisors(Eval(cadr(p1)));
 }
 
 /* do =====================================================================
@@ -295,22 +284,22 @@ Evaluates each argument from left to right. Returns the result of the last argum
 
 */
 export function Eval_do(p1: U) {
-  push(car(p1));
+  let result = car(p1);
   p1 = cdr(p1);
 
   while (iscons(p1)) {
-    pop();
-    push(Eval(car(p1)));
+    result = Eval(car(p1));
     p1 = cdr(p1);
   }
+  return result;
 }
 
 export function Eval_dsolve(p1: U) {
-  push(Eval(cadr(p1)));
-  push(Eval(caddr(p1)));
-  push(Eval(cadddr(p1)));
+  const a = Eval(cadr(p1));
+  const b = Eval(caddr(p1));
+  const c = Eval(cadddr(p1));
   stop('dsolve');
-  //dsolve();
+  //return dsolve(a, b, c);
 }
 
 // for example, Eval(f,x,2)
@@ -322,20 +311,20 @@ export function Eval_Eval(p1: U) {
     tmp = subst(tmp, Eval(car(p1)), Eval(cadr(p1)));
     p1 = cddr(p1);
   }
-  push(Eval(tmp));
+  return Eval(tmp);
 }
 
 // exp evaluation: it replaces itself with
 // a POWER(E,something) node and evals that one
 export function Eval_exp(p1: U) {
-  push(exponential(Eval(cadr(p1))));
+  return exponential(Eval(cadr(p1)));
 }
 
 export function Eval_factorial(p1: U) {
-  push(factorial(Eval(cadr(p1))));
+  return factorial(Eval(cadr(p1)));
 }
 
-export function Eval_factorpoly(p1: U) {
+export function Eval_factorpoly(p1: U): U {
   p1 = cdr(p1);
   const arg1 = Eval(car(p1));
   p1 = cdr(p1);
@@ -344,25 +333,20 @@ export function Eval_factorpoly(p1: U) {
   if (iscons(p1)) {
     temp = p1.tail().reduce((a: U, b: U) => factorpoly(a, Eval(b)), temp);
   }
-  push(temp);
+  return temp;
 }
 
 export function Eval_hermite(p1: U) {
   const arg2 = Eval(caddr(p1));
   const arg1 = Eval(cadr(p1));
-  push(hermite(arg1, arg2));
+  return hermite(arg1, arg2);
 }
 
 export function Eval_hilbert(p1: U) {
-  push(hilbert(Eval(cadr(p1))));
+  return hilbert(Eval(cadr(p1)));
 }
 
 export function Eval_index(p1: U) {
-  const result = _index(p1);
-  push(result);
-}
-
-function _index(p1: U) {
   const orig = p1;
 
   // look into the head of the list,
@@ -398,21 +382,16 @@ function _index(p1: U) {
 
 export function Eval_inv(p1: U) {
   const arg = Eval(cadr(p1));
-  push(inv(arg));
+  return inv(arg);
 }
 
 export function Eval_invg(p1: U) {
   const arg = Eval(cadr(p1));
-  push(invg(arg));
+  return invg(arg);
 }
 
 export function Eval_isinteger(p1: U) {
   p1 = Eval(cadr(p1));
-  const result = _isinteger(p1);
-  push(result);
-}
-
-function _isinteger(p1: U): U {
   if (isrational(p1)) {
     return isinteger(p1) ? Constants.one : Constants.zero;
   }
@@ -425,27 +404,30 @@ function _isinteger(p1: U): U {
 
 export function Eval_number(p1: U) {
   p1 = Eval(cadr(p1));
-  const result =
-    p1.k === NUM || p1.k === DOUBLE ? Constants.one : Constants.zero;
-  push(result);
+  if (p1.k === NUM || p1.k === DOUBLE) {
+    return Constants.one;
+  } else {
+    return Constants.zero;
+  }
 }
 
 export function Eval_operator(p1: U) {
-  const mapped = iscons(p1) ? p1.tail().map(Eval) : [];
-  const result = makeList(symbol(OPERATOR), ...mapped);
-  push(result);
+  return makeList(symbol(OPERATOR), ...evalList(cdr(p1)));
 }
 
 // quote definition
 export function Eval_quote(p1: U) {
-  push(cadr(p1));
+  return cadr(p1);
 }
 
 // rank definition
 export function Eval_rank(p1: U) {
   p1 = Eval(cadr(p1));
-  const rank = istensor(p1) ? integer(p1.tensor.ndim) : Constants.zero;
-  push(rank);
+  if (istensor(p1)) {
+    return integer(p1.tensor.ndim);
+  } else {
+    return Constants.zero;
+  }
 }
 
 // Evaluates the right side and assigns the
@@ -465,17 +447,15 @@ export function Eval_rank(p1: U) {
 //   f = y
 //   g
 //   > x
-export function Eval_setq(p1: U) {
+export function Eval_setq(p1: U): U {
   // case of tensor
   if (caadr(p1) === symbol(INDEX)) {
-    setq_indexed(p1);
-    return;
+    return setq_indexed(p1);
   }
 
   // case of function definition
   if (iscons(cadr(p1))) {
-    define_user_function(p1);
-    return;
+    return define_user_function(p1);
   }
 
   if (!issymbol(cadr(p1))) {
@@ -490,7 +470,7 @@ export function Eval_setq(p1: U) {
   // where an assignment does return the
   // assigned value.
   // TODO Could be changed.
-  push(symbol(NIL));
+  return symbol(NIL);
 }
 
 // Here "setq" is a misnomer because
@@ -515,7 +495,7 @@ export function Eval_setq(p1: U) {
 //  cadadr(p1) -> a
 //
 //-----------------------------------------------------------------------------
-function setq_indexed(p1: U) {
+function setq_indexed(p1: U): U {
   const p4 = cadadr(p1);
   console.log(`p4: ${p4}`);
   if (!issymbol(p4)) {
@@ -533,22 +513,22 @@ function setq_indexed(p1: U) {
     stop('indexed assignment: expected a symbol name');
   }
   const lvalue = Eval(caddr(p1));
-  let args:U[] = [];
+  let args: U[] = [];
   let p2 = cdadr(p1);
   if (iscons(p2)) {
     args = ([...p2].map(Eval));
   }
   const p3 = set_component(lvalue, ...args);
   set_binding(p4, p3);
-  push(symbol(NIL));
+  return symbol(NIL);
 }
 
 export function Eval_sqrt(p1: U) {
   const base = Eval(cadr(p1));
-  push(power(base, rational(1, 2)));
+  return power(base, rational(1, 2));
 }
 
-export function Eval_stop() {
+export function Eval_stop(): never {
   stop('user stop');
 }
 
@@ -556,7 +536,7 @@ export function Eval_subst(p1: U) {
   const newExpr = Eval(cadr(p1));
   const oldExpr = Eval(caddr(p1));
   const expr = Eval(cadddr(p1));
-  push(Eval(subst(expr, oldExpr, newExpr)));
+  return Eval(subst(expr, oldExpr, newExpr));
 }
 
 // always returns a matrix with rank 2
@@ -566,13 +546,11 @@ export function Eval_unit(p1: U) {
   const n = evaluate_integer(cadr(p1));
 
   if (isNaN(n)) {
-    push(p1);
-    return;
+    return p1;
   }
 
   if (n < 1) {
-    push(p1);
-    return;
+    return p1;
   }
 
   p1 = alloc_tensor(n * n);
@@ -583,7 +561,7 @@ export function Eval_unit(p1: U) {
     p1.tensor.elem[n * i + i] = Constants.one;
   }
   check_tensor_dimensions(p1);
-  push(p1);
+  return p1;
 }
 
 // like Eval() except "=" (assignment) is treated
@@ -611,7 +589,7 @@ export function Eval_predicate(p1: U): U {
   return Eval(p1);
 }
 
-export function *evalList(p1:U) {
+export function* evalList(p1: U) {
   if (iscons(p1)) {
     for (const el of p1) {
       yield Eval(el);

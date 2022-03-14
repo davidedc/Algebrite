@@ -8,9 +8,9 @@ import {
   isrational,
   MEQUAL,
   Num,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { add } from './add';
 import { rational } from './bignum';
 import { Eval } from './eval';
@@ -19,7 +19,6 @@ import { makeList } from './list';
 import { divide, multiply, negate } from './multiply';
 import { power } from './power';
 import { sine } from './sin';
-import {symbol} from "../runtime/symbol";
 
 //-----------------------------------------------------------------------------
 //
@@ -29,8 +28,7 @@ import {symbol} from "../runtime/symbol";
 //
 //-----------------------------------------------------------------------------
 export function Eval_gamma(p1: U) {
-  const result = gamma(Eval(cadr(p1)));
-  push(result);
+  return gamma(Eval(cadr(p1)));
 }
 
 function gamma(p1: U): U {

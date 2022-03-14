@@ -27,11 +27,11 @@ import {
   PI,
   POWER,
   SIN,
-  U,
+  U
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
 import { pop, push, top } from '../runtime/stack';
-import {get_binding, symbol} from '../runtime/symbol';
+import { get_binding, symbol } from '../runtime/symbol';
 import { equal, exponential, length, sign } from '../sources/misc';
 import { abs } from './abs';
 import { add, subtract } from './add';
@@ -40,9 +40,7 @@ import {
   compare_numbers,
   double,
   integer,
-  nativeDouble,
-  rational,
-  nativeInt,
+  nativeDouble, nativeInt, rational
 } from './bignum';
 import { conjugate } from './conj';
 import { cosine } from './cos';
@@ -60,7 +58,7 @@ import {
   isoneovertwo,
   ispositivenumber,
   isquarterturn,
-  isZeroAtomOrTensor,
+  isZeroAtomOrTensor
 } from './is';
 import { makeList } from './list';
 import { divide, multiply, negate } from './multiply';
@@ -71,8 +69,8 @@ import { power_tensor } from './tensor';
 
 /* Power function
 
-  Input:    push  Base 
-            push  Exponent
+  Input:    push  Base
+      push  Exponent
 
   Output:    Result on stack
 */
@@ -82,9 +80,9 @@ export function Eval_power(p1: U) {
   if (DEBUG_POWER) {
     breakpoint;
   }
-  const exponent = Eval(caddr(p1));
   const base = Eval(cadr(p1));
-  push(power(base, exponent));
+  const exponent = Eval(caddr(p1));
+  return power(base, exponent);
 }
 
 export function power(p1: U, p2: U): U {
@@ -171,13 +169,13 @@ function yypower(base: U, exponent: U): U {
       tmp = makeList(symbol(POWER), base, exponent);
     } else {
       tmp = makeList(
-        symbol(MULTIPLY),
-        base,
-        makeList(
-          symbol(POWER),
+          symbol(MULTIPLY),
           base,
-          rational(exponent.q.a.mod(exponent.q.b), exponent.q.b)
-        )
+          makeList(
+            symbol(POWER),
+            base,
+            rational(exponent.q.a.mod(exponent.q.b), exponent.q.b)
+          )
       );
       if (DEBUG_POWER) {
         console.log(` trick applied : ${tmp}`);
@@ -448,8 +446,8 @@ function yypower(base: U, exponent: U): U {
           ? double(Math.PI)
           : symbol(PI);
       let tmp = multiply(
-        power(abs(base), exponent),
-        power(Constants.negOne, divide(multiply(arg(base), exponent), pi))
+          power(abs(base), exponent),
+          power(Constants.negOne, divide(multiply(arg(base), exponent), pi))
       );
 
       // if we calculate the power making use of arctan:

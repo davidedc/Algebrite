@@ -8,11 +8,10 @@ import {
   FUNCTION,
   issymbol,
   NIL,
-  U,
+  U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
-import {push_symbol, set_binding, symbol} from '../runtime/symbol';
+import { set_binding, symbol } from '../runtime/symbol';
 import { Eval } from './eval';
 import { makeList } from './list';
 
@@ -49,7 +48,7 @@ import { makeList } from './list';
 // F function name
 // A argument list
 // B function body
-export function define_user_function(p1: U) {
+export function define_user_function(p1: U): U {
   const F = caadr(p1);
   const A = cdadr(p1);
   let B = caddr(p1);
@@ -82,9 +81,9 @@ export function define_user_function(p1: U) {
 
   // return value is nil
 
-  push_symbol(NIL);
+  return symbol(NIL);
 }
 
 export function Eval_function_reference(p1: U) {
-  push(p1);
+  return p1;
 }

@@ -5,15 +5,14 @@ import {
   Constants,
   isdouble,
   TANH,
-  U,
+  U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { double } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
-import {symbol} from "../runtime/symbol";
 
 /* arctanh =====================================================================
 
@@ -31,7 +30,7 @@ Returns the inverse hyperbolic tangent of x.
 
 */
 export function Eval_arctanh(x: U) {
-  push(arctanh(Eval(cadr(x))));
+  return arctanh(Eval(cadr(x)));
 }
 
 function arctanh(x: U): U {

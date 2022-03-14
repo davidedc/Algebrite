@@ -1,16 +1,14 @@
-import { gcd } from './gcd';
-import { cadr, Constants, isadd, U, noexpand } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { cadr, Constants, isadd, noexpand, U } from '../runtime/defs';
 import { yyexpand } from '../sources/misc';
 import { add } from './add';
 import { Eval } from './eval';
+import { gcd } from './gcd';
 import { divide, inverse, multiply_noexpand } from './multiply';
 
 // Condense an expression by factoring common terms.
 
 export function Eval_condense(p1: U) {
-  const result = Condense(Eval(cadr(p1)));
-  push(result);
+  return Condense(Eval(cadr(p1)));
 }
 
 export function Condense(p1: U): U {

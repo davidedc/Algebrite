@@ -1,8 +1,7 @@
-import {stop} from './run';
-import {push} from './stack';
-import {new_string} from '../sources/misc';
-import {countsize} from './count';
-import {BaseAtom, car, cdr, Cons, iscons, issymbol, istensor, NIL, Sym, SYM, U,} from './defs';
+import { countsize } from './count';
+import { BaseAtom, car, cdr, Cons, iscons, issymbol, istensor, NIL, Str, Sym, SYM, U } from './defs';
+import { stop } from './run';
+import { push } from './stack';
 
 // The symbol table is a simple array of struct U.
 
@@ -11,9 +10,9 @@ export function Eval_symbolsinfo() {
   const symbolsinfoToBePrinted = symbolsinfo();
 
   if (symbolsinfoToBePrinted !== '') {
-    new_string(symbolsinfoToBePrinted);
+    return new Str(symbolsinfoToBePrinted);
   } else {
-    push_symbol(NIL);
+    return symbol(NIL);
   }
 }
 
@@ -104,7 +103,7 @@ export function inChildScope<T>(f:()=>T):T{
   }
 }
 
-export function std_symbol(s: string, keyword?:(p1:Cons)=>void) {
+export function std_symbol(s: string, keyword?:(p1:Cons)=>U) {
   // TODO: can we delete latexPrint?
   const sym = keywordScope.getOrCreate(s);
   sym.latexPrint = s;

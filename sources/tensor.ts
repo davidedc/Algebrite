@@ -10,10 +10,10 @@ import {
   Sign,
   Sym,
   Tensor,
-  U,
+  U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { equal, lessp } from '../sources/misc';
 import { add } from './add';
 import { nativeInt } from './bignum';
@@ -24,7 +24,6 @@ import { inv } from './inv';
 import { isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
 import { multiply } from './multiply';
-import {symbol} from "../runtime/symbol";
 
 //(docs are generated from top-level comments, keep an eye on the formatting!)
 
@@ -80,7 +79,7 @@ Tensors are implemented...
 
 */
 // Called from the "eval" module to evaluate tensor elements.
-export function Eval_tensor(a: Tensor) {
+export function Eval_tensor(a: Tensor): U {
   //U **a, **b
   //---------------------------------------------------------------------
   //
@@ -102,12 +101,12 @@ export function Eval_tensor(a: Tensor) {
 
   check_tensor_dimensions(b);
 
-  b.tensor.elem = a.tensor.elem.map((el) => Eval(el));
+  b.tensor.elem = a.tensor.elem.map(Eval);
 
   check_tensor_dimensions(a);
   check_tensor_dimensions(b);
 
-  push(promote_tensor(b));
+  return promote_tensor(b);
 }
 
 //-----------------------------------------------------------------------------

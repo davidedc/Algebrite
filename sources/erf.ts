@@ -1,12 +1,11 @@
 import { cadr, Constants, ERF, isdouble, U } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { double } from './bignum';
 import { erfc } from './erfc';
 import { Eval } from './eval';
 import { isnegativeterm, isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
 import { negate } from './multiply';
-import {symbol} from "../runtime/symbol";
 
 /* erf =====================================================================
 
@@ -29,8 +28,7 @@ erf(-x)=erf(x)
 
 */
 export function Eval_erf(p1: U) {
-  const result = yerf(Eval(cadr(p1)));
-  push(result);
+  return yerf(Eval(cadr(p1)));
 }
 
 function yerf(p1: U): U {

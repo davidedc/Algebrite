@@ -5,13 +5,12 @@ import {
   defs,
   iscons,
   NIL,
-  PATTERN,
-  U,
+  PATTERN, Str,
+  U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
-import {push_symbol, symbol} from '../runtime/symbol';
-import { equal, new_string } from '../sources/misc';
+import { symbol } from '../runtime/symbol';
+import { equal } from '../sources/misc';
 import { makeList } from './list';
 import { print_list } from './print';
 
@@ -28,8 +27,7 @@ import { print_list } from './print';
 // printout
 export function Eval_silentpattern(p1: U) {
   Eval_pattern(p1);
-  pop();
-  push_symbol(NIL);
+  return symbol(NIL);
 }
 
 export function Eval_pattern(p1: U) {
@@ -82,7 +80,7 @@ export function Eval_pattern(p1: U) {
 
   // return the pattern node itself so we can
   // give some printout feedback
-  push(makeList(symbol(PATTERN), cdr(p1)));
+  return makeList(symbol(PATTERN), cdr(p1));
 }
 
 /*
@@ -100,16 +98,16 @@ export function Eval_clearpatterns() {
   do_clearPatterns();
 
   // return nothing
-  push_symbol(NIL);
+  return symbol(NIL);
 }
 
 export function Eval_patternsinfo() {
   const patternsinfoToBePrinted = patternsinfo();
 
   if (patternsinfoToBePrinted !== '') {
-    new_string(patternsinfoToBePrinted);
+    return new Str(patternsinfoToBePrinted);
   } else {
-    push_symbol(NIL);
+    return symbol(NIL);
   }
 }
 

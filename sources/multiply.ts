@@ -30,7 +30,6 @@ import {
 } from '../runtime/defs';
 import { append } from '../runtime/otherCFunctions';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
 import { symbol } from '../runtime/symbol';
 import { cmp_expr } from '../sources/misc';
 import { add, subtract } from './add';
@@ -59,7 +58,7 @@ export function Eval_multiply(p1: U) {
   if (iscons(p1)) {
     temp = [...p1].reduce((acc: U, p: U) => multiply(acc, Eval(p)), temp);
   }
-  push(temp);
+  return temp;
 }
 
 // this one doesn't eval the factors,
@@ -110,7 +109,7 @@ function yymultiply(p1: U, p2: U): U {
 
   p2 = ismultiply(p2) ? cdr(p2) : makeList(p2);
 
-  const factors: U[] = [];
+  const factors:U[] = [];
 
   // handle numerical coefficients
   if (isNumericAtom(car(p1)) && isNumericAtom(car(p2))) {
@@ -382,7 +381,7 @@ export function negate_noexpand(p1: U): U {
 //
 //-----------------------------------------------------------------------------
 
-function __normalize_radical_factors(factors: U[]) {
+function __normalize_radical_factors(factors:U[]) {
   let i = 0;
   // if coeff is 1 or floating then don't bother
   if (

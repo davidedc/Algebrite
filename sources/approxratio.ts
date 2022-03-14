@@ -8,20 +8,19 @@ import {
   DOUBLE,
   iscons,
   istensor,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { integer, rational } from './bignum';
 import { zzfloat } from './float';
 import { makeList } from './list';
 import { check_tensor_dimensions } from './tensor';
-import {symbol} from "../runtime/symbol";
 
 /*
  Guesses a rational for each float in the passed expression
 */
 export function Eval_approxratio(p1: U) {
-  push(approxratioRecursive(cadr(p1)));
+  return approxratioRecursive(cadr(p1));
 }
 
 function approxratioRecursive(expr: U): U {

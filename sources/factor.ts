@@ -9,10 +9,10 @@ import {
   NIL,
   Num,
   primetab,
-  U,
+  U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { integer } from './bignum';
 import { Eval } from './eval';
 import { factorpoly } from './factorpoly';
@@ -20,7 +20,6 @@ import { guess } from './guess';
 import { isinteger } from './is';
 import { multiply_all_noexpand } from './multiply';
 import { factor_number } from './pollard';
-import {symbol} from "../runtime/symbol";
 
 // factor a polynomial or integer
 export function Eval_factor(p1: U) {
@@ -34,7 +33,7 @@ export function Eval_factor(p1: U) {
   if (iscons(p1)) {
     temp = [...p1].reduce((acc: U, p: U) => factor_again(acc, Eval(p)), temp);
   }
-  push(temp);
+  return temp;
 }
 
 function factor_again(p1: U, p2: U): U {

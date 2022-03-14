@@ -14,19 +14,18 @@ import {
   NIL,
   Num,
   Sign,
-  U,
+  U
 } from '../runtime/defs';
 import { check_esc_flag } from '../runtime/run';
-import { push } from '../runtime/stack';
-import { cmp_expr, equal } from './misc';
+import { symbol } from "../runtime/symbol";
 import { add_numbers } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtom, isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
+import { cmp_expr, equal } from './misc';
 import { multiply, negate } from './multiply';
 import { print_list } from './print';
 import { tensor_plus_tensor } from './tensor';
-import {symbol} from "../runtime/symbol";
 
 /*
  Symbolic addition
@@ -60,7 +59,7 @@ export function Eval_add(p1: Cons) {
     const p2 = Eval(t);
     push_terms(terms, p2);
   }
-  push(add_terms(terms));
+  return add_terms(terms);
 }
 
 // Add terms, returns one expression.

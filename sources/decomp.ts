@@ -6,13 +6,10 @@ import {
   Cons,
   DEBUG, isadd,
   iscons,
-  ismultiply,
-  NIL,
-  U
+  ismultiply, NIL, U
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
-import { push } from '../runtime/stack';
-import { symbol } from "../runtime/symbol";
+import { symbol } from '../runtime/symbol';
 import { equal } from '../sources/misc';
 import { add_all } from './add';
 import { Eval } from './eval';
@@ -40,7 +37,7 @@ export function Eval_decomp(p1: U) {
 
   const variable = p1 === symbol(NIL) ? guess(arg) : p1;
   const result = decomp(false, arg, variable);
-  push(makeList(symbol(NIL), ...result));
+  return makeList(symbol(NIL), ...result);
 }
 
 function pushTryNotToDuplicateLocal(localStack: U[], item: U) {
@@ -159,7 +156,7 @@ function decomp_product(generalTransform: boolean, p1: U, p2: U): U[] {
 
   const constantFactors: U[] = [];
   while (iscons(p3)) {
-    const item = car(p3);
+      const item = car(p3);
     if (!Find(item, p2)) {
       if (
         constantFactors.length < 1 ||

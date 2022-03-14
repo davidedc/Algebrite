@@ -6,9 +6,9 @@ import {
   MSIGN,
   MZERO,
   SGN,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { absval } from './abs';
 import { Eval } from './eval';
 import { iscomplexnumber, isnegativeterm } from './is';
@@ -16,7 +16,6 @@ import { makeList } from './list';
 import { mmul } from './mmul';
 import { multiply, negate } from './multiply';
 import { power } from './power';
-import {symbol} from "../runtime/symbol";
 
 //-----------------------------------------------------------------------------
 //
@@ -27,8 +26,7 @@ import {symbol} from "../runtime/symbol";
 //
 //-----------------------------------------------------------------------------
 export function Eval_sgn(p1: U) {
-  const result = sgn(Eval(cadr(p1)));
-  push(result);
+  return sgn(Eval(cadr(p1)));
 }
 
 export function sgn(X: U): U {

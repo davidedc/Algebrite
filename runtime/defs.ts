@@ -214,7 +214,7 @@ export class Sym extends BaseAtom {
     super();
   }
 
-  public keyword:(p1:Cons)=>void;
+  public keyword:(p1:Cons)=>U;
 }
 
 export type U = Cons | Num | Double | Str | Tensor | Sym;

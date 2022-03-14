@@ -1,5 +1,4 @@
 import { caddr, cadr, Constants, isNumericAtom, U } from '../runtime/defs';
-import { push } from '../runtime/stack';
 import { lessp } from '../sources/misc';
 import { subtract } from './add';
 import { Eval } from './eval';
@@ -32,8 +31,7 @@ For example, the number of five card hands is choose(52,5)
 export function Eval_choose(p1: U) {
   const N = Eval(cadr(p1));
   const K = Eval(caddr(p1));
-  const result = choose(N, K);
-  push(result);
+  return choose(N, K);
 }
 
 function choose(N: U, K: U): U {

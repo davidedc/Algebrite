@@ -1,10 +1,9 @@
-import {car, cdr, defs, iscons, NIL, SYM, U,} from '../runtime/defs';
-import {defn} from '../runtime/init';
-import {clear_term} from '../runtime/otherCFunctions';
-import {run, stop} from '../runtime/run';
-import {push} from '../runtime/stack';
-import {clear_symbol, clear_symbols, symbol} from '../runtime/symbol';
-import {do_clearPatterns} from './pattern';
+import { car, cdr, defs, iscons, NIL, SYM, U } from '../runtime/defs';
+import { defn } from '../runtime/init';
+import { clear_term } from '../runtime/otherCFunctions';
+import { run, stop } from '../runtime/run';
+import { clear_symbol, clear_symbols, symbol } from '../runtime/symbol';
+import { do_clearPatterns } from './pattern';
 
 /* clearall =====================================================================
 
@@ -20,7 +19,7 @@ Completely wipes all variables from the environment.
 */
 export function Eval_clearall() {
   do_clearall();
-  push(symbol(NIL));
+  return symbol(NIL);
 }
 
 export function do_clearall() {
@@ -76,5 +75,5 @@ export function Eval_clear(p1: U) {
     p2 = cdr(p2);
   }
 
-  push(symbol(NIL));
+  return symbol(NIL);
 }

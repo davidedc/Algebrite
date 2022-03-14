@@ -1,10 +1,9 @@
 import { cadr, Constants, ERFC, isdouble, U } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { double } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
-import {symbol} from "../runtime/symbol";
 
 //-----------------------------------------------------------------------------
 //
@@ -16,8 +15,7 @@ import {symbol} from "../runtime/symbol";
 //
 //-----------------------------------------------------------------------------
 export function Eval_erfc(p1: U) {
-  const result = yerfc(Eval(cadr(p1)));
-  push(result);
+  return yerfc(Eval(cadr(p1)));
 }
 
 function yerfc(p1: U): U {
@@ -46,22 +44,22 @@ export function erfc(x: number) {
     t *
     Math.exp(
       -z * z -
-        1.26551223 +
+      1.26551223 +
+      t *
+      (1.00002368 +
         t *
-          (1.00002368 +
+        (0.37409196 +
+          t *
+          (0.09678418 +
             t *
-              (0.37409196 +
+            (-0.18628806 +
+              t *
+              (0.27886807 +
                 t *
-                  (0.09678418 +
-                    t *
-                      (-0.18628806 +
-                        t *
-                          (0.27886807 +
-                            t *
-                              (-1.13520398 +
-                                t *
-                                  (1.48851587 +
-                                    t * (-0.82215223 + t * 0.17087277))))))))
+                (-1.13520398 +
+                  t *
+                  (1.48851587 +
+                    t * (-0.82215223 + t * 0.17087277))))))))
     );
 
   if (x >= 0.0) {

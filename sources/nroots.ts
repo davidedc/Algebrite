@@ -1,19 +1,19 @@
-import {alloc_tensor} from '../runtime/alloc';
-import {caddr, cadr, Constants, DEBUG, defs, isdouble, NIL, U,} from '../runtime/defs';
-import {stop} from '../runtime/run';
-import {pop, push, top} from '../runtime/stack';
-import {cmp_expr} from '../sources/misc';
-import {add} from './add';
-import {double} from './bignum';
-import {coeff} from './coeff';
-import {Eval} from './eval';
-import {yyfloat} from './float';
-import {guess} from './guess';
-import {imag} from './imag';
-import {ispolyexpandedform} from './is';
-import {multiply} from './multiply';
-import {real} from './real';
-import {symbol} from "../runtime/symbol";
+import { alloc_tensor } from '../runtime/alloc';
+import { caddr, cadr, Constants, DEBUG, defs, isdouble, NIL, U } from '../runtime/defs';
+import { stop } from '../runtime/run';
+import { top } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
+import { cmp_expr } from '../sources/misc';
+import { add } from './add';
+import { double } from './bignum';
+import { coeff } from './coeff';
+import { Eval } from './eval';
+import { yyfloat } from './float';
+import { guess } from './guess';
+import { imag } from './imag';
+import { ispolyexpandedform } from './is';
+import { multiply } from './multiply';
+import { real } from './real';
 
 // find the roots of a polynomial numerically
 const NROOTS_YMAX = 101;
@@ -85,7 +85,7 @@ export function Eval_nroots(p1: U) {
   // n is the number of coefficients, n = deg(p) + 1
   monic(n);
 
-  const roots:U[] = [];
+  const roots: U[] = [];
 
   for (let k = n; k > 1; k--) {
     findroot(k);
@@ -107,14 +107,14 @@ export function Eval_nroots(p1: U) {
   // now make n equal to the number of roots
   n = roots.length;
   if (n == 1) {
-    push(roots[0]);
+    return roots[0];
   } else if (n > 1) {
     roots.sort(cmp_expr);
     p1 = alloc_tensor(n);
     p1.tensor.ndim = 1;
     p1.tensor.dim[0] = n;
     p1.tensor.elem = roots;
-    push(p1);
+    return p1;
   }
 }
 

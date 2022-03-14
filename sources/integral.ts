@@ -18,15 +18,15 @@ import {
   POWER,
   SQRT,
   Sym,
-  U,
+  U
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
-import {get_printname, symbol} from '../runtime/symbol';
+import { pop, push, top } from '../runtime/stack';
+import { symbol } from '../runtime/symbol';
 import { equal } from '../sources/misc';
 import { add } from './add';
-import { push_double, nativeInt } from './bignum';
+import { nativeInt, push_double } from './bignum';
 import { derivative } from './derivative';
 import { Eval } from './eval';
 import { guess } from './guess';
@@ -482,7 +482,7 @@ export function Eval_integral(p1: U) {
     }
   }
 
-  push(F);
+  return F;
 }
 
 export function integral(F: U, X: U): U {

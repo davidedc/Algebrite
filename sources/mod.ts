@@ -5,21 +5,20 @@ import {
   isNumericAtom,
   MOD,
   Num,
-  U,
+  U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { integer, nativeInt } from './bignum';
 import { Eval } from './eval';
 import { isinteger, isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
 import { mmod } from './mmul';
-import {symbol} from "../runtime/symbol";
 
 export function Eval_mod(p1: U) {
-  const arg2 = Eval(caddr(p1));
   const arg1 = Eval(cadr(p1));
-  push(mod(arg1, arg2));
+  let arg2 = Eval(caddr(p1));
+  return mod(arg1, arg2);
 }
 
 function mod(p1: U, p2: U): U {

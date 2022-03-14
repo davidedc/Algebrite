@@ -14,11 +14,11 @@ import {
   NIL,
   Sign,
   Str,
-  U,
+  U
 } from '../runtime/defs';
 import { strcmp } from '../runtime/otherCFunctions';
 import { push } from '../runtime/stack';
-import {get_printname, symbol} from '../runtime/symbol';
+import { get_printname, symbol } from '../runtime/symbol';
 import { compare_numbers, integer } from './bignum';
 import { Eval } from './eval';
 import { power } from './power';

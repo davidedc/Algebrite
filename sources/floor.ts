@@ -5,20 +5,18 @@ import {
   isdouble,
   isNumericAtom,
   Num,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { add } from './add';
 import { double } from './bignum';
 import { Eval } from './eval';
 import { isinteger, isnegativenumber } from './is';
 import { makeList } from './list';
 import { mdiv } from './mmul';
-import {symbol} from "../runtime/symbol";
 
 export function Eval_floor(p1: U) {
-  const result = yfloor(Eval(cadr(p1)));
-  push(result);
+  return yfloor(Eval(cadr(p1)));
 }
 
 function yfloor(p1: U): U {

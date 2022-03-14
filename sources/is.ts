@@ -31,9 +31,11 @@ import {
   SYMBOL_Y,
   SYMBOL_Z,
   Tensor,
-  U,
+  U
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
+import { pop, push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { equal, length } from '../sources/misc';
 import { absValFloat } from './abs';
 import { integer, nativeInt } from './bignum';
@@ -41,7 +43,6 @@ import { Eval_predicate } from './eval';
 import { zzfloat } from './float';
 import { guess } from './guess';
 import { multiply } from './multiply';
-import {symbol} from "../runtime/symbol";
 
 const DEBUG_IS = false;
 
@@ -308,7 +309,7 @@ export function isposint(
 
 // --------------------------------------
 
-export function isunivarpolyfactoredorexpandedform(p: U, x?: U): U {
+export function isunivarpolyfactoredorexpandedform(p: U, x?: U): U | false {
   if (x == null) {
     x = guess(p);
   }
@@ -323,7 +324,7 @@ export function isunivarpolyfactoredorexpandedform(p: U, x?: U): U {
   ) {
     return x;
   } else {
-    return;
+    return false;
   }
 }
 

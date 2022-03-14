@@ -1,6 +1,5 @@
 import { cadr, Constants, U } from '../runtime/defs';
 import { Find } from '../runtime/find';
-import { push } from '../runtime/stack';
 import { clockform } from './clock';
 import { Eval } from './eval';
 import { negate } from './multiply';
@@ -26,9 +25,9 @@ export function Eval_conj(p1: U) {
   p1 = Eval(cadr(p1));
   if (!Find(p1, Constants.imaginaryunit)) {
     // example: (-1)^(1/3)
-    push(clockform(conjugate(polar(p1))));
+    return clockform(conjugate(polar(p1)));
   } else {
-    push(conjugate(p1));
+    return conjugate(p1);
   }
 }
 

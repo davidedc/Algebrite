@@ -11,15 +11,14 @@ import {
   istensor,
   SYMBOL_D,
   Tensor,
-  U,
+  U
 } from '../runtime/defs';
-import {stop} from '../runtime/run';
-import {pop, push} from '../runtime/stack';
-import {get_binding, symbol} from '../runtime/symbol';
-import {Eval_derivative} from './derivative';
-import {Eval, evalList} from './eval';
-import {makeList} from './list';
-import {check_tensor_dimensions, copy_tensor} from './tensor';
+import { stop } from '../runtime/run';
+import { get_binding, symbol } from '../runtime/symbol';
+import { Eval_derivative } from './derivative';
+import { Eval, evalList } from './eval';
+import { makeList } from './list';
+import { check_tensor_dimensions, copy_tensor } from './tensor';
 
 // Evaluate a user defined function
 
@@ -50,7 +49,7 @@ General description
 Returns the partial derivative of f with respect to x. x can be a vector e.g. [x,y].
 
 */
-export function Eval_user_function(p1: U) {
+export function Eval_user_function(p1: U): U {
   // Use "derivative" instead of "d" if there is no user function "d"
 
   if (DEBUG) {
@@ -60,8 +59,7 @@ export function Eval_user_function(p1: U) {
     car(p1) === symbol(SYMBOL_D) &&
     get_binding(symbol(SYMBOL_D)) === symbol(SYMBOL_D)
   ) {
-    Eval_derivative(p1);
-    return;
+    return Eval_derivative(p1);
   }
 
   // normally car(p1) is a symbol with the function name
@@ -110,8 +108,7 @@ export function Eval_user_function(p1: U) {
     bodyAndFormalArguments === car(p1)
   ) {
     // leave everything as it was and return
-    push(makeList(bodyAndFormalArguments, ...evalList(B)));
-    return;
+    return makeList(bodyAndFormalArguments, ...evalList(B));
   }
 
   // Create the argument substitution list S
@@ -135,7 +132,7 @@ export function Eval_user_function(p1: U) {
     F = rewrite_args(F, S);
   }
   //console.log("rewritten body: " + F)
-  push(Eval(F));
+  return Eval(F);
 }
 
 // Rewrite by expanding symbols that contain args

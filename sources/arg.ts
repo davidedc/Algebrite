@@ -13,10 +13,9 @@ import {
   ispower,
   issymbol,
   PI,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
-import {get_binding, symbol} from '../runtime/symbol';
+import { get_binding, symbol } from '../runtime/symbol';
 import { add, subtract } from './add';
 import { arctan } from './arctan';
 import { denominator } from './denominator';
@@ -28,7 +27,7 @@ import {
   isnegativenumber,
   isoneovertwo,
   ispositivenumber,
-  isZeroAtomOrTensor,
+  isZeroAtomOrTensor
 } from './is';
 import { makeList } from './list';
 import { divide, multiply, negate } from './multiply';
@@ -104,7 +103,7 @@ Notes
 const DEBUG_ARG = false;
 
 export function Eval_arg(z: U) {
-  push(arg(Eval(cadr(z))));
+  return arg(Eval(cadr(z)));
 }
 
 export function arg(z: U): U {

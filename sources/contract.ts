@@ -7,15 +7,15 @@ import {
   Constants,
   istensor,
   NIL,
-  U,
+  U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
+import { pop, push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { add } from './add';
-import { integer, nativeInt } from './bignum';
+import { integer, nativeInt, push_integer } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
-import {symbol} from "../runtime/symbol";
 
 /* contract =====================================================================
 
@@ -44,8 +44,7 @@ export function Eval_contract(p1: U) {
     p2 = Eval(caddr(p1));
     p3 = Eval(cadddr(p1));
   }
-  const result = contract(p1_prime, p2, p3);
-  push(result);
+  return contract(p1_prime, p2, p3);
 }
 
 function contract(p1: U, p2: U, p3: U): U {
@@ -135,7 +134,7 @@ function contract(p1: U, p2: U, p3: U): U {
 
   if (nelem === 1) {
     return b[0];
-  }
+}
 
   return p2;
 }

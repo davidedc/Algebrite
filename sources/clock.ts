@@ -1,11 +1,10 @@
 import { cadr, Constants, POWER, U } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { abs } from './abs';
 import { arg } from './arg';
 import { Eval } from './eval';
 import { makeList } from './list';
 import { divide, multiply } from './multiply';
-import {symbol} from "../runtime/symbol";
 
 /*
  Convert complex z to clock form
@@ -32,8 +31,7 @@ import {symbol} from "../runtime/symbol";
 const DEBUG_CLOCKFORM = false;
 
 export function Eval_clock(p1: U) {
-  const result = clockform(Eval(cadr(p1)));
-  push(result);
+  return clockform(Eval(cadr(p1)));
 }
 
 export function clockform(p1: U): U {

@@ -1,7 +1,6 @@
 import { alloc_tensor } from '../runtime/alloc';
 import { car, cdr, iscons, istensor, MAXDIM, Tensor, U } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
 import { Eval } from './eval';
 import { multiply } from './multiply';
 import { scalar_times_tensor, tensor_times_scalar } from './tensor';
@@ -14,7 +13,7 @@ export function Eval_outer(p1: U) {
   const result = iscons(p1)
     ? p1.tail().reduce((acc: U, p: U) => outer(acc, Eval(p)), temp)
     : temp;
-  push(result);
+  return result;
 }
 
 function outer(p1: U, p2: U): U {

@@ -32,9 +32,7 @@ import {
   FLOOR,
   FOR,
   FUNCTION,
-  INDEX,
-  INV,
-  isadd,
+  INDEX, isadd,
   iscons,
   isfactorial,
   isinnerordot,
@@ -45,9 +43,7 @@ import {
   isrational,
   isstr,
   issymbol,
-  istensor,
-  istranspose,
-  LAST_2DASCII_PRINT,
+  istensor, LAST_2DASCII_PRINT,
   LAST_FULL_PRINT,
   LAST_LATEX_PRINT,
   LAST_LIST_PRINT,
@@ -83,12 +79,10 @@ import {
   TESTGE,
   TESTGT,
   TESTLE,
-  TESTLT,
-  U,
-  UNIT,
+  TESTLT, U,
+  UNIT
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
-import {get_binding, get_printname, set_binding, symbol} from '../runtime/symbol';
+import { get_binding, get_printname, set_binding, symbol } from '../runtime/symbol';
 import { lessp } from '../sources/misc';
 import { absval } from './abs';
 import { mp_denominator, mp_numerator, print_number } from './bignum';
@@ -103,7 +97,7 @@ import {
   isNumberOneOverSomething,
   isoneovertwo,
   isplusone,
-  isplustwo,
+  isplustwo
 } from './is';
 import { multiply, negate } from './multiply';
 import { numerator } from './numerator';
@@ -116,28 +110,28 @@ const power_str = '^';
 // "print" explicitly
 export function Eval_print(p1: U) {
   defs.stringsEmittedByUserPrintouts += _print(cdr(p1), defs.printMode);
-  push(symbol(NIL));
+  return symbol(NIL);
 }
 
 // this is only invoked when user invokes
 // "print2dascii" explicitly
 export function Eval_print2dascii(p1: U) {
   defs.stringsEmittedByUserPrintouts += _print(cdr(p1), PRINTMODE_2DASCII);
-  push(symbol(NIL));
+  return symbol(NIL);
 }
 
 // this is only invoked when user invokes
 // "printcomputer" explicitly
 export function Eval_printcomputer(p1: U) {
   defs.stringsEmittedByUserPrintouts += _print(cdr(p1), PRINTMODE_COMPUTER);
-  push(symbol(NIL));
+  return symbol(NIL);
 }
 
 // this is only invoked when user invokes
 // "printlatex" explicitly
 export function Eval_printlatex(p1: U) {
   defs.stringsEmittedByUserPrintouts += _print(cdr(p1), PRINTMODE_LATEX);
-  push(symbol(NIL));
+  return symbol(NIL);
 }
 
 // this is only invoked when user invokes
@@ -150,7 +144,7 @@ export function Eval_printhuman(p1: U) {
   defs.test_flag = false;
   defs.stringsEmittedByUserPrintouts += _print(cdr(p1), PRINTMODE_HUMAN);
   defs.test_flag = original_test_flag;
-  push(symbol(NIL));
+  return symbol(NIL);
 }
 
 // this is only invoked when user invokes
@@ -158,7 +152,7 @@ export function Eval_printhuman(p1: U) {
 export function Eval_printlist(p1: U) {
   const beenPrinted = _print(cdr(p1), PRINTMODE_LIST);
   defs.stringsEmittedByUserPrintouts += beenPrinted;
-  push(symbol(NIL));
+  return symbol(NIL);
 }
 
 function _print(p: U, passedPrintMode: string): string {

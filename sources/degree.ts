@@ -6,14 +6,13 @@ import {
   isNumericAtom,
   ispower,
   NIL,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { equal, lessp } from '../sources/misc';
 import { Eval } from './eval';
 import { guess } from './guess';
 import { isZeroAtomOrTensor } from './is';
-import {symbol} from "../runtime/symbol";
 
 /* deg =====================================================================
 
@@ -31,10 +30,10 @@ Returns the degree of polynomial p(x).
 
 */
 export function Eval_degree(p1: U) {
+  const poly = Eval(cadr(p1));
   p1 = Eval(caddr(p1));
-  const top = Eval(cadr(p1));
-  const variable = p1 === symbol(NIL) ? guess(top) : p1;
-  push(degree(top, variable));
+  const variable = p1 === symbol(NIL) ? guess(poly) : p1;
+  return degree(poly, variable);
 }
 
 //-----------------------------------------------------------------------------

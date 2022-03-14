@@ -9,11 +9,12 @@ import {
   MSIGN,
   NUM,
   PI,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { jn } from '../runtime/otherCFunctions';
+import { symbol } from "../runtime/symbol";
 import { subtract } from './add';
-import { double, integer, rational, nativeInt } from './bignum';
+import { double, integer, nativeInt, rational } from './bignum';
 import { cosine } from './cos';
 import { Eval } from './eval';
 import { isnegativeterm, isZeroAtomOrTensor } from './is';
@@ -21,8 +22,6 @@ import { makeList } from './list';
 import { divide, multiply, negate } from './multiply';
 import { power } from './power';
 import { sine } from './sin';
-import { jn } from '../runtime/otherCFunctions';
-import {symbol} from "../runtime/symbol";
 
 /* besselj =====================================================================
 
@@ -63,8 +62,7 @@ Examples:
 
 */
 export function Eval_besselj(p1: U) {
-  const result = besselj(Eval(cadr(p1)), Eval(caddr(p1)));
-  push(result);
+  return besselj(Eval(cadr(p1)), Eval(caddr(p1)));
 }
 
 export function besselj(p1: U, p2: U): U {

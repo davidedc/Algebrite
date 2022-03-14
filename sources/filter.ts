@@ -7,10 +7,9 @@ import {
   iscons,
   istensor,
   Tensor,
-  U,
+  U
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
-import { push } from '../runtime/stack';
 import { add } from './add';
 import { Eval } from './eval';
 
@@ -28,7 +27,7 @@ export function Eval_filter(p1: U) {
   if (iscons(p1)) {
     result = p1.tail().reduce((acc: U, p: U) => filter(acc, Eval(p)), result);
   }
-  push(result);
+  return result;
 }
 
 export function filter(F: U, X: U): U {

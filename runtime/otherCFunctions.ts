@@ -1,9 +1,9 @@
-import {stop} from './run';
-import {nativeInt} from '../sources/bignum';
-import {isZeroAtomOrTensor} from '../sources/is';
-import {defs, FORCE_FIXED_PRINTOUT, iscons, MAX_FIXED_PRINTOUT_DIGITS, PRINTMODE_LATEX, Sign, U,} from './defs';
-import {get_binding, symbol} from './symbol';
+import { nativeInt } from '../sources/bignum';
+import { isZeroAtomOrTensor } from '../sources/is';
 import { makeList } from '../sources/list';
+import { defs, FORCE_FIXED_PRINTOUT, iscons, MAX_FIXED_PRINTOUT_DIGITS, PRINTMODE_LATEX, Sign, U } from './defs';
+import { stop } from './run';
+import { get_binding, symbol } from './symbol';
 
 export function strcmp(str1: string, str2: string): Sign {
   if (str1 === str2) {
@@ -148,20 +148,6 @@ export function isalnumorunderscore(str: string): boolean {
     return false;
   }
   return isalphaOrUnderscore(str) || isdigit(str);
-}
-
-export function __range__(
-  left: number,
-  right: number,
-  inclusive: boolean
-): number[] {
-  let range: number[] = [];
-  let ascending = left < right;
-  let end = !inclusive ? right : ascending ? right + 1 : right - 1;
-  for (let i = left; ascending ? i < end : i > end; ascending ? i++ : i--) {
-    range.push(i);
-  }
-  return range;
 }
 
 // Append one list to another.
