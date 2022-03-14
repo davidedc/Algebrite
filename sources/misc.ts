@@ -13,20 +13,14 @@ import {
   istensor,
   NIL,
   Sign,
-  Str,
   U
 } from '../runtime/defs';
 import { strcmp } from '../runtime/otherCFunctions';
-import { push } from '../runtime/stack';
 import { get_printname, symbol } from '../runtime/symbol';
 import { compare_numbers, integer } from './bignum';
 import { Eval } from './eval';
 import { power } from './power';
 import { compare_tensors } from './tensor';
-
-export function new_string(s: string | number) {
-  push(new Str(s.toString()));
-}
 
 // both ints
 export function zero_matrix(i: number, j: number) {

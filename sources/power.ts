@@ -30,7 +30,6 @@ import {
   U
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
-import { pop, push, top } from '../runtime/stack';
 import { get_binding, symbol } from '../runtime/symbol';
 import { equal, exponential, length, sign } from '../sources/misc';
 import { abs } from './abs';
@@ -169,13 +168,13 @@ function yypower(base: U, exponent: U): U {
       tmp = makeList(symbol(POWER), base, exponent);
     } else {
       tmp = makeList(
-          symbol(MULTIPLY),
+        symbol(MULTIPLY),
+        base,
+        makeList(
+          symbol(POWER),
           base,
-          makeList(
-            symbol(POWER),
-            base,
-            rational(exponent.q.a.mod(exponent.q.b), exponent.q.b)
-          )
+          rational(exponent.q.a.mod(exponent.q.b), exponent.q.b)
+        )
       );
       if (DEBUG_POWER) {
         console.log(` trick applied : ${tmp}`);
@@ -272,7 +271,7 @@ function yypower(base: U, exponent: U): U {
   ) {
     let tmp = makeList(symbol(POWER), base, exponent);
     if (DEBUG_POWER) {
-      console.log(`   power: turning complex exponential to rect: ${top()}`);
+      console.log(`   power: turning complex exponential to rect: ${tmp}`);
     }
 
     const hopefullySimplified = rect(tmp); // put new (hopefully simplified expr) in exponent
@@ -442,12 +441,12 @@ function yypower(base: U, exponent: U): U {
       //console.log("power pushing PI when base is: " + base + " and exponent is:" + exponent)
       const pi =
         defs.evaluatingAsFloats ||
-        (iscomplexnumberdouble(base) && isdouble(exponent))
+          (iscomplexnumberdouble(base) && isdouble(exponent))
           ? double(Math.PI)
           : symbol(PI);
       let tmp = multiply(
-          power(abs(base), exponent),
-          power(Constants.negOne, divide(multiply(arg(base), exponent), pi))
+        power(abs(base), exponent),
+        power(Constants.negOne, divide(multiply(arg(base), exponent), pi))
       );
 
       // if we calculate the power making use of arctan:
