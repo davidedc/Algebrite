@@ -118,7 +118,7 @@ test_low_level = function() {
     console.log("exec text failed");
   }
   // test_clearall(); // merged into the .ts tests
-  test_inv();
+  // test_inv(); // merged into the .ts tests
   test_printlatex();
   test_mixedprint();
   test_inner();
@@ -130,7 +130,7 @@ test_low_level = function() {
   test_mdiv();
   test_mmod();
   test_mprime();
-  test_mgcd();
+  // test_mgcd(); // merged into the .ts tests
   test_mpow();
   test_mroot();
   // test_dependencies(); // merged into the .ts tests
@@ -151,16 +151,16 @@ selftest = function() {
   // test_abs(); // merged into the .ts tests
   test_sum();
   test_product();
-  test_for();
-  test_exp();
-  test_expand();
+  // test_for(); // merged into the .ts tests
+  // test_exp(); // merged into the .ts tests
+  // test_expand(); // merged into the .ts tests
   test_factorpoly();
   test_subst();
   // test_simplify(); // merged into the .ts tests
   test_multiply();
   test_scan();
   test_power();
-  test_factor_number();
+  // test_factor_number(); // merged into the .ts tests
   test_tensor();
   // test_bake(); // merged into the .ts tests
   // test_adj(); // merged into the .ts tests
@@ -180,17 +180,17 @@ selftest = function() {
   // test_derivative(); // merged into the .ts tests
   // test_dirac(); // merged into the .ts tests
   // test_erf(); // merged into the .ts tests
-  test_erfc();
-  test_expcos();
-  test_expsin();
-  test_float();
-  test_floor();
-  test_gamma();
+  // test_erfc(); // in the .ts tests
+  // test_expcos(); // in the .ts tests
+  // test_expsin(); // in the .ts tests
+  // test_float(); // in the .ts tests
+  // test_floor(); // in the .ts tests
+  // test_gamma(); // in the .ts tests
   test_gcd();
-  test_imag();
-  test_lcm();
-  test_log();
-  test_mod();
+  // test_imag(); // in the .ts tests
+  // test_lcm(); // in the .ts tests
+  // test_log(); // in the .ts tests
+  // test_mod(); // in the .ts tests
   test_nroots();
   test_numerator();
   test_outer();
@@ -203,8 +203,8 @@ selftest = function() {
   test_sgn();
   test_taylor();
   test_zero();
-  test_hermite();
-  test_laguerre();
+  // test_hermite(); // merged into the .ts tests
+  // test_laguerre(); // merged into the .ts tests
   test_legendre();
   // test_binomial(); // merged into the .ts tests
   // test_divisors(); // merged into the .ts tests
@@ -221,8 +221,8 @@ selftest = function() {
   // test_arccosh(); // merged into the .ts tests
   // test_arctan(); // merged into the .ts tests
   // test_arctanh(); // merged into the .ts tests
-  test_index();
-  test_isprime();
+  // test_index(); // merged into the .ts tests
+  // test_isprime(); // merged into the .ts tests
   // test_eigen(); // merged into the .ts tests
   test_shape();
   mini_test();
