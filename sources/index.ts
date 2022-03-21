@@ -1,7 +1,6 @@
 import { alloc_tensor } from '../runtime/alloc';
-import { defs, istensor, Tensor, U } from '../runtime/defs';
+import { istensor, Tensor, U } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { moveTos, push } from '../runtime/stack';
 import { nativeInt } from './bignum';
 import { check_tensor_dimensions } from './tensor';
 
@@ -9,13 +8,10 @@ import { check_tensor_dimensions } from './tensor';
 // is the object to be indexed, followed by the indices themselves.
 
 // called by Eval_index
-export function index_function(stack: U[]): U {
-  const s = 0;
-  let p1: U = stack[s] as Tensor;
-
+export function index_function(p1: Tensor, indices:U[]):U {
   const { ndim } = p1.tensor;
 
-  const m = stack.length - 1;
+  const m = indices.length;
 
   if (m > ndim) {
     stop('too many indices for tensor');
@@ -24,7 +20,7 @@ export function index_function(stack: U[]): U {
   let k = 0;
 
   for (let i = 0; i < m; i++) {
-    const t = nativeInt(stack[s + i + 1]);
+    const t = nativeInt(indices[i]);
     if (t < 1 || t > p1.tensor.dim[i]) {
       stop('index out of range');
     }
@@ -54,33 +50,12 @@ export function index_function(stack: U[]): U {
   return p2;
 }
 
-//-----------------------------------------------------------------------------
-//
-//  Input:    n    Number of args on stack
-//
-//      tos-n    Right-hand value
-//
-//      tos-n+1    Left-hand value
-//
-//      tos-n+2    First index
-//
-//      .
-//      .
-//      .
-//
-//      tos-1    Last index
-//
-//  Output:    Result on stack
-//
-//-----------------------------------------------------------------------------
-export function set_component(n: number) {
-  if (n < 3) {
+
+export function set_component(RVALUE:U, ...args:U[]):U {
+  if (args.length < 2) {
     stop('error in indexed assign');
   }
-
-  const s = defs.tos - n;
-  const RVALUE = defs.stack[s];
-  let LVALUE = defs.stack[s + 1];
+  let[LVALUE, ...indices] = args;
 
   if (!istensor(LVALUE)) {
     stop(
@@ -90,7 +65,7 @@ export function set_component(n: number) {
 
   const { ndim } = LVALUE.tensor;
 
-  const m = n - 2;
+  const m = indices.length;
 
   if (m > ndim) {
     stop('error in indexed assign');
@@ -98,7 +73,7 @@ export function set_component(n: number) {
 
   let k = 0;
   for (let i = 0; i < m; i++) {
-    const t = nativeInt(defs.stack[s + i + 2]);
+    const t = nativeInt(indices[i]);
     if (t < 1 || t > LVALUE.tensor.dim[i]) {
       stop('error in indexed assign\n');
     }
@@ -128,9 +103,7 @@ export function set_component(n: number) {
 
     check_tensor_dimensions(LVALUE);
 
-    moveTos(defs.tos - n);
-    push(LVALUE);
-    return;
+    return LVALUE;
   }
 
   // see if the rvalue matches
@@ -156,7 +129,5 @@ export function set_component(n: number) {
   check_tensor_dimensions(LVALUE);
   check_tensor_dimensions(RVALUE);
 
-  moveTos(defs.tos - n);
-
-  push(LVALUE);
+  return LVALUE;
 }

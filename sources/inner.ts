@@ -14,13 +14,12 @@ import {
   istensor,
   MAXDIM,
   NIL,
-  symbol,
   SYMBOL_IDENTITY_MATRIX,
   Tensor,
-  U,
+  U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { add, subtract } from './add';
 import { Eval } from './eval';
 import { inv } from './inv';
@@ -100,7 +99,7 @@ But here in Algebrite they do the same thing.
  http://uk.mathworks.com/help/matlab/ref/mtimes.html
 
 */
-export function Eval_inner(p1: U) {
+export function Eval_inner(p1: U): U {
   // if there are more than two arguments then
   // reduce it to a more standard version
   // of two arguments, which means we need to
@@ -132,8 +131,7 @@ export function Eval_inner(p1: U) {
     for (let i = 2; i < args.length; i++) {
       temp = makeList(symbol(INNER), args[args.length - i - 1], temp);
     }
-    Eval_inner(temp);
-    return;
+    return Eval_inner(temp);
   }
 
   // TODO we have to take a look at the whole
@@ -169,8 +167,8 @@ export function Eval_inner(p1: U) {
             isNumericAtomOrTensor(operands[i + shift + 1])
           )
         ) {
-          const arg2 = Eval(operands[i + shift + 1]);
           const arg1 = inv(Eval(operands[i + shift]));
+          const arg2 = Eval(operands[i + shift + 1]);
           const difference = subtract(arg1, arg2);
           //console.log "result: " + difference
           if (isZeroAtomOrTensor(difference)) {
@@ -206,21 +204,11 @@ export function Eval_inner(p1: U) {
 
   // now rebuild the arguments, just using the
   // refined operands
-  //console.log "rebuilding the argument ----"
-
-  if (operands.length === 0) {
-    push(symbol(SYMBOL_IDENTITY_MATRIX));
-    return;
+  if (operands.length == 0) {
+    return symbol(SYMBOL_IDENTITY_MATRIX);
   }
-
-  p1 = makeList(symbol(INNER), ...operands);
-
-  p1 = cdr(p1);
-  let result = Eval(car(p1));
-  if (iscons(p1)) {
-    result = p1.tail().reduce((acc: U, p: U) => inner(acc, Eval(p)), result);
-  }
-  push(result);
+  operands = operands.map(Eval);
+  return operands.reduce(inner);
 }
 
 // inner definition

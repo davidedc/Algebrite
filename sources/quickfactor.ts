@@ -1,10 +1,11 @@
-import { Num, POWER, symbol, U } from '../runtime/defs';
+import { Num, POWER, U } from '../runtime/defs';
 import { subtract } from './add';
 import { bignum_power_number, bignum_truncate, nativeInt } from './bignum';
 import { factor_small_number } from './factor';
 import { isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
 import { multiply, multiply_all } from './multiply';
+import {symbol} from "../runtime/symbol";
 
 //-----------------------------------------------------------------------------
 //

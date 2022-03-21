@@ -11,17 +11,16 @@ import {
   ispower,
   istensor,
   PI,
-  symbol,
   Tensor,
-  U,
+  U
 } from '../runtime/defs';
 import {
   Find,
   findPossibleClockForm,
-  findPossibleExponentialForm,
+  findPossibleExponentialForm
 } from '../runtime/find';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { exponential } from '../sources/misc';
 import { add } from './add';
 import { integer, rational } from './bignum';
@@ -36,7 +35,7 @@ import {
   isnegativenumber,
   isnegativeterm,
   ispositivenumber,
-  isZeroAtomOrTensor,
+  isZeroAtomOrTensor
 } from './is';
 import { makeList } from './list';
 import { divide, multiply, negate } from './multiply';
@@ -97,8 +96,7 @@ Notes
 const DEBUG_ABS = false;
 
 export function Eval_abs(p1: U) {
-  const result = abs(Eval(cadr(p1)));
-  push(result);
+    return abs(Eval(cadr(p1)));
 }
 
 export function absValFloat(p1: U): U {

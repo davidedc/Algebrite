@@ -3,9 +3,9 @@ import {
   HERMITE,
   issymbol,
   SECRETX,
-  symbol,
-  U,
+  U
 } from '../runtime/defs';
+import { symbol } from "../runtime/symbol";
 import { subtract } from './add';
 import { integer, nativeInt } from './bignum';
 import { Eval } from './eval';

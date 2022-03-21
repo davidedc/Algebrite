@@ -1,5 +1,4 @@
 import { caddr, cadr, Constants, isNumericAtom, U } from '../runtime/defs';
-import { push } from '../runtime/stack';
 import { lessp } from '../sources/misc';
 import { subtract } from './add';
 import { Eval } from './eval';
@@ -21,8 +20,7 @@ import { divide } from './multiply';
 export function Eval_binomial(p1: U) {
   const N = Eval(cadr(p1));
   const K = Eval(caddr(p1));
-  const result = binomial(N, K);
-  push(result);
+  return binomial(N, K);
 }
 
 function binomial(N: U, K: U): U {

@@ -1,5 +1,4 @@
 import { cadr, U } from '../runtime/defs';
-import { push } from '../runtime/stack';
 import { add } from './add';
 import { integer } from './bignum';
 import { conjugate } from './conj';
@@ -18,8 +17,7 @@ import { rect } from './rect';
   exp(i a)  cos(a)
 */
 export function Eval_real(p1: U) {
-  const result = real(Eval(cadr(p1)));
-  push(result);
+  return real(Eval(cadr(p1)));
 }
 
 export function real(p: U): U {

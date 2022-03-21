@@ -7,10 +7,9 @@ import {
   ismultiply,
   ispower,
   LOG,
-  symbol,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { add, subtract } from './add';
 import { double } from './bignum';
 import { denominator } from './denominator';
@@ -29,8 +28,7 @@ import { numerator } from './numerator';
 // for the "common" logarithm i.e. base 10. Also note that Google
 // calculations use log for the common logarithm.
 export function Eval_log(p1: U) {
-  const result = logarithm(Eval(cadr(p1)));
-  push(result);
+  return logarithm(Eval(cadr(p1)));
 }
 
 export function logarithm(p1: U): U {

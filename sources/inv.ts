@@ -13,7 +13,6 @@ import {
   isNumericAtomOrTensor,
   Sym,
   Tensor,
-  symbol,
   U,
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
@@ -26,6 +25,7 @@ import { isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
 import { divide, multiply } from './multiply';
 import { is_square_matrix } from './tensor';
+import {symbol} from "../runtime/symbol";
 
 //-----------------------------------------------------------------------------
 //

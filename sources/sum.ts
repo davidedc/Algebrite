@@ -5,13 +5,12 @@ import {
   cadr,
   Constants,
   issymbol,
-  U,
+  U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
 import { get_binding, set_binding } from '../runtime/symbol';
 import { add } from './add';
-import { integer } from './bignum';
+import { integer, nativeInt } from './bignum';
 import { Eval, evaluate_integer } from './eval';
 
 // 'sum' function
@@ -23,11 +22,6 @@ import { Eval, evaluate_integer } from './eval';
 
 // leaves the sum at the top of the stack
 export function Eval_sum(p1: U) {
-  const result = _sum(p1);
-  push(result);
-}
-
-function _sum(p1: U): U {
   // 1st arg
   const body = cadr(p1);
 

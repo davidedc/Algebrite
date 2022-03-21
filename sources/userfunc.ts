@@ -1,10 +1,7 @@
 import {
-  cadr,
   car,
-  cddr,
   cdr,
   DEBUG,
-  defs,
   EVAL,
   FUNCTION,
   iscons,
@@ -12,17 +9,15 @@ import {
   isstr,
   issymbol,
   istensor,
-  symbol,
   SYMBOL_D,
   Tensor,
-  U,
+  U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
-import { get_binding } from '../runtime/symbol';
+import { get_binding, symbol } from '../runtime/symbol';
 import { Eval_derivative } from './derivative';
-import { Eval } from './eval';
-import { list, makeList } from './list';
+import { Eval, evalList } from './eval';
+import { makeList } from './list';
 import { check_tensor_dimensions, copy_tensor } from './tensor';
 
 // Evaluate a user defined function
@@ -54,7 +49,7 @@ General description
 Returns the partial derivative of f with respect to x. x can be a vector e.g. [x,y].
 
 */
-export function Eval_user_function(p1: U) {
+export function Eval_user_function(p1: U): U {
   // Use "derivative" instead of "d" if there is no user function "d"
 
   if (DEBUG) {
@@ -64,8 +59,7 @@ export function Eval_user_function(p1: U) {
     car(p1) === symbol(SYMBOL_D) &&
     get_binding(symbol(SYMBOL_D)) === symbol(SYMBOL_D)
   ) {
-    Eval_derivative(p1);
-    return;
+    return Eval_derivative(p1);
   }
 
   // normally car(p1) is a symbol with the function name
@@ -114,24 +108,17 @@ export function Eval_user_function(p1: U) {
     bodyAndFormalArguments === car(p1)
   ) {
     // leave everything as it was and return
-    const h = defs.tos;
-    push(bodyAndFormalArguments);
-    p1 = B;
-    while (iscons(p1)) {
-      push(Eval(car(p1)));
-      p1 = cdr(p1);
-    }
-    list(defs.tos - h);
-    return;
+    return makeList(bodyAndFormalArguments, ...evalList(B));
   }
 
   // Create the argument substitution list S
   p1 = A;
   let p2 = B;
-  const h = defs.tos;
+  const S:U[]=[];
+
   while (iscons(p1) && iscons(p2)) {
-    push(car(p1));
-    push(car(p2));
+    S.push(car(p1));
+    S.push(car(p2));
     // why explicitly Eval the parameters when
     // the body of the function is
     // evalled anyways? Commenting it out. All tests pass...
@@ -140,63 +127,50 @@ export function Eval_user_function(p1: U) {
     p2 = cdr(p2);
   }
 
-  list(defs.tos - h);
-  const S = pop();
-
   // Evaluate the function body
-  push(F);
-  if (iscons(S)) {
-    push(S);
-    rewrite_args();
+  if (S.length) {
+    F = rewrite_args(F, S);
   }
-  //console.log "rewritten body: " + stack[tos-1]
-  push(Eval(pop()));
+  //console.log("rewritten body: " + F)
+  return Eval(F);
 }
 
 // Rewrite by expanding symbols that contain args
-function rewrite_args() {
-  let n = 0;
-
-  // subst. list which is a list
-  // where each consecutive pair
-  // is what needs to be substituted and with what
-  const p2 = pop();
+/**
+ *
+ * @param p1 expr to substitute in i.e. the function body
+ * @param p2 subst. list which is a list where each consecutive pair
+ * is what needs to be substituted and with what
+ */
+function rewrite_args(p1:U, p2:U[]):U {
   //console.log "subst. list " + p2
-
-  // expr to substitute in i.e. the
-  // function body
-  let p1 = pop();
   //console.log "expr: " + p1
 
   if (istensor(p1)) {
-    n = rewrite_args_tensor(p1, p2);
-    return n;
+    return rewrite_args_tensor(p1, p2);
   }
 
   if (iscons(p1)) {
-    const h = defs.tos;
-    if (car(p1) === car(p2)) {
+    let result:U[]=[];
+    if (car(p1) === p2[0]) {
       // rewrite a function in
       // the body with the one
       // passed from the paramaters
-      push(makeList(symbol(EVAL), car(cdr(p2))));
+      result.push(makeList(symbol(EVAL), p2[1]));
     } else {
       // if there is no match
       // then no substitution necessary
-      push(car(p1));
+      result.push(car(p1));
     }
 
     // continue recursively to
     // rewrite the rest of the body
     p1 = cdr(p1);
     while (iscons(p1)) {
-      push(car(p1));
-      push(p2);
-      n += rewrite_args();
+      result.push(rewrite_args(car(p1), p2));
       p1 = cdr(p1);
     }
-    list(defs.tos - h);
-    return n;
+    return makeList(...result);
   }
 
   // ground cases here
@@ -208,8 +182,7 @@ function rewrite_args() {
   // If not a symbol then no
   // substitution to be done
   if (!issymbol(p1)) {
-    push(p1);
-    return 0;
+    return p1;
   }
 
   // Here we are in a symbol case
@@ -217,43 +190,30 @@ function rewrite_args() {
 
   // Check if there is a direct match
   // of symbols right away
-  let p3 = p2;
-  while (iscons(p3)) {
-    if (p1 === car(p3)) {
-      push(cadr(p3));
-      return 1;
+  for (let i = 0; i < p2.length; i+=2) {
+    if (p1 === p2[i]) {
+      return p2[i+1];
     }
-    p3 = cddr(p3);
   }
 
   // Get the symbol's content, if _that_
   // matches then do the substitution
-  p3 = get_binding(p1);
-  push(p3);
+  let p3 = get_binding(p1);
   if (p1 !== p3) {
-    push(p2); // subst. list
-    n = rewrite_args();
-    if (n === 0) {
-      pop();
-      push(p1); // restore if not rewritten with arg
+    const n = rewrite_args(p3, p2);
+    if (n === p3) {
+      return p1; // restore if not rewritten with arg
     }
   }
 
-  return n;
+  return p3;
 }
 
-function rewrite_args_tensor(p1: Tensor, p2: U) {
-  let n = 0;
+function rewrite_args_tensor(p1: Tensor, p2: U[]):U {
   p1 = copy_tensor(p1);
-  p1.tensor.elem = p1.tensor.elem.map((el) => {
-    push(el);
-    push(p2);
-    n += rewrite_args();
-    return pop();
-  });
+  p1.tensor.elem = p1.tensor.elem.map((el) => rewrite_args(el, p2));
 
   check_tensor_dimensions(p1);
 
-  push(p1);
-  return n;
+  return p1;
 }

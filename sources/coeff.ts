@@ -5,11 +5,10 @@ import {
   Constants,
   doexpand,
   NIL,
-  symbol,
   SYMBOL_X,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { equal } from '../sources/misc';
 import { subtract } from './add';
 import { Eval } from './eval';
@@ -45,7 +44,7 @@ export function Eval_coeff(p1: U) {
   }
 
   // divide p by x^n, keep the constant part
-  push(filter(divide(P, power(X, N)), X));
+  return filter(divide(P, power(X, N)), X);
 }
 
 //-----------------------------------------------------------------------------

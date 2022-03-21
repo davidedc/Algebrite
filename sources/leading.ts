@@ -1,5 +1,5 @@
-import { caddr, cadr, NIL, symbol, U } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { caddr, cadr, NIL, U } from '../runtime/defs';
+import { symbol } from "../runtime/symbol";
 import { degree } from './degree';
 import { Eval } from './eval';
 import { filter } from './filter';
@@ -24,7 +24,7 @@ export function Eval_leading(p1: U) {
   const P = Eval(cadr(p1));
   p1 = Eval(caddr(p1));
   const X = p1 === symbol(NIL) ? guess(P) : p1;
-  push(leading(P, X));
+  return leading(P, X);
 }
 
 function leading(P: U, X: U) {

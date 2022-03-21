@@ -4,11 +4,10 @@ import {
   cadr,
   Constants,
   NIL,
-  symbol,
   SYMBOL_X,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { add, subtract } from './add';
 import { integer } from './bignum';
 import { coeff } from './coeff';
@@ -24,7 +23,7 @@ export function Eval_quotient(p1: U) {
   if (X === symbol(NIL)) {
     X = symbol(SYMBOL_X);
   }
-  push(divpoly(DIVIDEND, DIVISOR, X));
+  return divpoly(DIVIDEND, DIVISOR, X);
 }
 
 //-----------------------------------------------------------------------------

@@ -7,10 +7,9 @@ import {
   LAGUERRE,
   NIL,
   SECRETX,
-  symbol,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { add, subtract } from './add';
 import { integer, nativeInt } from './bignum';
 import { Eval } from './eval';
@@ -49,7 +48,7 @@ export function Eval_laguerre(p1: U) {
   const p2 = Eval(cadddr(p1));
   const K = p2 === symbol(NIL) ? Constants.zero : p2;
 
-  push(laguerre(X, N, K));
+  return laguerre(X, N, K);
 }
 
 function laguerre(X: U, N: U, K: U): U {

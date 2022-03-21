@@ -1,4 +1,3 @@
-import { gcd } from './gcd';
 import {
   caddr,
   cadr,
@@ -9,19 +8,18 @@ import {
   ismultiply,
   ispower,
   istensor,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
 import { add } from './add';
 import { Condense } from './condense';
 import { Eval } from './eval';
+import { gcd } from './gcd';
 import { isnegativenumber } from './is';
 import { divide, inverse, multiply } from './multiply';
 import { check_tensor_dimensions } from './tensor';
 
 export function Eval_rationalize(p1: U) {
-  const result = rationalize(Eval(cadr(p1)));
-  push(result);
+  return rationalize(Eval(cadr(p1)));
 }
 
 export function rationalize(p: U): U {
@@ -106,7 +104,7 @@ function multiply_denominators_factor(p: U, p2: U): U {
 }
 
 function __rationalize_tensor(p1: U): U {
-  p1 = Eval(p1); // makes a copy
+  p1 = Eval(p1);  // makes a copy
 
   if (!istensor(p1)) {
     // might be zero

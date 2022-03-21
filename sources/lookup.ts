@@ -1,5 +1,4 @@
 import { cadr, iscons, SYM, U } from '../runtime/defs';
-import { push } from '../runtime/stack';
 import { get_binding } from '../runtime/symbol';
 
 // now this might be a little confusing, so a
@@ -120,5 +119,5 @@ export function Eval_lookup(p1: U) {
   if (!iscons(p1) && cadr(p1).k === SYM) {
     p1 = get_binding(p1);
   }
-  push(p1);
+  return p1;
 }

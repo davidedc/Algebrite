@@ -4,10 +4,9 @@ import {
   isdouble,
   isNumericAtom,
   ROUND,
-  symbol,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { double, integer } from './bignum';
 import { Eval } from './eval';
 import { yyfloat } from './float';
@@ -15,8 +14,7 @@ import { isinteger } from './is';
 import { makeList } from './list';
 
 export function Eval_round(p1: U) {
-  const result = yround(Eval(cadr(p1)));
-  push(result);
+  return yround(Eval(cadr(p1)));
 }
 
 function yround(p1: U): U {

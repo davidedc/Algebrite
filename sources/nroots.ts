@@ -1,18 +1,8 @@
 import { alloc_tensor } from '../runtime/alloc';
-import {
-  caddr,
-  cadr,
-  Constants,
-  DEBUG,
-  defs,
-  isdouble,
-  NIL,
-  symbol,
-  U,
-} from '../runtime/defs';
+import { caddr, cadr, Constants, DEBUG, defs, isdouble, NIL, U } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { moveTos, push } from '../runtime/stack';
-import { sort_stack } from '../sources/misc';
+import { symbol } from "../runtime/symbol";
+import { cmp_expr } from '../sources/misc';
 import { add } from './add';
 import { double } from './bignum';
 import { coeff } from './coeff';
@@ -70,9 +60,6 @@ export function Eval_nroots(p1: U) {
     stop('nroots: polynomial?');
   }
 
-  // mark the stack
-  const h = defs.tos;
-
   // get the coefficients
   const cs = coeff(p1, p2);
   let n = cs.length;
@@ -94,6 +81,8 @@ export function Eval_nroots(p1: U) {
   // n is the number of coefficients, n = deg(p) + 1
   monic(n);
 
+  const roots: U[] = [];
+
   for (let k = n; k > 1; k--) {
     findroot(k);
     if (Math.abs(nroots_a.r) < NROOTS_DELTA) {
@@ -102,7 +91,7 @@ export function Eval_nroots(p1: U) {
     if (Math.abs(nroots_a.i) < NROOTS_DELTA) {
       nroots_a.i = 0.0;
     }
-    push(
+    roots.push(
       add(
         double(nroots_a.r),
         multiply(double(nroots_a.i), Constants.imaginaryunit)
@@ -112,16 +101,16 @@ export function Eval_nroots(p1: U) {
   }
 
   // now make n equal to the number of roots
-  n = defs.tos - h;
-
-  if (n > 1) {
-    sort_stack(n);
+  n = roots.length;
+  if (n == 1) {
+    return roots[0];
+  } else if (n > 1) {
+    roots.sort(cmp_expr);
     p1 = alloc_tensor(n);
     p1.tensor.ndim = 1;
     p1.tensor.dim[0] = n;
-    p1.tensor.elem = defs.stack.slice(h, h + n);
-    moveTos(h);
-    push(p1);
+    p1.tensor.elem = roots;
+    return p1;
   }
 }
 

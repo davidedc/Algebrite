@@ -1,5 +1,5 @@
-import { car, cdr, Constants, NIL, symbol, TAYLOR, U } from '../runtime/defs';
-import { pop, push, top } from '../runtime/stack';
+import { car, cdr, Constants, NIL, TAYLOR, U } from '../runtime/defs';
+import { symbol } from "../runtime/symbol";
 import { add, subtract } from './add';
 import { integer, nativeInt } from './bignum';
 import { derivative } from './derivative';
@@ -28,7 +28,7 @@ export function Eval_taylor(p1: U) {
   // 2nd arg
   p1 = cdr(p1);
   let p2 = Eval(car(p1));
-  const X = p2 === symbol(NIL) ? guess(top()) : p2; // TODO: should this be `top()`?
+  const X = p2 === symbol(NIL) ? guess(F) : p2;
 
   // 3rd arg
   p1 = cdr(p1);
@@ -40,7 +40,7 @@ export function Eval_taylor(p1: U) {
   p2 = Eval(car(p1));
   const A = p2 === symbol(NIL) ? Constants.zero : p2; // 0: default expansion point
 
-  push(taylor(F, X, N, A));
+  return taylor(F, X, N, A);
 }
 
 function taylor(F: U, X: U, N: U, A: U): U {

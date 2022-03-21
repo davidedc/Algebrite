@@ -4,12 +4,11 @@ import {
   car,
   Constants,
   isdouble,
-  symbol,
   TAN,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
-import { double, integer, rational, nativeInt } from './bignum';
+import { symbol } from "../runtime/symbol";
+import { double, integer, nativeInt, rational } from './bignum';
 import { Eval } from './eval';
 import { isnegative } from './is';
 import { makeList } from './list';
@@ -18,8 +17,7 @@ import { power } from './power';
 
 // Tangent function of numerical and symbolic arguments
 export function Eval_tan(p1: U) {
-  const result = tangent(Eval(cadr(p1)));
-  push(result);
+  return tangent(Eval(cadr(p1)));
 }
 
 function tangent(p1: U): U {

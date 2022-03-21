@@ -7,19 +7,19 @@ import {
   isdouble,
   istensor,
   NIL,
-  symbol,
   Tensor,
-  U,
+  U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
-import { set_binding, usr_symbol } from '../runtime/symbol';
+import { set_binding, symbol, usr_symbol } from '../runtime/symbol';
 import { double } from './bignum';
 import { Eval } from './eval';
 import { yyfloat } from './float';
 import { makeList } from './list';
 import { print_str } from './print';
 import { copy_tensor } from './tensor';
+
+type EIGENOP = typeof EIGEN | typeof EIGENVAL | typeof EIGENVEC;
 
 /* eigen =====================================================================
 
@@ -122,7 +122,7 @@ export function Eval_eigen(p1: U) {
   p1 = usr_symbol('Q');
   set_binding(p1, p3);
 
-  push(symbol(NIL));
+  return symbol(NIL);
 }
 
 /* eigenval =====================================================================
@@ -141,11 +141,6 @@ Compute eigenvalues of m. See "eigen" for more info.
 
 */
 export function Eval_eigenval(p1: U) {
-  const result = _eigenval(p1);
-  push(result);
-}
-
-function _eigenval(p1: U) {
   const { arg, invalid } = EIG_check_arg(p1);
   if (invalid) {
     return makeList(symbol(EIGENVAL), invalid);
@@ -172,11 +167,6 @@ Compute eigenvectors of m. See "eigen" for more info.
 
 */
 export function Eval_eigenvec(p1: U) {
-  const result = _eigenvec(p1);
-  push(result);
-}
-
-function _eigenvec(p1: U) {
   const { arg, invalid } = EIG_check_arg(p1);
   if (invalid) {
     return makeList(symbol(EIGENVEC), invalid);
@@ -239,7 +229,7 @@ function eigIsDoubleTensor(p1: Tensor): p1 is Tensor<Double> {
 //      p3    eigenvectors
 //
 //-----------------------------------------------------------------------------
-function eigen(op: number, p1: Tensor<Double>): [U, U] {
+function eigen(op: EIGENOP, p1: Tensor<Double>): [U, U] {
   // malloc working vars
 
   //EIG_yydd = (double *) malloc(n * n * sizeof (double))

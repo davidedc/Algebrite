@@ -26,35 +26,19 @@ import {
   Num,
   OPERATOR,
   POWER,
-  symbol,
-  U,
+  U
 } from '../runtime/defs';
+import { append } from '../runtime/otherCFunctions';
 import { stop } from '../runtime/run';
-import { pop, pop_n_items, push, push_all } from '../runtime/stack';
+import { symbol } from '../runtime/symbol';
 import { cmp_expr } from '../sources/misc';
 import { add, subtract } from './add';
-import {
-  divide_numbers,
-  invert_number,
-  mp_denominator,
-  mp_numerator,
-  multiply_numbers,
-  negate_number,
-} from './bignum';
+import { divide_numbers, invert_number, mp_denominator, mp_numerator, multiply_numbers, negate_number } from './bignum';
 import { Eval } from './eval';
-import {
-  equaln,
-  isfraction,
-  isinteger,
-  isminusone,
-  isnegativenumber,
-  isplusone,
-  isZeroAtom,
-} from './is';
-import { list, makeList } from './list';
+import { equaln, isfraction, isinteger, isminusone, isnegativenumber, isplusone, isZeroAtom } from './is';
+import { makeList } from './list';
 import { power } from './power';
 import { scalar_times_tensor, tensor_times_scalar } from './tensor';
-import { append } from '../runtime/otherCFunctions';
 
 // Symbolic multiplication
 
@@ -74,7 +58,7 @@ export function Eval_multiply(p1: U) {
   if (iscons(p1)) {
     temp = [...p1].reduce((acc: U, p: U) => multiply(acc, Eval(p)), temp);
   }
-  push(temp);
+  return temp;
 }
 
 // this one doesn't eval the factors,
@@ -91,8 +75,6 @@ export function multiply(arg1: U, arg2: U): U {
 }
 
 function yymultiply(p1: U, p2: U): U {
-  const h = defs.tos;
-
   // is either operand zero?
   if (isZeroAtom(p1) || isZeroAtom(p2)) {
     return Constants.Zero();
@@ -127,21 +109,23 @@ function yymultiply(p1: U, p2: U): U {
 
   p2 = ismultiply(p2) ? cdr(p2) : makeList(p2);
 
+  const factors:U[] = [];
+
   // handle numerical coefficients
   if (isNumericAtom(car(p1)) && isNumericAtom(car(p2))) {
     const arg1 = car(p1) as Num | Double;
     const arg2 = car(p2) as Num | Double;
-    push(multiply_numbers(arg1, arg2));
+    factors.push(multiply_numbers(arg1, arg2));
     p1 = cdr(p1);
     p2 = cdr(p2);
   } else if (isNumericAtom(car(p1))) {
-    push(car(p1));
+    factors.push(car(p1));
     p1 = cdr(p1);
   } else if (isNumericAtom(car(p2))) {
-    push(car(p2));
+    factors.push(car(p2));
     p2 = cdr(p2);
   } else {
-    push(Constants.One());
+    factors.push(Constants.One());
   }
 
   let [p3, p5] = parse_p1(p1);
@@ -149,7 +133,7 @@ function yymultiply(p1: U, p2: U): U {
 
   while (iscons(p1) && iscons(p2)) {
     if (caar(p1) === symbol(OPERATOR) && caar(p2) === symbol(OPERATOR)) {
-      push(new Cons(symbol(OPERATOR), append(cdar(p1), cdar(p2))));
+      factors.push(new Cons(symbol(OPERATOR), append(cdar(p1), cdar(p2))));
       p1 = cdr(p1);
       p2 = cdr(p2);
       [p3, p5] = parse_p1(p1);
@@ -159,17 +143,17 @@ function yymultiply(p1: U, p2: U): U {
 
     switch (cmp_expr(p3, p4)) {
       case -1:
-        push(car(p1));
+        factors.push(car(p1));
         p1 = cdr(p1);
         [p3, p5] = parse_p1(p1);
         break;
       case 1:
-        push(car(p2));
+        factors.push(car(p2));
         p2 = cdr(p2);
         [p4, p6] = parse_p2(p2);
         break;
       case 0:
-        combine_factors(h, p4, p5, p6);
+        combine_factors(factors, p4, p5, p6);
         p1 = cdr(p1);
         p2 = cdr(p2);
         [p3, p5] = parse_p1(p1);
@@ -181,20 +165,18 @@ function yymultiply(p1: U, p2: U): U {
   }
 
   // push remaining factors, if any
-  const remaining = [];
   if (iscons(p1)) {
-    remaining.push(...p1);
+    factors.push(...p1);
   }
   if (iscons(p2)) {
-    remaining.push(...p2);
+    factors.push(...p2);
   }
-  push_all(remaining);
 
   // normalize radical factors
   // example: 2*2(-1/2) -> 2^(1/2)
   // must be done after merge because merge may produce radical
   // example: 2^(1/2-a)*2^a -> 2^(1/2)
-  __normalize_radical_factors(h);
+  __normalize_radical_factors(factors);
 
   // this hack should not be necessary, unless power returns a multiply
   //for (i = h; i < tos; i++) {
@@ -204,36 +186,31 @@ function yymultiply(p1: U, p2: U): U {
   //  }
   //}
   if (defs.expanding) {
-    for (let i = h; i < defs.tos; i++) {
-      if (isadd(defs.stack[i])) {
-        const arr = pop_n_items(defs.tos - h);
-        return multiply_all(arr);
+    for (let i = 0; i < factors.length; i++) {
+      if (isadd(factors[i])) {
+        return multiply_all(factors);
       }
     }
   }
 
   // n is the number of result factors on the stack
-  const n = defs.tos - h;
+  const n = factors.length;
   if (n === 1) {
-    return pop();
+    return factors.pop();
   }
 
   // discard integer 1
-  if (isrational(defs.stack[h]) && equaln(defs.stack[h], 1)) {
+  if (isrational(factors[0]) && equaln(factors[0], 1)) {
     if (n === 2) {
-      const p7 = pop();
-      pop();
+      const p7 = factors.pop();
       return p7;
     } else {
-      defs.stack[h] = symbol(MULTIPLY);
-      list(n);
-      return pop();
+      factors[0] = symbol(MULTIPLY);
+      return makeList(...factors);
     }
   }
 
-  list(n);
-  const p7 = pop();
-  return new Cons(symbol(MULTIPLY), p7);
+  return new Cons(symbol(MULTIPLY), makeList(...factors));
 }
 
 // Decompose a factor into base and power.
@@ -269,22 +246,22 @@ function parse_p2(p2: U): [U, U] {
 }
 
 // h an integer
-function combine_factors(h: number, p4: U, p5: U, p6: U) {
+function combine_factors(factors: U[], p4: U, p5: U, p6: U) {
   let p7 = power(p4, add(p5, p6));
   if (isNumericAtom(p7)) {
-    defs.stack[h] = multiply_numbers(defs.stack[h] as Num | Double, p7);
+    factors[0] = multiply_numbers(factors[0] as Num | Double, p7);
   } else if (ismultiply(p7)) {
     // power can return number * factor (i.e. -1 * i)
     if (isNumericAtom(cadr(p7)) && cdddr(p7) === symbol(NIL)) {
-      const arg1 = defs.stack[h] as Num | Double;
+      const arg1 = factors[0] as Num | Double;
       const arg2 = cadr(p7) as Num | Double;
-      defs.stack[h] = multiply_numbers(arg1, arg2);
-      push(caddr(p7));
+      factors[0] = multiply_numbers(arg1, arg2);
+      factors.push(caddr(p7));
     } else {
-      push(p7);
+      factors.push(p7);
     }
   } else {
-    push(p7);
+    factors.push(p7);
   }
 }
 
@@ -404,44 +381,43 @@ export function negate_noexpand(p1: U): U {
 //
 //-----------------------------------------------------------------------------
 
-// h is an int
-function __normalize_radical_factors(h: number) {
+function __normalize_radical_factors(factors:U[]) {
   let i = 0;
   // if coeff is 1 or floating then don't bother
   if (
-    isplusone(defs.stack[h]) ||
-    isminusone(defs.stack[h]) ||
-    isdouble(defs.stack[h])
+    isplusone(factors[0]) ||
+    isminusone(factors[0]) ||
+    isdouble(factors[0])
   ) {
     return;
   }
 
   // if no radicals then don't bother
-  for (i = h + 1; i < defs.tos; i++) {
-    if (__is_radical_number(defs.stack[i])) {
+  for (i = 1; i < factors.length; i++) {
+    if (__is_radical_number(factors[i])) {
       break;
     }
   }
 
-  if (i === defs.tos) {
+  if (i === factors.length) {
     return;
   }
 
   // numerator
-  let A: U = mp_numerator(defs.stack[h]);
+  let A: U = mp_numerator(factors[0]);
   //console.log("__normalize_radical_factors numerator: " + stack[tos-1])
 
-  for (let i = h + 1; i < defs.tos; i++) {
+  for (let i = 1; i < factors.length; i++) {
     if (isplusone(A) || isminusone(A)) {
       break;
     }
 
-    if (!__is_radical_number(defs.stack[i])) {
+    if (!__is_radical_number(factors[i])) {
       continue;
     }
 
-    const BASE = cadr(defs.stack[i]);
-    const EXPO = caddr(defs.stack[i]);
+    const BASE = cadr(factors[i]);
+    const EXPO = caddr(factors[i]);
 
     // exponent must be negative
     if (!isnegativenumber(EXPO)) {
@@ -459,24 +435,24 @@ function __normalize_radical_factors(h: number) {
     A = TMP;
 
     // invert radical
-    defs.stack[i] = makeList(symbol(POWER), BASE, add(Constants.One(), EXPO));
+    factors[i] = makeList(symbol(POWER), BASE, add(Constants.One(), EXPO));
   }
 
   // denominator
-  let B: U = mp_denominator(defs.stack[h]);
+  let B: U = mp_denominator(factors[0]);
   //console.log("__normalize_radical_factors denominator: " + stack[tos-1])
 
-  for (let i = h + 1; i < defs.tos; i++) {
+  for (let i = 1; i < factors.length; i++) {
     if (isplusone(B)) {
       break;
     }
 
-    if (!__is_radical_number(defs.stack[i])) {
+    if (!__is_radical_number(factors[i])) {
       continue;
     }
 
-    const BASE = cadr(defs.stack[i]);
-    const EXPO = caddr(defs.stack[i]);
+    const BASE = cadr(factors[i]);
+    const EXPO = caddr(factors[i]);
 
     // exponent must be positive
     if (isnegativenumber(EXPO)) {
@@ -520,11 +496,11 @@ function __normalize_radical_factors(h: number) {
     //console.log("__new radical exponent: " + stack[tos-1])
 
     // invert radical
-    defs.stack[i] = makeList(symbol(POWER), BASE, subtracted);
+    factors[i] = makeList(symbol(POWER), BASE, subtracted);
   }
 
   // reconstitute the coefficient
-  defs.stack[h] = divide(A, B);
+  factors[0] = divide(A, B);
 }
 
 // don't include i

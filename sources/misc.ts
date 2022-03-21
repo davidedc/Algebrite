@@ -13,21 +13,14 @@ import {
   istensor,
   NIL,
   Sign,
-  Str,
-  symbol,
-  U,
+  U
 } from '../runtime/defs';
 import { strcmp } from '../runtime/otherCFunctions';
-import { push } from '../runtime/stack';
-import { get_printname } from '../runtime/symbol';
+import { get_printname, symbol } from '../runtime/symbol';
 import { compare_numbers, integer } from './bignum';
 import { Eval } from './eval';
 import { power } from './power';
 import { compare_tensors } from './tensor';
-
-export function new_string(s: string | number) {
-  push(new Str(s.toString()));
-}
 
 // both ints
 export function zero_matrix(i: number, j: number) {
@@ -202,22 +195,6 @@ export function exponential(p1: U): U {
 
 export function square(p1: U): U {
   return power(p1, integer(2));
-}
-
-//__cmp = (p1, p2) ->
-//  return cmp_expr(p1, p2)
-
-// n an integer
-export function sort_stack(n: number) {
-  //qsort(stack + tos - n, n, sizeof (U *), __cmp)
-
-  const h = defs.tos - n;
-  const subsetOfStack = defs.stack.slice(h, h + n);
-  subsetOfStack.sort(cmp_expr);
-  defs.stack = defs.stack
-    .slice(0, h)
-    .concat(subsetOfStack)
-    .concat(defs.stack.slice(h + n));
 }
 
 export function sort(arr: U[]): void {

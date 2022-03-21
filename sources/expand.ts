@@ -9,12 +9,11 @@ import {
   ispower,
   istensor,
   NIL,
-  symbol,
   Tensor,
-  U,
+  U
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { equal } from '../sources/misc';
 import { add, subtract } from './add';
 import { integer, nativeInt } from './bignum';
@@ -45,11 +44,10 @@ import { copy_tensor } from './tensor';
 //        2     x     x + 1
 //       x
 export function Eval_expand(p1: U) {
-  const top = Eval(cadr(p1));
+  const F = Eval(cadr(p1));
   const p2 = Eval(caddr(p1));
-  const X = p2 === symbol(NIL) ? guess(top) : p2;
-  const F = top;
-  push(expand(F, X));
+  const X = p2 === symbol(NIL) ? guess(F) : p2;
+  return expand(F, X);
 }
 
 //define A p2

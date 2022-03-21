@@ -2,20 +2,14 @@ import {
   caadr,
   cadadr,
   caddr,
-  cadr,
-  car,
-  cdr,
-  Constants,
+  cadr, Constants,
   FACTORIAL,
   isadd,
   isfactorial,
   ismultiply,
-  ispower,
-  NIL,
-  symbol,
-  U,
+  ispower, U
 } from '../runtime/defs';
-import { pop, push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { equal } from '../sources/misc';
 import { add, add_all, subtract } from './add';
 import { Eval } from './eval';
@@ -52,8 +46,7 @@ Then simplify the sum to get
 */
 // simplify factorials term-by-term
 function Eval_simfac(p1: U) {
-  const result = simfac(Eval(cadr(p1)));
-  push(result);
+  return simfac(Eval(cadr(p1)));
 }
 
 //if 1

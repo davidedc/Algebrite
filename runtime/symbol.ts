@@ -1,27 +1,6 @@
-import { stop } from './run';
-import { push } from './stack';
-import { new_string } from '../sources/misc';
 import { countsize } from './count';
-import {
-  BaseAtom,
-  binding,
-  breakpoint,
-  car,
-  cdr,
-  DEBUG,
-  iscons,
-  isSymbolReclaimable,
-  istensor,
-  NIL,
-  NSYM,
-  PI,
-  Sym,
-  SYM,
-  SYMBOL_I,
-  SYMBOL_IDENTITY_MATRIX,
-  symtab,
-  U,
-} from './defs';
+import { BaseAtom, car, cdr, Cons, iscons, issymbol, istensor, NIL, Str, Sym, SYM, U } from './defs';
+import { stop } from './run';
 
 // The symbol table is a simple array of struct U.
 
@@ -30,52 +9,104 @@ export function Eval_symbolsinfo() {
   const symbolsinfoToBePrinted = symbolsinfo();
 
   if (symbolsinfoToBePrinted !== '') {
-    new_string(symbolsinfoToBePrinted);
+    return new Str(symbolsinfoToBePrinted);
   } else {
-    push_symbol(NIL);
+    return symbol(NIL);
   }
 }
 
 function symbolsinfo() {
-  let symbolsinfoToBePrinted = '';
-  for (let i = NIL + 1; i < symtab.length; i++) {
-    if (symtab[i].printname === '') {
-      if (isSymbolReclaimable[i] === false) {
-        break;
-      } else {
-        continue;
-      }
-    }
-    const symtabi = symtab[i] + '';
-    const bindingi = (binding[i] + '').substring(0, 4);
-    symbolsinfoToBePrinted +=
-      'symbol: ' +
-      symtabi +
-      ' size: ' +
-      countsize(binding[i]) +
-      ' value: ' +
-      bindingi +
-      '...\n';
-  }
-  return symbolsinfoToBePrinted;
+  return [...userScope.symbolinfo()].join('\n');
 }
 
-// s is a string, n is an int
-// TODO: elsewhere when we create a symbol we
-// rather prefer to create a new entry. Here we just
-// reuse the existing one. If that can never be a problem
-// then explain why, otherwise do create a new entry.
-export function std_symbol(s: string, n: number, latexPrint?: string) {
-  const p: Sym = symtab[n];
-  if (p == null) {
-    breakpoint;
+class Scope {
+  private symbols = new Map<string, Sym>()
+  private bindings = new Map<string, U>();
+
+  constructor(private parent?:Scope) {}
+
+  getOrCreate(name:string):Sym {
+    const existing = this.getExisting(name);
+    if (existing) return existing;
+    const sym = new Sym(name);
+    this.symbols.set(name, sym);
+    return sym;
   }
-  p.printname = s;
-  if (latexPrint != null) {
-    p.latexPrint = latexPrint;
-  } else {
-    p.latexPrint = s;
+
+  private getExisting(name:string):Sym|undefined {
+    return this.parent?.getExisting(name) || this.symbols.get(name);
   }
+
+  mustGet(name:string):Sym {
+    return this.symbols.get(name) || this.parent?.mustGet(name) || stop(`${name} not defined`);
+  }
+
+  has(s:Sym):boolean {
+    return this.symbols.has(s.printname);
+  }
+
+  binding(sym:Sym):U {
+    return this.bindings.get(sym.printname) || this.parent?.binding(sym) || sym;
+  }
+
+  set(sym:Sym, value:U) {
+    this.bindings.set(sym.printname, value);
+  }
+
+  clear() {
+    this.bindings.clear();
+  }
+
+  delete(s:Sym) {
+    this.symbols.delete(s.printname);
+    this.bindings.delete(s.printname);
+    this.parent?.delete(s);
+  }
+
+  *symbolinfo():Generator<string> {
+    if (this.parent) {
+      yield *this.parent.symbolinfo();
+    }
+    for (const [name, sym] of this.symbols.entries()) {
+      const binding = this.bindings.get(name) || sym;
+      const bindingi = (binding + '').substring(0, 4)
+      yield `symbol: ${sym} size: ${countsize(binding)} value: ${bindingi}...`;
+    }
+  }
+
+  clearRenamedVariablesToAvoidBindingToExternalScope() {
+    for (const name of this.symbols.keys()) {
+      if (name.indexOf('AVOID_BINDING_TO_EXTERNAL_SCOPE_VALUE') !== -1) {
+        this.symbols.delete(name);
+      }
+    }
+    for (const name of this.bindings.keys()) {
+      if (name.indexOf('AVOID_BINDING_TO_EXTERNAL_SCOPE_VALUE') !== -1) {
+        this.bindings.delete(name);
+      }
+    }
+    this.parent?.clearRenamedVariablesToAvoidBindingToExternalScope();
+  }
+}
+
+let keywordScope = new Scope();
+let userScope = new Scope(keywordScope);
+
+export function inChildScope<T>(f:()=>T):T{
+  let savedScope = userScope;
+  try {
+    userScope = new Scope(userScope);
+    return f();
+  } finally {
+    userScope = savedScope;
+  }
+}
+
+export function std_symbol(s: string, keyword?:(p1:Cons)=>U) {
+  // TODO: can we delete latexPrint?
+  const sym = keywordScope.getOrCreate(s);
+  sym.latexPrint = s;
+  sym.keyword = keyword;
 }
 
 // symbol lookup, or symbol creation if symbol doesn't exist yet
@@ -104,33 +135,7 @@ export function std_symbol(s: string, n: number, latexPrint?: string) {
 // (e.g. symbol(SYMBOL_X)) rather than
 // by looking up a string.
 export function usr_symbol(s: string) {
-  let i = 0;
-  for (i = 0; i < NSYM; i++) {
-    if (s === symtab[i].printname) {
-      // found the symbol
-      return symtab[i];
-    }
-    if (symtab[i].printname === '') {
-      // found an entry in the symbol table
-      // with no printname, exit the loop
-      // and re-use this location
-      break;
-    }
-  }
-  if (i === NSYM) {
-    stop('symbol table overflow');
-  }
-
-  symtab[i] = new Sym(s);
-  // say that we just created the symbol
-  // then, binding[the new symbol entry]
-  // by default points to the symbol.
-  // So the value of an unassigned symbol will
-  // be just its name.
-  binding[i] = symtab[i];
-  isSymbolReclaimable[i] = false;
-
-  return symtab[i];
+  return userScope.getOrCreate(s);
 }
 
 // get the symbol's printname
@@ -149,59 +154,14 @@ export function set_binding(p: U, q: U) {
   if (p.k !== SYM) {
     stop('symbol error');
   }
-  //console.log "setting binding of " + p.toString() + " to: " + q.toString()
-  //if p.toString() == "aaa"
-  //  breakpoint
-  const indexFound = symtab.indexOf(p);
-  /*
-  if indexFound == -1
-    breakpoint
-    for i in [0...symtab.length]
-      if p.printname == symtab[i].printname
-        indexFound = i
-        console.log "remedied an index not found!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        break
-  */
-  if (symtab.indexOf(p, indexFound + 1) !== -1) {
-    console.log('ops, more than one element!');
-    breakpoint;
-  }
-  if (DEBUG) {
-    console.log(`lookup >> set_binding lookup ${indexFound}`);
-  }
-  isSymbolReclaimable[indexFound] = false;
-  binding[indexFound] = q;
+  userScope.set(p, q);
 }
 
 export function get_binding(p: U) {
   if (p.k !== SYM) {
     stop('symbol error');
   }
-  //console.log "getting binding of " + p.toString()
-  //if p.toString() == "aaa"
-  //  breakpoint
-  const indexFound = symtab.indexOf(p);
-  /*
-  if indexFound == -1
-    breakpoint
-    for i in [0...symtab.length]
-      if p.printname == symtab[i].printname
-        indexFound = i
-        console.log "remedied an index not found!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        break
-  */
-  if (symtab.indexOf(p, indexFound + 1) !== -1) {
-    console.log('ops, more than one element!');
-    breakpoint;
-  }
-  if (DEBUG) {
-    console.log(`lookup >> get_binding lookup ${indexFound}`);
-  }
-  //if indexFound == 139
-  //  breakpoint
-  //if indexFound == 137
-  //  breakpoint
-  return binding[indexFound];
+  return userScope.binding(p);
 }
 
 // the concept of user symbol is a little fuzzy
@@ -211,71 +171,19 @@ function is_usr_symbol(p: U): boolean {
   if (p.k !== SYM) {
     return false;
   }
-  const theSymnum = symnum(p);
-  // see "defs" file for the naming of the symbols
-  if (
-    theSymnum > PI &&
-    theSymnum !== SYMBOL_I &&
-    theSymnum !== SYMBOL_IDENTITY_MATRIX
-  ) {
-    return true;
-  }
-  return false;
+  return /^[abcdjnrstxyz]_?$/.test(p.printname) || !keywordScope.has(p);
 }
 
-// get symbol's number from ptr
-let lookupsTotal = 0;
-
-export function symnum(p: U) {
-  lookupsTotal++;
-  if (p.k !== SYM) {
-    stop('symbol error');
-  }
-  const indexFound = symtab.indexOf(p);
-  if (symtab.indexOf(p, indexFound + 1) !== -1) {
-    console.log('ops, more than one element!');
-    breakpoint;
-  }
-  if (DEBUG) {
-    console.log(
-      `lookup >> symnum lookup ${indexFound} lookup # ${lookupsTotal}`
-    );
-  }
-  //if lookupsTotal == 21
-  //  breakpoint
-  //if indexFound == 79
-  //  breakpoint
-  return indexFound;
-}
-
-// push indexed symbol
-// k is an int
-export function push_symbol(k: number) {
-  push(symtab[k]);
+// total clearout of symbol table
+export function reset_symbols() {
+  keywordScope = new Scope();
+  userScope = new Scope(keywordScope);
 }
 
 export function clear_symbols() {
-  // we can clear just what's assignable.
-  // everything before NIL is not assignable,
-  // so there is no need to clear it.
-  for (let i = NIL + 1; i < NSYM; i++) {
-    // stop at the first empty
-    // entry that is not reclaimable
-    if (symtab[i].printname === '') {
-      if (isSymbolReclaimable[i] === false) {
-        break;
-      } else {
-        continue;
-      }
-    }
-
-    symtab[i] = new Sym('');
-    binding[i] = symtab[i];
-    isSymbolReclaimable[i] = false;
-  }
+  userScope = new Scope(keywordScope);
+  keywordScope.clear();
 }
-//symtab[i].printname = ""
-//binding[i] = symtab[i]
 
 // collect all the variables in a tree
 export function collectUserSymbols(p: U, accumulator: U[]) {
@@ -300,4 +208,22 @@ export function collectUserSymbols(p: U, accumulator: U[]) {
     collectUserSymbols(car(p), accumulator);
     p = cdr(p);
   }
+}
+
+export function symbol(name:string): Sym {
+  // Should this just in the keywordScope?
+  return userScope.mustGet(name);
+}
+
+export function iskeyword(p: U): boolean {
+  return issymbol(p) && p.keyword != null;
+} // this transformation is done in run.coffee, see there
+// for more info.
+
+export function clearRenamedVariablesToAvoidBindingToExternalScope() {
+  userScope.clearRenamedVariablesToAvoidBindingToExternalScope();
+}
+
+export function clear_symbol(s:Sym) {
+  userScope.delete(s);
 }

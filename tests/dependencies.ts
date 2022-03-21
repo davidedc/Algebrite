@@ -279,6 +279,7 @@ test('20', t => {
 });
 
 test('21', t => {
+  debugger
   const testResult = findDependenciesInScript('f(x) = x * x + g(y)');
 
   t.is(

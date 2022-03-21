@@ -34,19 +34,18 @@ import {
   SIN,
   SINH,
   Sym,
-  symbol,
   TAN,
   TANH,
-  U,
+  U
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { equal, exponential, length, lessp } from '../sources/misc';
 import { add, add_all, subtract } from './add';
 import { besselj } from './besselj';
 import { bessely } from './bessely';
-import { integer, rational, nativeInt } from './bignum';
+import { integer, nativeInt, rational } from './bignum';
 import { cosine } from './cos';
 import { ycosh } from './cosh';
 import { dirac } from './dirac';
@@ -72,7 +71,7 @@ import { d_scalar_tensor, d_tensor_scalar, d_tensor_tensor } from './tensor';
 //define X p4
 //define N p5
 
-export function Eval_derivative(p1: U) {
+export function Eval_derivative(p1: U): U {
   // evaluate 1st arg to get function F
   p1 = cdr(p1);
   let F = Eval(car(p1));
@@ -164,7 +163,7 @@ export function Eval_derivative(p1: U) {
     }
   }
 
-  push(F); // final result
+  return F; // final result
 }
 
 export function derivative(p1: U, p2: U): U {

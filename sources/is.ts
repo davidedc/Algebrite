@@ -27,14 +27,14 @@ import {
   NUM,
   Num,
   PI,
-  symbol,
   SYMBOL_X,
   SYMBOL_Y,
   SYMBOL_Z,
   Tensor,
-  U,
+  U
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
+import { symbol } from "../runtime/symbol";
 import { equal, length } from '../sources/misc';
 import { absValFloat } from './abs';
 import { integer, nativeInt } from './bignum';
@@ -308,7 +308,7 @@ export function isposint(
 
 // --------------------------------------
 
-export function isunivarpolyfactoredorexpandedform(p: U, x?: U): U {
+export function isunivarpolyfactoredorexpandedform(p: U, x?: U): U | false {
   if (x == null) {
     x = guess(p);
   }
@@ -323,7 +323,7 @@ export function isunivarpolyfactoredorexpandedform(p: U, x?: U): U {
   ) {
     return x;
   } else {
-    return;
+    return false;
   }
 }
 

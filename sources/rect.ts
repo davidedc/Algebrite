@@ -7,17 +7,15 @@ import {
   ismultiply,
   issymbol,
   SIN,
-  symbol,
   U,
-  YYRECT,
+  YYRECT
 } from '../runtime/defs';
 import {
   Find,
   findPossibleClockForm,
-  findPossibleExponentialForm,
+  findPossibleExponentialForm
 } from '../runtime/find';
-import { pop, push } from '../runtime/stack';
-import { get_binding } from '../runtime/symbol';
+import { get_binding, symbol } from '../runtime/symbol';
 import { abs } from './abs';
 import { add } from './add';
 import { arg } from './arg';
@@ -38,8 +36,7 @@ Convert complex z to rectangular form
 const DEBUG_RECT = false;
 
 export function Eval_rect(p1: U) {
-  const result = rect(Eval(cadr(p1)));
-  push(result);
+  return rect(Eval(cadr(p1)));
 }
 
 export function rect(p1: U): U {

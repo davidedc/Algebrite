@@ -11,11 +11,10 @@ import {
   PI,
   POWER,
   SIN,
-  symbol,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
-import { double, integer, rational, nativeInt } from './bignum';
+import { symbol } from "../runtime/symbol";
+import { double, integer, nativeInt, rational } from './bignum';
 import { Eval } from './eval';
 import {
   equaln,
@@ -23,7 +22,7 @@ import {
   isminusoneoversqrttwo,
   isMinusSqrtThreeOverTwo,
   isoneoversqrttwo,
-  isSqrtThreeOverTwo,
+  isSqrtThreeOverTwo
 } from './is';
 import { makeList } from './list';
 import { multiply } from './multiply';
@@ -44,7 +43,7 @@ Returns the inverse sine of x.
 
 */
 export function Eval_arcsin(x: U) {
-  push(arcsin(Eval(cadr(x))));
+    return arcsin(Eval(cadr(x)));
 }
 
 function arcsin(x: U): U {

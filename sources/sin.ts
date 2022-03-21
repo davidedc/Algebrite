@@ -9,12 +9,11 @@ import {
   iscons,
   isdouble,
   SIN,
-  symbol,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { add, subtract } from './add';
-import { double, integer, rational, nativeInt } from './bignum';
+import { double, integer, nativeInt, rational } from './bignum';
 import { cosine } from './cos';
 import { Eval } from './eval';
 import { isnegative, isnpi } from './is';
@@ -24,8 +23,7 @@ import { power } from './power';
 
 // Sine function of numerical and symbolic arguments
 export function Eval_sin(p1: U) {
-  const result = sine(Eval(cadr(p1)));
-  push(result);
+  return sine(Eval(cadr(p1)));
 }
 
 export function sine(p1: U): U {

@@ -18,13 +18,12 @@ import {
   istranspose,
   MAXDIM,
   NIL,
-  symbol,
-  TRANSPOSE,
-  U,
   SYMBOL_IDENTITY_MATRIX,
+  TRANSPOSE,
+  U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { equal } from '../sources/misc';
 import { add } from './add';
 import { integer, nativeInt } from './bignum';
@@ -44,7 +43,7 @@ export function Eval_transpose(p1: U) {
     arg3 = Eval(cadddr(p1));
   }
 
-  push(transpose(arg1, arg2, arg3));
+  return transpose(arg1, arg2, arg3);
 }
 
 // by default p3 is 2 and p2 is 1

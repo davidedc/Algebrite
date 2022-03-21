@@ -3,29 +3,25 @@ import {
   cadr,
   car,
   cdr,
-  Constants,
+  Constants, defs,
   doexpand,
   isadd,
   iscons,
   ismultiply,
   isNumericAtom,
   ispower,
-  isrational,
-  MULTIPLY,
-  symbol,
-  U,
+  isrational, MULTIPLY, U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from '../runtime/symbol';
 import { equal, length, lessp } from '../sources/misc';
 import { subtract } from './add';
 import { gcd_numbers } from './bignum';
 import { Eval } from './eval';
+import { factorpoly } from './factorpoly';
 import { isnegativenumber, isunivarpolyfactoredorexpandedform } from './is';
+import { makeList } from './list';
 import { divide, multiply } from './multiply';
 import { power } from './power';
-import { factorpoly } from "./factorpoly";
-import { makeList } from "./list";
-
 
 // Greatest common denominator
 // can also be run on polynomials, however
@@ -38,7 +34,7 @@ export function Eval_gcd(p1: U) {
   if (iscons(p1)) {
     result = p1.tail().reduce((acc: U, p: U) => gcd(acc, Eval(p)), result);
   }
-  push(result);
+  return result;
 }
 
 export function gcd(p1: U, p2: U): U {
@@ -89,7 +85,7 @@ function gcd_main(p1: U, p2: U): U {
 
 // TODO this should probably be in "is"?
 export function areunivarpolysfactoredorexpandedform(p1:U, p2:U):U {
- let polyVar: U;
+ let polyVar: U|false;
   if (polyVar = isunivarpolyfactoredorexpandedform(p1)){
     if (isunivarpolyfactoredorexpandedform(p2, polyVar)){
       return polyVar;
@@ -247,7 +243,7 @@ function gcd_sum(p: U): U {
   return iscons(p) ? p.tail().reduce(gcd) : car(cdr(p));
 }
 
-function gcd_term_term(p1: U, p2: U): U {
+function gcd_term_term(p1: U, p2:U): U {
   if (!iscons(p1) || !iscons(p2)) {
     return Constants.one;
   }

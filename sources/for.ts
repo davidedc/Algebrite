@@ -5,12 +5,11 @@ import {
   cadr,
   issymbol,
   NIL,
-  U,
+  U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
-import { get_binding, push_symbol, set_binding } from '../runtime/symbol';
-import { integer } from './bignum';
+import { get_binding, set_binding, symbol } from '../runtime/symbol';
+import { integer, nativeInt } from './bignum';
 import { Eval, evaluate_integer } from './eval';
 
 // 'for' function
@@ -42,14 +41,12 @@ export function Eval_for(p1: U) {
 
   const j = evaluate_integer(cadddr(p1));
   if (isNaN(j)) {
-    push(p1);
-    return;
+    return p1;
   }
 
   const k = evaluate_integer(caddddr(p1));
   if (isNaN(k)) {
-    push(p1);
-    return;
+    return p1;
   }
 
   // remember contents of the index
@@ -66,5 +63,5 @@ export function Eval_for(p1: U) {
 
   // return value
 
-  push_symbol(NIL);
+  return symbol(NIL);
 }

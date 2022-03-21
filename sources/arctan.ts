@@ -11,12 +11,11 @@ import {
   ispower,
   POWER,
   SIN,
-  symbol,
   TAN,
-  U,
+  U
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { equal } from '../sources/misc';
 import { double, rational } from './bignum';
 import { denominator } from './denominator';
@@ -42,7 +41,7 @@ Returns the inverse tangent of x.
 
 */
 export function Eval_arctan(x: U) {
-  push(arctan(Eval(cadr(x))));
+    return arctan(Eval(cadr(x)));
 }
 
 export function arctan(x: U): U {

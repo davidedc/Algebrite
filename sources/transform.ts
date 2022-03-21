@@ -15,15 +15,13 @@ import {
   METAB,
   METAX,
   NIL,
-  symbol,
   SYMBOL_A_UNDERSCORE,
   SYMBOL_B_UNDERSCORE,
   SYMBOL_X_UNDERSCORE,
   U,
   noexpand,
 } from '../runtime/defs';
-import { pop } from '../runtime/stack';
-import { get_binding, set_binding } from '../runtime/symbol';
+import { get_binding, set_binding, symbol } from '../runtime/symbol';
 import { subtract } from './add';
 import { polyform } from './bake';
 import { decomp } from './decomp';
@@ -171,7 +169,6 @@ export function transform(
           restTerm = cdr(restTerm);
 
           if (DEBUG) {
-            console.log('tos before recursive transform: ' + defs.tos);
             console.log(`testing: ${secondTerm}`);
             console.log(`about to try to simplify other term: ${secondTerm}`);
           }
@@ -215,8 +212,7 @@ export function transform(
         }
       }
       if (eachTransformEntry) {
-        scan_meta(eachTransformEntry as string);
-        const temp = pop();
+        const temp = scan_meta(eachTransformEntry as string);
 
         const p5 = cadr(temp);
         B = caddr(temp);

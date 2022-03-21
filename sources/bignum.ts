@@ -7,7 +7,6 @@ import {
   Double,
   DOUBLE,
   isdouble,
-  isNumericAtom,
   isrational,
   Num,
   NUM,
@@ -19,7 +18,6 @@ import {
 import { mcmp } from '../runtime/mcmp';
 import { doubleToReasonableString } from '../runtime/otherCFunctions';
 import { stop } from '../runtime/run';
-import { pop, push } from '../runtime/stack';
 import { isfraction, isinteger, isZeroAtomOrTensor } from './is';
 import { mgcd } from './mgcd';
 import { mdiv, mmul } from './mmul';
@@ -329,31 +327,12 @@ export function convert_rational_to_double(p: Num): number {
   return result;
 }
 
-// n an integer
-export function push_integer(n: number): void {
-  if (DEBUG) {
-    console.log(`pushing integer ${n}`);
-  }
-  push(integer(n));
-}
-
 export function integer(n: number): Num {
   return new Num(bigInt(n));
 }
 
-export function push_double(d: number): void {
-  push(double(d));
-}
-
 export function double(d: number): Double {
   return new Double(d);
-}
-
-export function push_rational(
-  a: number | bigInt.BigInteger,
-  b: number | bigInt.BigInteger
-): void {
-  push(rational(a, b));
 }
 
 export function rational(
@@ -363,11 +342,6 @@ export function rational(
   // `as any as number` cast added because bigInt(number) and bigInt(bigInt.BigInteger)
   // are both accepted signatures, but bigInt(number|bigInt.BigInteger) is not
   return new Num(bigInt((a as any) as number), bigInt((b as any) as number));
-}
-
-export function pop_integer(): number {
-  const p1 = pop();
-  return nativeInt(p1);
 }
 
 export function nativeInt(p1: U): number {
@@ -393,7 +367,7 @@ export function nativeInt(p1: U): number {
   return n;
 }
 
-export function bignum_scan_integer(s: string): void {
+export function bignum_scan_integer(s: string): U {
   let scounter = 0;
 
   const sign_ = s[scounter];
@@ -410,11 +384,11 @@ export function bignum_scan_integer(s: string): void {
   if (sign_ === '-') {
     p1 = negate(p1);
   }
-  push(p1);
+  return p1;
 }
 
 export function bignum_scan_float(s: string) {
-  push_double(parseFloat(s));
+  return double(parseFloat(s));
 }
 
 // gives the capability of printing the unsigned
@@ -481,11 +455,6 @@ export function gcd_numbers(p1: Num, p2: Num): Num {
   return new Num(setSignTo(a, 1), b);
 }
 
-export function pop_double(): number {
-  const p1 = pop();
-  return nativeDouble(p1);
-}
-
 export function nativeDouble(p1: U): number {
   let d = 0.0;
   switch (p1.k) {
@@ -499,14 +468,6 @@ export function nativeDouble(p1: U): number {
       d = 0.0;
   }
   return d;
-}
-
-export function pop_number(): Num | Double {
-  const n = pop();
-  if (!isNumericAtom(n)) {
-    stop('not a number');
-  }
-  return n;
 }
 
 export function bignum_float(n: Num): Double {

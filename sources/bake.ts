@@ -9,7 +9,6 @@ import {
   ismultiply,
   MULTIPLY,
   POWER,
-  symbol,
   SYMBOL_S,
   SYMBOL_T,
   SYMBOL_X,
@@ -21,6 +20,7 @@ import { integer } from './bignum';
 import { coeff } from './coeff';
 import { equaln, ispolyexpandedform, isZeroAtomOrTensor } from './is';
 import { makeList } from './list';
+import {symbol} from "../runtime/symbol";
 
 export function bake(p1: U): U {
   return doexpand(_bake, p1);

@@ -8,9 +8,8 @@ import {
   ismultiply,
   ispower,
   isrational,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
 import { mp_numerator } from './bignum';
 import { Eval } from './eval';
 import { isnegativeterm, isplusone } from './is';
@@ -18,8 +17,7 @@ import { multiply_all } from './multiply';
 import { rationalize } from './rationalize';
 
 export function Eval_numerator(p1: U) {
-  const result = numerator(Eval(cadr(p1)));
-  push(result);
+  return numerator(Eval(cadr(p1)));
 }
 
 export function numerator(p1: U): U {

@@ -1,22 +1,6 @@
 import { index_function, set_component } from '.';
 import { alloc_tensor } from '../runtime/alloc';
 import {
-  ABS,
-  ADD,
-  ADJ,
-  AND,
-  APPROXRATIO,
-  ARCCOS,
-  ARCCOSH,
-  ARCSIN,
-  ARCSINH,
-  ARCTAN,
-  ARCTANH,
-  ARG,
-  BESSELJ,
-  BESSELY,
-  BINDING,
-  BINOMIAL,
   breakpoint,
   caadr,
   cadadr,
@@ -26,288 +10,47 @@ import {
   car,
   cdadr,
   cddr,
-  cdr,
-  CEILING,
-  CHECK,
-  CHOOSE,
-  CIRCEXP,
-  CLEAR,
-  CLEARALL,
-  CLEARPATTERNS,
-  CLOCK,
-  COEFF,
-  COFACTOR,
-  CONDENSE,
-  CONJ,
-  CONS,
+  cdr, CONS,
   Cons,
-  Constants,
-  CONTRACT,
-  COS,
-  COSH,
-  DEBUG,
-  DECOMP,
-  DEFINT,
-  defs,
-  DEGREE,
-  DENOMINATOR,
-  DERIVATIVE,
-  DET,
-  DIM,
-  DIRAC,
-  DIVISORS,
-  DO,
-  DOT,
-  DOUBLE,
-  EIGEN,
-  EIGENVAL,
-  EIGENVEC,
-  ERF,
-  ERFC,
-  EVAL,
-  EXP,
-  EXPAND,
-  EXPCOS,
-  EXPSIN,
-  FACTOR,
-  FACTORIAL,
-  FACTORPOLY,
-  FILTER,
-  FLOATF,
-  FLOOR,
-  FOR,
-  FUNCTION,
-  GAMMA,
-  GCD,
-  HERMITE,
-  HILBERT,
-  IMAG,
-  INDEX,
-  INNER,
-  INTEGRAL,
-  INV,
-  INVG,
-  iscons,
+  Constants, DEBUG, defs, DOUBLE, EVAL, INDEX, iscons,
   isdouble,
   ISINTEGER,
-  iskeyword,
-  isNumericAtom,
-  ISPRIME,
-  isrational,
+  isNumericAtom, isrational,
   issymbol,
   istensor,
-  LAGUERRE,
   LAST,
-  LCM,
-  LEADING,
-  LEGENDRE,
-  LOG,
-  LOOKUP,
-  MOD,
-  MULTIPLY,
   NIL,
-  NOT,
-  NROOTS,
+  noexpand,
   NUM,
-  NUMBER,
-  NUMERATOR,
   OPERATOR,
-  OR,
-  OUTER,
-  PATTERN,
-  PATTERNSINFO,
   PI,
-  POLAR,
-  POWER,
-  PRIME,
-  PRINT,
-  PRINT2DASCII,
-  PRINTFULL,
-  PRINTLATEX,
-  PRINTLIST,
-  PRINTPLAIN,
-  PRODUCT,
-  QUOTE,
-  QUOTIENT,
-  RANK,
-  RATIONALIZE,
-  REAL,
-  ROOTS,
-  ROUND,
   SETQ,
-  SGN,
-  SHAPE,
-  SILENTPATTERN,
-  SIMPLIFY,
-  SIN,
-  SINH,
-  SQRT,
-  STOP,
   STR,
-  SUBST,
-  SUM,
   SYM,
   Sym,
-  symbol,
-  SYMBOLSINFO,
-  TAN,
-  TANH,
-  TAYLOR,
   TENSOR,
   Tensor,
-  TEST,
   TESTEQ,
-  TESTGE,
-  TESTGT,
-  TESTLE,
-  TESTLT,
-  TRANSPOSE,
-  U,
-  UNIT,
-  YYRECT,
-  ZERO,
+  U
 } from '../runtime/defs';
 import { check_esc_flag, stop } from '../runtime/run';
-import { pop, push, push_all } from '../runtime/stack';
-import {
-  Eval_symbolsinfo,
-  get_binding,
-  set_binding,
-  symnum,
-} from '../runtime/symbol';
-import { exponential } from '../sources/misc';
-import { Eval_abs } from './abs';
-import { Eval_add } from './add';
-import { Eval_adj } from './adj';
-import { Eval_approxratio } from './approxratio';
-import { Eval_arccos } from './arccos';
-import { Eval_arccosh } from './arccosh';
-import { Eval_arcsin } from './arcsin';
-import { Eval_arcsinh } from './arcsinh';
-import { Eval_arctan } from './arctan';
-import { Eval_arctanh } from './arctanh';
-import { Eval_arg } from './arg';
-import { Eval_besselj } from './besselj';
-import { Eval_bessely } from './bessely';
-import {
-  convert_rational_to_double,
-  double,
-  push_integer,
-  integer,
-  rational,
-  nativeInt,
-} from './bignum';
-import { Eval_binomial } from './binomial';
-import { Eval_ceiling } from './ceiling';
-import { Eval_choose } from './choose';
-import { Eval_circexp } from './circexp';
-import { Eval_clear, Eval_clearall } from './clear';
-import { Eval_clock } from './clock';
-import { Eval_coeff } from './coeff';
-import { Eval_cofactor } from './cofactor';
-import { Eval_condense } from './condense';
-import { Eval_conj } from './conj';
-import { Eval_contract } from './contract';
-import { Eval_cos } from './cos';
-import { Eval_cosh } from './cosh';
-import { Eval_decomp } from './decomp';
-import { define_user_function, Eval_function_reference } from './define';
-import { Eval_defint } from './defint';
-import { Eval_degree } from './degree';
-import { Eval_denominator } from './denominator';
-import { Eval_derivative } from './derivative';
+import { get_binding, iskeyword, set_binding, symbol } from '../runtime/symbol';
+import { convert_rational_to_double, double, integer, nativeInt, rational } from './bignum';
+import { define_user_function } from './define';
 import { det } from './det';
-import { Eval_dirac } from './dirac';
 import { divisors } from './divisors';
-import { Eval_eigen, Eval_eigenval, Eval_eigenvec } from './eigen';
-import { Eval_erf } from './erf';
-import { Eval_erfc } from './erfc';
-import { Eval_expand } from './expand';
-import { Eval_expcos } from './expcos';
-import { Eval_expsin } from './expsin';
-import { Eval_factor } from './factor';
 import { factorial } from './factorial';
 import { factorpoly } from './factorpoly';
-import { Eval_filter } from './filter';
-import { Eval_float } from './float';
-import { Eval_floor } from './floor';
-import { Eval_for } from './for';
-import { Eval_gamma } from './gamma';
-import { Eval_gcd } from './gcd';
 import { hermite } from './hermite';
 import { hilbert } from './hilbert';
-import { Eval_imag } from './imag';
-import { Eval_inner } from './inner';
-import { Eval_integral } from './integral';
 import { inv, invg } from './inv';
-import {
-  isfloating,
-  isinteger,
-  isintegerorintegerfloat,
-  isZeroLikeOrNonZeroLikeOrUndetermined,
-} from './is';
-import { Eval_isprime } from './isprime';
-import { Eval_laguerre } from './laguerre';
-import { Eval_lcm } from './lcm';
-import { Eval_leading } from './leading';
-import { Eval_legendre } from './legendre';
+import { isfloating, isinteger, isintegerorintegerfloat, isZeroLikeOrNonZeroLikeOrUndetermined } from './is';
 import { makeList } from './list';
-import { Eval_log } from './log';
-import { Eval_lookup } from './lookup';
-import { Eval_mod } from './mod';
-import { Eval_multiply } from './multiply';
-import { Eval_nroots } from './nroots';
-import { Eval_numerator } from './numerator';
-import { Eval_outer } from './outer';
-import {
-  Eval_clearpatterns,
-  Eval_pattern,
-  Eval_patternsinfo,
-  Eval_silentpattern,
-} from './pattern';
-import { Eval_polar } from './polar';
-import { Eval_power, power } from './power';
-import { Eval_prime } from './prime';
-import {
-  Eval_print,
-  Eval_print2dascii,
-  Eval_printcomputer,
-  Eval_printhuman,
-  Eval_printlatex,
-  Eval_printlist,
-} from './print';
-import { Eval_product } from './product';
-import { Eval_quotient } from './quotient';
-import { Eval_rationalize } from './rationalize';
-import { Eval_real } from './real';
-import { Eval_rect } from './rect';
-import { Eval_roots } from './roots';
-import { Eval_round } from './round';
-import { Eval_sgn } from './sgn';
-import { Eval_shape } from './shape';
-import { Eval_simplify } from './simplify';
-import { Eval_sin } from './sin';
-import { Eval_sinh } from './sinh';
+import { exponential } from './misc';
+import { power } from './power';
 import { subst } from './subst';
-import { Eval_sum } from './sum';
-import { Eval_tan } from './tan';
-import { Eval_tanh } from './tanh';
-import { Eval_taylor } from './taylor';
 import { check_tensor_dimensions, Eval_tensor } from './tensor';
-import {
-  Eval_and,
-  Eval_not,
-  Eval_or,
-  Eval_test,
-  Eval_testeq,
-  Eval_testge,
-  Eval_testgt,
-  Eval_testle,
-  Eval_testlt,
-} from './test';
-import { Eval_transpose } from './transpose';
 import { Eval_user_function } from './userfunc';
-import { Eval_zero } from './zero';
 
 export function evaluate_integer(p: U): number {
   return nativeInt(Eval(p));
@@ -330,40 +73,32 @@ export function Eval(p1: U): U {
     defs.evaluatingAsFloats = true;
   }
 
-  let result: U;
-  switch (p1.k) {
-    case CONS:
-      Eval_cons(p1);
-      result = pop();
-      break;
-    case NUM:
-      result = defs.evaluatingAsFloats
-        ? double(convert_rational_to_double(p1))
-        : p1;
-      break;
-    case DOUBLE:
-    case STR:
-      result = p1;
-      break;
-    case TENSOR:
-      Eval_tensor(p1);
-      result = pop();
-      break;
-    case SYM:
-      Eval_sym(p1);
-      result = pop();
-      break;
-    default:
-      stop('atom?');
+  try {
+    switch (p1.k) {
+      case CONS:
+        return Eval_cons(p1);
+      case NUM:
+        return defs.evaluatingAsFloats
+          ? double(convert_rational_to_double(p1))
+          : p1;
+      case DOUBLE:
+      case STR:
+        return p1;
+      case TENSOR:
+        return Eval_tensor(p1);
+      case SYM:
+        return Eval_sym(p1);
+      default:
+        stop('atom?');
+    }
+  } finally {
+    if (willEvaluateAsFloats) {
+      defs.evaluatingAsFloats = false;
+    }
   }
-
-  if (willEvaluateAsFloats) {
-    defs.evaluatingAsFloats = false;
-  }
-  return result;
 }
 
-function Eval_sym(p1: Sym) {
+export function Eval_sym(p1: Sym): U {
   // note that function calls are not processed here
   // because, since they have an argument (at least an empty one)
   // they are actually CONs, which is a branch of the
@@ -374,20 +109,16 @@ function Eval_sym(p1: Sym) {
   // at the binding array, because keywords
   // are not redefinable.
   if (iskeyword(p1)) {
-    push(Eval(makeList(p1, symbol(LAST))));
-    return;
+    return Eval(makeList(p1, symbol(LAST)));
   } else if (p1 === symbol(PI) && defs.evaluatingAsFloats) {
-    push(Constants.piAsDouble);
-    return;
+    return Constants.piAsDouble;
   }
 
   // Evaluate symbol's binding
-  const p2 = get_binding(p1);
+  let p2 = get_binding(p1);
   if (DEBUG) {
     console.log(`looked up: ${p1} which contains: ${p2}`);
   }
-
-  push(p2);
 
   // differently from standard Lisp,
   // here the evaluation is not
@@ -424,13 +155,14 @@ function Eval_sym(p1: Sym) {
 
     defs.chainOfUserSymbolsNotFunctionsBeingEvaluated.push(p1);
 
-    push(Eval(pop()));
+    p2 = Eval(p2);
 
     defs.chainOfUserSymbolsNotFunctionsBeingEvaluated.pop();
   }
+  return p2;
 }
 
-function Eval_cons(p1: Cons) {
+export function Eval_cons(p1: Cons): U {
   const cons_head = car(p1);
 
   // normally the cons_head is a symbol,
@@ -443,8 +175,7 @@ function Eval_cons(p1: Cons) {
   // In those cases, we find an EVAL here,
   // so we proceed to EVAL
   if (car(cons_head) === symbol(EVAL)) {
-    Eval_user_function(p1);
-    return;
+    return Eval_user_function(p1);
   }
 
   // If we didn't fall in the EVAL case above
@@ -453,284 +184,15 @@ function Eval_cons(p1: Cons) {
     stop('cons?');
   }
 
-  switch (symnum(cons_head)) {
-    case ABS:
-      return Eval_abs(p1);
-    case ADD:
-      return Eval_add(p1);
-    case ADJ:
-      return Eval_adj(p1);
-    case AND:
-      return Eval_and(p1);
-    case ARCCOS:
-      return Eval_arccos(p1);
-    case ARCCOSH:
-      return Eval_arccosh(p1);
-    case ARCSIN:
-      return Eval_arcsin(p1);
-    case ARCSINH:
-      return Eval_arcsinh(p1);
-    case ARCTAN:
-      return Eval_arctan(p1);
-    case ARCTANH:
-      return Eval_arctanh(p1);
-    case ARG:
-      return Eval_arg(p1);
-    // case ATOMIZE: return Eval_atomize();
-    case BESSELJ:
-      return Eval_besselj(p1);
-    case BESSELY:
-      return Eval_bessely(p1);
-    case BINDING:
-      return Eval_binding(p1);
-    case BINOMIAL:
-      return Eval_binomial(p1);
-    case CEILING:
-      return Eval_ceiling(p1);
-    case CHECK:
-      return Eval_check(p1);
-    case CHOOSE:
-      return Eval_choose(p1);
-    case CIRCEXP:
-      return Eval_circexp(p1);
-    case CLEAR:
-      return Eval_clear(p1);
-    case CLEARALL:
-      return Eval_clearall();
-    case CLEARPATTERNS:
-      return Eval_clearpatterns();
-    case CLOCK:
-      return Eval_clock(p1);
-    case COEFF:
-      return Eval_coeff(p1);
-    case COFACTOR:
-      return Eval_cofactor(p1);
-    case CONDENSE:
-      return Eval_condense(p1);
-    case CONJ:
-      return Eval_conj(p1);
-    case CONTRACT:
-      return Eval_contract(p1);
-    case COS:
-      return Eval_cos(p1);
-    case COSH:
-      return Eval_cosh(p1);
-    case DECOMP:
-      return Eval_decomp(p1);
-    case DEGREE:
-      return Eval_degree(p1);
-    case DEFINT:
-      return Eval_defint(p1);
-    case DENOMINATOR:
-      return Eval_denominator(p1);
-    case DERIVATIVE:
-      return Eval_derivative(p1);
-    case DET:
-      return Eval_det(p1);
-    case DIM:
-      return Eval_dim(p1);
-    case DIRAC:
-      return Eval_dirac(p1);
-    case DIVISORS:
-      return Eval_divisors(p1);
-    case DO:
-      return Eval_do(p1);
-    case DOT:
-      return Eval_inner(p1);
-    // case DRAW: return Eval_draw();
-    // case DSOLVE: return Eval_dsolve();
-    case EIGEN:
-      return Eval_eigen(p1);
-    case EIGENVAL:
-      return Eval_eigenval(p1);
-    case EIGENVEC:
-      return Eval_eigenvec(p1);
-    case ERF:
-      return Eval_erf(p1);
-    case ERFC:
-      return Eval_erfc(p1);
-    case EVAL:
-      return Eval_Eval(p1);
-    case EXP:
-      return Eval_exp(p1);
-    case EXPAND:
-      return Eval_expand(p1);
-    case EXPCOS:
-      return Eval_expcos(p1);
-    case EXPSIN:
-      return Eval_expsin(p1);
-    case FACTOR:
-      return Eval_factor(p1);
-    case FACTORIAL:
-      return Eval_factorial(p1);
-    case FACTORPOLY:
-      return Eval_factorpoly(p1);
-    case FILTER:
-      return Eval_filter(p1);
-    case FLOATF:
-      return Eval_float(p1);
-    case APPROXRATIO:
-      return Eval_approxratio(p1);
-    case FLOOR:
-      return Eval_floor(p1);
-    case FOR:
-      return Eval_for(p1);
-    // this is invoked only when we
-    // evaluate a function that is NOT being called
-    // e.g. when f is a function as we do
-    //  g = f
-    case FUNCTION:
-      return Eval_function_reference(p1);
-    case GAMMA:
-      return Eval_gamma(p1);
-    case GCD:
-      return Eval_gcd(p1);
-    case HERMITE:
-      return Eval_hermite(p1);
-    case HILBERT:
-      return Eval_hilbert(p1);
-    case IMAG:
-      return Eval_imag(p1);
-    case INDEX:
-      return Eval_index(p1);
-    case INNER:
-      return Eval_inner(p1);
-    case INTEGRAL:
-      return Eval_integral(p1);
-    case INV:
-      return Eval_inv(p1);
-    case INVG:
-      return Eval_invg(p1);
-    case ISINTEGER:
-      return Eval_isinteger(p1);
-    case ISPRIME:
-      return Eval_isprime(p1);
-    case LAGUERRE:
-      return Eval_laguerre(p1);
-    //  when LAPLACE then Eval_laplace()
-    case LCM:
-      return Eval_lcm(p1);
-    case LEADING:
-      return Eval_leading(p1);
-    case LEGENDRE:
-      return Eval_legendre(p1);
-    case LOG:
-      return Eval_log(p1);
-    case LOOKUP:
-      return Eval_lookup(p1);
-    case MOD:
-      return Eval_mod(p1);
-    case MULTIPLY:
-      return Eval_multiply(p1);
-    case NOT:
-      return Eval_not(p1);
-    case NROOTS:
-      return Eval_nroots(p1);
-    case NUMBER:
-      return Eval_number(p1);
-    case NUMERATOR:
-      return Eval_numerator(p1);
-    case OPERATOR:
-      return Eval_operator(p1);
-    case OR:
-      return Eval_or(p1);
-    case OUTER:
-      return Eval_outer(p1);
-    case PATTERN:
-      return Eval_pattern(p1);
-    case PATTERNSINFO:
-      return Eval_patternsinfo();
-    case POLAR:
-      return Eval_polar(p1);
-    case POWER:
-      return Eval_power(p1);
-    case PRIME:
-      return Eval_prime(p1);
-    case PRINT:
-      return Eval_print(p1);
-    case PRINT2DASCII:
-      return Eval_print2dascii(p1);
-    case PRINTFULL:
-      return Eval_printcomputer(p1);
-    case PRINTLATEX:
-      return Eval_printlatex(p1);
-    case PRINTLIST:
-      return Eval_printlist(p1);
-    case PRINTPLAIN:
-      return Eval_printhuman(p1);
-    case PRODUCT:
-      return Eval_product(p1);
-    case QUOTE:
-      return Eval_quote(p1);
-    case QUOTIENT:
-      return Eval_quotient(p1);
-    case RANK:
-      return Eval_rank(p1);
-    case RATIONALIZE:
-      return Eval_rationalize(p1);
-    case REAL:
-      return Eval_real(p1);
-    case ROUND:
-      return Eval_round(p1);
-    case YYRECT:
-      return Eval_rect(p1);
-    case ROOTS:
-      return Eval_roots(p1);
-    case SETQ:
-      return Eval_setq(p1);
-    case SGN:
-      return Eval_sgn(p1);
-    case SILENTPATTERN:
-      return Eval_silentpattern(p1);
-    case SIMPLIFY:
-      return Eval_simplify(p1);
-    case SIN:
-      return Eval_sin(p1);
-    case SINH:
-      return Eval_sinh(p1);
-    case SHAPE:
-      return Eval_shape(p1);
-    case SQRT:
-      return Eval_sqrt(p1);
-    case STOP:
-      return Eval_stop();
-    case SUBST:
-      return Eval_subst(p1);
-    case SUM:
-      return Eval_sum(p1);
-    case SYMBOLSINFO:
-      return Eval_symbolsinfo();
-    case TAN:
-      return Eval_tan(p1);
-    case TANH:
-      return Eval_tanh(p1);
-    case TAYLOR:
-      return Eval_taylor(p1);
-    case TEST:
-      return Eval_test(p1);
-    case TESTEQ:
-      return Eval_testeq(p1);
-    case TESTGE:
-      return Eval_testge(p1);
-    case TESTGT:
-      return Eval_testgt(p1);
-    case TESTLE:
-      return Eval_testle(p1);
-    case TESTLT:
-      return Eval_testlt(p1);
-    case TRANSPOSE:
-      return Eval_transpose(p1);
-    case UNIT:
-      return Eval_unit(p1);
-    case ZERO:
-      return Eval_zero(p1);
-    default:
-      return Eval_user_function(p1);
+  if (cons_head.keyword) {
+    return cons_head.keyword(p1);
   }
+
+  return Eval_user_function(p1);
 }
 
-function Eval_binding(p1: U) {
-  push(get_binding(cadr(p1)));
+export function Eval_binding(p1: U) {
+  return get_binding(cadr(p1));
 }
 
 /* check =====================================================================
@@ -755,23 +217,23 @@ for numeric values. In which case, "true" is returned for non-zero values.
 Potential improvements: "check" can't evaluate strings yet.
 
 */
-function Eval_check(p1: U) {
+export function Eval_check(p1: U) {
   // check the argument
   const checkResult = isZeroLikeOrNonZeroLikeOrUndetermined(cadr(p1));
 
   if (checkResult == null) {
     // returned null: unknown result
     // leave the whole check unevalled
-    push(p1);
+    return p1;
   } else {
     // returned true or false -> 1 or 0
-    push_integer(Number(checkResult));
+    return integer(Number(checkResult));
   }
 }
 
-function Eval_det(p1: U) {
+export function Eval_det(p1: U) {
   const arg = Eval(cadr(p1)) as Tensor;
-  push(det(arg));
+  return det(arg);
 }
 
 /* dim =====================================================================
@@ -789,21 +251,21 @@ General description
 Returns the cardinality of the nth index of tensor "m".
 
 */
-function Eval_dim(p1: U) {
+export function Eval_dim(p1: U) {
   //int n
   const p2 = Eval(cadr(p1));
   const n = iscons(cddr(p1)) ? evaluate_integer(caddr(p1)) : 1;
   if (!istensor(p2)) {
-    push(Constants.one); // dim of scalar is 1
+    return Constants.one; // dim of scalar is 1
   } else if (n < 1 || n > p2.tensor.ndim) {
-    push(p1);
+    return p1;
   } else {
-    push_integer(p2.tensor.dim[n - 1]);
+    return integer(p2.tensor.dim[n - 1]);
   }
 }
 
-function Eval_divisors(p1: U) {
-  push(divisors(Eval(cadr(p1))));
+export function Eval_divisors(p1: U) {
+  return divisors(Eval(cadr(p1)));
 }
 
 /* do =====================================================================
@@ -821,48 +283,48 @@ General description
 Evaluates each argument from left to right. Returns the result of the last argument.
 
 */
-function Eval_do(p1: U) {
-  push(car(p1));
+export function Eval_do(p1: U) {
+  let result = car(p1);
   p1 = cdr(p1);
 
   while (iscons(p1)) {
-    pop();
-    push(Eval(car(p1)));
+    result = Eval(car(p1));
     p1 = cdr(p1);
   }
+  return result;
 }
 
-function Eval_dsolve(p1: U) {
-  push(Eval(cadr(p1)));
-  push(Eval(caddr(p1)));
-  push(Eval(cadddr(p1)));
+export function Eval_dsolve(p1: U) {
+  const a = Eval(cadr(p1));
+  const b = Eval(caddr(p1));
+  const c = Eval(cadddr(p1));
   stop('dsolve');
-  //dsolve();
+  //return dsolve(a, b, c);
 }
 
 // for example, Eval(f,x,2)
 
-function Eval_Eval(p1: U) {
+export function Eval_Eval(p1: U) {
   let tmp = Eval(cadr(p1));
   p1 = cddr(p1);
   while (iscons(p1)) {
     tmp = subst(tmp, Eval(car(p1)), Eval(cadr(p1)));
     p1 = cddr(p1);
   }
-  push(Eval(tmp));
+  return Eval(tmp);
 }
 
 // exp evaluation: it replaces itself with
 // a POWER(E,something) node and evals that one
-function Eval_exp(p1: U) {
-  push(exponential(Eval(cadr(p1))));
+export function Eval_exp(p1: U) {
+  return exponential(Eval(cadr(p1)));
 }
 
-function Eval_factorial(p1: U) {
-  push(factorial(Eval(cadr(p1))));
+export function Eval_factorial(p1: U) {
+  return factorial(Eval(cadr(p1)));
 }
 
-function Eval_factorpoly(p1: U) {
+export function Eval_factorpoly(p1: U): U {
   p1 = cdr(p1);
   const arg1 = Eval(car(p1));
   p1 = cdr(p1);
@@ -871,25 +333,20 @@ function Eval_factorpoly(p1: U) {
   if (iscons(p1)) {
     temp = p1.tail().reduce((a: U, b: U) => factorpoly(a, Eval(b)), temp);
   }
-  push(temp);
+  return temp;
 }
 
-function Eval_hermite(p1: U) {
+export function Eval_hermite(p1: U) {
   const arg2 = Eval(caddr(p1));
   const arg1 = Eval(cadr(p1));
-  push(hermite(arg1, arg2));
+  return hermite(arg1, arg2);
 }
 
-function Eval_hilbert(p1: U) {
-  push(hilbert(Eval(cadr(p1))));
+export function Eval_hilbert(p1: U) {
+  return hilbert(Eval(cadr(p1)));
 }
 
-function Eval_index(p1: U) {
-  const result = _index(p1);
-  push(result);
-}
-
-function _index(p1: U) {
+export function Eval_index(p1: U) {
   const orig = p1;
 
   // look into the head of the list,
@@ -907,7 +364,7 @@ function _index(p1: U) {
     return orig;
   }
 
-  const stack: U[] = [theTensor];
+  const stack: U[] = [];
   // we examined the head of the list which was the tensor,
   // now look into the indexes
   p1 = cdr(p1);
@@ -920,26 +377,21 @@ function _index(p1: U) {
     p1 = cdr(p1);
   }
 
-  return index_function(stack);
+  return index_function(theTensor, stack);
 }
 
-function Eval_inv(p1: U) {
+export function Eval_inv(p1: U) {
   const arg = Eval(cadr(p1));
-  push(inv(arg));
+  return inv(arg);
 }
 
-function Eval_invg(p1: U) {
+export function Eval_invg(p1: U) {
   const arg = Eval(cadr(p1));
-  push(invg(arg));
+  return invg(arg);
 }
 
-function Eval_isinteger(p1: U) {
+export function Eval_isinteger(p1: U) {
   p1 = Eval(cadr(p1));
-  const result = _isinteger(p1);
-  push(result);
-}
-
-function _isinteger(p1: U): U {
   if (isrational(p1)) {
     return isinteger(p1) ? Constants.one : Constants.zero;
   }
@@ -950,29 +402,32 @@ function _isinteger(p1: U): U {
   return makeList(symbol(ISINTEGER), p1);
 }
 
-function Eval_number(p1: U) {
+export function Eval_number(p1: U) {
   p1 = Eval(cadr(p1));
-  const result =
-    p1.k === NUM || p1.k === DOUBLE ? Constants.one : Constants.zero;
-  push(result);
+  if (p1.k === NUM || p1.k === DOUBLE) {
+    return Constants.one;
+  } else {
+    return Constants.zero;
+  }
 }
 
-function Eval_operator(p1: U) {
-  const mapped = iscons(p1) ? p1.tail().map(Eval) : [];
-  const result = makeList(symbol(OPERATOR), ...mapped);
-  push(result);
+export function Eval_operator(p1: U) {
+  return makeList(symbol(OPERATOR), ...evalList(cdr(p1)));
 }
 
 // quote definition
-function Eval_quote(p1: U) {
-  push(cadr(p1));
+export function Eval_quote(p1: U) {
+  return cadr(p1);
 }
 
 // rank definition
-function Eval_rank(p1: U) {
+export function Eval_rank(p1: U) {
   p1 = Eval(cadr(p1));
-  const rank = istensor(p1) ? integer(p1.tensor.ndim) : Constants.zero;
-  push(rank);
+  if (istensor(p1)) {
+    return integer(p1.tensor.ndim);
+  } else {
+    return Constants.zero;
+  }
 }
 
 // Evaluates the right side and assigns the
@@ -992,17 +447,15 @@ function Eval_rank(p1: U) {
 //   f = y
 //   g
 //   > x
-function Eval_setq(p1: U) {
+export function Eval_setq(p1: U): U {
   // case of tensor
   if (caadr(p1) === symbol(INDEX)) {
-    setq_indexed(p1);
-    return;
+    return setq_indexed(p1);
   }
 
   // case of function definition
   if (iscons(cadr(p1))) {
-    define_user_function(p1);
-    return;
+    return define_user_function(p1);
   }
 
   if (!issymbol(cadr(p1))) {
@@ -1017,7 +470,7 @@ function Eval_setq(p1: U) {
   // where an assignment does return the
   // assigned value.
   // TODO Could be changed.
-  push(symbol(NIL));
+  return symbol(NIL);
 }
 
 // Here "setq" is a misnomer because
@@ -1042,7 +495,7 @@ function Eval_setq(p1: U) {
 //  cadadr(p1) -> a
 //
 //-----------------------------------------------------------------------------
-function setq_indexed(p1: U) {
+function setq_indexed(p1: U): U {
   const p4 = cadadr(p1);
   console.log(`p4: ${p4}`);
   if (!issymbol(p4)) {
@@ -1059,48 +512,45 @@ function setq_indexed(p1: U) {
     //   existingMatrix[index] = something
     stop('indexed assignment: expected a symbol name');
   }
-  const h = defs.tos;
-  push(Eval(caddr(p1)));
+  const lvalue = Eval(caddr(p1));
+  let args: U[] = [];
   let p2 = cdadr(p1);
   if (iscons(p2)) {
-    push_all([...p2].map(Eval));
+    args = ([...p2].map(Eval));
   }
-  set_component(defs.tos - h);
-  const p3 = pop();
+  const p3 = set_component(lvalue, ...args);
   set_binding(p4, p3);
-  push(symbol(NIL));
+  return symbol(NIL);
 }
 
-function Eval_sqrt(p1: U) {
+export function Eval_sqrt(p1: U) {
   const base = Eval(cadr(p1));
-  push(power(base, rational(1, 2)));
+  return power(base, rational(1, 2));
 }
 
-function Eval_stop() {
+export function Eval_stop(): never {
   stop('user stop');
 }
 
-function Eval_subst(p1: U) {
+export function Eval_subst(p1: U) {
   const newExpr = Eval(cadr(p1));
   const oldExpr = Eval(caddr(p1));
   const expr = Eval(cadddr(p1));
-  push(Eval(subst(expr, oldExpr, newExpr)));
+  return Eval(subst(expr, oldExpr, newExpr));
 }
 
 // always returns a matrix with rank 2
 // i.e. two dimensions,
 // the passed parameter is the size
-function Eval_unit(p1: U) {
+export function Eval_unit(p1: U) {
   const n = evaluate_integer(cadr(p1));
 
   if (isNaN(n)) {
-    push(p1);
-    return;
+    return p1;
   }
 
   if (n < 1) {
-    push(p1);
-    return;
+    return p1;
   }
 
   p1 = alloc_tensor(n * n);
@@ -1111,7 +561,7 @@ function Eval_unit(p1: U) {
     p1.tensor.elem[n * i + i] = Constants.one;
   }
   check_tensor_dimensions(p1);
-  push(p1);
+  return p1;
 }
 
 // like Eval() except "=" (assignment) is treated
@@ -1137,4 +587,12 @@ export function Eval_predicate(p1: U): U {
   }
 
   return Eval(p1);
+}
+
+export function* evalList(p1: U) {
+  if (iscons(p1)) {
+    for (const el of p1) {
+      yield Eval(el);
+    }
+  }
 }

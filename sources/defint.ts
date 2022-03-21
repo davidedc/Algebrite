@@ -1,5 +1,4 @@
 import { cadr, car, cddr, cdr, iscons, U } from '../runtime/defs';
-import { push } from '../runtime/stack';
 import { subtract } from './add';
 import { Eval } from './eval';
 import { integral } from './integral';
@@ -65,5 +64,5 @@ export function Eval_defint(p1: U) {
     F = subtract(arg1, arg2);
   }
 
-  push(F);
+  return F;
 }

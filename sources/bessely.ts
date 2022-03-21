@@ -4,17 +4,16 @@ import {
   cadr,
   Constants,
   isdouble,
-  symbol,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { yn } from '../runtime/otherCFunctions';
+import { symbol } from "../runtime/symbol";
 import { double, nativeInt } from './bignum';
 import { Eval } from './eval';
 import { isnegativeterm } from './is';
 import { makeList } from './list';
 import { multiply, negate } from './multiply';
 import { power } from './power';
-import { yn } from '../runtime/otherCFunctions';
 
 /* bessely =====================================================================
 
@@ -33,8 +32,7 @@ Bessel function of second kind.
 
 */
 export function Eval_bessely(p1: U) {
-  const result = bessely(Eval(cadr(p1)), Eval(caddr(p1)));
-  push(result);
+  return bessely(Eval(cadr(p1)), Eval(caddr(p1)));
 }
 
 export function bessely(p1: U, p2: U): U {

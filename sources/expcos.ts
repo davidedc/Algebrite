@@ -1,5 +1,4 @@
 import { cadr, Constants, U } from '../runtime/defs';
-import { push } from '../runtime/stack';
 import { exponential } from '../sources/misc';
 import { add } from './add';
 import { rational } from './bignum';
@@ -8,8 +7,7 @@ import { multiply, negate } from './multiply';
 
 // Do the exponential cosine function.
 export function Eval_expcos(p1: U) {
-  const result = expcos(Eval(cadr(p1)));
-  push(result);
+  return expcos(Eval(cadr(p1)));
 }
 
 export function expcos(p1: U): U {

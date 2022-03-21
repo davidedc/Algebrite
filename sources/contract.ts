@@ -7,11 +7,10 @@ import {
   Constants,
   istensor,
   NIL,
-  symbol,
-  U,
+  U
 } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { add } from './add';
 import { integer, nativeInt } from './bignum';
 import { Eval } from './eval';
@@ -44,8 +43,7 @@ export function Eval_contract(p1: U) {
     p2 = Eval(caddr(p1));
     p3 = Eval(cadddr(p1));
   }
-  const result = contract(p1_prime, p2, p3);
-  push(result);
+  return contract(p1_prime, p2, p3);
 }
 
 function contract(p1: U, p2: U, p3: U): U {

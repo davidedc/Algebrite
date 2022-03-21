@@ -1,7 +1,6 @@
-import { gcd } from './gcd';
-import { car, cdr, doexpand, iscons, U } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { car, cdr, defs, doexpand, iscons, U } from '../runtime/defs';
 import { Eval } from './eval';
+import { gcd } from './gcd';
 import { divide, inverse } from './multiply';
 
 // Find the least common multiple of two expressions.
@@ -11,7 +10,7 @@ export function Eval_lcm(p1: U) {
   if (iscons(p1)) {
     result = p1.tail().reduce((a: U, b: U) => lcm(a, Eval(b)), result);
   }
-  push(result);
+  return result;
 }
 
 export function lcm(p1: U, p2: U): U {

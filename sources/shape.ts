@@ -1,7 +1,6 @@
 import { alloc_tensor } from '../runtime/alloc';
 import { cadr, Constants, istensor, U } from '../runtime/defs';
 import { stop } from '../runtime/run';
-import { push } from '../runtime/stack';
 import { integer } from './bignum';
 import { Eval } from './eval';
 import { isZeroAtomOrTensor } from './is';
@@ -9,7 +8,7 @@ import { isZeroAtomOrTensor } from './is';
 // shape of tensor
 export function Eval_shape(p1: U) {
   const result = shape(Eval(cadr(p1)));
-  push(result);
+  return result;
 }
 
 function shape(p1: U): U {

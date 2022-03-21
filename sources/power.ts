@@ -27,12 +27,10 @@ import {
   PI,
   POWER,
   SIN,
-  symbol,
-  U,
+  U
 } from '../runtime/defs';
 import { Find } from '../runtime/find';
-import { pop, push, top } from '../runtime/stack';
-import { get_binding } from '../runtime/symbol';
+import { get_binding, symbol } from '../runtime/symbol';
 import { equal, exponential, length, sign } from '../sources/misc';
 import { abs } from './abs';
 import { add, subtract } from './add';
@@ -41,9 +39,7 @@ import {
   compare_numbers,
   double,
   integer,
-  nativeDouble,
-  rational,
-  nativeInt,
+  nativeDouble, nativeInt, rational
 } from './bignum';
 import { conjugate } from './conj';
 import { cosine } from './cos';
@@ -61,7 +57,7 @@ import {
   isoneovertwo,
   ispositivenumber,
   isquarterturn,
-  isZeroAtomOrTensor,
+  isZeroAtomOrTensor
 } from './is';
 import { makeList } from './list';
 import { divide, multiply, negate } from './multiply';
@@ -72,8 +68,8 @@ import { power_tensor } from './tensor';
 
 /* Power function
 
-  Input:    push  Base 
-            push  Exponent
+  Input:    push  Base
+      push  Exponent
 
   Output:    Result on stack
 */
@@ -83,9 +79,9 @@ export function Eval_power(p1: U) {
   if (DEBUG_POWER) {
     breakpoint;
   }
-  const exponent = Eval(caddr(p1));
   const base = Eval(cadr(p1));
-  push(power(base, exponent));
+  const exponent = Eval(caddr(p1));
+  return power(base, exponent);
 }
 
 export function power(p1: U, p2: U): U {
@@ -275,7 +271,7 @@ function yypower(base: U, exponent: U): U {
   ) {
     let tmp = makeList(symbol(POWER), base, exponent);
     if (DEBUG_POWER) {
-      console.log(`   power: turning complex exponential to rect: ${top()}`);
+      console.log(`   power: turning complex exponential to rect: ${tmp}`);
     }
 
     const hopefullySimplified = rect(tmp); // put new (hopefully simplified expr) in exponent
@@ -445,7 +441,7 @@ function yypower(base: U, exponent: U): U {
       //console.log("power pushing PI when base is: " + base + " and exponent is:" + exponent)
       const pi =
         defs.evaluatingAsFloats ||
-        (iscomplexnumberdouble(base) && isdouble(exponent))
+          (iscomplexnumberdouble(base) && isdouble(exponent))
           ? double(Math.PI)
           : symbol(PI);
       let tmp = multiply(

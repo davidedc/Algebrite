@@ -26,7 +26,6 @@ import {
   iscons,
   isdouble,
   isfactorial,
-  iskeyword,
   ismultiply,
   isNumericAtom,
   ispower,
@@ -37,7 +36,6 @@ import {
   NUM,
   STR,
   SYM,
-  symbol,
   TENSOR,
   version,
   cadar,
@@ -55,11 +53,10 @@ import {
 } from './runtime/defs';
 import { Find } from './runtime/find';
 import { init } from './runtime/init';
-import { pop, push, restore, save, swap, dupl } from './runtime/stack';
 import {
   collectUserSymbols,
-  get_binding,
-  set_binding,
+  get_binding, iskeyword,
+  set_binding, symbol,
   usr_symbol,
 } from './runtime/symbol';
 import { exec, parse } from './runtime/zombocom';
@@ -174,12 +171,6 @@ $.equal = equal;
 $.length = length;
 $.scan = scan;
 $.Find = Find;
-$.dupl = dupl;
-$.swap = swap;
-$.restore = restore;
-$.save = save;
-$.push = push;
-$.pop = pop;
 $.get_binding = get_binding;
 $.set_binding = set_binding;
 $.usr_symbol = usr_symbol;

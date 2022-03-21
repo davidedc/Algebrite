@@ -7,10 +7,9 @@ import {
   ispower,
   isrational,
   MZERO,
-  symbol,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { Eval } from './eval';
 import { isnegativeterm } from './is';
 import { makeList } from './list';
@@ -26,8 +25,7 @@ import { negate } from './multiply';
 //  dirac(b-a)=dirac(a-b)
 //-----------------------------------------------------------------------------
 export function Eval_dirac(p1: U) {
-  const result = dirac(Eval(cadr(p1)));
-  push(result);
+  return dirac(Eval(cadr(p1)));
 }
 
 export function dirac(p1: U): U {

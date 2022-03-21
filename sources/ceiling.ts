@@ -5,10 +5,9 @@ import {
   isdouble,
   isNumericAtom,
   Num,
-  symbol,
-  U,
+  U
 } from '../runtime/defs';
-import { push } from '../runtime/stack';
+import { symbol } from "../runtime/symbol";
 import { add } from './add';
 import { double } from './bignum';
 import { Eval } from './eval';
@@ -33,8 +32,7 @@ Returns the smallest integer not less than x.
 
 */
 export function Eval_ceiling(p1: U) {
-  const result = ceiling(Eval(cadr(p1)));
-  push(result);
+  return ceiling(Eval(cadr(p1)));
 }
 
 function ceiling(p1: U): U {

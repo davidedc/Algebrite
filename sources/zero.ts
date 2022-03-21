@@ -1,13 +1,8 @@
 import { alloc_tensor } from '../runtime/alloc';
 import { Constants, iscons, MAXDIM, U } from '../runtime/defs';
-import { push } from '../runtime/stack';
 import { evaluate_integer } from './eval';
 
 export function Eval_zero(p1: U) {
-  push(_zero(p1));
-}
-
-function _zero(p1: U): U {
   const k: number[] = Array(MAXDIM).fill(0);
 
   let m = 1;
