@@ -1331,11 +1331,17 @@ function print_power(base: BaseAtom, exponent: BaseAtom) {
       accumulator += print_factor(base, true);
       accumulator += print_str(')');
     } else if (ispower(base)) {
-      if (defs.printMode !== PRINTMODE_LATEX) {
+      if (defs.printMode == PRINTMODE_LATEX) {
+        accumulator += print_str('{');
+      }
+      else {
         accumulator += print_str('(');
       }
       accumulator += print_factor(base, true);
-      if (defs.printMode !== PRINTMODE_LATEX) {
+      if (defs.printMode == PRINTMODE_LATEX) {
+        accumulator += print_str('}');
+      }
+      else {
         accumulator += print_str(')');
       }
     } else if (
