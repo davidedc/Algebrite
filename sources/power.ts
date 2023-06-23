@@ -160,27 +160,11 @@ function yypower(base: U, exponent: U): U {
   ) {
     if (DEBUG_POWER) {
       console.log('   power: -1 ^ rational');
-      console.log(
-        ` trick: exponent.q.a , exponent.q.b ${exponent.q.a} , ${exponent.q.b}`
-      );
-    }
-    if (exponent.q.a < exponent.q.b) {
-      tmp = makeList(symbol(POWER), base, exponent);
-    } else {
-      tmp = makeList(
-        symbol(MULTIPLY),
-        base,
-        makeList(
-          symbol(POWER),
-          base,
-          rational(exponent.q.a.mod(exponent.q.b), exponent.q.b)
-        )
-      );
-      if (DEBUG_POWER) {
-        console.log(` trick applied : ${tmp}`);
-      }
     }
 
+    const aModded = exponent.q.a.mod(exponent.q.b.multiply(2));
+    tmp = makeList(symbol(POWER), base, rational(aModded, exponent.q.b));
+    
     // evaluates clock form into
     // rectangular form. This seems to give
     // slightly better form to some test results.
