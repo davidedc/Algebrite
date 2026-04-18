@@ -41,7 +41,7 @@
     "@bazel/bazelisk": "latest",
     "@bazel/buildifier": "latest",
     "@bazel/esbuild": "^4.4.6",
-    "@bazel/typescript": "4.4.6",
+    "@bazel/typescript": "5.8.1",
     "typescript": "^3.9.6"
   }
 }
